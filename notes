@@ -1,1 +1,8 @@
 3461136 lines of log, "observed" in 1 second.
+(gc.log is the data set)
+Running script with printing on above data set = 222 seconds
+Running NO printing                            = 38.7 seconds
+
+
+For a 0.5 GB file, this is ACCEPTABLE time.... I think it would be better
+if it were faster, though. M
