@@ -7,15 +7,25 @@
 # Purpose: Simple parsing of gc log file, @info level.
 # Ellis Brown, 5/19/2021
 
+
+# TODO: 
+#       Update documentation
+#       Verify correctness on edge cases
+#       Update handling of command line arguments
+'''
+HOW TO RUN
+envoke using python3
+argv(1) = "True" for debug mode, "False" otherwise
+argv(2) = filename to store csv in, no filename otherwise.
+'''
 # open the specific test file. Update to use any file.
 import sys
-
 import time
 ## Timing test start ###
 startTime = time.time()
 
 # Global varaibles : used through runtime #
-data_table = []
+data_table = [[],[],[],[],[]]
 debug_mode = False
 #### Set up debug mode ### 
 if len(sys.argv) >= 2:
@@ -24,13 +34,14 @@ if len(sys.argv) >= 2:
 
 
 def read_file():
-    log = open("gc.log", mode="r") # Everyone LOVES hard coded in files <3
+    log = open("gc_small.log", mode="r") # Everyone LOVES hard coded in files <3
     log_data = log.readlines()
 
     #count = 0 # used for small testing
 
     for idx, line in enumerate(log_data):
-        read_header(line, idx)
+        start, end = read_header(line, idx)
+        add_row_to_table(line, start, end)
         # count += 1
         # if count == 45 and debug_mode:
         #     log.close()
@@ -38,6 +49,8 @@ def read_file():
 
     log.close()
 
+# Takes a line, and a specified char. Returns all indicies of that char
+# in the specified lines. Max indicies count = 4.
 def get_indicies_of_chars(line, char_in):
     data_out = []
     for idx, char in enumerate(line):
@@ -74,23 +87,49 @@ def verify_valid_tag(start_tag, end_tag):
 def read_header(line, idx):
     start_tag = get_indicies_of_chars(line, "[")
     end_tag = get_indicies_of_chars(line, "]")
-    if debug_mode:
-        print(start_tag)
-        print(end_tag)
-        print("read_header " + str(idx))
-    verify_valid_tag(start_tag, end_tag)
+    #verify_valid_tag(start_tag, end_tag)
+    return start_tag, end_tag
+    # now that we have the headers, we can progress to adding them to a hash table.
 
+def add_row_to_table(line, start, end):
+    for i in range(len(start)):
+        data_table[i].append(line[int(start[i] + 1):int(end[i])])
+    data_table[4].append(line[end[i]+ 1:])
 
 
 def main():
-    print(sys.argv)
-    print("Entering main!")
+    
+    
+    if (debug_mode):
+        print("Run " + str(sys.argv[0]) + " with:")
+        for i in range(len(sys.argv) - 1 ):
+            print(sys.argv[i + 1])
     read_file()
-    print("Finished running proram")
-    #print_info()
+    create_csv()
+
+
+def create_csv():
+    filename = "gc_data.csv"
+    if (len(sys.argv) >= 2):
+        filename = sys.argv[1] 
+    with open(filename, "w") as ofile:
+        for row in range(len(data_table[0])):
+            for col in range(len(data_table) - 1):
+                ofile.write(data_table[col][row] + " | ")
+            # special case, don't add on the vertical line for last column.
+            ofile.write(data_table[4][row] + "\n")
+
+def print_info():
+    for row in range(len(data_table[0])):
+        for col in range(len(data_table)):
+            print(data_table[col][row], end = " ")
+        print("")
 
 main()
 
 ### Timing test end ###
 executionTime = (time.time() - startTime)
-print("\n\nExecution time in seconds: " + str(executionTime) + "\n\n")
+
+print("\nParse execution time in seconds: " + str(executionTime) + "\n\n")
+if debug_mode:
+    print_info()

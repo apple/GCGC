@@ -1,0 +1,3 @@
+#!/bin/bash
+
+python3 parse.py True gc_data_temp.csv > timing_log
