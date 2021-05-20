@@ -6,33 +6,25 @@
 
 # Purpose: Simple parsing of gc log file, @info level.
 # Ellis Brown, 5/19/2021
-
+import sys
 
 # TODO: 
 #       Update documentation
 #       Verify correctness on edge cases
 #       Update handling of command line arguments
-'''
-HOW TO RUN
-envoke using python3
-argv(1) = "True" for debug mode, "False" otherwise
-argv(2) = filename to store csv in, no filename otherwise.
-'''
-# open the specific test file. Update to use any file.
-import sys
 
 
-# Global varaibles : used through runtime #
-data_table = [[],[],[],[],[]]
-debug_mode = False
-#### Set up debug mode ### 
-if len(sys.argv) >= 2:
-    if sys.argv[1] in ["True", "true", "t"]:
-        debug_mode = True
+
+
+def usage():
+    if (len(sys.argv)) <= 4:
+        print("Sorry, please rerun using " + str(sys.argv[0]
+        + " <filename> <debug mode> <output csv filename>"))
+        quit()
 
 
 def read_file():
-    log = open("gc_small.log", mode="r") # Everyone LOVES hard coded in files <3
+    log = open(sys.argv[1], mode="r") # Everyone LOVES hard coded in files <3
     log_data = log.readlines()
 
     #count = 0 # used for small testing
@@ -110,7 +102,7 @@ def main():
 
 
 def create_csv():
-    filename = "gc_data.csv"
+    filename = sys.argv[3]
     if (len(sys.argv) >= 2):
         filename = sys.argv[2] 
     with open(filename, "w") as ofile:
@@ -125,6 +117,11 @@ def print_info():
         for col in range(len(data_table)):
             print(data_table[col][row], end = " ")
         print("")
+
+usage()
+# data_table & debug_mode are global variables used throughout runtime.
+data_table = [[],[],[],[],[]]
+debug_mode = sys.argv[2]
 
 main()
 

@@ -1,6 +1,23 @@
 #!/bin/bash
 
-python3 parse.py false  gc_data_temp.csv 
+# Ellis Brown, 5/20/2021
 
-python3 organize.py gc_data_temp.csv 
-rm gc_data_temp.csv
+# Purpose : Given a parameter, and optionally a debugging mode,
+#           Executes and analyzes the contents of a gc log.
+
+# Parameters:
+FILENAME=$1         # gc log file 
+
+DEBUG_MODE=$2       # true  = debug on
+                    # false = debug off
+TEMP_FILENAME="/tmp/GC_intermediate.csv"    # the name of a temporary file
+                                            # that can get optionally removed
+                                            # afterwards.
+
+echo "Running parse..."
+time python3 parse.py FILENAME DEBUG_MODE  TEMP_FILENAME
+echo "Running organize..."
+time python3 organize.py gc_data_temp.csv > small_out
+echo "Running Sort..."
+time python3 sort_actions.py small_out > final
+echo "Complete!"

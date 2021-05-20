@@ -15,9 +15,7 @@ import sys
 
 def main():
         
-    if (len(sys.argv)) <= 1:
-        print("Incorrect usage : Rerun with the filename, and optional flags")
-        quit()
+    usage()
     print("Read CSV file " + str(sys.argv[1]))
 
     #TODO: come up with better names for the columns
@@ -36,5 +34,10 @@ def remove_leading_spaces(column):
             new_info_col.append(column[idx].strip())
         
     return new_info_col
+
+def usage():
+    if (len(sys.argv)) <= 1:
+        print("Incorrect usage : Rerun with the filename, and optional flags")
+        quit()
 
 main()

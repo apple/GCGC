@@ -6,34 +6,78 @@ import sys
 from collections import defaultdict
 from difflib import SequenceMatcher
 
+''''''''''''''''''''''''''''
+Parameters: 
+argv[1]:    Filename containing lines with 
+            interesting data, to find similarities between
+others:     none
+''''''''''''''''''''''''''''
 
+def main():
+    usage() # establish correct arguments called
+    
+    table = find_matches(open(sys.argv[1], "r"))
+    # hash table with lists for values. In time order per list grouping.
+    
+    print_table(table)
+    f.close()
+
+# Takes in a, and hashes each line in the file using 
+# the first 10 characters. Then, it finds similar entry characters.
+# Returns a hash table with first 10 characters as keys, and lists of lines from
+# the file that had the similar first 10 as the values.
+def find_matches(f):
+
+    hash_table = defaultdict(list)
+    file = f.readlines()
+    
+    # For each line in the file, we use case analysis:
+    #
+    #   Case 1: the current_key is IN the table
+    #               -> append to that list.
+    #   Case 2: the current_key is SIMILAR to another key in table
+    #               -> append to that SIMILAR key's list
+    #   Case 3: the current_key is NOT in the table
+    #               -> Create a new entry to the table. 
+    for line in file:
+        current_key = line[:10]
+        
+        if current_key in hash_table:
+            hash_table[current_key].append(line)
+   
+        else:
+            found = False
+            
+            for key in hash_table:
+                if similar(key, current_key) >= 0.85:
+                    hash_table[key].append(line)
+                    found = True
+                    break
+
+            if not found:
+                hash_table[current_key].append(line)
+
+    return hash_table
+
+
+# Prints off the different entries of the has table, row by row.
+def print_table(hash_table):
+    for key in hash_table:
+        print(str(hash_table[key]) + "\n")
+
+
+# Defines the similarity between two strings. Returns a float
+# from 0-1, where 0 is no match, 1 is the same string.
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
 
-f = open(sys.argv[1], "r")
-file = f.readlines()
-f.close()
-
-hash_table = defaultdict(list)
-
-for line in file:
-    current_key = line[:10]
-    
-    if current_key in hash_table:
-        hash_table[current_key].append(line)
-        
-    else:
-        found = False
-        for key in hash_table:
-            if similar(key, current_key) >= 0.85:
-                hash_table[key].append(line)
-                found = True
-                break
-        if not found:
-            hash_table[current_key].append(line)
-
-for key in hash_table:
-    print(str(hash_table[key]) + "\n")
+# Defines arguments to call this program from command line. 
+# Program quits if called incorrectly.
+def usage():
+    if len(sys.argv < 2):
+        print("Usage: " + str(sys.argv[1] + " <filename>"))
+        quit()
 
 
+main()
