@@ -6,6 +6,7 @@ import sys
 from collections import defaultdict
 from difflib import SequenceMatcher
 
+
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
@@ -20,20 +21,19 @@ for line in file:
     current_key = line[:10]
     
     if current_key in hash_table:
-        print("Same key found")
         hash_table[current_key].append(line)
         
     else:
         found = False
         for key in hash_table:
             if similar(key, current_key) >= 0.85:
-                print("Similar key found")
                 hash_table[key].append(line)
                 found = True
                 break
         if not found:
-            print("No key found")
             hash_table[current_key].append(line)
 
 for key in hash_table:
     print(str(hash_table[key]) + "\n")
+
+

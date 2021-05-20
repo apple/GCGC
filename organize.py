@@ -12,6 +12,7 @@ import pandas as pd
 import sys
 
 
+
 def main():
         
     if (len(sys.argv)) <= 1:
@@ -30,7 +31,9 @@ def remove_leading_spaces(column):
 
     new_info_col = []
     for idx in range(len(column)):
-        new_info_col.append(column[idx].strip())
+        if (type(column[idx])) == str:
+
+            new_info_col.append(column[idx].strip())
         
     return new_info_col
 

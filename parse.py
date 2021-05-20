@@ -20,9 +20,7 @@ argv(2) = filename to store csv in, no filename otherwise.
 '''
 # open the specific test file. Update to use any file.
 import sys
-import time
-## Timing test start ###
-startTime = time.time()
+
 
 # Global varaibles : used through runtime #
 data_table = [[],[],[],[],[]]
@@ -92,10 +90,13 @@ def read_header(line, idx):
     # now that we have the headers, we can progress to adding them to a hash table.
 
 def add_row_to_table(line, start, end):
-    for i in range(len(start)):
-        data_table[i].append(line[int(start[i] + 1):int(end[i])])
-    data_table[4].append(line[end[i]+ 1:])
-
+    if len(start) == 4:
+        for i in range(len(start)):
+            data_table[i].append(line[int(start[i] + 1):int(end[i])])
+        
+        data_table[4].append(line[end[i]+ 1:])
+    else:
+        data_table[4][-1] += (line)
 
 def main():
     
@@ -111,11 +112,11 @@ def main():
 def create_csv():
     filename = "gc_data.csv"
     if (len(sys.argv) >= 2):
-        filename = sys.argv[1] 
+        filename = sys.argv[2] 
     with open(filename, "w") as ofile:
         for row in range(len(data_table[0])):
             for col in range(len(data_table) - 1):
-                ofile.write(data_table[col][row] + " | ")
+                ofile.write(data_table[col][row] + "|")
             # special case, don't add on the vertical line for last column.
             ofile.write(data_table[4][row] + "\n")
 
@@ -127,9 +128,3 @@ def print_info():
 
 main()
 
-### Timing test end ###
-executionTime = (time.time() - startTime)
-
-print("\nParse execution time in seconds: " + str(executionTime) + "\n\n")
-if debug_mode:
-    print_info()
