@@ -23,8 +23,79 @@ Below: How to run an executable, and create a garbage collector log file
 ====
 (set the phases to anything as needed.)
 
-java   "-Xlog:gc*,gc+phases=debug:file=FILENAME.log"
+java "-Xlog:gc*,gc+phases=debug:file=FILENAME.log"
+java "-Xlog:all=trace:file=FILENAME.log"
 
 
 Useful resource here: 
 https://sematext.com/blog/java-garbage-collection-logs/ 
+
+https://www.redhat.com/en/blog/collecting-and-reading-g1-garbage-collector-logs-part-2 
+
+
+````````````````````  Current state of java runnable testing below ````````````
+#!/bin/sh
+# Ellis Brown, note taking
+
+#java "-Xlog:gc*,gc+phases=debug" -jar extremem.jar  -dDictionarySize=1000 -dServerThreads=1 \
+#                                 -dCustomerThreads=1 -dBrowsingHistoryQueueCount=1 -dSalesTransactionQueueCount=1 \
+#                                  -dSimulationDuration=500ms > example_log.log
+# run with java.
+# -Xlog:gc*, gc+phrases=debug    turns on the garbage collection logs
+# -jar extremem.jar runs the jar file using the java run
+# everything else is specific flags for the provided jar executable
+
+# you can add additional flags like -Xlog as you wish. These are not associated with the program's flags.
+PARAMS="-dDictionarySize=1000
+        -dServerThreads=1
+        -dCustomerThreads=1
+        -dBrowsingHistoryQueueCount=1
+        -dSalesTransactionQueueCount=1
+        -dSimulationDuration=1m"
+
+# flags to use
+#"-XX:LogFile='./example_log.log'"
+# The following collects all gc log information
+# However, it produces a couple files extra that I don't know why the information is being produced.
+#java "-Xlog:gc*,gc+phases=debug:file=gc_test.txt"
+RUN='java "-Xlog:all=trace:file=FILENAME.log" -jar extremem.jar'
+PROG="${RUN} ${PARAMS}"
+
+#eval $PROG
+#java -jar extremem.jar \
+#        -dDictionarySize=1000 \
+#        -dServerThreads=1 \
+#        -dCustomerThreads=1 \
+#        -dBrowsingHistoryQueueCount=1 \
+#        -dSalesTransactionQueueCount=1 \
+#        -dSimulationDuration=1s
+Overhead="java -jar extremem.jar"
+Runnable="-dDictionarySize=1000
+        -dServerThreads=1
+        -dCustomerThreads=1
+        -dBrowsingHistoryQueueCount=1
+        -dSalesTransactionQueueCount=1
+        -dSimulationDuration=1m"
+Prog=${Overhead} ${Runnable}
+eval $Prog
+
+Re-evaluation of the tool:
+I find it completly necessary to only draw on information from lines that
+specifically start on the "[time]" cell, and ignore all others.
+
+1) If a line does not include that, IE, its a contiunuation from another line,
+There are multiple ways to handle this. I think the best thing to do is
+put the entire string into an analzer, that should pump out an
+information dump at the other end, which goes and collects from
+[time] to the next one, and groups THOSE into lines,
+
+2) Then, I can take that output, put it into an analyzer, which turns it
+into a comma seperated value sheet.
+
+3) T H E N, take those, and analyze the data, using the times and output type as 
+metadata, for analyzing the instructions actually printined.
+
+4) After obtaining that data, I can do analysis on the like groupings, ordered
+by time, to produce the correct output.
+
+It is necessary for step 3 come before step 4. 
