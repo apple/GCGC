@@ -1,3 +1,6 @@
 #!/bin/bash
 
-python3 parse.py True gc_data_temp.csv > timing_log
+python3 parse.py false  gc_data_temp.csv 
+
+python3 organize.py gc_data_temp.csv 
+rm gc_data_temp.csv
