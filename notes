@@ -12,6 +12,19 @@ if it were faster, though.
 &&&&&&&&&&&&&&&&&&&&&&&&&
 PLANNING OF ORGINIZATION
 &&&&&&&&&&&&&&&&&&&&&&&&&
+
 CSV created
 Column seperator character(s):  |  
 List seperator:                 , 
+
+====
+Below: How to run an executable, and create a garbage collector log file
+       that captures all relevant information
+====
+(set the phases to anything as needed.)
+
+java   "-Xlog:gc*,gc+phases=debug:file=FILENAME.log"
+
+
+Useful resource here: 
+https://sematext.com/blog/java-garbage-collection-logs/ 
