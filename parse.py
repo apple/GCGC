@@ -17,7 +17,7 @@ import sys
 
 
 def usage():
-    if (len(sys.argv)) <= 4:
+    if (len(sys.argv)) < 4:
         print("Sorry, please rerun using " + str(sys.argv[0]
         + " <filename> <debug mode> <output csv filename>"))
         quit()
@@ -91,8 +91,6 @@ def add_row_to_table(line, start, end):
         data_table[4][-1] += (line)
 
 def main():
-    
-    
     if (debug_mode):
         print("Run " + str(sys.argv[0]) + " with:")
         for i in range(len(sys.argv) - 1 ):
@@ -102,9 +100,8 @@ def main():
 
 
 def create_csv():
-    filename = sys.argv[3]
-    if (len(sys.argv) >= 2):
-        filename = sys.argv[2] 
+    
+    filename = sys.argv[3] 
     with open(filename, "w") as ofile:
         for row in range(len(data_table[0])):
             for col in range(len(data_table) - 1):
@@ -121,7 +118,8 @@ def print_info():
 usage()
 # data_table & debug_mode are global variables used throughout runtime.
 data_table = [[],[],[],[],[]]
-debug_mode = sys.argv[2]
-
+debug_mode = False
+if (sys.argv[2]) in ["True", "true", "t"]:
+    debug_mode = True
 main()
 

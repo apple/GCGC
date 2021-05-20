@@ -6,12 +6,12 @@ import sys
 from collections import defaultdict
 from difflib import SequenceMatcher
 
-''''''''''''''''''''''''''''
+'''
 Parameters: 
 argv[1]:    Filename containing lines with 
             interesting data, to find similarities between
 others:     none
-''''''''''''''''''''''''''''
+'''
 
 def main():
     usage() # establish correct arguments called
@@ -20,7 +20,7 @@ def main():
     # hash table with lists for values. In time order per list grouping.
     
     print_table(table)
-    f.close()
+
 
 # Takes in a, and hashes each line in the file using 
 # the first 10 characters. Then, it finds similar entry characters.
@@ -30,7 +30,7 @@ def find_matches(f):
 
     hash_table = defaultdict(list)
     file = f.readlines()
-    
+    f.close()
     # For each line in the file, we use case analysis:
     #
     #   Case 1: the current_key is IN the table
@@ -75,7 +75,7 @@ def similar(a, b):
 # Defines arguments to call this program from command line. 
 # Program quits if called incorrectly.
 def usage():
-    if len(sys.argv < 2):
+    if len(sys.argv) < 2:
         print("Usage: " + str(sys.argv[1] + " <filename>"))
         quit()
 
