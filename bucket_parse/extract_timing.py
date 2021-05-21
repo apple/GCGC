@@ -1,5 +1,5 @@
 import sys
-
+from time_tag import get_timestamps # allows parsing of gc line
 def usage():
     if (len(sys.argv)) < 3:
         print("Sorry, please rerun using " + str(sys.argv[0])
@@ -9,19 +9,21 @@ def usage():
 def extract_data(filename, target_string):
     
     file = open(filename, "r")
-    timing = []
+    data = []
+    timestamps = []
     str_len = len(target_string)
     for line in file:
         if target_string in line:         
             idx = line.index(target_string)
             left = find_index_left(idx, line, ")")            
             right = idx +  line[idx:].index("\n")
-            timing.append(line[left + 1 : right - 1])
-    return timing
+            data.append(line[left + 1 : right - 1])
+            timestamps.append(get_timestamps(line))
+    return data, timestamps
 
-def arrange_tup(timing):
+def arrange_tup(data):
     arr = []
-    for row in timing:
+    for row in data:
         idx = row.index(")")
         tup = (row[idx+2:-1],row[1:idx+1])
         arr.append(tup)
@@ -45,24 +47,23 @@ def find_index_left(idx, line, char):
 
 def main():
     usage()
-    timing = extract_data(sys.argv[1], "->")
-    unsorted = arrange_tup(timing)
+    data, timestamps = extract_data(sys.argv[1], "->")
+    unsorted = arrange_tup(data)
     if (len(unsorted)) == 0:
         print("Length of unsorted is zero...\n")
         quit()
     
+    #s = sorted(unsorted, key=lambda tup: float(tup[0])) # sorts by using tuple[0] as key
+    #find_trends(s)
     
-    s = sorted(unsorted, key=lambda tup: float(tup[0])) # sorts by using tuple[0] as key
-    for line in s:
-        print(line)
-    
-    find_trends(s)
-    write_to_csv(s, sys.argv[2])
+    write_to_csv(unsorted, timestamps, sys.argv[2])
+    print("Finished!")
 
-def write_to_csv(data, filename):
+def write_to_csv(data, timestamps, filename):
     file = open(filename, "w") 
-    for line in data:
-        file.write(line[0] + str(", ") + line[1] + "\n")
+    for line, time in zip(data, timestamps):
+        file.write(line[0] + str(", ") + line[1] + str(", "))
+        file.write(time[0] + str(", ") + time[1] + str("\n"))
     file.close()
 
 main()
