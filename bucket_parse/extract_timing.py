@@ -30,10 +30,11 @@ def arrange_tup(timing):
 
 def find_trends(s):
     max_wait = max(s, key = lambda i : float(i[0][:-2]))
-    print(max_wait)
-    average_wait =  sum(float(i[0][:-2]) for i in s)
-    #average_wait = sum(s, key=lambda i : i[0][:-2])
-    print(average_wait)
+    print("Max wait" + str(max_wait))
+    total_wait =  sum(float(i[0][:-2]) for i in s)
+    average_wait = total_wait / len(s)
+    print("Total wait: " + str(total_wait))
+    print("Average wait: " + str(average_wait))
 
 
 def find_index_left(idx, line, char):
