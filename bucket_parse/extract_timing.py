@@ -12,9 +12,11 @@ def extract_data(filename, target_string):
     timing = []
     str_len = len(target_string)
     for line in file:
-        idx = line.index(target_string)
-        if not (idx + str_len + 3) > len(line):
-            timing.append(line[idx + str_len + 1:])
+        if target_string in line:         
+            idx = line.index(target_string)
+            left = find_index_left(idx, line, ")")            
+            right = idx +  line[idx:].index("\n")
+            timing.append(line[left + 1 : right - 1])
     return timing
 
 def arrange_tup(timing):
@@ -33,9 +35,16 @@ def find_trends(s):
     #average_wait = sum(s, key=lambda i : i[0][:-2])
     print(average_wait)
 
+
+def find_index_left(idx, line, char):
+    for i in range(idx, 0, -1):
+        if line[i] == char:
+            return i
+    return -1
+
 def main():
     usage()
-    timing = extract_data(sys.argv[1], "(G1 Evacuation Pause)")
+    timing = extract_data(sys.argv[1], "->")
     unsorted = arrange_tup(timing)
     if (len(unsorted)) == 0:
         print("Length of unsorted is zero...\n")
