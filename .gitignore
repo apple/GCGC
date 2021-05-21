@@ -1,3 +1,6 @@
 # Files not needed.
 # The gc log is too large, not needed.
 *.log
+final
+/bucket_parse/*.log 
+
