@@ -1,0 +1,8 @@
+#!/bin/bash
+
+FILENAME=$1
+TEMP_FILE=$2
+
+python3 find_pauses.py $FILENAME $TEMP_FILE 
+
+time python3 extract_timing.py $TEMP_FILE 

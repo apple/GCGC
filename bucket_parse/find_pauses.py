@@ -2,21 +2,22 @@
 import sys
 
 def usage():
-    if (len(sys.argv)) < 2:
+    if (len(sys.argv)) < 3:
         print("Sorry, please rerun using " + str(sys.argv[0])
         + " <filename>")
         quit()
 
-def parse_file(filename):
-    file = open(filename, "r")
-    output_file = open("pauses_out", "w")
+def parse_file(filename_in, filename_out):
+    file = open(filename_in, "r")
+    output_file = open(filename_out, "w")
     pauses = []
+    count = 0
     for line in file:
         if "Pause Young" in line:
             output_file.write(line)
-    
+
 def main():
     usage()
-    parse_file(sys.argv[1])
+    parse_file(sys.argv[1], sys.argv[2])
 
 main()
