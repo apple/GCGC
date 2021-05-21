@@ -16,9 +16,9 @@ TEMP_FILENAME="/tmp/GC_intermediate.csv"    # the name of a temporary file
 
 
 echo "Running parse..."
-#time python3 parse.py $FILENAME $DEBUG_MODE  $TEMP_FILENAME
+time python3 parse.py $FILENAME $DEBUG_MODE  $TEMP_FILENAME
 echo "Running organize..."
-#time python3 organize.py $TEMP_FILENAME > small_out
+time python3 organize.py $TEMP_FILENAME > small_out
 echo "Running Sort..."
 time python3 sort_actions.py small_out > final
 echo "Complete!"

@@ -81,6 +81,9 @@ def read_header(line, idx):
     return start_tag, end_tag
     # now that we have the headers, we can progress to adding them to a hash table.
 
+# Create a row to add to the table, appending one item to each column.
+# This uses the property that data_table is an array of length 5, with
+#   each entry in the array representing a column.
 def add_row_to_table(line, start, end):
     if len(start) == 4:
         for i in range(len(start)):

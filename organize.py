@@ -34,8 +34,10 @@ def remove_leading_spaces(column):
             line = column[idx].strip()
             if len(line) > 0:
                 new_info_col.append(line)
+            
         else:
             new_info_col.append(column[idx])
+
         
     return new_info_col
 
