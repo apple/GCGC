@@ -1,9 +1,9 @@
 import sys
 
 def usage():
-    if (len(sys.argv)) < 2:
+    if (len(sys.argv)) < 3:
         print("Sorry, please rerun using " + str(sys.argv[0])
-        + " <filename>")
+        + " <filename> <output_csv filename>")
         quit()
 
 def extract_data(filename, target_string):
@@ -30,11 +30,11 @@ def arrange_tup(timing):
 
 def find_trends(s):
     max_wait = max(s, key = lambda i : float(i[0][:-2]))
-    print("Max wait" + str(max_wait))
-    total_wait =  sum(float(i[0][:-2]) for i in s)
-    average_wait = total_wait / len(s)
-    print("Total wait: " + str(total_wait))
-    print("Average wait: " + str(average_wait))
+    #print("Max wait" + str(max_wait))
+    total_wait =  round(sum(float(i[0][:-2]) for i in s), 4)
+    average_wait = round(total_wait / len(s), 4)
+    #print("Total wait: " + str(total_wait))
+    #print("Average wait: " + str(average_wait))
 
 
 def find_index_left(idx, line, char):
@@ -50,11 +50,19 @@ def main():
     if (len(unsorted)) == 0:
         print("Length of unsorted is zero...\n")
         quit()
-    for line in unsorted:
+    
+    
+    s = sorted(unsorted, key=lambda tup: float(tup[0])) # sorts by using tuple[0] as key
+    for line in s:
         print(line)
-    print("\n\n")
-    s = sorted(unsorted, key=lambda tup: tup[0]) # sorts by using tuple[0] as key
     
     find_trends(s)
+    write_to_csv(s, sys.argv[2])
+
+def write_to_csv(data, filename):
+    file = open(filename, "w") 
+    for line in data:
+        file.write(line[0] + str(", ") + line[1] + "\n")
+    file.close()
 
 main()

@@ -1,0 +1,16 @@
+Exploring the use of SimCloud to host jupyter notebooks:
+
+    Simcloud setup:
+    1) https://simcloud.apple.com/tutorials/cli/
+
+    Using with Jupyter notebooks:
+    2) https://simcloud.apple.com/tutorials/jupyter/#python-3
+
+    Stack overflow with specific python3 question/answer
+    3) https://stackoverflow.apple.com/questions/15101
+
+Exploring Data Notebooks and workspaces:
+
+    What is a data notebook & setup :
+    1) https://docs.aci.apple.com/datastudio/what_is_pds/what_is_pds.html
+    

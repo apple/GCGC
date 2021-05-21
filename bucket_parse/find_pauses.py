@@ -4,7 +4,7 @@ import sys
 def usage():
     if (len(sys.argv)) < 3:
         print("Sorry, please rerun using " + str(sys.argv[0])
-        + " <filename>")
+        + " <filename> <output_data filename>")
         quit()
 
 def parse_file(filename_in, filename_out):
