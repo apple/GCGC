@@ -35,27 +35,25 @@ def find_matches(f):
     #
     #   Case 1: the current_key is IN the table
     #               -> append to that list.
-    #   Case 2: the current_key is SIMILAR to another key in table
-    #               -> append to that SIMILAR key's list
     #   Case 3: the current_key is NOT in the table
     #               -> Create a new entry to the table. 
     for line in file:
-        current_key = line[:10]
+        current_key = line[:3]
         
         if current_key in hash_table:
             hash_table[current_key].append(line)
    
         else:
-            found = False
-            
-            for key in hash_table:
-                if similar(key, current_key) >= 0.85:
-                    hash_table[key].append(line)
-                    found = True
-                    break
+            # found = False
+            hash_table[current_key].append(line)
+            # for key in hash_table:
+            #     if similar(key, current_key) >= 0.85:
+            #         hash_table[key].append(line)
+            #         found = True
+            #         break
 
-            if not found:
-                hash_table[current_key].append(line)
+            #  if not found:
+            
 
     return hash_table
 

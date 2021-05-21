@@ -16,7 +16,7 @@ import sys
 def main():
         
     usage()
-    print("Read CSV file " + str(sys.argv[1]))
+    
 
     #TODO: come up with better names for the columns
     df = pd.read_csv(sys.argv[1], sep="|", names = ["real-time", "time-from-start", "info-type", "gc-info-type", "data"])
@@ -30,8 +30,12 @@ def remove_leading_spaces(column):
     new_info_col = []
     for idx in range(len(column)):
         if (type(column[idx])) == str:
-
-            new_info_col.append(column[idx].strip())
+            
+            line = column[idx].strip()
+            if len(line) > 0:
+                new_info_col.append(line)
+        else:
+            new_info_col.append(column[idx])
         
     return new_info_col
 
