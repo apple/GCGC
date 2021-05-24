@@ -60,7 +60,19 @@ def __find_trends(df):
 #          program
 # Parameters/Requirements
 def plot_heap_allocation_breakdown(counts):
+    # tutorial below
+    x = np.array(list(range(len(counts))))
+    #print(counts)
     region_names = ["E", "S", "O", "HS", "HC", "CS", "F", "OA", "CA", "TAMS"]
     
-    for line in counts:
+    colors = ["red", "yellow", "blue", "green", "purple", "orange", "black", "brown", "pink", "lime", "green"]
+    plt.xlabel("Program's runtime")
+    plt.ylabel("Number of memory blocks")
+    plt.title("heap allocation throughout runtime")
+    plt.legend(region_names)
+    temp = []
+    for idx in range(len(counts[0])):
+        plt.plot(x, np.array(list(row[idx] for row in counts)), color = colors[idx], label = region_names[idx])
+    plt.legend()
+    plt.show() # commented out during testing.
 
