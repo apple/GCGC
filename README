@@ -1,0 +1,29 @@
+Ellis Brown
+5/24
+
+
+Quick temporary README. 
+
+Folders:
+
+Jupyter-Everything:  has my testing Jupyter notebook
+
+unusued-code:        Has code to transform an entire log into a CSV file
+                     based on the tags and categories presented, with 
+                     whitespace handling. Script may require modification for
+                     original file (logs lives in /datasets).
+
+datasets:            full and small logs created from different workloads.
+
+bucket_parse:       Currently used work: parses the log looking for a specific
+                    field per line, creates a CSV file with the new information,
+                    which is read by the notebook. Currently finds log lines 
+                    associated with Young generational pauses.
+
+                    Run with "./run_bucket <log_file> <temp_filename> \
+                                           <output_csvfile>
+
+Other
+-> notes: current notes I am working on
+-> /bucket_parse/resources : links and resources to different log analyzing tool
+
