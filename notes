@@ -106,3 +106,6 @@ https://www.oracle.com/technetwork/tutorials/tutorials-1876574.html#CSet
 
 -> Very specific in searches for regular expressions
 
+During the last few weeks, I could make everything run using parallel 
+processing. Therefore, I will have each category parse run independently
+of the rest

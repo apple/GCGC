@@ -35,7 +35,7 @@ def find_matches(f):
     #
     #   Case 1: the current_key is IN the table
     #               -> append to that list.
-    #   Case 3: the current_key is NOT in the table
+    #   Case 2: the current_key is NOT in the table
     #               -> Create a new entry to the table. 
     for line in file:
         current_key = line[:3]

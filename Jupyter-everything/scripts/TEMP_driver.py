@@ -1,8 +1,10 @@
-import process_log
+import process_log as pl
+import plot_data as pltd
 
 def main():
-    process_log.setLogPath("../../datasets/gc.log")
-    df = process_log.getPauses(False)
+    pl.setLogPath("../../datasets/gc.log")
+    df = pl.getPauses(False)
+    #pltd.plot_pauses(df)
     print(df)
 
 main()
