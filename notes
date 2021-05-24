@@ -103,3 +103,6 @@ It is necessary for step 3 come before step 4.
 Resource number 3)
 Has index lookup for logging terms oracle g1 garbage collector
 https://www.oracle.com/technetwork/tutorials/tutorials-1876574.html#CSet 
+
+-> Very specific in searches for regular expressions
+
