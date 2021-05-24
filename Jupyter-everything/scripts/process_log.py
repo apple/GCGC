@@ -27,6 +27,7 @@
     # Total time (seconds)
     # Memory leaks? 
 import pandas as pd
+import re
 
 path= ""                # path to log data
 output_csv_id = "extra" # name-scheme of output data file
@@ -183,13 +184,45 @@ def getHeapAllocation(create_csv = False):
                 accepting = False
             elif accepting:
                 heap_regions[-1].append(filedata[idx])
+                print(filedata[idx])
             idx += 1
-    parsed_heap_regions = simplify_regions(heap_regions)
+    parsed_heap_regions = __simplify_regions(heap_regions)
     return parsed_heap_regions
 
-def simplify_regions(heap_regions):
+
+def __simplify_regions(heap_regions):
     # https://regex101.com 
+    pattern = "[GC]\(\d*\)\s*\|\s*(\d+)\|0x((\d|\w)*),\s*0x((\d|\w)*),\s+0x((\d|\w)*)\|(\s*)(\d*)%\|(\s*)(\w+)"
+    # Searches for the following string:
+        # GC(0) |  1|0x0000abc123, 0x0000abc321, 0x0000234321| 25%|  O|
+        # with anything changing (all numbers, ect.) other than non letter-number characters.
+    # group we are looking for: 11
+    simplifed = [] 
     for entry in heap_regions:
         metadata = [] 
         for line in entry:
-            print(line)
+            match = re.search(pattern, line)
+            if match:
+                metadata.append(match.group(11))
+        simplifed.append(metadata)
+    
+    ## List contains the different categories of memory blocks.
+    
+    ''' Heap Regions: E=young(eden), S=young(survivor), O=old, HS=humongous(starts)
+     HC=humongous(continues), CS=collection set, F=free, OA=open archive
+     CA=closed archive, TAMS=top-at-mark-start (previous, next) '''
+
+    
+    regions = ["E", "S", "O", "HS", "HC", "CS", "F", "OA", "CA", "TAMS"]
+    counts = [] # will hold all frequency lists
+    for heap_state in simplifed:
+        frequencies = []
+        [frequencies.append(0) for i in regions]
+        for mem_block in heap_state:
+            for i in range(len(regions))
+                if region == mem_block:
+                    frequencies[i] += 1
+                    break
+        counts.append(frequencies)
+    
+    return counts
