@@ -7,7 +7,6 @@ def usage():
         quit()
 
 def extract_data(filename, target_string):
-    
     file = open(filename, "r")
     data = []
     timestamps = []
