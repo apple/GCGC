@@ -42,13 +42,17 @@ def setLogPath(p):
 # Parameters : none
 # Requirements: path must be set to the .log file we look to traverse.
 # Return: List of tuples as pauses, with added metadata.
-def getPauses():
+def getPauses(create_csv = False):
     pause_data = []
     with open(path, "r") as file:
         for line in file:
             if "Pause Young" in line:
                 pause_data.append(line)
-    return extract_pause_metadata(pause_data)
+    data, timestamps = extract_pause_metadata(pause_data)
+    if create_csv:
+        filename = "pauses_" + output_csv_id + "_OUT.csv"
+        export_pause_csv(data, timestamps ,filename)
+    return zip(data, timestamps)
 
 def export_pause_csv(data, timestamps, filename):
     file = open(filename, "w") 
@@ -57,7 +61,7 @@ def export_pause_csv(data, timestamps, filename):
         file.write(time[0] + str(", ") + time[1] + str("\n"))
     file.close()
 
-main()
+
 
 # Purpose: Extracts the useful information from each line of pause_data, 
 #          which can then be easily read/displayed
@@ -82,7 +86,7 @@ def extract_pause_metadata(pause_data):
             timestamps.append(get_timestamps(line))
     
     data = arrange_cols_pauses(data)
-    return data
+    return data, timestamps
 
 
 
