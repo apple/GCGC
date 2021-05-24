@@ -63,9 +63,11 @@ def plot_heap_allocation_breakdown(counts):
     # tutorial below
     x = np.array(list(range(len(counts))))
     #print(counts)
-    region_names = ["E", "S", "O", "HS", "HC", "CS", "F", "OA", "CA", "TAMS"]
-    
-    colors = ["red", "yellow", "blue", "green", "purple", "orange", "black", "brown", "pink", "lime", "green"]
+    region_names = ["Young", "Survivor", "Old", "Humongus_start", "Humongus_continue", "Collection_set", "Free", "Open_archive", "Closed_archive", "TAMS"]
+    ''' Heap Regions: E=young(eden), S=young(survivor), O=old, HS=humongous(starts)
+     HC=humongous(continues), CS=collection set, F=free, OA=open archive
+     CA=closed archive, TAMS=top-at-mark-start (previous, next) '''
+    colors = ["royalblue", "cyan", "black", "green", "purple", "orange", "lime", "brown", "darkmagenta", "lime", "green"]
     plt.xlabel("Program's runtime")
     plt.ylabel("Number of memory blocks")
     plt.title("heap allocation throughout runtime")
