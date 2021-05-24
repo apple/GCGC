@@ -166,3 +166,30 @@ def __dataframe_from_pause_lists(data, timestamps):
     df.columns = ["pause_time", "memory_change",
                  "actual_time", "time_from_start"]
     return df
+
+
+def getHeapAllocation(create_csv = False):
+    accepting = False
+    heap_regions = []
+    with open(path, "r") as file:
+        filedata = file.readlines()
+        idx = 0
+        filesize = len(filedata)
+        while (idx < filesize):
+            if "Heap Regions" in filedata[idx]:
+                accepting = True
+                heap_regions.append([])
+            elif accepting and "0x" not in filedata[idx]:
+                accepting = False
+            elif accepting:
+                heap_regions[-1].append(filedata[idx])
+            idx += 1
+    parsed_heap_regions = simplify_regions(heap_regions)
+    return parsed_heap_regions
+
+def simplify_regions(heap_regions):
+    # https://regex101.com 
+    for entry in heap_regions:
+        metadata = [] 
+        for line in entry:
+            print(line)
