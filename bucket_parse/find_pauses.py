@@ -11,7 +11,6 @@ def parse_file(filename_in, filename_out):
     file = open(filename_in, "r")
     output_file = open(filename_out, "w")
     pauses = []
-    count = 0
     for line in file:
         if "Pause Young" in line:
             output_file.write(line)
