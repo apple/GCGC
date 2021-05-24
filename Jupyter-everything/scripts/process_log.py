@@ -48,13 +48,16 @@ def getPauses(create_csv = False):
         for line in file:
             if "Pause Young" in line:
                 pause_data.append(line)
-    data, timestamps = extract_pause_metadata(pause_data)
+    data, timestamps = __extract_pause_metadata(pause_data)
     if create_csv:
         filename = "pauses_" + output_csv_id + "_OUT.csv"
-        export_pause_csv(data, timestamps ,filename)
+        __export_pause_csv(data, timestamps ,filename)
     return zip(data, timestamps)
 
-def export_pause_csv(data, timestamps, filename):
+
+# Purpose: Creates a file with specific CSV data to the pause
+#          gc log information.
+def __export_pause_csv(data, timestamps, filename):
     file = open(filename, "w") 
     for line, time in zip(data, timestamps):
         file.write(line[0] + str(", ") + line[1] + str(", "))
@@ -70,7 +73,7 @@ def export_pause_csv(data, timestamps, filename):
 # Return:
         # a list of data, with lines specific only to pauses, as tuples with
         # pause time, and change in allocated bytes in the yonug generation.
-def extract_pause_metadata(pause_data):
+def __extract_pause_metadata(pause_data):
     data = []
     timestamps = []
     target_string = "->" # Found any time the bytes change from this pause
@@ -79,18 +82,18 @@ def extract_pause_metadata(pause_data):
     for line in pause_data:
         if target_string in line:         
             idx = line.index(target_string)
-            left = find_index_left(idx, line, ")")            
+            left = __find_index_left(idx, line, ")")            
             right = idx +  line[idx:].index("\n")
             # Get the indicies within the large line, extract that information.
             data.append(line[left + 1 : right - 1])
-            timestamps.append(get_timestamps(line))
+            timestamps.append(__get_timestamps(line))
     
-    data = arrange_cols_pauses(data)
+    data = __arrange_cols_pauses(data)
     return data, timestamps
 
 
 
-#       -> find_index_left
+#       -> __find_index_left
 # Purpose: Find the index of a particular character to the left passed idx
 # Parameters:
         # (idx)  The starting index to begin searching left from
@@ -99,7 +102,7 @@ def extract_pause_metadata(pause_data):
 # Return: 
         # The first index of the (char) in (line), if found.
         # Else, -1
-def find_index_left(idx, line, char):
+def __find_index_left(idx, line, char):
     for i in range(idx, 0, -1):
         if line[i] == char:
             return i
@@ -107,13 +110,13 @@ def find_index_left(idx, line, char):
 
 
 
-#       -> arrange_cols_pauses
+#       -> __arrange_cols_pauses
 # Purpose: Given a list of pauses data, create a tuple holding the data nicely
 #          in each of the cells. Return that updated, formated tuple list.
 # Parameters:
         # (data) a list with entries being a log line formatted to only
         #        contain Time of pause, and block change.
-def arrange_cols_pauses(data):
+def __arrange_cols_pauses(data):
     pause_data = []
     for row in data:
         # We assume all rows fit this description, but it is good to check
@@ -128,8 +131,8 @@ def arrange_cols_pauses(data):
 
 
 ### Purpose: Extracts the time information for any GC log line.
-### Returns both time stamps, in their entirety.
-def get_timestamps(line):
+### Returns both time stamps, in their entirety, as a 2 length list.
+def __get_timestamps(line):
     ## We assume we are extracting a line, following the following
     ## format.
     #[2020-11-16T14:54:23.755+0000][7.353s][info ] ...
