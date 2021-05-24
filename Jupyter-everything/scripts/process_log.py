@@ -151,7 +151,7 @@ def __get_timestamps(line):
 # and combines them into one pandas df.
 def __dataframe_from_pause_lists(data, timestamps):
     if (len(data) != len(timestamps)):
-        print("Data list length does not match timestamps list length")
+        print("ERROR: Data list length does not match timestamps list length")
         quit()
     
     combined = [[],[],[],[]]
@@ -184,7 +184,6 @@ def getHeapAllocation(create_csv = False):
                 accepting = False
             elif accepting:
                 heap_regions[-1].append(filedata[idx])
-                print(filedata[idx])
             idx += 1
     parsed_heap_regions = __simplify_regions(heap_regions)
     return parsed_heap_regions
@@ -219,8 +218,8 @@ def __simplify_regions(heap_regions):
         frequencies = []
         [frequencies.append(0) for i in regions]
         for mem_block in heap_state:
-            for i in range(len(regions))
-                if region == mem_block:
+            for i in range(len(regions)):
+                if regions[i] == mem_block:
                     frequencies[i] += 1
                     break
         counts.append(frequencies)

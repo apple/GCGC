@@ -54,3 +54,13 @@ def __find_trends(df):
     print("Max wait: " + str(max_wait) + " ms")
     print("Total wait: " + str(total_wait) + " ms")
     print("Average wait: " + str(average_wait) + " ms")
+
+
+# Purpose: Print a graph showing the heap breakdown throughout the
+#          program
+# Parameters/Requirements
+def plot_heap_allocation_breakdown(counts):
+    region_names = ["E", "S", "O", "HS", "HC", "CS", "F", "OA", "CA", "TAMS"]
+    
+    for line in counts:
+

@@ -3,7 +3,8 @@ import plot_data as pltd
 
 def main():
     pl.setLogPath("../../datasets/gc.log")
-    pl.getHeapAllocation()
+    temp = pl.getHeapAllocation()
+    
     #df = pl.getPauses(False)
     #pltd.plot_pauses(df)
    
