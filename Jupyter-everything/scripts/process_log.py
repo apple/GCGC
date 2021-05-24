@@ -26,6 +26,7 @@
     # Average time per task compared to all gc tasks
     # Total time (seconds)
     # Memory leaks? 
+import pandas as pd
 
 path= ""                # path to log data
 output_csv_id = "extra" # name-scheme of output data file
@@ -52,7 +53,7 @@ def getPauses(create_csv = False):
     if create_csv:
         filename = "pauses_" + output_csv_id + "_OUT.csv"
         __export_pause_csv(data, timestamps ,filename)
-    return zip(data, timestamps)
+    return __dataframe_from_pause_lists(data, timestamps)
 
 
 # Purpose: Creates a file with specific CSV data to the pause
@@ -143,3 +144,25 @@ def __get_timestamps(line):
     real_time  = line[1:index_seperator]
     from_start = line[index_seperator + 2 : index_seperator + 2 + line[index_seperator + 2:].index("]")]
     return [real_time, from_start] 
+
+
+# Purpose: (TEMPORARY FUNCTION) : takes a list of tuples and a list of lists,
+# and combines them into one pandas df.
+def __dataframe_from_pause_lists(data, timestamps):
+    if (len(data) != len(timestamps)):
+        print("Data list length does not match timestamps list length")
+        quit()
+    
+    combined = [[],[],[],[]]
+    for i in range(len(data)):
+        combined[0].append(data[i][0])
+        combined[1].append(data[i][1])
+        combined[2].append(timestamps[i][0])
+        combined[3].append(timestamps[i][1])
+
+    df = pd.DataFrame(combined)
+    df = pd.DataFrame.transpose(df)
+    
+    df.columns = ["pause_time", "memory_change",
+                 "actual_time", "time_from_start"]
+    return df
