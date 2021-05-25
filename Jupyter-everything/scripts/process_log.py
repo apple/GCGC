@@ -135,16 +135,34 @@ def __arrange_cols_pauses(data):
 ### Purpose: Extracts the time information for any GC log line.
 ### Returns both time stamps, in their entirety, as a 2 length list.
 def __get_timestamps(line):
+    if not line[0] == "[":
+            return None
     ## We assume we are extracting a line, following the following
     ## format.
     #[2020-11-16T14:54:23.755+0000][7.353s][info ] ...
-    if not line[0] == "[":
-        return None
-    # Now, we assume we have a valid line. Extract information based on this assumption.    
+    '''However, if a line does not contain a Original timestamp, instead format
+       by returning time from start twice.'''
+    pattern = "\[\d\d\d\d-\d\d-\d\d.*\]"
+    match = re.search(pattern, line) # Search the regex line for a match
     index_seperator = line.index("]")
     real_time  = line[1:index_seperator]
-    from_start = line[index_seperator + 2 : index_seperator + 2 + line[index_seperator + 2:].index("]")]
-    return [real_time, from_start] 
+    if match:  
+        # Now, we assume we have a valid line. Extract information based on this assumption.    
+        from_start = line[index_seperator + 2 : index_seperator + 2
+                         + line[index_seperator + 2:].index("]")]
+        return [real_time, from_start] 
+    else: 
+        # We assume we have NO date format, but DO have time stamps.
+        from_start = real_time # We will just use the same information. 
+                               # Let the client detect and handle this case
+                               # Rational: Currently, there are no plans for
+                               # use of the "real time", but we provide 
+                               # infrastructure to allow it.
+        return [real_time, from_start]
+        
+
+
+
 
 
 # Purpose: (TEMPORARY FUNCTION) : takes a list of tuples and a list of lists,
@@ -169,6 +187,12 @@ def __dataframe_from_pause_lists(data, timestamps):
     return df
 
 
+# Get the contents of the heap at each GC log moment. 
+# Note:  UNIMPLEMENTED create_csv = true.
+# Example:
+# Heap could be 50% free, 25% young, 25% old at a moment in time. This
+#   determines that breakdown from the log information, if it exists, and 
+#   produces a frequencies list for it.
 def getHeapAllocation(create_csv = False):
     accepting = False
     heap_regions = []
@@ -186,6 +210,8 @@ def getHeapAllocation(create_csv = False):
                 heap_regions[-1].append(filedata[idx])
             idx += 1
     parsed_heap_regions = __simplify_regions(heap_regions)
+    if create_csv:
+        print("Creating a CSV is Unimplemented currently")
     return parsed_heap_regions
 
 
@@ -225,3 +251,15 @@ def __simplify_regions(heap_regions):
         counts.append(frequencies)
     
     return counts
+
+
+def getHeapInitialState(create_csv = False):
+    
+    
+    # I will attempt two approaches
+    #1) Finding the  'text' using regex groups, then searching for 
+    # keywords there
+
+    #2) Matching directly with regex.
+    # to compare runtime. :) 
+    
