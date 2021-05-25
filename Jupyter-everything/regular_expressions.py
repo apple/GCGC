@@ -33,8 +33,5 @@ Minimum heap 12582912000  Initial heap 12582912000  Maximum heap 12582912000
 
 # Start with top log.
 pattern = "Heap\sMin\sCapacity:\s*(.+)\s|Heap\sRegion Size:\s(.+)\s|Heap\sInitial Capacity:\s(.+)\s|Heap\sMax\sCapacity:\s(.+)\s|Initial\sheap\s(\d+\w*)\s|Heap\sregion\ssize:\s(.+)\s|Minimum\sheap\s(\d+)\s|Maximum\sheap\s(\d+)\s"
-# Groups: 
-# 2 || 6 : Heap Region Size
-# 1 || 7  : Heap Min Capacity
-# 3 || 5 : Heap Initial Capacity
-# 4 || 0 : Heap Max Capacity
+updated_pattern = "Heap\sMin\sCapacity:\s*(.+)\s|Heap\sRegion Size:\s(.+)\s|Heap\sInitial Capacity:\s(.+)\s|Heap\sMax\sCapacity:\s(.+)\s|Minimum\sheap\s(\d+)\s+Initial\sheap\s(\d+\w*)\s+Maximum\sheap\s(\d+)\s|\s*Heap\s+region\s+size:\s+(.*)\s*"
+# Groups: (please recheck, they have changed.)

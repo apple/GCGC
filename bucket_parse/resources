@@ -14,3 +14,7 @@ Exploring Data Notebooks and workspaces:
     What is a data notebook & setup :
     1) https://docs.aci.apple.com/datastudio/what_is_pds/what_is_pds.html
     
+
+fun way to make lists. 
+    found_state = list([False for i in range(len(dict_keys))])        #[False, ... , False]
+    found_values = list(map(int, [0 for i in range(len(dict_keys))])) #[0, 0, ...,       0]

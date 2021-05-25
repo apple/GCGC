@@ -259,13 +259,91 @@ def getHeapInitialState(create_csv = False):
     # I will attempt two approaches
     #1) Finding the  'text' using regex groups, then searching for 
     # keywords there
-    line_parse = '\[*(.*)\]*\[\d+\.\d+\w+\]\[(.*)\[(.*)\](.*)'
+    line_key = '\[*(.*)\]*\[\d+\.\d+\w+\]\[(.*)\[(.*)\](.*)'
+    important_info = "Heap\sMin\sCapacity:\s*(.+)\s|Heap\sRegion Size:\s(.+)\s|Heap\sInitial Capacity:\s(.+)\s|Heap\sMax\sCapacity:\s(.+)\s|\s*Minimum\sheap\s(\d+)\s+Initial\sheap\s(\d+\w*)\s+Maximum\sheap\s(\d+)\s*|\s*Heap\s+region\s+size:\s*(\d*\w*)\s*"
+                 # Min, Init, Max, Curr
+    categories = [ 0,    0,    0,    0 ] 
+    found_values = list([False for i in range(len(categories))])
+    search_min  = "^\s*Heap\sMin\sCapacity:\s*(.+)\s*"
+    search_init = "^\s*Heap\sInitial Capacity:\s(.+)\s*"
+    search_max  = "^\s*Heap\sMax\sCapacity:\s(.+)\s*"
+    search_region_size = "^\s*Heap\sRegion Size:\s(.+)\s*|\s*Heap\s+region\s+size:\s*(\d*\w*)\s*"
+    search_three = "^\s*Minimum\sheap\s(\d+)\s+Initial\sheap\s(\d+\w*)\s+Maximum\sheap\s(\d+)\s*"
+    searchables = [search_min, search_init, search_max, search_region_size]
+    my_dictionary = {k: f(v) for k, v in my_dictionary.items()}
+
     with open(path, "r") as file:
         for line in file:
-            match = re.search(line_parse, line)
+            match = re.search(line_key, line)
             if match:
-                line_text = match.group(5)
-                
+                line_text = match.group(len(match.groups()))
+                for idx in range(len(searchables)):
+                    match = re.search(str(searchables[idx]), line_text)
+                    if match:
+                        print(str(match) + "~" +  str(searchables[idx]))
+                    
+                match = re.search(search_three, line_text)
+                if match:
+                    print(match)    
+
     #2) Matching directly with regex.
     # to compare runtime. :) 
+    
+def getHeapInitialState2(create_csv = False):
+
+    # Put all needed mappings into a dictionary
+    to_search = {}
+    
+    to_search["Min"]    = "^\s*Heap\s+Min\s+Capacity:\s*(.+)\s*"
+    to_search["Init"]   = "^\s*Heap\s+Initial\s+Capacity:\s*(.+)\s*"
+    to_search["Max"]    = "^\s*Heap\s+Max\s+Capacity:\s*(.+)\s*"
+    to_search["Region"] = "^\s*Heap\s+Region\s+Size:\s*(.+)\s*"
+
+#########TODO: Compare runtime after removing the wildcards######## 
+#    to_search["Min"]    = "^\s*Heap\s+Min\s+Capacity:\s*(.+)\s*"
+#    to_search["Init"]   = "^\s*Heap\s+Initial\s+Capacity:\s*(.+)\s*"
+#    to_search["Max"]    = "^\s*Heap\s+Max\s+Capacity:\s*(.+)\s*"
+#    to_search["Region"] = "^\s*Heap\s+Region\s+Size:\s*(.+)\s*"
+#####################################################################
+    #|\s*Heap\s+region\s+size:\s*(\d*\w*)\s* <- extra
+    
+    
+    dict_keys = ["Min", "Init", "Max", "Region"]
+    found_values = {}
+    for key in dict_keys:
+        found_values[key] = 0
+    
+
+    log_line_key = '\[*(.*)\]*\[\d+\.\d+\w+\]\[(.*)\[(.*)\](.*)'
+    with open(path, "r") as file:
+        # read every line in the log file
+        for line in file:
+            # find the "non tag" region of each line
+            match_info = re.search(log_line_key, line)
+            # if found
+            if match_info:
+                # access the "non tag" region of that line
+                non_tag_text = match_info.group(len(match_info.groups()))
+                # get all things we are still searching for 
+                keys = list(to_search.keys())
+
+                for i in range(len(keys)): # use index because changes size
+                    # for all possible search categories, check if line has a 
+                    # match
+                    possible_match = re.search(to_search[keys[i]], non_tag_text)
+                    # If there is a match, we can remove this from our list to
+                    # search. Save the value found to the array.
+                    if possible_match:
+                        del to_search[keys[i]]
+                        found_values[keys[i]] = possible_match.group(len(possible_match.groups()))
+            
+            if not to_search: # If the dictionary to search is empty.
+                break
+            
+    print(found_values)
+
+
+                
+    
+    
     
