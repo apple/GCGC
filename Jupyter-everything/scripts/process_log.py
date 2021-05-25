@@ -259,7 +259,13 @@ def getHeapInitialState(create_csv = False):
     # I will attempt two approaches
     #1) Finding the  'text' using regex groups, then searching for 
     # keywords there
-
+    line_parse = '\[*(.*)\]*\[\d+\.\d+\w+\]\[(.*)\[(.*)\](.*)'
+    with open(path, "r") as file:
+        for line in file:
+            match = re.search(line_parse, line)
+            if match:
+                line_text = match.group(5)
+                
     #2) Matching directly with regex.
     # to compare runtime. :) 
     
