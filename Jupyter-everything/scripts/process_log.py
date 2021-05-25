@@ -288,12 +288,17 @@ def getHeapInitialState(create_csv = False):
 
     #2) Matching directly with regex.
     # to compare runtime. :) 
-    
+
+
+
+
+# Goal: Parse the initial heap state out of the GC logs.
+# Example: Max Heap : 2048 MB
+# STILL IN PROGRESS
 def getHeapInitialState2(create_csv = False):
 
     # Put all needed mappings into a dictionary
-    to_search = {}
-    
+    to_search = {}      # regex strings for different fields
     to_search["Min"]    = "^\s*Heap\s+Min\s+Capacity:\s*(.+)\s*"
     to_search["Init"]   = "^\s*Heap\s+Initial\s+Capacity:\s*(.+)\s*"
     to_search["Max"]    = "^\s*Heap\s+Max\s+Capacity:\s*(.+)\s*"
@@ -307,13 +312,13 @@ def getHeapInitialState2(create_csv = False):
 #####################################################################
     #|\s*Heap\s+region\s+size:\s*(\d*\w*)\s* <- extra
     
-    
-    dict_keys = ["Min", "Init", "Max", "Region"]
+    # Create a set of found things.
     found_values = {}
-    for key in dict_keys:
+    for key in to_search.keys():
         found_values[key] = 0
     
-
+    # Log line key is used to ignore parsing date-time information, 
+    # and other printed gc flags
     log_line_key = '\[*(.*)\]*\[\d+\.\d+\w+\]\[(.*)\[(.*)\](.*)'
     with open(path, "r") as file:
         # read every line in the log file
@@ -340,10 +345,4 @@ def getHeapInitialState2(create_csv = False):
             if not to_search: # If the dictionary to search is empty.
                 break
             
-    print(found_values)
-
-
-                
-    
-    
-    
+    print(found_values)    
