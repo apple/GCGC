@@ -29,7 +29,6 @@ def plot_pauses(df):
     # Plot 2: Pauses showing duration, no timestamps
     x_values = list(map(int, list(range(len(y_values)))))
     plt.bar(x = x_values, height= y_values)
-
     plt.ylabel("Pause duration (miliseconds)");
     plt.xlabel("Pause listed in order")
     plt.title("Pauses for Young Generation GC")
@@ -60,7 +59,9 @@ def __find_trends(df):
 #          program
 # Parameters/Requirements
 def plot_heap_allocation_breakdown(counts):
-    # tutorial below
+    if (type(counts)) == dict:
+        return __plot_HA_schema0(counts)
+
     x = np.array(list(range(len(counts))))
     #print(counts)
     region_names = ["Young", "Survivor", "Old", "Humongus_start", "Humongus_continue", "Collection_set", "Free", "Open_archive", "Closed_archive", "TAMS"]
@@ -68,16 +69,41 @@ def plot_heap_allocation_breakdown(counts):
      HC=humongous(continues), CS=collection set, F=free, OA=open archive
      CA=closed archive, TAMS=top-at-mark-start (previous, next) '''
     colors = ["royalblue", "cyan", "black", "green", "purple", "orange", "lime", "brown", "darkmagenta", "lime", "green"]
-    plt.xlabel("Program's runtime")
+    plt.xlabel("Program's run(NOT BASED ON TIME)")
     plt.ylabel("Number of memory blocks")
     plt.title("heap allocation throughout runtime")
     plt.legend(region_names)
-    temp = []
     for idx in range(len(counts[0])):
         plt.plot(x, np.array(list(row[idx] for row in counts)), color = colors[idx], label = region_names[idx])
     plt.legend()
     plt.show() # commented out during testing.
 
+# Purpose : Plot the heap breakdown throughout program
+#
+# Counts is a dictionary. Keys = names
+# Values = list of tuples
+#                  (before, after)
+def __plot_HA_schema0(data_dictionary):
+    
+    
+    x = np.array(list(range(len(data_dictionary["Eden"]) * 2))) 
+    plt.xlabel("Program's run(NOT BASED ON TIME)")
+    plt.ylabel("Number of memory blocks")
+    plt.title("heap allocation throughout runtime")
+    plt.legend(list(data_dictionary.keys()))
+    colors = ["royalblue", "cyan", "black", "green", "purple", "orange", "lime", "brown", "darkmagenta", "lime", "green"]
+    color_index = 0
+    for key in data_dictionary.keys():
+        pairs = []
+        for idx in range(len(data_dictionary[key])):
+            pairs.append(data_dictionary[key][idx][0])
+            pairs.append(data_dictionary[key][idx][1])
+        plt.plot(x, np.array(pairs), color = colors[color_index], label = str(key))
+        color_index += 1
+    plt.legend()
+    plt.show() # commented out during testing.
+
+    
 
 # Purpose: Creates a graphical table to represent the initial heap state
 # Parameters: inital_heap_state (hs) : dict
@@ -86,7 +112,7 @@ def tableInitialHeapState(hs):
     # create table from data
     if hs:
         table_rows = [[key, hs[key]] for key in hs.keys()]
-        table = plt.table(cellText=table_rows)
-        plt.show()
+        for item in table_rows:
+            print(item[0] + " \t| " + item[1])
     else:
         print("No found heap state information. Empty dict")

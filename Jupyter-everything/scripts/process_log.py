@@ -218,6 +218,8 @@ def __dataframe_from_pause_lists(data, timestamps):
 #   determines that breakdown from the log information, if it exists, and 
 #   produces a frequencies list for it.
 def getHeapAllocation(create_csv = False):
+    if (log_schema == 0):
+        return __getHeapAllocation_schema0(create_csv)
     accepting = False
     heap_regions = []
     with open(path, "r") as file:
@@ -237,6 +239,40 @@ def getHeapAllocation(create_csv = False):
     if create_csv:
         print("Creating a CSV is Unimplemented currently")
     return parsed_heap_regions
+
+def __getHeapAllocation_schema0(create_csv = False):
+    
+    to_search = {}
+    to_search["Eden"]     = "\s+Eden regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
+    to_search["Survivor"] = "\s+Survivor regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
+    to_search["Old"]      = "\s+Old regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
+    to_search["Archive"]  = "\s+Archive regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
+    to_search["Huge"]     = "\s+Humongous regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
+
+    heap_regions = {} # Create collection to add to
+    # Initalize the lists we will append to, based on what is found
+    for key in to_search.keys():
+        heap_regions[key] = []
+    
+    # Helps focus search onto "non tag" regions of each log line
+    log_line_key = '\[*(.*)\]*\[\d+\.\d+\w+\]\[(.*)\[(.*)\](.*)'
+    with open(path, "r") as file:
+        for line in file:
+            match_info = re.search(log_line_key, line)
+            # if found
+            if match_info:
+                non_tag_text = match_info.group(len(match_info.groups()))
+                for key in to_search.keys():
+                    # Search for each of the interesting fields.
+                    m =  re.search(to_search[key], non_tag_text)
+                    # m is a possibe match
+                    if m:
+                        heap_regions[key].append((m.group(1), m.group(2)))
+    # Return dictionary 
+    return heap_regions
+
+
+
 
 
 def __simplify_regions(heap_regions):
