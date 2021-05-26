@@ -65,7 +65,8 @@ def __find_trends(df):
 #          program
 # Parameters/Requirements
 def plot_heap_allocation_breakdown(counts):
-    if (type(counts)) == dict:
+    
+    if (len(counts)) == 2:
         return __plot_HA_schema0(counts)
 
     x = np.array(list(range(len(counts))))
@@ -89,9 +90,9 @@ def plot_heap_allocation_breakdown(counts):
 # Counts is a dictionary. Keys = names
 # Values = list of tuples
 #                  (before, after)
-def __plot_HA_schema0(data_dictionary):
-    
-    free_memory = __calculate_freemem(data_dictionary)
+def __plot_HA_schema0(dd):
+    data_dictionary = dd[0]
+    free_memory = __calculate_freemem(data_dictionary, dd[1])
     x = np.array(list(range(len(data_dictionary["Eden"]) * 2))) 
     plt.xlabel("GC Run number (not based on time)")
     plt.ylabel("Number of memory blocks")
@@ -127,17 +128,8 @@ def __plot_HA_schema0(data_dictionary):
 
 
 # Purpose: Because "free" memory is not explicitly captured, must be calculated
-def __calculate_freemem(data_dictionary):
+def __calculate_freemem(data_dictionary, inital_free):
     free_mem = []
-    inital_free = 0
-    # Note: this calculation is temporary
-    for key in data_dictionary.keys():
-        inital_free += int(data_dictionary[key][0][0])
-    
-    # Abitrary number of free data so trend line will look reasonable
-    # FIX LATER (IMPORTANT TODO)
-    #inital_free *= 6
-    inital_free = 125
     for idx in range(len(data_dictionary["Eden"])):
         temp_val = 0
         for key in data_dictionary.keys():

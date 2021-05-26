@@ -238,7 +238,7 @@ def getHeapAllocation(create_csv = False):
     parsed_heap_regions = __simplify_regions(heap_regions)
     if create_csv:
         print("Creating a CSV is Unimplemented currently")
-    return parsed_heap_regions
+    return [parsed_heap_regions]
 
 def __getHeapAllocation_schema0(create_csv = False):
     
@@ -268,10 +268,36 @@ def __getHeapAllocation_schema0(create_csv = False):
                     # m is a possibe match
                     if m:
                         heap_regions[key].append((m.group(1), m.group(2)))
-    # Return dictionary 
-    return heap_regions
+
+    # Warning: 
+    # The following is O(n)*c runtime, on filesize, where c is fairly large   
+    # Calculate the total memory avilable, to correctly display
+    # Graph containing 'free' memory
+    inital_storage = __getHeapInitialState(False)
+    init_cap = __remove_metrx_ending(inital_storage["Max"])
+    init_region_size = __remove_metrx_ending(inital_storage["Region"])
+
+    return [heap_regions, int(init_cap/init_region_size)]
 
 
+
+# Takes in a number such as "1M" or "255G", and properly scales it 
+# to fit the correct size. Deault unit it is 1 Megabyte (M)
+# Returns as an int.
+def __remove_metrx_ending(string):
+    if len(string) >= 2:
+        if string[-1] == "G":
+            return int(string[:-1]) * 1000
+        elif string[-1] == "M":
+            return int(string[:-1])
+        elif string[-1] == "T":
+            print("Enconutered Terrabyte storage. First time, please check math")
+            return int(string[:-1]) * 1000000
+    else:
+        #Im not sure what could hit this case.
+        return int(string)
+
+    
 
 
 
@@ -326,7 +352,9 @@ def __simplify_regions(heap_regions):
 #       The runtime for this may take a very long time.
 #
 def getHeapInitialState(create_csv = False):
+    return __getHeapInitialState(create_csv)
 
+def __getHeapInitialState(create_csv):
     # Put all needed mappings into a dictionary
     to_search = {}      # regex strings for different fields
     if (log_schema == 0):# Different style logs. Determine which it is from global vars.
@@ -384,7 +412,9 @@ def getHeapInitialState(create_csv = False):
         with open("inital_state_" + output_csv_id + "_OUT.csv", "w") as file:
             for k in found_values.keys():
                 file.write(str(k) + ", " + str(found_values[k]) + "\n")
-    return found_values    # Note: no particular order in return's formation
+    
+    
+    return found_values  # Note: no particular order in return's formation
 
 
 # Goes to each of the pauses in the garbage collector phases
