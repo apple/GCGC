@@ -5,8 +5,20 @@
 #          gc log file, extracting information      #
 #          of specified types, and returning them.  #
 #                                                   #
-# Ellis Brown, 5/21/2020                            #
+# Ellis Brown, 5/26/2020                            #
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Public functions                                  #
+#                                                   #
+# setLogPath          (string  path)                # 
+# setLogSchema        (integer logtype)             #
+# getPauses           (boolean create_csv)          #
+# getHeapAllocation   (boolean create_csv)          #
+# getHeapInitialState (boolea create_csv)           #
+# # # # # # # # # # # # # # # # # # # # # # # # # # #
+import pandas as pd
+import re
+
+
 
 '''TODO: The following are catogries of information to parse from the log '''
 # I would like to be able to produce
@@ -25,12 +37,17 @@
     # Allocation and promotion (from young->old)
     # Average time per task compared to all gc tasks
     # Total time (seconds)
-    # Memory leaks? 
-import pandas as pd
-import re
+    # Calculate potential Memory leaks? 
+
 
 path= ""                # path to log data
 output_csv_id = "extra" # name-scheme of output data file
+log_schema = 0          # type of log formatted file.
+'''Current log formats: 
+    [0] amzn_workload
+    [1] gc.log
+'''
+    
  
 # Set the path to the log file, which will then be parsed for specific 
 # attributes.
@@ -38,6 +55,13 @@ def setLogPath(p):
     global path
     path = p
 
+# Set the log schema type, which helps extract information and greatly
+# reduce runtime.
+# TODO: Implement a "-1" schema, which doesn't know which to use, and searches
+# all possible log arrangements
+def setLogSchema(logtype):
+    global log_schema
+    log_schema = logtype
 
 #       -> getPauses
 # Purpose: Returns a CSV style list of all pauses from the Young Generation
@@ -253,72 +277,38 @@ def __simplify_regions(heap_regions):
     return counts
 
 
+###############################################################################
+#                   __getHeapInitialState_schema0()
+#
+# Purpose: Returns the heap inital state for a specific log style.
+# Returns the information in a dictionary style.
+#
+# Requirement: Global variable "path" and "log_schema" must match log to analyze
+#
+# NOTE: Reads all log lines until all information is found.
+#       In the case of an incorrect log format (information not found)
+#       The runtime for this may take a very long time.
+#
 def getHeapInitialState(create_csv = False):
-    
-    
-    # I will attempt two approaches
-    #1) Finding the  'text' using regex groups, then searching for 
-    # keywords there
-    line_key = '\[*(.*)\]*\[\d+\.\d+\w+\]\[(.*)\[(.*)\](.*)'
-    important_info = "Heap\sMin\sCapacity:\s*(.+)\s|Heap\sRegion Size:\s(.+)\s|Heap\sInitial Capacity:\s(.+)\s|Heap\sMax\sCapacity:\s(.+)\s|\s*Minimum\sheap\s(\d+)\s+Initial\sheap\s(\d+\w*)\s+Maximum\sheap\s(\d+)\s*|\s*Heap\s+region\s+size:\s*(\d*\w*)\s*"
-                 # Min, Init, Max, Curr
-    categories = [ 0,    0,    0,    0 ] 
-    found_values = list([False for i in range(len(categories))])
-    search_min  = "^\s*Heap\sMin\sCapacity:\s*(.+)\s*"
-    search_init = "^\s*Heap\sInitial Capacity:\s(.+)\s*"
-    search_max  = "^\s*Heap\sMax\sCapacity:\s(.+)\s*"
-    search_region_size = "^\s*Heap\sRegion Size:\s(.+)\s*|\s*Heap\s+region\s+size:\s*(\d*\w*)\s*"
-    search_three = "^\s*Minimum\sheap\s(\d+)\s+Initial\sheap\s(\d+\w*)\s+Maximum\sheap\s(\d+)\s*"
-    searchables = [search_min, search_init, search_max, search_region_size]
-    my_dictionary = {k: f(v) for k, v in my_dictionary.items()}
-
-    with open(path, "r") as file:
-        for line in file:
-            match = re.search(line_key, line)
-            if match:
-                line_text = match.group(len(match.groups()))
-                for idx in range(len(searchables)):
-                    match = re.search(str(searchables[idx]), line_text)
-                    if match:
-                        print(str(match) + "~" +  str(searchables[idx]))
-                    
-                match = re.search(search_three, line_text)
-                if match:
-                    print(match)    
-
-    #2) Matching directly with regex.
-    # to compare runtime. :) 
-
-
-
-
-# Goal: Parse the initial heap state out of the GC logs.
-# Example: Max Heap : 2048 MB
-# STILL IN PROGRESS
-def getHeapInitialState2(create_csv = False):
 
     # Put all needed mappings into a dictionary
     to_search = {}      # regex strings for different fields
-    to_search["Min"]    = "^\s*Heap\s+Min\s+Capacity:\s*(.+)\s*"
-    to_search["Init"]   = "^\s*Heap\s+Initial\s+Capacity:\s*(.+)\s*"
-    to_search["Max"]    = "^\s*Heap\s+Max\s+Capacity:\s*(.+)\s*"
-    to_search["Region"] = "^\s*Heap\s+Region\s+Size:\s*(.+)\s*"
-
-#########TODO: Compare runtime after removing the wildcards######## 
-#    to_search["Min"]    = "^\s*Heap\s+Min\s+Capacity:\s*(.+)\s*"
-#    to_search["Init"]   = "^\s*Heap\s+Initial\s+Capacity:\s*(.+)\s*"
-#    to_search["Max"]    = "^\s*Heap\s+Max\s+Capacity:\s*(.+)\s*"
-#    to_search["Region"] = "^\s*Heap\s+Region\s+Size:\s*(.+)\s*"
-#####################################################################
-    #|\s*Heap\s+region\s+size:\s*(\d*\w*)\s* <- extra
-    
-    # Create a set of found things.
+    if (log_schema == 0):# Different style logs. Determine which it is from global vars.
+        to_search["Min"]    = "^\s*Heap\s+Min\s+Capacity:\s*(.+)\s*"
+        to_search["Init"]   = "^\s*Heap\s+Initial\s+Capacity:\s*(.+)\s*"
+        to_search["Max"]    = "^\s*Heap\s+Max\s+Capacity:\s*(.+)\s*"
+        to_search["Region"] = "^\s*Heap\s+Region\s+Size:\s*(.+)\s*"
+    elif (log_schema == 1):
+        to_search["Region"] = "\s*Heap\s+region\s+size:\s*(\d*\w*)\s*"
+        to_search["Metadata"] = "\s*Minimum\sheap\s(\d+)\s+Initial\sheap\s(\d+\w*)\s+Maximum\sheap\s(\d+)\s*"
+    else:
+        return "Unable to parse schema: " + str(log_schema)
+    # Create a set of found values.
     found_values = {}
     for key in to_search.keys():
         found_values[key] = 0
     
-    # Log line key is used to ignore parsing date-time information, 
-    # and other printed gc flags
+    # Log line key is used to ignore parsing date-time & tag information
     log_line_key = '\[*(.*)\]*\[\d+\.\d+\w+\]\[(.*)\[(.*)\](.*)'
     with open(path, "r") as file:
         # read every line in the log file
@@ -344,5 +334,12 @@ def getHeapInitialState2(create_csv = False):
             
             if not to_search: # If the dictionary to search is empty.
                 break
-            
-    print(found_values)    
+    if log_schema == 1:
+        # FIX FORMATTING 
+        print("I didnt format!! ANything! :D")
+    # If create_csv parameter True, write to csv specified format.
+    if create_csv:
+        with open("inital_state_" + output_csv_id + "_OUT.csv") as file:
+            for k in found_values.keys():
+                file.write(str(k) + ", " + str(found_values[k]) + "\n")
+    return found_values    # Note: no particular order in return's formation
