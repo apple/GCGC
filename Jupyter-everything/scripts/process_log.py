@@ -303,11 +303,9 @@ def getHeapInitialState(create_csv = False):
         to_search["Metadata"] = "\s*Minimum\sheap\s(\d+)\s+Initial\sheap\s(\d+\w*)\s+Maximum\sheap\s(\d+)\s*"
     else:
         return "Unable to parse schema: " + str(log_schema)
+
     # Create a set of found values.
-    found_values = {}
-    for key in to_search.keys():
-        found_values[key] = 0
-    
+    found_values = {}    
     # Log line key is used to ignore parsing date-time & tag information
     log_line_key = '\[*(.*)\]*\[\d+\.\d+\w+\]\[(.*)\[(.*)\](.*)'
     with open(path, "r") as file:
@@ -330,13 +328,21 @@ def getHeapInitialState(create_csv = False):
                     # search. Save the value found to the array.
                     if possible_match:
                         del to_search[keys[i]]
-                        found_values[keys[i]] = possible_match.group(len(possible_match.groups()))
+                        # Every interesting value lives in its own line
+                        if log_schema == 0:
+                            found_values[keys[i]] = possible_match.group(len(possible_match.groups()))
+                        # This log schema has all on one line, so make 3 entries
+                        # to the found dictionary, if we found 3. Else, 1
+                        elif log_schema == 1:
+                            if len(possible_match.groups()) > 2:
+                                found_values["Min"]  = possible_match.group(1)
+                                found_values["Init"] = possible_match.group(2)
+                                found_values["Max"]  = possible_match.group(3)
+                            else: 
+                                found_values[keys[i]] = possible_match.group(len(possible_match.groups()))
             
             if not to_search: # If the dictionary to search is empty.
                 break
-    if log_schema == 1:
-        # FIX FORMATTING 
-        print("I didnt format!! ANything! :D")
     # If create_csv parameter True, write to csv specified format.
     if create_csv:
         with open("inital_state_" + output_csv_id + "_OUT.csv") as file:
