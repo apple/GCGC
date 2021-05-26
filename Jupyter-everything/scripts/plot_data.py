@@ -69,7 +69,7 @@ def plot_heap_allocation_breakdown(counts):
      HC=humongous(continues), CS=collection set, F=free, OA=open archive
      CA=closed archive, TAMS=top-at-mark-start (previous, next) '''
     colors = ["royalblue", "cyan", "black", "green", "purple", "orange", "lime", "brown", "darkmagenta", "lime", "green"]
-    plt.xlabel("Program's run(NOT BASED ON TIME)")
+    plt.xlabel("GC Run number (not based on time)")
     plt.ylabel("Number of memory blocks")
     plt.title("heap allocation throughout runtime")
     plt.legend(region_names)
@@ -85,25 +85,65 @@ def plot_heap_allocation_breakdown(counts):
 #                  (before, after)
 def __plot_HA_schema0(data_dictionary):
     
-    
+    free_memory = __calculate_freemem(data_dictionary)
     x = np.array(list(range(len(data_dictionary["Eden"]) * 2))) 
-    plt.xlabel("Program's run(NOT BASED ON TIME)")
+    plt.xlabel("GC Run number (not based on time)")
     plt.ylabel("Number of memory blocks")
     plt.title("heap allocation throughout runtime")
     plt.legend(list(data_dictionary.keys()))
     colors = ["royalblue", "cyan", "black", "green", "purple", "orange", "lime", "brown", "darkmagenta", "lime", "green"]
     color_index = 0
+    plt.figure(1)
     for key in data_dictionary.keys():
         pairs = []
         for idx in range(len(data_dictionary[key])):
-            pairs.append(data_dictionary[key][idx][0])
-            pairs.append(data_dictionary[key][idx][1])
-        plt.plot(x, np.array(pairs), color = colors[color_index], label = str(key))
+            pairs.append(int(data_dictionary[key][idx][0]))
+            pairs.append(int(data_dictionary[key][idx][1]))
+        temp_plot_for_testing_please_remove_after = plt.plot(np.array(x), np.array(pairs), color = colors[color_index], label = str(key))
         color_index += 1
     plt.legend()
     plt.show() # commented out during testing.
+    plt.figure(2)
+    plt.plot(x, np.array(free_memory), color = "red", label = "Free Memory")
+    plt.legend()
+    plt.show() # commented out during testing.
+    plt.figure(3)
+    for key in data_dictionary.keys():
+        pairs = []
+        for idx in range(len(data_dictionary[key])):
+            pairs.append(int(data_dictionary[key][idx][0]))
+            pairs.append(int(data_dictionary[key][idx][1]))
+        temp_plot_for_testing_please_remove_after = plt.plot(np.array(x), np.array(pairs), color = colors[color_index], label = str(key))
+        color_index += 1
+    plt.plot(x, np.array(free_memory), color = "red", label = "Free Memory")
+    plt.legend()
+    plt.show() # commented out during testing.
 
+
+# Purpose: Because "free" memory is not explicitly captured, must be calculated
+def __calculate_freemem(data_dictionary):
+    free_mem = []
+    inital_free = 0
+    # Note: this calculation is temporary
+    for key in data_dictionary.keys():
+        inital_free += int(data_dictionary[key][0][0])
     
+    # Abitrary number of free data so trend line will look reasonable
+    # FIX LATER (IMPORTANT TODO)
+    #inital_free *= 6
+    inital_free = 125
+    for idx in range(len(data_dictionary["Eden"])):
+        temp_val = 0
+        for key in data_dictionary.keys():
+            temp_val += int(data_dictionary[key][idx][0])
+        free_mem.append(int(inital_free - temp_val))
+        temp_val = 0
+        for key in data_dictionary.keys():
+            temp_val += int(data_dictionary[key][idx][1])
+        free_mem.append(int(inital_free - temp_val))
+    return free_mem
+        
+
 
 # Purpose: Creates a graphical table to represent the initial heap state
 # Parameters: inital_heap_state (hs) : dict
