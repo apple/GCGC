@@ -35,3 +35,10 @@
 # pattern = "Heap\sMin\sCapacity:\s*(.+)\s|Heap\sRegion Size:\s(.+)\s|Heap\sInitial Capacity:\s(.+)\s|Heap\sMax\sCapacity:\s(.+)\s|Initial\sheap\s(\d+\w*)\s|Heap\sregion\ssize:\s(.+)\s|Minimum\sheap\s(\d+)\s|Maximum\sheap\s(\d+)\s"
 # updated_pattern = "Heap\sMin\sCapacity:\s*(.+)\s|Heap\sRegion Size:\s(.+)\s|Heap\sInitial Capacity:\s(.+)\s|Heap\sMax\sCapacity:\s(.+)\s|Minimum\sheap\s(\d+)\s+Initial\sheap\s(\d+\w*)\s+Maximum\sheap\s(\d+)\s|\s*Heap\s+region\s+size:\s+(.*)\s*"
 # # Groups: (please recheck, they have changed.)
+
+schema_0_delta_regions_eden = "/\s+Eden regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*/gm"
+schema_0_delta_regions_surv = "\s+Survivor regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
+schema_0_delta_regions_old_ = "\s+Old regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
+schema_0_delta_regions_arch = "\s+Archive regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
+schema_0_delta_regions_humo= "\s+Humongous regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
+

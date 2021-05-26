@@ -345,7 +345,7 @@ def getHeapInitialState(create_csv = False):
                 break
     # If create_csv parameter True, write to csv specified format.
     if create_csv:
-        with open("inital_state_" + output_csv_id + "_OUT.csv") as file:
+        with open("inital_state_" + output_csv_id + "_OUT.csv", "w") as file:
             for k in found_values.keys():
                 file.write(str(k) + ", " + str(found_values[k]) + "\n")
     return found_values    # Note: no particular order in return's formation

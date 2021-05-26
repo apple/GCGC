@@ -78,3 +78,15 @@ def plot_heap_allocation_breakdown(counts):
     plt.legend()
     plt.show() # commented out during testing.
 
+
+# Purpose: Creates a graphical table to represent the initial heap state
+# Parameters: inital_heap_state (hs) : dict
+# Return: None
+def tableInitialHeapState(hs):
+    # create table from data
+    if hs:
+        table_rows = [[key, hs[key]] for key in hs.keys()]
+        table = plt.table(cellText=table_rows)
+        plt.show()
+    else:
+        print("No found heap state information. Empty dict")
