@@ -385,3 +385,34 @@ def getHeapInitialState(create_csv = False):
             for k in found_values.keys():
                 file.write(str(k) + ", " + str(found_values[k]) + "\n")
     return found_values    # Note: no particular order in return's formation
+
+
+# Goes to each of the pauses in the garbage collector phases
+# and dumps all data. TODO: Fix data and make it simpler
+# Requirement: Path is set.
+def getGCdataSections(create_csv = False):
+    if create_csv == True:
+        print("Creating this CSV is currently unimplemented")
+    # Helps focus search onto "non tag" regions of each log line
+    log_line_key = '\[*(.*)\]*\[\d+\.\d+\w+\]\[(.*)\[(.*)\](.*)'
+    gc_data_key = ".*GC\((\d+)\).*"
+    data_cards = {}
+    with open(path, "r") as file:
+        for line in file:
+            match_info = re.search(log_line_key, line)
+            # if found
+            if match_info:
+                non_tag_text = match_info.group(len(match_info.groups()))
+                m = re.search(gc_data_key, non_tag_text)
+                if m:
+                    key = m.group(len(m.groups()))
+                    if not key in data_cards:
+                        data_cards[key] = []
+                    data_cards[key].append(non_tag_text)
+    ## Temporary testing of idea ##
+    
+    for k in data_cards.keys():
+        print("\n\n\n\n\n")
+        for entry in data_cards[k]:
+            print(entry)
+    return data_cards
