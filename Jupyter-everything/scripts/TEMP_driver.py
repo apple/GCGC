@@ -5,8 +5,8 @@ def main():
     
     # testInitialHeapState()
     # testHeapAllocation()
-    testLargeInformationPauseCollection()
-    
+    # testLargeInformationPauseCollection()
+    testGetGCMetadata()
     #dplt.plot_heap_allocation_breakdown(temp)
     #df = pl.getPauses(False)
     #dplt.plot_pauses(df)
@@ -15,6 +15,9 @@ def testLargeInformationPauseCollection():
     pl.setLogPath("../../datasets/amzn_workload_4.log")
     t = pl.getGCdataSections()
 
+def testGetGCMetadata():
+    pl.setLogPath("../../datasets/amzn_workload_4.log")
+    t = pl.getGCMetadata(False)
 
 
 def testHeapAllocation():

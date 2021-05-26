@@ -44,7 +44,7 @@ path= ""                # path to log data
 output_csv_id = "extra" # name-scheme of output data file
 log_schema = 0          # type of log formatted file.
 '''Current log formats: 
-    [0] amzn_workload
+    [0] amzn_workload 
     [1] gc.log
 '''
     
@@ -429,3 +429,42 @@ def getTotalProgramRuntime():
         real_time, from_start = __get_timestamps(final_line)
         # Remove the "s" from the time from start. 
         return float(from_start[:-1])
+
+# Purpose: Obtain metadata about a particular version of 
+def getGCMetadata(create_csv = False):
+    
+    if log_schema != 0:
+        print("getGCMetadata for log_schema " + str(log_schema) + " unimplemented")
+        return
+    
+    to_search = {}
+    categories = ["Version", "CPUs", "Memory", "Large Page Support",
+                  "NUMA Support", "Compressed Oops", "Pre-touch", 
+                  "Parallel Workers", "Heap Region Size",
+                  "Heap Initial Capacity", "Heap Max Capacity", 
+                  "Heap Min Capacity", "Concurrent Workers", 
+                  "Concurrent Refinement Workers", "Periodic GC"]
+    for item in categories:
+        to_search[item] = "\s+" + str(item) + ":\s+(.+)\s*"
+    metadata = {}
+    # Helps focus search onto "non tag" regions of each log line
+    log_line_key = '\[*(.*)\]*\[\d+\.\d+\w+\]\[(.*)\[(.*)\](.*)'
+    with open(path, "r") as file:
+        for line in file:
+            match_info = re.search(log_line_key, line)
+            # if found
+            if match_info:
+                non_tag_text = match_info.group(len(match_info.groups()))
+                items = list(to_search.keys())
+
+                for idx in range(len(items)):
+                    # Search for each of the interesting fields.
+                    m =  re.search(to_search[items[idx]], non_tag_text)
+                    # m is a possibe match
+                    if m:
+                        del to_search[items[idx]]
+                        metadata[items[idx]] = m.group(1)
+            if not to_search:
+                break
+        
+    return metadata
