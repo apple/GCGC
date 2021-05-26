@@ -6,6 +6,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from scripts import process_log as pl
 
 def plot_pauses(df):
     # Obtain X Y list information from the dataframe.
@@ -16,7 +17,10 @@ def plot_pauses(df):
     x_values = list(map(float, x))
     y_values = list(map(float, list(df.iloc[:,0])))
     del x #not necesarily needed
-
+    total_wait = __find_trends(df)
+    total_time = pl.getTotalProgramRuntime()
+    throughput = (total_time - (total_wait)/1000) / (total_time)
+    print("Throughput probably: " + str(round(throughput * 100, 4)) + "%")
     
     # # # # # # # # # # # # # # # # # # # #
     # Plot 1: Pauses over program's entire runtime.
@@ -36,7 +40,8 @@ def plot_pauses(df):
     # # # # # # # # # # # # # # # # # # # #
 
     ## Find interesting trends within the data.
-    __find_trends(df)
+    
+
 
 
 
@@ -53,6 +58,7 @@ def __find_trends(df):
     print("Max wait: " + str(max_wait) + " ms")
     print("Total wait: " + str(total_wait) + " ms")
     print("Average wait: " + str(average_wait) + " ms")
+    return total_wait
 
 
 # Purpose: Print a graph showing the heap breakdown throughout the

@@ -416,3 +416,16 @@ def getGCdataSections(create_csv = False):
         for entry in data_cards[k]:
             print(entry)
     return data_cards
+
+# Finds the last GC log timestamp. Uses that to find time in seconds from
+# start, and returns it as a float.
+# Note: not efficient if looking to optimize
+def getTotalProgramRuntime():
+    with open(path, "r") as file:
+        data = file.readlines()
+        
+        final_line = data[-1]
+
+        real_time, from_start = __get_timestamps(final_line)
+        # Remove the "s" from the time from start. 
+        return float(from_start[:-1])
