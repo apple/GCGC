@@ -74,6 +74,8 @@ def getPauses(create_csv = False):
         for line in file:
             if "Pause Young" in line:
                 pause_data.append(line)
+            if "Full Pause" in line:
+                print("FULL PAUSE WOOOOOOo")
     data, timestamps = __extract_pause_metadata(pause_data)
     if create_csv:
         filename = "pauses_" + output_csv_id + "_OUT.csv"

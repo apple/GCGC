@@ -1,0 +1,3 @@
+This folder contains information on how to parse for a specific string
+in a particular log format. It is designed to be easily changed if the format
+of a log changes.
