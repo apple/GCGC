@@ -62,29 +62,50 @@ def __find_trends(df):
     print("Average wait: " + str(average_wait) + " ms")
     return total_wait
 
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                   plot_heap_allocation_breakdown                             #
+#                                                                              #
+#   Purpose:                                                                   #
+#       Print a graph showing the heap breakdown throughout runtime            #
+#   Parameters:                                                                #
+#       counts: list  -> could represent two different data formats            #
+#            if len(list) == 1:                                                #
+#                   2 dimensional list, with all region counts                 #
+#                   before and after gc pauses                                 #
+#            if len(list) == 2:                                                #
+#                   list[0] = dictionary, with all region counts               #
+#                   list[2] = integer, size of initial free memory             # 
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+def plot_heap_allocation_breakdown(breakdown_lst):
+    if not breakdown_lst:
+        return
 
-# Purpose: Print a graph showing the heap breakdown throughout the
-#          program
-# Parameters/Requirements
-def plot_heap_allocation_breakdown(counts):
+    # determine data arrangement from list length
+    if (len(breakdown_lst)) == 2:
+        return __plot_HA_schema0(breakdown_lst)
+
+    # Access 2 dimensional list of allocation during runtime    
+    allocation_summary = breakdown_lst[0]
+
+    # Create helper list [0...n-1] to plot
+    x = np.array(list(range(len(allocation_summary))))
     
-    if (len(counts)) == 2:
-        return __plot_HA_schema0(counts)
-    counts = counts[0]
-    x = np.array(list(range(len(counts))))
     
-    #print(counts)
-    region_names = ["Young", "Survivor", "Old", "Humongus_start", "Humongus_continue", "Collection_set", "Free", "Open_archive", "Closed_archive", "TAMS"]
-    ''' Heap Regions: E=young(eden), S=young(survivor), O=old, HS=humongous(starts)
-     HC=humongous(continues), CS=collection set, F=free, OA=open archive
-     CA=closed archive, TAMS=top-at-mark-start (previous, next) '''
+    # Order matters here, associated with order collected this data.
+    # TODO: Remove dependence on Order, use dictionary instead
+    region_names = ["Young", "Survivor", "Old", "Humongus_start", 
+                    "Humongus_continue", "Collection_set", "Free", 
+                    "Open_archive", "Closed_archive", "TAMS"]
+
+    # Add titles and format style to plot
     colors = ["royalblue", "cyan", "black", "green", "purple", "orange", "lime", "brown", "darkmagenta", "lime", "green"]
     plt.xlabel("GC Run number (not based on time)")
     plt.ylabel("Number of memory blocks")
     plt.title("heap allocation throughout runtime")
     plt.legend(region_names)
-    for idx in range(len(counts[0])):
-        plt.plot(x, np.array(list(row[idx] for row in counts)), color = colors[idx], label = region_names[idx])
+    # Plot information for each region
+    for idx in range(len(allocation_summary[0])):
+        plt.plot(x, np.array(list(row[idx] for row in allocation_summary)), color = colors[idx], label = region_names[idx])
     plt.legend()
     plt.show() 
 
@@ -113,13 +134,12 @@ def __plot_HA_schema0(dd):
     if (not dd) or (len(dd) < 2) or (not dd[0]) or (not dd[1]):
         return
 
-    
     data_dictionary = dd[0]
-
     # get free_memory list of memory during runtime
     free_memory = __calculate_freemem(data_dictionary, dd[1]) 
     
-    # Create integer list [1...n] to help plot allocation
+    # Create integer list [0...n-1] to help plot allocation
+    # TODO: Change this to be based on actual time in program.
     x = np.array(list(range(len(data_dictionary["Eden"]) * 2))) # *2 for tuples
     
     # Format plot
@@ -212,23 +232,6 @@ def __calculate_freemem(data_dictionary, inital_free):
 
     return free_mem
         
-######################################################################
-# Following block is currently unused.
-# Rational: It returns the same data as tableMetadata(), just less 
-# # Purpose: Creates a graphical table to represent the initial heap state
-# # Parameters: inital_heap_state (hs) : dict
-# # Return: None
-# def tableInitialHeapState(hs):
-#     # create table from data
-#     if hs:
-#         table_rows = [[key, hs[key]] for key in hs.keys()]
-#         for item in table_rows:
-#             print(item[0] + " \t| " + item[1])
-#     else:
-#         print("No found heap state information. Empty dict")
-######################################################################
-
-
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #               function tableMetadata()                      #
