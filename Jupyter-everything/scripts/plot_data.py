@@ -171,25 +171,36 @@ def tableInitialHeapState(hs):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def tableMetadata(metadata):
     
-    if metadata:
-        keys = []
-        vals = []
-        for key in metadata.keys():
-            keys.append(key)
-            vals.append(metadata[key])
-    else:
-        print("No metadata found")
+    if not metadata:
+        print("No metadata found.")
+        return
+    
+    # Transform into two lists, for easier data formatting
+    keys = []
+    vals = []
+    for key in metadata.keys():
+        keys.append(key)
+        vals.append(metadata[key])
+    # Determine max char length
     max_key_len = max([len(item) for item in keys])
     max_val_len = max([len(item) for item in vals])
+
+    # Add a top to the table box
     table_line = "-" * max_key_len + "-" * max_val_len + "----"
     print(table_line)
+    
+    # Print each row  
     for idx in range(len(keys)):
-        t = max_key_len - len(keys[idx])
-        if (t % 2) == 0:
-            print(str(keys[idx]) +" "+ int((max_key_len - len(keys[idx])) / 2) * ". " + " | " + str(vals[idx]))
-        else:
-            print(str(keys[idx]) +" "+ int((max_key_len - len(keys[idx])) / 2) * ". " + ". | " + str(vals[idx]))
-
-
-        #print(table_line)
-
+        
+        # Start with the metadata item 
+        print(str(keys[idx]) +" ", end="")
+        
+        # Determine if an extra whitespace is needed, from even/odd lines
+        whitespace_length = max_key_len - len(keys[idx])
+        if (whitespace_length % 2 == 1):
+            print(" ", end="")
+        
+        # Print formatting based on item length, then print the value
+        print(int((max_key_len - len(keys[idx])) / 2) * ". " + "| " + str(vals[idx]))
+        
+       
