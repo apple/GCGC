@@ -7,6 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from scripts import process_log as pl
+plt.rcParams['figure.figsize'] = [14, 8]
 
 def plot_pauses(df):
     # Obtain X Y list information from the dataframe.
@@ -19,12 +20,13 @@ def plot_pauses(df):
     del x #not necesarily needed
     total_wait = __find_trends(df)
     total_time = pl.getTotalProgramRuntime()
+    print("Total program runtime: " + str(total_time) + " seconds")
     throughput = (total_time - (total_wait)/1000) / (total_time)
-    print("Throughput probably: " + str(round(throughput * 100, 4)) + "%")
-    
+    print("Throughput: " + str(round(throughput * 100, 4)) + "%")
+ 
     # # # # # # # # # # # # # # # # # # # #
     # Plot 1: Pauses over program's entire runtime.
-    plt.bar(x = x_values, height= y_values)
+    plt.bar(x = np.array(x_values), height= np.array(y_values), width = 2.0)
     plt.ylabel("Pause duration (miliseconds)");
     plt.xlabel("Time from program start (seconds)")
     plt.title("Pauses for Young Generation GC")
@@ -68,8 +70,9 @@ def plot_heap_allocation_breakdown(counts):
     
     if (len(counts)) == 2:
         return __plot_HA_schema0(counts)
-
+    counts = counts[0]
     x = np.array(list(range(len(counts))))
+    
     #print(counts)
     region_names = ["Young", "Survivor", "Old", "Humongus_start", "Humongus_continue", "Collection_set", "Free", "Open_archive", "Closed_archive", "TAMS"]
     ''' Heap Regions: E=young(eden), S=young(survivor), O=old, HS=humongous(starts)
@@ -155,6 +158,17 @@ def tableInitialHeapState(hs):
     else:
         print("No found heap state information. Empty dict")
 
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+#               function tableMetadata()                      #
+#   Purpose:                                                  #
+#       Take the metadata collected, and print in a well      #
+#       formatted table using ASCII characters                #
+#   Parameters:                                               #
+#       metadata : a dictionary containing key-value pairs    #
+#                   keys:   The type of the metadata item     #
+#                   values: The value of the metadata item    #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def tableMetadata(metadata):
     
     if metadata:
