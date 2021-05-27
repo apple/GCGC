@@ -113,38 +113,63 @@ def __plot_HA_schema0(dd):
     if (not dd) or (len(dd) < 2) or (not dd[0]) or (not dd[1]):
         return
 
+    
     data_dictionary = dd[0]
-    free_memory = __calculate_freemem(data_dictionary, dd[1])
-    x = np.array(list(range(len(data_dictionary["Eden"]) * 2))) 
+
+    # get free_memory list of memory during runtime
+    free_memory = __calculate_freemem(data_dictionary, dd[1]) 
+    
+    # Create integer list [1...n] to help plot allocation
+    x = np.array(list(range(len(data_dictionary["Eden"]) * 2))) # *2 for tuples
+    
+    # Format plot
     plt.xlabel("GC Run number (not based on time)")
     plt.ylabel("Number of memory blocks")
     plt.title("heap allocation throughout runtime")
     plt.legend(list(data_dictionary.keys()))
-    colors = ["royalblue", "cyan", "black", "green", "purple", "orange", "lime", "brown", "darkmagenta", "lime", "green"]
+    # Choose from some color choices. TODO: style colors
+    colors = ["royalblue", "cyan", "black", "green", "purple", 
+              "orange", "lime", "brown", "darkmagenta", "lime", "green"]
     color_index = 0
+    # Create the first plot
     plt.figure(1)
+    
     for key in data_dictionary.keys():
+        # Get list of the region size before & after every gc run
         pairs = []
         for idx in range(len(data_dictionary[key])):
             pairs.append(int(data_dictionary[key][idx][0]))
             pairs.append(int(data_dictionary[key][idx][1]))
-        temp_plot_for_testing_please_remove_after = plt.plot(np.array(x), np.array(pairs), color = colors[color_index], label = str(key))
+        # Add to the current plot
+        plt.plot(np.array(x), np.array(pairs), color = colors[color_index], label = str(key))
         color_index += 1
-    plt.legend()
-    plt.show() 
+    
+    # Show plot (without memory)
+    plt.legend()                    #TODO: test if removing this line does anything
+    plt.show()
+
+    # Create second plot: (Just memory during runtime)
+    # As heap memory could always be 99% free, seeing the changes in the
+    # amonut of free memory in it's own plot is valuable 
     plt.figure(2)
     plt.plot(x, np.array(free_memory), color = "red", label = "Free Memory")
     plt.legend()
     plt.show() 
+
+    # Create third plot
     plt.figure(3)
+    # Add back all information from plot 1
     for key in data_dictionary.keys():
         pairs = []
         for idx in range(len(data_dictionary[key])):
             pairs.append(int(data_dictionary[key][idx][0]))
             pairs.append(int(data_dictionary[key][idx][1]))
-        temp_plot_for_testing_please_remove_after = plt.plot(np.array(x), np.array(pairs), color = colors[color_index], label = str(key))
+        plt.plot(np.array(x), np.array(pairs), color = colors[color_index], label = str(key))
         color_index += 1
+    # add the free memory to the plot
     plt.plot(x, np.array(free_memory), color = "red", label = "Free Memory")
+    
+    # Display plot
     plt.legend()
     plt.show() 
 
