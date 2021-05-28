@@ -98,7 +98,7 @@ def plot_heap_allocation_breakdown(breakdown_lst):
                     "Open_archive", "Closed_archive", "TAMS"]
 
     # Add titles and format style to plot
-    colors = ["royalblue", "cyan", "black", "green", "purple", "orange", "lime", "brown", "darkmagenta", "lime", "green"]
+    colors = ["royalblue", "cyan", "black", "green", "purple", "lime", "brown", "darkmagenta", "lime", "green"]
     plt.xlabel("GC Run number (not based on time)")
     plt.ylabel("Number of memory blocks")
     plt.title("heap allocation throughout runtime")
@@ -149,7 +149,7 @@ def __plot_HA_schema0(dd):
     plt.legend(list(data_dictionary.keys()))
     # Choose from some color choices. TODO: style colors
     colors = ["royalblue", "cyan", "black", "green", "purple", 
-              "orange", "lime", "brown", "darkmagenta", "lime", "green"]
+              "lime", "brown", "darkmagenta", "lime", "green"]
     color_index = 0
     # Create the first plot
     plt.figure(1)

@@ -68,19 +68,33 @@ def setLogSchema(logtype):
 # Parameters : none
 # Requirements: path must be set to the .log file we look to traverse.
 # Return: List of tuples as pauses, with added metadata.
-def getPauses(create_csv = False):
+def getYoungPauses(create_csv = False):
     pause_data = []
     with open(path, "r") as file:
         for line in file:
             if "Pause Young" in line:
                 pause_data.append(line)
-            if "Full Pause" in line:
-                print("FULL PAUSE WOOOOOOo")
     data, timestamps = __extract_pause_metadata(pause_data)
     if create_csv:
         filename = "pauses_" + output_csv_id + "_OUT.csv"
         __export_pause_csv(data, timestamps ,filename)
-    return __dataframe_from_pause_lists(data, timestamps)
+    return __dataframe_from_pause_lists(data, timestamps, "pause_time")
+
+
+def getConcurrentMarkPauses(create_csv = False):
+    concurrent_data = []
+    remark = False
+    with open(path, "r") as file:
+        for line in file:
+            if "Pause Remark" in line or "Pause Cleanup" in line:
+                concurrent_data.append(line)
+    data, timestamps = __extract_pause_metadata(concurrent_data)
+    if create_csv:
+        filename = "concurrent_pauses" + output_csv_id + "_OUT.csv"
+        __export_pause_csv(data, timestamps ,filename)
+    return __dataframe_from_pause_lists(data, timestamps, "c_t")
+
+
 
 
 # Purpose: Creates a file with specific CSV data to the pause
@@ -193,7 +207,7 @@ def __get_timestamps(line):
 
 # Purpose: (TEMPORARY FUNCTION) : takes a list of tuples and a list of lists,
 # and combines them into one pandas df.
-def __dataframe_from_pause_lists(data, timestamps):
+def __dataframe_from_pause_lists(data, timestamps, col1):
     if (len(data) != len(timestamps)):
         print("ERROR: Data list length does not match timestamps list length")
         quit()
@@ -208,7 +222,7 @@ def __dataframe_from_pause_lists(data, timestamps):
     df = pd.DataFrame(combined)
     df = pd.DataFrame.transpose(df)
     
-    df.columns = ["pause_time", "memory_change",
+    df.columns = [col1, "memory_change",
                  "actual_time", "time_from_start"]
     return df
 
