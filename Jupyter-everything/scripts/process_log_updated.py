@@ -151,9 +151,11 @@ def __create_csv(table, filename):
             file.write("\n")
 
 
-def get_unique_filename(filename):
-    print ("FILENAME IN: ", filename)
-    
+# Returns a filename that is unique. If filename 
+def __get_unique_filename(filename):
+    if not filename:
+        return __get_unique_filename("default_filename.csv")
+
     if not os.path.exists(filename):
         return filename
     else:
@@ -161,15 +163,13 @@ def get_unique_filename(filename):
         count = num_chars
         digits = 0
         for i in range(num_chars): # -3 for the ".csv" ending
-            print (filename[i:num_chars])
             if filename[i:num_chars].isnumeric():
                 digits = int(filename[i:num_chars])
                 count = i
                 break
         filename = filename[0:count] + str(digits + 1)  + ".csv"
-        filename = get_unique_filename(filename)
+        filename = __get_unique_filename(filename)
     
-    print("FILENAME OUT: ", filename)
     return filename
 
 
