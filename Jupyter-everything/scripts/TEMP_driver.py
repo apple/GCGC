@@ -10,11 +10,9 @@ def main():
     #dplt.plot_heap_allocation_breakdown(temp)
     #df = pl.getPauses(False)
     #dplt.plot_pauses(df)
-    #pl.setLogPath("../../datasets/amzn_workload_4.log")
-    #t = pl.getYoungPauses2(True)
-    f= pl.get_unique_filename("coolfile.csv")
-    with open(f, "w") as file:
-        file.write("Hi friends and family! :D ")
+    # pl.setLogPath("../../datasets/amzn_workload_4.log")
+    # t = pl.getYoungPauses2(False)
+    testHeapAllocation()
     
 def testLargeInformationPauseCollection():
     pl.setLogPath("../../datasets/amzn_workload_4.log")
@@ -26,17 +24,15 @@ def testGetGCMetadata():
 
 
 def testHeapAllocation():
-    pl.setLogPath("../../datasets/amzn_workload_4.log")
-    pl.setLogSchema(0)
-    print("First run:\n")
-    t = pl.getHeapAllocation(False)
-    dplt.plot_heap_allocation_breakdown(t)
+    # pl.setLogPath("../../datasets/amzn_workload_4.log")
+    # pl.setLogSchema(0)
+    # print("First run:\n")
+    # t = pl.getHeapAllocation(False)
+    # dplt.plot_heap_allocation_breakdown(t)
 
     pl.setLogPath("../../datasets/gc.log")
     pl.setLogSchema(1)
-    print("Second Run:\n")
-    t = pl.getHeapAllocation(False)
-    dplt.plot_heap_allocation_breakdown(t)
+    t = pl.getHeapAllocation(True)
 
 
 def testInitalHeapState():

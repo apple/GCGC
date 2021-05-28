@@ -111,7 +111,8 @@ def getYoungPauses2(create_csv = False):
     
     # Extract metadata and info from each line
     search_term = [g1f.lineMetadata() + g1f.YoungPause()]
-    # note: by reading the documentation, I know there are 6 regex groups.
+
+    # note: by reading the g1f documentation, I know there are 6 regex groups.
     table = g1f.manyMatch_LineSearch(match_terms = search_term, 
                                      num_match_groups = 6,
                                      data = [],
@@ -123,21 +124,22 @@ def getYoungPauses2(create_csv = False):
     
     # remove the ms terminology from the ending
     for index in range(len(table[-1])):
-        table[-1][index] = __remove_metrx_ending_time(table[-1][index])
+        table[-1][index] = __remove_metric_ending_time(table[-1][index])
    
     table = __remove_empty_columns(table)
 
     #### If create CSV ###
     if create_csv:
-        __create_csv(table)
+        __create_csv(table, "young_pauses.csv")
 
     return table
 
 ####
 # Purpose: Print the contents of a 'table' as a csv file
-#
+# Params : table , and filename. A unique filename will be created.
+# returns nothing.
 ###
-import os.path 
+
 def __create_csv(table, filename):
     # C
     filename = __get_unique_filename(filename)
@@ -151,7 +153,10 @@ def __create_csv(table, filename):
             file.write("\n")
 
 
-# Returns a filename that is unique. If filename 
+# Returns a filename that is unique. If filename already exists,
+# return the filename with the number 1 appended to the back. If 
+# there is already a numbered version of the filename, increase the number.
+import os.path 
 def __get_unique_filename(filename):
     if not filename:
         return __get_unique_filename("default_filename.csv")
@@ -173,12 +178,10 @@ def __get_unique_filename(filename):
     return filename
 
 
-
-
 # Removes the characters from the end of a timing string, and returns a float
 # The default unit is miliseconds (ms), and other units are scaled to that size
 # Note: only tested with ms right now, everything else is untested
-def __remove_metrx_ending_time(string):
+def __remove_metric_ending_time(string):
     if not string:
         return None 
     
@@ -204,8 +207,6 @@ def __remove_empty_columns(table):
     
     parsed = []
     for index in range(len(table)):
-        print(index)
-        print(len(table))
         column  = table[index]
         content = False
         for row in column:
@@ -232,136 +233,33 @@ def getConcurrentMarkPauses(create_csv = False):
     return __dataframe_from_pause_lists(data, timestamps, "c_t")
 
 
-
-
-# Purpose: Creates a file with specific CSV data to the pause
-#          gc log information.
-def __export_pause_csv(data, timestamps, filename):
-    file = open(filename, "w") 
-    for line, time in zip(data, timestamps):
-        file.write(line[0] + str(", ") + line[1] + str(", "))
-        file.write(time[0] + str(", ") + time[1] + str("\n"))
-    file.close()
-
-
-
-# Purpose: Extracts the useful information from each line of pause_data, 
-#          which can then be easily read/displayed
-# Parameters: 
-        # (pause_data) : lines of the log file that have our desired string
-# Return:
-        # a list of data, with lines specific only to pauses, as tuples with
-        # pause time, and change in allocated bytes in the yonug generation.
-def __extract_pause_metadata(pause_data):
-    data = []
-    timestamps = []
-    target_string = "->" # Found any time the bytes change from this pause
-    str_len = len(target_string)
-    
-    for line in pause_data:
-        if target_string in line:         
-            idx = line.index(target_string)
-            left = __find_index_left(idx, line, ")")            
-            right = idx +  line[idx:].index("\n")
-            # Get the indicies within the large line, extract that information.
-            data.append(line[left + 1 : right - 1])
-            timestamps.append(__get_timestamps(line))
-    
-    data = __arrange_cols_pauses(data)
-    return data, timestamps
-
-
-
-#       -> __find_index_left
-# Purpose: Find the index of a particular character to the left passed idx
-# Parameters:
-        # (idx)  The starting index to begin searching left from
-        # (line) The string of text to search
-        # (char) The character you are searching for the index of
-# Return: 
-        # The first index of the (char) in (line), if found.
-        # Else, -1
-def __find_index_left(idx, line, char):
-    for i in range(idx, 0, -1):
-        if line[i] == char:
-            return i
-    return -1
-
-
-
-#       -> __arrange_cols_pauses
-# Purpose: Given a list of pauses data, create a tuple holding the data nicely
-#          in each of the cells. Return that updated, formated tuple list.
-# Parameters:
-        # (data) a list with entries being a log line formatted to only
-        #        contain Time of pause, and block change.
-def __arrange_cols_pauses(data):
-    pause_data = []
-    for row in data:
-        # We assume all rows fit this description, but it is good to check
-        if ")" in row:        
-            idx = row.index(")")
-            tup = (row[idx+2:-1],row[1:idx+1])
-            pause_data.append(tup)
-        else:
-            print("Error in arrange_col_pauses: Incorrectly formatted line")
-    return pause_data
-
-
-
-### Purpose: Extracts the time information for any GC log line.
-### Returns both time stamps, in their entirety, as a 2 length list.
-def __get_timestamps(line):
-    if not line[0] == "[":
-            return None
-    ## We assume we are extracting a line, following the following
-    ## format.
-    #[2020-11-16T14:54:23.755+0000][7.353s][info ] ...
-    '''However, if a line does not contain a Original timestamp, instead format
-       by returning time from start twice.'''
-    pattern = "\[\d\d\d\d-\d\d-\d\d.*\]"
-    match = re.search(pattern, line) # Search the regex line for a match
-    index_seperator = line.index("]")
-    real_time  = line[1:index_seperator]
-    if match:  
-        # Now, we assume we have a valid line. Extract information based on this assumption.    
-        from_start = line[index_seperator + 2 : index_seperator + 2
-                         + line[index_seperator + 2:].index("]")]
-        return [real_time, from_start] 
-    else: 
-        # We assume we have NO date format, but DO have time stamps.
-        from_start = real_time # We will just use the same information. 
-                               # Let the client detect and handle this case
-                               # Rational: Currently, there are no plans for
-                               # use of the "real time", but we provide 
-                               # infrastructure to allow it.
-        return [real_time, from_start]
-        
-
-
-
-
-
-# Purpose: (TEMPORARY FUNCTION) : takes a list of tuples and a list of lists,
-# and combines them into one pandas df.
-def __dataframe_from_pause_lists(data, timestamps, col1):
-    if (len(data) != len(timestamps)):
-        print("ERROR: Data list length does not match timestamps list length")
-        quit()
-    
-    combined = [[],[],[],[]]
-    for i in range(len(data)):
-        combined[0].append(data[i][0])
-        combined[1].append(data[i][1])
-        combined[2].append(timestamps[i][0])
-        combined[3].append(timestamps[i][1])
-
-    df = pd.DataFrame(combined)
-    df = pd.DataFrame.transpose(df)
-    
-    df.columns = [col1, "memory_change",
-                 "actual_time", "time_from_start"]
-    return df
+# ### Purpose: Extracts the time information for any GC log line.
+# ### Returns both time stamps, in their entirety, as a 2 length list.
+# def __get_timestamps(line):
+#     if not line[0] == "[":
+#             return None
+#     ## We assume we are extracting a line, following the following
+#     ## format.
+#     #[2020-11-16T14:54:23.755+0000][7.353s][info ] ...
+#     '''However, if a line does not contain a Original timestamp, instead format
+#        by returning time from start twice.'''
+#     pattern = "\[\d\d\d\d-\d\d-\d\d.*\]"
+#     match = re.search(pattern, line) # Search the regex line for a match
+#     index_seperator = line.index("]")
+#     real_time  = line[1:index_seperator]
+#     if match:  
+#         # Now, we assume we have a valid line. Extract information based on this assumption.    
+#         from_start = line[index_seperator + 2 : index_seperator + 2
+#                          + line[index_seperator + 2:].index("]")]
+#         return [real_time, from_start] 
+#     else: 
+#         # We assume we have NO date format, but DO have time stamps.
+#         from_start = real_time # We will just use the same information. 
+#                                # Let the client detect and handle this case
+#                                # Rational: Currently, there are no plans for
+#                                # use of the "real time", but we provide 
+#                                # infrastructure to allow it.
+#         return [real_time, from_start]
 
 
 # Get the contents of the heap at each GC log moment. 
@@ -390,7 +288,7 @@ def getHeapAllocation(create_csv = False):
             idx += 1
     parsed_heap_regions = __simplify_regions(heap_regions)
     if create_csv:
-        print("Creating a CSV is Unimplemented currently")
+        __create_csv(parsed_heap_regions, "heap_allocation.csv")
     return [parsed_heap_regions]
 
 def __getHeapAllocation_schema0(create_csv = False):
@@ -454,42 +352,37 @@ def __remove_metrx_ending(string):
 
 
 
+# Transforms lines on collected heap_regions into a table of heap allocation
+# frequencies. Returns the table
 def __simplify_regions(heap_regions):
-    # https://regex101.com 
     pattern = "[GC]\(\d*\)\s*\|\s*(\d+)\|0x((\d|\w)*),\s*0x((\d|\w)*),\s+0x((\d|\w)*)\|(\s*)(\d*)%\|(\s*)(\w+)"
     # Searches for the following string:
         # GC(0) |  1|0x0000abc123, 0x0000abc321, 0x0000234321| 25%|  O|
         # with anything changing (all numbers, ect.) other than non letter-number characters.
     # group we are looking for: 11
-    simplifed = [] 
+    simplified = [] 
     for entry in heap_regions:
         metadata = [] 
         for line in entry:
             match = re.search(pattern, line)
             if match:
                 metadata.append(match.group(11))
-        simplifed.append(metadata)
+        simplified.append(metadata)
+    regions = ["F", "E", "S", "O", "HS", "HC", "CS", "OA", "CA", "TAMS"]
     
-    ## List contains the different categories of memory blocks.
-    
-    ''' Heap Regions: E=young(eden), S=young(survivor), O=old, HS=humongous(starts)
-     HC=humongous(continues), CS=collection set, F=free, OA=open archive
-     CA=closed archive, TAMS=top-at-mark-start (previous, next) '''
+    # create a table with N columns, N = number of regions
+    table = [[] for i in range(len(regions))]
 
-    
-    regions = ["E", "S", "O", "HS", "HC", "CS", "F", "OA", "CA", "TAMS"]
-    counts = [] # will hold all frequency lists
-    for heap_state in simplifed:
-        frequencies = []
-        [frequencies.append(0) for i in regions]
-        for mem_block in heap_state:
+    # add to each column of the table.
+    for cell in simplified:
+        for column in table:
+            column.append(0)
+        for item in cell:
             for i in range(len(regions)):
-                if regions[i] == mem_block:
-                    frequencies[i] += 1
-                    break
-        counts.append(frequencies)
-    
-    return counts
+                if regions[i] == item:
+                    table[i][-1] += 1
+
+    return table    
 
 
 ###############################################################################

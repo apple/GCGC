@@ -93,8 +93,8 @@ def plot_heap_allocation_breakdown(breakdown_lst):
     
     # Order matters here, associated with order collected this data.
     # TODO: Remove dependence on Order, use dictionary instead
-    region_names = ["Young", "Survivor", "Old", "Humongus_start", 
-                    "Humongus_continue", "Collection_set", "Free", 
+    region_names = ["Free", "Young", "Survivor", "Old", "Humongus_start", 
+                    "Humongus_continue", "Collection_set",  
                     "Open_archive", "Closed_archive", "TAMS"]
 
     # Add titles and format style to plot
