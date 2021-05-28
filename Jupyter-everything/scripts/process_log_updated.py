@@ -158,14 +158,16 @@ def get_unique_filename(filename):
         return filename
     else:
         num_chars = len(filename) - 4
-        for i in range(len(filename) - 4): # -4 for the ".csv" ending
+        count = num_chars
+        digits = 0
+        for i in range(num_chars): # -3 for the ".csv" ending
+            print (filename[i:num_chars])
             if filename[i:num_chars].isnumeric():
                 digits = int(filename[i:num_chars])
                 count = i
                 break
-            else:
-                digits = 0
-        filename = str(digits + 1) + filename[count:num_chars]
+        filename = filename[0:count] + str(digits + 1)  + ".csv"
+        filename = get_unique_filename(filename)
     
     print("FILENAME OUT: ", filename)
     return filename

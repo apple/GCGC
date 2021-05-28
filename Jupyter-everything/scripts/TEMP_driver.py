@@ -12,7 +12,9 @@ def main():
     #dplt.plot_pauses(df)
     #pl.setLogPath("../../datasets/amzn_workload_4.log")
     #t = pl.getYoungPauses2(True)
-    get_unique_filename("coolfile.csv")
+    f= pl.get_unique_filename("coolfile.csv")
+    with open(f, "w") as file:
+        file.write("Hi friends and family! :D ")
     
 def testLargeInformationPauseCollection():
     pl.setLogPath("../../datasets/amzn_workload_4.log")
