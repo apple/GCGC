@@ -1,15 +1,18 @@
-import process_log as pl
-import plot_data as dplt
+import process_log_updated as pl
+#import plot_data as dplt
 
 def main():
     
     # testInitialHeapState()
     # testHeapAllocation()
     # testLargeInformationPauseCollection()
-    testGetGCMetadata()
+    #testGetGCMetadata()
     #dplt.plot_heap_allocation_breakdown(temp)
     #df = pl.getPauses(False)
     #dplt.plot_pauses(df)
+    #pl.setLogPath("../../datasets/amzn_workload_4.log")
+    #t = pl.getYoungPauses2(True)
+    get_unique_filename("coolfile.csv")
     
 def testLargeInformationPauseCollection():
     pl.setLogPath("../../datasets/amzn_workload_4.log")

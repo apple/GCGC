@@ -19,7 +19,7 @@ import re # regular expressions
 #
 ##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def YoungPause():
-    return ".*Pause Young.*?(\d+\w*->\d+\w*\(*.*\)*) (\d+.*)\s"
+    return ".*Pause Young.*?(\d+\w*->\d+\w*\(*.*\)*)\s(\d+.*)\s*"
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -270,7 +270,28 @@ def HeapInitalMaxMin_schema1():
 #
 ##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def fullLineInfo():
-    return  '^\[*(.*)\]*\[(\d+\.\d+\w+)\]\[(.*)\[(.*)\](.*)\s+'
+    return  '^\[*(.*)\]*\[(\d+\.\d+\w+)\]\[(.*)\]\[(.*)\](.*)\s+'
+
+
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                               lineMetadata
+#   Purpose:
+#       Parse an entire log line, and extract each and only the metadata 
+#   
+#   Return:
+#       A regex searchable string for this particular field
+# 
+#   Regex Group Info
+#       1) DateTime information (if present)
+#       2) Time since program began (integer with a metric unit)
+#       3) Reason for log entry [info/debug/...]
+#       4) gc phase
+#
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+def lineMetadata():
+    return  '^\[*(.*)\]*\[(\d+\.\d+\w+)\]\[(.*)\]\[(.*)\].*\s+'
+
 
 
 # Metadata that can be searched for. TODO: Add formal documentation
@@ -310,7 +331,6 @@ def manyMatch_LineSearch(match_terms = [],        # regex terms to search for
                         in_file = False):         # TRUE if data in a file
     if not match_terms or num_match_groups == 0:
         return []
-    
     if in_file :
         file = open(filepath, "r")
         data = file.readlines()
