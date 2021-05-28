@@ -1,7 +1,7 @@
-max = 11652
+max = 20000
 count = 0
-with open("./long_amzn_workload.log", "r") as file:
-    with open("./long_a.log", "w") as file_out:
+with open("./gc.log", "r") as file:
+    with open("./medium_gc.log", "w") as file_out:
         d = file.readlines()
         for line in d:
             count += 1
