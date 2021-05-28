@@ -4,58 +4,276 @@ import re # regular expressions
 # Returns a regex searchable string.
 # Strings are expected to have exactly one group of interest
 
-def EXample_String():
-    return "Example"
 
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                               YoungPause
+#   Purpose:
+#       Finds the timing associated with a Young Pause in Garbage Collection
+#   
+#   Return:
+#       A regex searchable string for this particular field
+# 
+#   Regex Group Info
+#       1) Change in memory allocation
+#       2) Time spent
+#
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def YoungPause():
     return ".*Pause Young.*?(\d+\w*->\d+\w*\(*.*\)*) (\d+.*)\s"
 
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                               PauseCleanup
+#   Purpose:
+#       Finds timing associated with a Pause Cleanup GC action
+#   
+#   Return:
+#       A regex searchable string for this particular log field
+# 
+#   Regex Group Info
+#       1) Change in data allocated
+#       2) Time spent
+#
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def PauseCleanup():
     return ".*Pause Cleanup.*?(\d+\w*->\d+\w*\(*.*\)*) (\d+.*)\s"
 
-def DateTimestamp():
-    return "\[\d\d\d\d-\d\d-\d\d.*\]"
 
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                               DateTimestamp
+#   Purpose:
+#       Finds the date and time information in yyyy-mm-dd(T)hh:mm:ss:mmm
+#   
+#   Return:
+#       A regex searchable string for this particular field
+# 
+#   Regex Group Info
+#       1) Date time stamp info
+#
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+def DateTimestamp():
+    return "\[(\d\d\d\d-\d\d-\d\d.*)\]"
+
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                               EdenHR
+#   Purpose:
+#       Finds the number and change in eden regions
+#   
+#   Return:
+#       A regex searchable string for this particular field
+# 
+#   Regex Group Info
+#       1) Initial number of regions
+#       2) Final number of regions
+#       3) Next anticipated number of young regions before GC runs
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def EdenHR():
     return "\s+Eden regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
 
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                               SurvivorHR
+#   Purpose:
+#       Finds the number of Survivor regions before/after GC run
+#   
+#   Return:
+#       A regex searchable string for this particular field
+# 
+#   Regex Group Info
+#       1) Number of survivor regions before gc
+#       2) Number of survivor regions after gc
+#       3) Number of anticipated survivor regions next gc cycle
+#
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def SurvivorHR():
     return "\s+Survivor regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
 
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                                   OldHR
+#   Purpose:
+#       Finds the number of Old regions before/after GC run
+#   
+#   Return:
+#       A regex searchable string for this particular field
+# 
+#   Regex Group Info
+#       1) Number of old regions before GC run
+#       2) Number of old regions after GC runs
+#       
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def OldHR():
-    return "\s+Old regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
+    return "\s+Old regions:\s+(\d+)->(\d+)\(?\d*\)?\s*"
 
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                               ArchiveHR
+#   Purpose:
+#       Finds the number of archive regions before/after gc run
+#   
+#   Return:
+#       A regex searchable string for this particular field
+# 
+#   Regex Group Info
+#       1) Number of archive regions before gc run
+#       2) Number of archive regions after  gc run
+#
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def ArchiveHR():
-    return "\s+Archive regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
+    return "\s+Archive regions:\s+(\d+)->(\d+)\(?\d*\)?\s*"
 
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                               functionname
+#   Purpose:
+#       somepurposehere
+#   
+#   Return:
+#       A regex searchable string for this particular field
+# 
+#   Regex Group Info
+#       1)
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def HugeHR():
     return "\s+Humongous regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
 
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                               HeapRegions_schema1
+#   Purpose:
+#       Finds the heap allocation for a single line (schema1)
+#   
+#   Return:
+#       A regex searchable string for this particular field
+# 
+#   Regex Group Info
+#       1-10) Not needed currently, but each field of the line
+#       11) The heap region categorization 
+#
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def HeapRegions_schema1():
     return "[GC]\(\d*\)\s*\|\s*(\d+)\|0x((\d|\w)*),\s*0x((\d|\w)*),\s+0x((\d|\w)*)\|(\s*)(\d*)%\|(\s*)(\w+)"
 
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                               HeapMinCapacity
+#   Purpose:
+#       Find the minimum heap capacity at runtime start
+#   
+#   Return:
+#       A regex searchable string for this particular field
+# 
+#   Regex Group Info
+#       1) Min Heap capacity (integer with a metric unit)
+#
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def HeapMinCapacity():
     return "^\s*Heap\s+Min\s+Capacity:\s*(.+)\s*"
 
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                               HeapInitialCapacity
+#   Purpose:
+#       Find the Heap Initial Capacity at runtime start
+#   
+#   Return:
+#       A regex searchable string for this particular field
+# 
+#   Regex Group Info
+#       1) Initial Heap Capacity (integer with a metric unit)
+#
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def HeapInitialCapacity():
     return "^\s*Heap\s+Initial\s+Capacity:\s*(.+)\s*"
 
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                               HeapMaxCapacity
+#   Purpose:
+#       Find the Heap Max Capacity at runtime start
+#   
+#   Return:
+#       A regex searchable string for this particular field
+# 
+#   Regex Group Info
+#       1) HeapMaxCapacity (integer with a metric unit)
+#
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def HeapMaxCapacity():
     return "^\s*Heap\s+Max\s+Capacity:\s*(.+)\s*"
 
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                               HeapRegionSize
+#   Purpose:
+#       Find the Heap Region Size at program start
+#   
+#   Return:
+#       A regex searchable string for this particular field
+# 
+#   Regex Group Info
+#       1) Heap Region Size (integer with a metric unit)
+#
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def HeapRegionSize():
     return "^\s*Heap\s+Region\s+Size:\s*(.+)\s*"
 
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                            HeapRegionSize_schema1
+#   Purpose:
+#       Find the Heap Region Size at program start
+#   
+#   Return:
+#       A regex searchable string for this particular field
+# 
+#   Regex Group Info
+#       1) Program region size (integer with a metric unit)
+#
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def HeapRegionSize_schema1():
     return "\s*Heap\s+region\s+size:\s*(\d*\w*)\s*"
 
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                             HeapInitalMaxMin_schema1
+#   Purpose:
+#       Find Heap Inital, Max, and Min (schema1) at program start
+#   
+#   Return:
+#       A regex searchable string for this particular field
+# 
+#   Regex Group Info
+#       1) Minimum Heap Size (integer with a metric unit)
+#       2) Initial Heap Size (integer with a metric unit)
+#       3) Maximum Heap Size (integer with a metric unit)
+#
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def HeapInitalMaxMin_schema1():
     return "\s*Minimum\sheap\s(\d+)\s+Initial\sheap\s(\d+\w*)\s+Maximum\sheap\s(\d+)\s*"
 
-# TODO: Document all possible regex groups
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                               fullLineInfo
+#   Purpose:
+#       Parse an entire log line, and extract each region
+#   
+#   Return:
+#       A regex searchable string for this particular field
+# 
+#   Regex Group Info
+#       1) DateTime information (if present)
+#       2) Time since program began (integer with a metric unit)
+#       3) Reason for log entry [info/debug/...]
+#       4) gc phase
+#       5) log line info
+#
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def fullLineInfo():
     return  '^\[*(.*)\]*\[(\d+\.\d+\w+)\]\[(.*)\[(.*)\](.*)\s+'
 
+
+# Metadata that can be searched for. TODO: Add formal documentation
 def G1Metadata():
     categories = ["Version", "CPUs", "Memory", "Large Page Support",
                   "NUMA Support", "Compressed Oops", "Pre-touch", 
@@ -66,9 +284,25 @@ def G1Metadata():
     return categories
 
 
-# Accepts a mapping that will iterate over the entire log file
-# Expects to find many matches for each term.
-# Returns table of results, and number of appended metadata columns (after)
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                         manyMatch_LineSearch
+#   Purpose:
+#       Search through a data set, and return a list of all matches
+#   
+#   Parameters:
+#       match_terms      : Terms to search for within data set
+#       num_match_groups : Integer representing number groups to remember
+#       data             : List of data to be searched
+#       filepath         : string File path to file containing data to be read
+#       in_file          : If True, open filepath specified for reading data.
+#                          If false, the data is passsed in parameter "Data"       
+#   Return:
+#       List of lists:
+#           ->  Outer list contains N lists, where N = num_match_groups.
+#               The outer list can be described as the columns
+#           -> Inner list contains all matches, for each associated group
+#
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def manyMatch_LineSearch(match_terms = [],        # regex terms to search for
                         num_match_groups = 0,     
                         data = [],                # data to search
@@ -99,10 +333,10 @@ def manyMatch_LineSearch(match_terms = [],        # regex terms to search for
 
 
 
-# NOTE: assumed all things fall into match group 1
+# TODO: Do this!
 def singleMatch_LineSearch( match_terms = [],        # regex terms to search for   
                             data = [],
-                            ordered = False,              # data to search
+                            search_titles =[],              # data to search
                             filepath = "",            # filepath of file to read
                             in_file = False):
 
@@ -129,15 +363,33 @@ def singleMatch_LineSearch( match_terms = [],        # regex terms to search for
                 found[term] = match.group(1)    # add to found set
         if not toSearch:
             break
-    if ordered:
-        found = __sort_to_list(found, match_terms)
-    return found
+    
+    return __sort_to_list(found, match_terms, search_titles)
+    
 
-def __sort_to_list(dictWords, keysOrder):
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+#                            __sort_to_list()                                  #
+#   Purpose:                                                                   #
+#       Takes a dictionary, and turns it into a list in a particular order     #
+#                                                                              #
+#   Parameters:                                                                #
+#       dictWords     : dictionary of key value pairs to be transformed        #
+#       keysOrder     : all keys for the dictionary, in a specific order       #
+#       search_titles : alternative titles for the keys, if wanted             #
+#                                                                              #
+#   Return:                                                                    #
+#       Returns a list, where list[idx] = [key, value] from                    #
+#       original dictionary.                                                   #
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+def __sort_to_list(dictWords, keysOrder, search_titles):
     if not dictWords or not keysOrder:
         return 
     ordered = []
-    for key in keysOrder:
-        ordered.append([key, dictWords[key]])
-    return ordered
+    if search_titles:
+        for i in range(len(keysOrder)):
+            ordered.append([search_titles[i], dictWords[keysOrder[i]]])
+    else:
+        for key in keysOrder:
+            ordered.append([key, dictWords[key]])
 
+    return ordered
