@@ -328,42 +328,58 @@ def manyMatch_LineSearch(match_terms = [],        # regex terms to search for
 
 
                     
-
-
-
-
-
-# TODO: Do this!
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                         singleMatch_LineSearch                               #
+#   Purpose:                                                                   #
+#       Search through a data set, return the first of all matches             #
+#                                                                              #
+#   Parameters:                                                                #
+#       match_terms      : Terms to search for within data set                 #
+#       data             : List of data to be searched                         #
+#       search_titles    : Names for the search terms passed. Optional.        #
+#       filepath         : string File path to file containing data to be read #
+#       in_file          : If True, open filepath specified for reading data.  #
+#                          If false, the data is passsed in parameter "Data"   #  
+#   Return:                                                                    #    
+#      A list containing the match terms with their corresponding output vals  #
+#           where match term could be the actual match term, or the            #
+#           corresponding "search_title" for that term                         #
+#                                                                              #
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def singleMatch_LineSearch( match_terms = [],        # regex terms to search for   
                             data = [],
                             search_titles =[],              # data to search
                             filepath = "",            # filepath of file to read
                             in_file = False):
-
+    # if nothing to search, done.
     if not match_terms:
         return {}
-    
+    # Obtain data, if needed
     if in_file :
         file = open(filepath, "r")
         data = file.readlines()
     
+    # initalize dictionarys for searching/finding
     toSearch = {}
+    found    = {}
     for term in match_terms:
         toSearch[term] = term
-    
-    found = {}
 
     for line in data:
         search_terms = list(toSearch.keys()) # get all terms to search
         for index in range(len(search_terms)): # iterate through using indicies
             term = search_terms[index]
             match = re.search(term, line)
+            # if match, move from toSearch -> found
             if match: 
                 del toSearch[term] # remove from searchable set
                 found[term] = match.group(1)    # add to found set
+        
+        # Check if all things have been found (save runtime)
         if not toSearch:
             break
-    
+
+    # loop end. Transform dictionary into organized list. 
     return __sort_to_list(found, match_terms, search_titles)
     
 

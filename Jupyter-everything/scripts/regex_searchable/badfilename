@@ -1,3 +1,0 @@
-Hello world!
-None
-['^\\s*Heap\\s+Min\\s+Capacity:\\s*(.+)\\s*', '^\\s*Heap\\s+Max\\s+Capacity:\\s*(.+)\\s*', '^\\s*Heap\\s+Region\\s+Size:\\s*(.+)\\s*']
