@@ -1,0 +1,38 @@
+#!/bin/sh
+
+## Purpose: Generate usable GC logs by running the program
+## with different and interesting parameters.
+COMPILER="java"
+LOG_FILENAME="simcloud_workload_log.log"
+JFR_FILENAME="simcloud_workload_flight.jfr"
+GC_LOG="-Xlog:gc*,gc+phases=debug:file=./outputs/${LOG_FILENAME}.log"
+FLIGHT_RECORDER="-XX:+UnlockDiagnosticVMOptions -XX:+FlightRecorder -XX:StartFlightRecording=duration=1000s,filename=./outputs/${JFR_FILENAME}.jfr,settings=profile"
+RUN="-jar extremem.jar"
+PARAMS="-dDictionarySize=1000000
+        -dServerThreads=2000
+        -dCustomerThreads=2000
+        -dBrowsingHistoryQueueCount=2000
+        -dSalesTransactionQueueCount=2000
+        -dSimulationDuration=1h
+        -dRandomSeed=42
+        -dNumProducts=10000
+        -dProductNameLength=100
+        -dProductDescriptionLength=500
+        -dNumCustomers=4000
+        -dCustomerThinkTime=200s
+        -dCustomerPeriod=4m
+        -dProductReviewLength=200
+        -dSelectionCriteriaCount=20
+        -dBuyThreshold=0.2
+        -dCustomerReplacementPeriod=20s
+        -dProductReplacementPeriod=120s"
+
+STRESS="-dDictionarySize=50000
+        -dCustomerThreads=1000
+        -dCustomerPeriod=12s
+        -dCustomerThinkTime=8s
+        -dSimulationDuration=5m"
+
+WORKLOAD="${COMPILER} ${FLIGHT_RECORDER} ${GC_LOG} ${RUN} ${STRESS}"
+eval ${WORKLOAD} > /dev/null
+echo "Complete!"
