@@ -1,22 +1,42 @@
-# Purpose: Handles all graphing functionality for data.
-
-# NOTE: this is a temporary script
-#       TODO: Update documentation, simplify actions.
-#       Fix style.
+#############################################################################
+##                          plot_data.py
+##  Defines functions to plot tables of information collected from logs.
+##  
+##  Author: Ellis Brown, 6/1
+##  TODO: Define a general type chart, plots any table 
+#############################################################################
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from scripts import process_log as pl
-plt.rcParams['figure.figsize'] = [14, 8]
 
-def plot_pauses(df):
+# Set the size of the figures that appear in the Jupyter notebook
+plt.rcParams['figure.figsize'] = [12, 7]
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                               plot_pauses
+#   Purpose:
+#       plots the pauses due to gc across full runtime
+#   
+#   Parameters:
+#       table: a table, with columns as categories
+#           columns as follows: --
+#       datetime (optional), time, [info/debug/...], gc phase, pause time
+#   
+#   Return:
+#       None: Creates multiple tables showing the pauses over runtime, and 
+#             table with trends within the data
+#
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+def plot_pauses(table):
     
     # Obtain X Y list information from the dataframe.
-    shift = 5 - len(df) # account for possible empty rows.
-    y_values = list(map(float, df[4 - shift]))
-    x_values = list(map(__time_to_float, df[0 - shift]))
+    shift = 5 - len(table) # account for possible empty rows.
+    y_values = list(map(float, table[4 - shift]))
+    x_values = list(map(__time_to_float, table[0 - shift]))
 
-    total_wait = __find_trends(df)
+    # Show interesting trends
+    total_wait = __find_trends(table)
     total_time = pl.getTotalProgramRuntime()
     print("Total time: " + str(total_time))
     print("Total program runtime: " + str(total_time) + " seconds")
@@ -40,19 +60,32 @@ def plot_pauses(df):
     plt.show()
     # # # # # # # # # # # # # # # # # # # #
 
-    ## Find interesting trends within the data.
     
-
+# Removes trailing 's' character from time in seconds
 def __time_to_float(time):
     return float(time[:-1])
 
-
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                               __find_trends
+#   Purpose:
+#       Finds trends for pause data in a dataset
+#   
+#   Parameters:
+#       table: a table, with columns as categories
+#       --table should contaain the following columns
+#   
+#       datetime (optional), time, [info/debug/...], gc phase, pause time
+#   
+#   Return:
+#       None: Creates a table showing the interesting ascii values
+#
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Finds trends in dataframe. 
 # Column 1 must be pause time, (1 indexed)
 # Column 4 must be time since start of program.
-def __find_trends(df):
-    shift = 5 - len(df)
-    wait_times = df[4 - shift]
+def __find_trends(table):
+    shift = 5 - len(table)
+    wait_times = table[4 - shift]
     max_wait = max(wait_times, key = lambda i : float(i))
     total_wait   = round(sum(float(i) for i in wait_times), 4)
     average_wait = round(total_wait / len(wait_times), 4)
@@ -240,52 +273,17 @@ def __calculate_freemem(data_dictionary, inital_free):
         free_mem.append(int(inital_free - temp_val))
 
     return free_mem
-        
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-#               function tableMetadata()                      #
+#               function displayMetadata()                    #
 #   Purpose:                                                  #
 #       Take the metadata collected, and print in a well      #
 #       formatted table using ASCII characters                #
 #   Parameters:                                               #
-#       metadata : a dictionary containing key-value pairs    #
-#                   keys:   The type of the metadata item     #
-#                   values: The value of the metadata item    #
+#       metadata : a table containing title-value pairs       #
+#                  title :   The type of the metadata item    #
+#                  values:  The value of the metadata item    #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def tableMetadata(metadata):
-    
-    if not metadata:
-        print("No metadata found.")
-        return
-    
-    # Transform into two lists, for easier data formatting
-    keys = []
-    vals = []
-    for key in metadata.keys():
-        keys.append(key)
-        vals.append(metadata[key])
-    # Determine max char length
-    max_key_len = max([len(item) for item in keys])
-    max_val_len = max([len(item) for item in vals])
-
-    # Add a top to the table box
-    table_line = "-" * max_key_len + "-" * max_val_len + "----"
-    print(table_line)
-    
-    # Print each row  
-    for idx in range(len(keys)):
-        
-        # Start with the metadata item 
-        print(str(keys[idx]) +" ", end="")
-        
-        # Determine if an extra whitespace is needed, from even/odd lines
-        whitespace_length = max_key_len - len(keys[idx])
-        if (whitespace_length % 2 == 1):
-            print(" ", end="")
-        
-        # Print formatting based on item length, then print the value
-        print(int((max_key_len - len(keys[idx])) / 2) * ". " + "| " + str(vals[idx]))
-        
 def displayMetadata(table):
     # table is a list of lists
     # [ [title, value], [title, value], ... ]
