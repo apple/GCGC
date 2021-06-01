@@ -15,6 +15,7 @@
 # getHeapAllocation   (boolean create_csv)          #
 # getHeapInitialState (boolea create_csv)           #
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
+from os import pathconf_names
 import pandas as pd
 import re
 from scripts import g1version16 as g1f # g1format
@@ -292,14 +293,17 @@ def getHeapAllocation(create_csv = False):
         __create_csv(parsed_heap_regions, "heap_allocation.csv")
     return [parsed_heap_regions]
 
+
+# This is hard to transform with readable code.
+# TODO: transform such that return type is reasonable.
 def __getHeapAllocation_schema0(create_csv = False):
     
     to_search = {}
-    to_search["Eden"]     = "\s+Eden regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
-    to_search["Survivor"] = "\s+Survivor regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
-    to_search["Old"]      = "\s+Old regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
-    to_search["Archive"]  = "\s+Archive regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
-    to_search["Huge"]     = "\s+Humongous regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
+    to_search["Eden"]     = g1f.EdenHR()
+    to_search["Survivor"] = g1f.SurvivorHR()
+    to_search["Old"]      = g1f.OldHR()
+    to_search["Archive"]  = g1f.ArchiveHR()
+    to_search["Huge"]     = g1f.HugeHR()
 
     heap_regions = {} # Create collection to add to
     # Initalize the lists we will append to, based on what is found
@@ -329,6 +333,7 @@ def __getHeapAllocation_schema0(create_csv = False):
     init_cap = __remove_metrx_ending(inital_storage["Max"])
     init_region_size = __remove_metrx_ending(inital_storage["Region"])
 
+    # return results. Notice len(list) = 2
     return [heap_regions, int(init_cap/init_region_size)]
 
 

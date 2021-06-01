@@ -140,9 +140,9 @@ def ArchiveHR():
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#                               functionname
+#                               HugeHR
 #   Purpose:
-#       somepurposehere
+#       Finds the count for Humongus regions before/after gc run
 #   
 #   Return:
 #       A regex searchable string for this particular field
@@ -305,7 +305,7 @@ def fullLineInfo():
 #
 ##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def lineMetadata():
-    return  '^\[*(.*)\]*\[(\d+\.\d+\w+)\]\[(.*)\]\[(.*)\].*\s+'
+    return  '^\[*(.*)\]*\[(\d+\.\d+\w+)\]\[(.*)\]\[(.*)\].*\s*'
 
 
 
