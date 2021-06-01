@@ -141,7 +141,11 @@ def __plot_HA_schema0(dd):
     
     # Create integer list [0...n-1] to help plot allocation
     # TODO: Change this to be based on actual time in program.
-    x = np.array(list(range(len(data_dictionary["Eden"]) * 2))) # *2 for tuples
+    x = []
+    for item in data_dictionary["Time"]:
+        x.append(float(item))
+        x.append(float(item))
+    x = np.array(x) # *2 for tuples
     
     # Format plot
     plt.xlabel("GC Run number (not based on time)")
@@ -156,14 +160,15 @@ def __plot_HA_schema0(dd):
     plt.figure(1)
     
     for key in data_dictionary.keys():
+        if str(key) != "Time":
         # Get list of the region size before & after every gc run
-        pairs = []
-        for idx in range(len(data_dictionary[key])):
-            pairs.append(int(data_dictionary[key][idx][0]))
-            pairs.append(int(data_dictionary[key][idx][1]))
-        # Add to the current plot
-        plt.plot(np.array(x), np.array(pairs), color = colors[color_index], label = str(key))
-        color_index += 1
+            pairs = []
+            for idx in range(len(data_dictionary[key])):
+                pairs.append(int(data_dictionary[key][idx][0]))
+                pairs.append(int(data_dictionary[key][idx][1]))
+            # Add to the current plot
+            plt.plot(np.array(x), np.array(pairs), color = colors[color_index], label = str(key))
+            color_index += 1
     
     # Show plot (without memory)
     plt.legend()                    #TODO: test if removing this line does anything
@@ -181,12 +186,13 @@ def __plot_HA_schema0(dd):
     plt.figure(3)
     # Add back all information from plot 1
     for key in data_dictionary.keys():
-        pairs = []
-        for idx in range(len(data_dictionary[key])):
-            pairs.append(int(data_dictionary[key][idx][0]))
-            pairs.append(int(data_dictionary[key][idx][1]))
-        plt.plot(np.array(x), np.array(pairs), color = colors[color_index], label = str(key))
-        color_index += 1
+        if str(key) != "Time":
+            pairs = []
+            for idx in range(len(data_dictionary[key])):
+                pairs.append(int(data_dictionary[key][idx][0]))
+                pairs.append(int(data_dictionary[key][idx][1]))
+            plt.plot(np.array(x), np.array(pairs), color = colors[color_index], label = str(key))
+            color_index += 1
     # add the free memory to the plot
     plt.plot(x, np.array(free_memory), color = "red", label = "Free Memory")
     
@@ -220,15 +226,17 @@ def __calculate_freemem(data_dictionary, inital_free):
         # Calculate the free memory before the GC runs
         temp_val = 0
         for key in data_dictionary.keys():
+            if str(key) != "Time":
                                         # access tuple [0] from list
                                         # of tuples associated with key
-            temp_val += int(data_dictionary[key][idx][0])
+                temp_val += int(data_dictionary[key][idx][0])
         free_mem.append(int(inital_free - temp_val))
         
         # Calculate the free memory after the GC runs
         temp_val = 0
         for key in data_dictionary.keys():
-            temp_val += int(data_dictionary[key][idx][1])
+            if str(key) != "Time":
+                temp_val += int(data_dictionary[key][idx][1])
         free_mem.append(int(inital_free - temp_val))
 
     return free_mem

@@ -309,9 +309,11 @@ def __getHeapAllocation_schema0(create_csv = False):
     # Initalize the lists we will append to, based on what is found
     for key in to_search.keys():
         heap_regions[key] = []
-    
+    heap_regions["Time"] = []
+
     # Helps focus search onto "non tag" regions of each log line
-    log_line_key = '\[*(.*)\]*\[\d+\.\d+\w+\]\[(.*)\[(.*)\](.*)'
+    log_line_key = '\[*(.*)\]*\[(\d+\.\d+)\w+\]\[(.*)\[(.*)\](.*)'
+ 
     with open(path, "r") as file:
         for line in file:
             match_info = re.search(log_line_key, line)
@@ -324,15 +326,20 @@ def __getHeapAllocation_schema0(create_csv = False):
                     # m is a possibe match
                     if m:
                         heap_regions[key].append((m.group(1), m.group(2)))
+                        if key == "Eden":
+                            heap_regions["Time"].append(match_info.group(2))
+                        
 
+    
     # Warning: 
     # The following is O(n)*c runtime, on filesize, where c is fairly large   
     # Calculate the total memory avilable, to correctly display
     # Graph containing 'free' memory
+    
     inital_storage = __getHeapInitialState(False)
     init_cap = __remove_metrx_ending(inital_storage["Max"])
     init_region_size = __remove_metrx_ending(inital_storage["Region"])
-
+    
     # return results. Notice len(list) = 2
     return [heap_regions, int(init_cap/init_region_size)]
 
