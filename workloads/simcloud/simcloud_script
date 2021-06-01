@@ -1,0 +1,13 @@
+        #!/bin/sh
+        #simcloud job post --cpus 4 --smi current-ubuntu16.04-cuda8.0
+        #simcloud bundle create
+        #https://simcloud.apple.com/ui/cluster/nodepools?cluster=mr2
+        # bundle id
+#bundle-8bc73cd875494734bf099df9bd2117ee
+simcloud -c mr2 job run --bundles bundle-8bc73cd875494734bf099df9bd2117ee --command 'java -version > output.txt  && ./simcloud/run' --output "simcloud_workload_log.log simcloud_workload_flight.jfr output.txt"
+#simcloud -c mr2 job console --live $job_id
+#simcloud job download
+        # --output filenames
+        # simcloud job download <id> 
+        # simcloud bundle list # lists bundles
+        # simcloud bundle delete <id> # delete an unusued / old bundle

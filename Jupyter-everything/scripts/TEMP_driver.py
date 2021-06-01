@@ -1,15 +1,23 @@
-import process_log as pl
-import plot_data as dplt
+import process_log_updated as pl
+#import plot_data as dplt
 
 def main():
     
     # testInitialHeapState()
     # testHeapAllocation()
     # testLargeInformationPauseCollection()
-    testGetGCMetadata()
+    #testGetGCMetadata()
     #dplt.plot_heap_allocation_breakdown(temp)
     #df = pl.getPauses(False)
     #dplt.plot_pauses(df)
+    # pl.setLogPath("../../datasets/amzn_workload_4.log")
+    # t = pl.getYoungPauses2(False)
+    # testHeapAllocation()
+    pl.setLogPath("../../datasets/amzn_workload_4.log")
+    pl.setLogSchema(0)
+    pl.getGCMetadata2(create_csv = False)
+    print(pl.getTotalProgramRuntime())
+    
     
 def testLargeInformationPauseCollection():
     pl.setLogPath("../../datasets/amzn_workload_4.log")
@@ -21,17 +29,15 @@ def testGetGCMetadata():
 
 
 def testHeapAllocation():
-    pl.setLogPath("../../datasets/amzn_workload_4.log")
-    pl.setLogSchema(0)
-    print("First run:\n")
-    t = pl.getHeapAllocation(False)
-    dplt.plot_heap_allocation_breakdown(t)
+    # pl.setLogPath("../../datasets/amzn_workload_4.log")
+    # pl.setLogSchema(0)
+    # print("First run:\n")
+    # t = pl.getHeapAllocation(False)
+    # dplt.plot_heap_allocation_breakdown(t)
 
     pl.setLogPath("../../datasets/gc.log")
     pl.setLogSchema(1)
-    print("Second Run:\n")
-    t = pl.getHeapAllocation(False)
-    dplt.plot_heap_allocation_breakdown(t)
+    t = pl.getHeapAllocation(True)
 
 
 def testInitalHeapState():

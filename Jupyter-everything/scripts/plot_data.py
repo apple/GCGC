@@ -10,16 +10,15 @@ from scripts import process_log as pl
 plt.rcParams['figure.figsize'] = [14, 8]
 
 def plot_pauses(df):
+    
     # Obtain X Y list information from the dataframe.
-    x_values = list(df.iloc[:,3])
-    x = []
-    for entry in x_values:
-        x.append(entry[:-1])
-    x_values = list(map(float, x))
-    y_values = list(map(float, list(df.iloc[:,0])))
-    del x #not necesarily needed
+    shift = 5 - len(df) # account for possible empty rows.
+    y_values = list(map(float, df[4 - shift]))
+    x_values = list(map(__time_to_float, df[0 - shift]))
+
     total_wait = __find_trends(df)
     total_time = pl.getTotalProgramRuntime()
+    print("Total time: " + str(total_time))
     print("Total program runtime: " + str(total_time) + " seconds")
     throughput = (total_time - (total_wait)/1000) / (total_time)
     print("Throughput: " + str(round(throughput * 100, 4)) + "%")
@@ -44,14 +43,16 @@ def plot_pauses(df):
     ## Find interesting trends within the data.
     
 
-
+def __time_to_float(time):
+    return float(time[:-1])
 
 
 # Finds trends in dataframe. 
 # Column 1 must be pause time, (1 indexed)
 # Column 4 must be time since start of program.
 def __find_trends(df):
-    wait_times = list(df.iloc[:,0])
+    shift = 5 - len(df)
+    wait_times = df[4 - shift]
     max_wait = max(wait_times, key = lambda i : float(i))
     total_wait   = round(sum(float(i) for i in wait_times), 4)
     average_wait = round(total_wait / len(wait_times), 4)
@@ -93,8 +94,8 @@ def plot_heap_allocation_breakdown(breakdown_lst):
     
     # Order matters here, associated with order collected this data.
     # TODO: Remove dependence on Order, use dictionary instead
-    region_names = ["Young", "Survivor", "Old", "Humongus_start", 
-                    "Humongus_continue", "Collection_set", "Free", 
+    region_names = ["Free", "Young", "Survivor", "Old", "Humongus_start", 
+                    "Humongus_continue", "Collection_set",  
                     "Open_archive", "Closed_archive", "TAMS"]
 
     # Add titles and format style to plot
@@ -277,4 +278,21 @@ def tableMetadata(metadata):
         # Print formatting based on item length, then print the value
         print(int((max_key_len - len(keys[idx])) / 2) * ". " + "| " + str(vals[idx]))
         
-       
+def displayMetadata(table):
+    # table is a list of lists
+    # [ [title, value], [title, value], ... ]
+    
+    # determine line length for formatting.
+    max_title_len = max([len(item[0]) for item in table])
+
+    for item in table:
+        # Start with title 
+        print(item[0] +" ", end="")
+        
+        # Determine if an extra whitespace is needed, from even/odd lines
+        whitespace_length = max_title_len - len(item[0])
+        if (whitespace_length % 2 == 1):
+            print(" ", end="")
+        
+        # Print formatting based on item length, then print the value
+        print(int((max_title_len - len(item[0])) / 2) * ". " + "| " + str(item[1]))
