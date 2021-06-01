@@ -2,5 +2,11 @@
 # The gc log is too large, not needed.
 *.log
 final
-/bucket_parse/*.log 
+/datasets/*
+
+/workloads/outputs
+/workloads/logs
+/workloads/META-INF
+/workloads/*.jfr
+/workloads/*.log
 
