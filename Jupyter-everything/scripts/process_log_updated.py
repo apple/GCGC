@@ -115,8 +115,8 @@ def getYoungPauses2(create_csv = False):
     # note: by reading the g1f documentation, I know there are 6 regex groups.
     table = g1f.manyMatch_LineSearch(match_terms = search_term, 
                                      num_match_groups = 6,
-                                     data = [],
-                                     filepath = path,
+                                     data = [],     #reading from file, no data
+                                     filepath = path, #global
                                      in_file = True)
     if not table:
         print("Unable to find young pauses in data set")
@@ -125,7 +125,7 @@ def getYoungPauses2(create_csv = False):
     # remove the ms terminology from the ending
     for index in range(len(table[-1])):
         table[-1][index] = __remove_metric_ending_time(table[-1][index])
-   
+
     table = __remove_empty_columns(table)
 
     #### If create CSV ###
@@ -141,7 +141,7 @@ def getYoungPauses2(create_csv = False):
 ###
 
 def __create_csv(table, filename):
-    # C
+    # Don't overwrite any data : get a unique filename.
     filename = __get_unique_filename(filename)
     with open(filename, "w") as file:
         # iterate through the rows
