@@ -295,7 +295,7 @@ def lineMetadata():
 
 
 # Metadata that can be searched for. TODO: Add formal documentation
-def G1Metadata():
+def G1Metadata_titles():
     categories = ["Version", "CPUs", "Memory", "Large Page Support",
                   "NUMA Support", "Compressed Oops", "Pre-touch", 
                   "Parallel Workers", "Heap Region Size",
@@ -304,6 +304,12 @@ def G1Metadata():
                   "Concurrent Refinement Workers", "Periodic GC"]
     return categories
 
+def G1Metadata_searchable():
+    sections = G1Metadata_titles()
+    searchables = []
+    for section in sections:
+        searchables.append(".*\s" + section + ":\s(.+)\s*")
+    return searchables
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                         manyMatch_LineSearch

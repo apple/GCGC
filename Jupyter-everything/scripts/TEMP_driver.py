@@ -12,7 +12,10 @@ def main():
     #dplt.plot_pauses(df)
     # pl.setLogPath("../../datasets/amzn_workload_4.log")
     # t = pl.getYoungPauses2(False)
-    testHeapAllocation()
+    # testHeapAllocation()
+    pl.setLogPath("../../datasets/amzn_workload_4.log")
+    pl.setLogSchema(0)
+    pl.getGCMetadata2()
     
 def testLargeInformationPauseCollection():
     pl.setLogPath("../../datasets/amzn_workload_4.log")
