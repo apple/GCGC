@@ -498,13 +498,17 @@ def getGCdataSections(create_csv = False):
 # Note: not efficient if looking to optimize
 def getTotalProgramRuntime():
     with open(path, "r") as file:
-        data = file.readlines()
-        
+        data = file.readlines()        
         final_line = data[-1]
-
-        real_time, from_start = __get_timestamps(final_line)
-        # Remove the "s" from the time from start. 
-        return float(from_start[:-1])
+        
+        g1f.fullLineInfo()
+        columns = g1f.manyMatch_LineSearch( match_terms = [g1f.fullLineInfo()],
+                                  num_match_groups = 5,
+                                  data = [final_line] )                                    
+        # Data is returned in table format. Access table column 1
+        # Access the only row, row 0
+        # then remove the second "s" character to create a float.
+        return float(columns[1][0][:-1])
 
 # Purpose: Obtain metadata about a particular version of 
 def getGCMetadata(create_csv = False):
@@ -550,11 +554,13 @@ def getGCMetadata2(create_csv = False):
     if log_schema != 0:
         print("getGCMetadata for log_schema " + str(log_schema) + " unimplemented")
         return
-    
-    data = g1f.singleMatch_LineSearch(match_terms = g1f.G1Metadata_searchable(),
+    # columns = each metadata term
+    table = g1f.singleMatch_LineSearch(match_terms = g1f.G1Metadata_searchable(),
                                       data = [],
                                       search_titles = g1f.G1Metadata_titles(),
                                       filepath = path,
                                       in_file  = True)
-    print(data)    
+    if create_csv:
+        __create_csv(table, "gc_metadata.csv")
+    return table
     
