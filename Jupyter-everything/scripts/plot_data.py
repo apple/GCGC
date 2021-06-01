@@ -278,10 +278,21 @@ def tableMetadata(metadata):
         # Print formatting based on item length, then print the value
         print(int((max_key_len - len(keys[idx])) / 2) * ". " + "| " + str(vals[idx]))
         
-       
 def displayMetadata(table):
     # table is a list of lists
-    # [ [title, value], [title, value] ]
+    # [ [title, value], [title, value], ... ]
+    
+    # determine line length for formatting.
     max_title_len = max([len(item[0]) for item in table])
-    max_value_len = max([len(item[1]) for item in table])
-    print(max_title_len, max_value_len)
+
+    for item in table:
+        # Start with title 
+        print(item[0] +" ", end="")
+        
+        # Determine if an extra whitespace is needed, from even/odd lines
+        whitespace_length = max_title_len - len(item[0])
+        if (whitespace_length % 2 == 1):
+            print(" ", end="")
+        
+        # Print formatting based on item length, then print the value
+        print(int((max_title_len - len(item[0])) / 2) * ". " + "| " + str(item[1]))
