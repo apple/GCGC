@@ -38,6 +38,21 @@ def YoungPause():
 def PauseCleanup():
     return ".*Pause Cleanup.*?(\d+\w*->\d+\w*\(*.*\)*) (\d+.*)\s"
 
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                               PauseRemark
+#   Purpose:
+#       Finds timing associated with a Pause Remark GC action
+#   
+#   Return:
+#       A regex searchable string for this particular log field
+# 
+#   Regex Group Info
+#       1) Change in data allocated
+#       2) Time spent
+#
+##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+def PauseRemark():
+    return ".*Pause Remark.*?(\d+\w*->\d+\w*\(*.*\)*) (\d+.*)\s"
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                               DateTimestamp

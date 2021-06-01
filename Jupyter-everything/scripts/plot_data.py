@@ -10,16 +10,15 @@ from scripts import process_log as pl
 plt.rcParams['figure.figsize'] = [14, 8]
 
 def plot_pauses(df):
+    
     # Obtain X Y list information from the dataframe.
-    x_values = list(df.iloc[:,3])
-    x = []
-    for entry in x_values:
-        x.append(entry[:-1])
-    x_values = list(map(float, x))
-    y_values = list(map(float, list(df.iloc[:,0])))
-    del x #not necesarily needed
+    shift = 5 - len(df) # account for possible empty rows.
+    y_values = list(map(float, df[4 - shift]))
+    x_values = list(map(__time_to_float, df[0 - shift]))
+
     total_wait = __find_trends(df)
     total_time = pl.getTotalProgramRuntime()
+    print("Total time: " + str(total_time))
     print("Total program runtime: " + str(total_time) + " seconds")
     throughput = (total_time - (total_wait)/1000) / (total_time)
     print("Throughput: " + str(round(throughput * 100, 4)) + "%")
@@ -44,14 +43,16 @@ def plot_pauses(df):
     ## Find interesting trends within the data.
     
 
-
+def __time_to_float(time):
+    return float(time[:-1])
 
 
 # Finds trends in dataframe. 
 # Column 1 must be pause time, (1 indexed)
 # Column 4 must be time since start of program.
 def __find_trends(df):
-    wait_times = list(df.iloc[:,0])
+    shift = 5 - len(df)
+    wait_times = df[4 - shift]
     max_wait = max(wait_times, key = lambda i : float(i))
     total_wait   = round(sum(float(i) for i in wait_times), 4)
     average_wait = round(total_wait / len(wait_times), 4)
@@ -278,3 +279,9 @@ def tableMetadata(metadata):
         print(int((max_key_len - len(keys[idx])) / 2) * ". " + "| " + str(vals[idx]))
         
        
+def displayMetadata(table):
+    # table is a list of lists
+    # [ [title, value], [title, value] ]
+    max_title_len = max([len(item[0]) for item in table])
+    max_value_len = max([len(item[1]) for item in table])
+    print(max_title_len, max_value_len)
