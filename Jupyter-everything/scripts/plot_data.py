@@ -110,13 +110,13 @@ def __find_trends(table):
 #                   list[0] = dictionary, with all region counts               #
 #                   list[2] = integer, size of initial free memory             # 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def plot_heap_allocation_breakdown(breakdown_lst):
+def plot_heap_allocation_breakdown(breakdown_lst, max_heap = 0):
     if not breakdown_lst:
         return
 
     # determine data arrangement from list length
     if (len(breakdown_lst)) == 2:
-        return __plot_HA_schema0(breakdown_lst)
+        return __plot_HA_schema0(breakdown_lst, max_heap)
 
     # Access 2 dimensional list of allocation during runtime    
     allocation_summary = breakdown_lst[0]
@@ -164,10 +164,24 @@ def plot_heap_allocation_breakdown(breakdown_lst):
 #                                                                              #
 #   Note: generates MatPlotLib plot                                            #
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def __plot_HA_schema0(dd):
-    if (not dd) or (len(dd) < 2) or (not dd[0]) or (not dd[1]):
+def __plot_HA_schema0(dd, max_heap = 0):
+    
+    if (not dd) or (len(dd) < 2) or (not dd[0]) :
         return
-
+    if (not dd):
+        print("No data to plot")
+        return 
+    if len(dd) < 2:
+        print("Not enough data to plot Heap Allocation")
+        return
+    if not dd[0]:
+        print("List missing collected Heap Allocation data")
+        return
+    if not dd[1]:
+        print("Failed to find inital memory size. Rerun with parameter max_heap = (int)")
+    if max_heap != 0:
+        dd[1] = max_heap
+    print("This far")
     data_dictionary = dd[0]
     # get free_memory list of memory during runtime
     free_memory = __calculate_freemem(data_dictionary, dd[1]) 
@@ -254,6 +268,12 @@ def __calculate_freemem(data_dictionary, inital_free):
         return []
 
     free_mem = []
+    keys = list(data_dictionary.keys())
+    # if any sections did not collect data, remove them.
+    for i in range(len(keys)):
+        if not data_dictionary[keys[i]]:
+            del data_dictionary[keys[i]]
+
     for idx in range(len(data_dictionary["Eden"])):
         
         # Calculate the free memory before the GC runs

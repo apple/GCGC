@@ -336,12 +336,13 @@ def __getHeapAllocation_schema0(create_csv = False):
     # Calculate the total memory avilable, to correctly display
     # Graph containing 'free' memory
     
-    inital_storage = __getHeapInitialState(False)
-    init_cap = __remove_metrx_ending(inital_storage["Max"])
-    init_region_size = __remove_metrx_ending(inital_storage["Region"])
-    
-    # return results. Notice len(list) = 2
-    return [heap_regions, int(init_cap/init_region_size)]
+    initial_storage = __getHeapInitialState(False)
+    print(initial_storage)
+    if initial_storage:
+        init_cap = __remove_metrx_ending(initial_storage["Max"])
+        init_region_size = __remove_metrx_ending(initial_storage["Region"])
+        return [heap_regions, int(init_cap/init_region_size)]
+    return [heap_regions, 0]
 
 
 
