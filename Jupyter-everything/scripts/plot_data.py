@@ -5,6 +5,7 @@
 ##  Author: Ellis Brown, 6/1
 ##  TODO: Define a general type chart, plots any table 
 #############################################################################
+from typing import KeysView
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -177,14 +178,14 @@ def __plot_HA_schema0(dd, max_heap = 0):
     if not dd[0]:
         print("List missing collected Heap Allocation data")
         return
-    if not dd[1]:
+    if not dd[1] and not max_heap:
         print("Failed to find inital memory size. Rerun with parameter max_heap = (int)")
     if max_heap != 0:
         dd[1] = max_heap
     print("This far")
     data_dictionary = dd[0]
     # get free_memory list of memory during runtime
-    free_memory = __calculate_freemem(data_dictionary, dd[1]) 
+    free_memory = __calculate_freemem(data_dictionary, dd[1], before = True, after = True) 
     
     # Create integer list [0...n-1] to help plot allocation
     # TODO: Change this to be based on actual time in program.
@@ -195,7 +196,7 @@ def __plot_HA_schema0(dd, max_heap = 0):
     x = np.array(x) # *2 for tuples
     
     # Format plot
-    plt.xlabel("GC Run number (not based on time)")
+    plt.xlabel("GC Run : Time in seconds")
     plt.ylabel("Number of memory blocks")
     plt.title("heap allocation throughout runtime")
     plt.legend(list(data_dictionary.keys()))
@@ -224,10 +225,10 @@ def __plot_HA_schema0(dd, max_heap = 0):
     # Create second plot: (Just memory during runtime)
     # As heap memory could always be 99% free, seeing the changes in the
     # amonut of free memory in it's own plot is valuable 
-    plt.figure(2)
-    plt.plot(x, np.array(free_memory), color = "red", label = "Free Memory")
-    plt.legend()
-    plt.show() 
+    # plt.figure(2)
+    # plt.plot(x, np.array(free_memory), color = "red", label = "Free Memory")
+    # plt.legend()
+    # plt.show() 
 
     # Create third plot
     plt.figure(3)
@@ -263,7 +264,7 @@ def __plot_HA_schema0(dd, max_heap = 0):
 #   Return: list with the # of free regions sequentially. Memory recorded      #
 #           directly before and after each garbage collection pause.           #
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def __calculate_freemem(data_dictionary, inital_free):
+def __calculate_freemem(data_dictionary, inital_free, before = False, after = False):
     if not data_dictionary:
         return []
 
@@ -277,20 +278,22 @@ def __calculate_freemem(data_dictionary, inital_free):
     for idx in range(len(data_dictionary["Eden"])):
         
         # Calculate the free memory before the GC runs
-        temp_val = 0
-        for key in data_dictionary.keys():
-            if str(key) != "Time":
-                                        # access tuple [0] from list
-                                        # of tuples associated with key
-                temp_val += int(data_dictionary[key][idx][0])
-        free_mem.append(int(inital_free - temp_val))
+        if before:
+            temp_val = 0
+            for key in data_dictionary.keys():
+                if str(key) != "Time":
+                                            # access tuple [0] from list
+                                            # of tuples associated with key
+                    temp_val += int(data_dictionary[key][idx][0])
+            free_mem.append(int(inital_free - temp_val))
         
         # Calculate the free memory after the GC runs
-        temp_val = 0
-        for key in data_dictionary.keys():
-            if str(key) != "Time":
-                temp_val += int(data_dictionary[key][idx][1])
-        free_mem.append(int(inital_free - temp_val))
+        if after:
+            temp_val = 0
+            for key in data_dictionary.keys():
+                if str(key) != "Time":
+                    temp_val += int(data_dictionary[key][idx][1])
+            free_mem.append(int(inital_free - temp_val))
 
     return free_mem
 
@@ -322,3 +325,65 @@ def displayMetadata(table):
         
         # Print formatting based on item length, then print the value
         print(int((max_title_len - len(item[0])) / 2) * ". " + "| " + str(item[1]))
+    
+
+# Currently only defined on Schema 0
+def heap_allocation_beforeafter_gc(breakdown_lst, max_heap = 0):
+    if not breakdown_lst:
+        return
+    data = breakdown_lst[0]
+    if not breakdown_lst[1]:
+        breakdown_lst[1] = max_heap
+    free_memory_before = __calculate_freemem(data, breakdown_lst[1], before = True)
+    free_memory_after = __calculate_freemem(data, breakdown_lst[1], after = True)
+    x = []
+    for item in data["Time"]:
+        x.append(float(item))
+    x = np.array(x)
+    ## basic plot setup ##
+    plt.xlabel("Time in seconds")
+    plt.ylabel("Number of memory blocks")
+    plt.title("Heap allocation BEFORE gc")
+    plt.legend(list(data.keys()))
+    # Choose from some color choices. TODO: style colors
+    colors = ["royalblue", "cyan", "black", "green", "purple", 
+              "lime", "brown", "darkmagenta", "lime", "green"]
+    color_index = 0
+    # Create the first plot
+    plt.figure(1)
+    afterl = []
+    labels = []
+    #########################
+    for key in data.keys():
+        if str(key) != "Time":
+            before = []
+            after = []
+            
+            for idx in range(len(data[key])):
+                before.append(int(data[key][idx][0]))
+                after.append(int(data[key][idx][1]))
+            plt.plot(np.array(x), np.array(before), color = colors[color_index], label = str(key))
+            color_index += 1
+            afterl.append(after)
+            labels.append(str(KeysView))
+    plt.plot(x, np.array(free_memory_before), color = "red", label = "Free Memory")            
+    plt.legend()                    #TODO: test if removing this line does anything
+    plt.show()
+    print("\n\n")
+    ###############
+    ### Figure 2 ##
+    ###############
+    plt.figure(2)
+    plt.xlabel("Time in seconds")
+    plt.ylabel("Number of memory blocks")
+    plt.title("Heap allocation AFTER gc")
+    
+    color_index = 0
+    for i in range(len(afterl)):
+        plt.plot(x, np.array(afterl[i]), color = colors[color_index], label = labels[i])
+        color_index += 1
+
+    plt.plot(x, np.array(free_memory_after), color = "red", label = "Free Memory")
+    plt.legend()
+    plt.show()
+
