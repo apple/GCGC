@@ -212,8 +212,9 @@ def __remove_empty_columns(table):
 
     return parsed
      
-
+# TODO: TEST AND VERIFY
 def getConcurrentMarkPauses(create_csv = False):
+    print("Fuunction getConcurrentMarkPauses called.")
     match_terms = [g1f.lineMetadata() + g1f.PauseRemark(), 
                    g1f.lineMetadata() + g1f.PauseCleanup()]
     table = g1f.manyMatch_LineSearch(match_terms = match_terms,
