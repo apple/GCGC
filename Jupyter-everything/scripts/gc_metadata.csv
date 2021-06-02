@@ -1,2 +1,0 @@
-Version, CPUs, Memory, Large Page Support, NUMA Support, Compressed Oops, Pre-touch, Parallel Workers, Heap Region Size, Heap Initial Capacity, Heap Max Capacity, Heap Min Capacity, Concurrent Workers, Concurrent Refinement Workers, Periodic GC, 
-16.0.1+9 (release), 16 total, 16 available, 65536M, Disabled, Disabled, Enabled (Zero based), Disabled, 13, 8M, 1G, 16G, 8M, 3, 13, Disabled, 
