@@ -179,7 +179,7 @@ def __find_trends(table):
 
 def generate_table_comparison(tl, func, title, count = 0):
     fig, ax = plt.subplots()
-    colors = ["g", "r", "b", "y"]
+    colors = ["g", "r", "b", "y", "c", "m"] #https://matplotlib.org/stable/gallery/color/named_colors.html
     for i in range(len(tl)):
         ax = func(tl[i], ax, colors[i], str(i), count)
     ax = addLabels(ax, title)
