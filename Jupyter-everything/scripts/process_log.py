@@ -7,14 +7,7 @@
 #                                                   #
 # Ellis Brown, 5/26/2020                            #
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Public functions                                  #
-#                                                   #
-# setLogPath          (string  path)                # 
-# setLogSchema        (integer logtype)             #
-# getPauses           (boolean create_csv)          #
-# getHeapAllocation   (boolean create_csv)          #
-# getHeapInitialState (boolea create_csv)           #
-# # # # # # # # # # # # # # # # # # # # # # # # # # #
+
 from os import pathconf_names
 import pandas as pd
 import re
@@ -105,7 +98,7 @@ def setLogSchema(logtype):
 # # Parameters : none
 # # Requirements: path must be set to the .log file we look to traverse.
 # # Return: List of tuples as pauses, with added metadata.
-def getYoungPauses2(create_csv = False):
+def getYoungPauses(create_csv = False):
     
     with open(path, "r") as f:
         file_contents = f.readlines()
