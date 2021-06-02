@@ -21,7 +21,10 @@ def comparePauses():
         choose(file)
         table = pl.getYoungPauses(False)
         collection.append(table)
-    generate_table_comparison(collection)
+    generate_table_comparison(collection, plot_pause, "Pauses during runtime")
+    generate_table_comparison(collection, plot_sum_pauses, "Sum Pauses during runtime", 10)
+    generate_table_comparison(collection, plot_longest_pauses, "Longest pauses during runtime", 10)
+    
 
 def choose(filename):
     pl.setLogPath(filename)
@@ -174,24 +177,32 @@ def __find_trends(table):
     print("Average wait: " + str(average_wait) + " ms")
     return total_wait
 
-def generate_table_comparison(tl):
+def generate_table_comparison(tl, func, title, count = 0):
     fig, ax = plt.subplots()
     colors = ["g", "r", "b", "y"]
     for i in range(len(tl)):
-        ax = plot_pause(tl[i], ax, colors[i], label = str(i))
+        ax = func(tl[i], ax, colors[i], str(i), count)
+    ax = addLabels(ax, title)
+    plt.show()
+
+def generate_sum_table_comparsion(tl):
+    fig, ax = plt.subplots()
+    colors = ["g", "r", "b", "y"]
+    for i in range(len(tl)):
+        ax = plot_sum_pauses(tl[i], ax, colors[i], str(i), 10)
     ax = addLabels(ax)
     plt.show()
 
 
 
-def addLabels(ax):
+def addLabels(ax, title):
     ax.set_xlabel("X LABEL")
     ax.set_ylabel("Y LABEL")
-    ax.set_title("the coolest")
+    ax.set_title(title)
     ax.legend()
     return ax 
 
-def plot_pause(table, ax, color = "", label = ""):
+def plot_pause(table, ax, color = "", label = "", count = 0):
     
     ########################### setup ######################
     if not table:
@@ -269,7 +280,7 @@ def plot_longest_pauses(table, ax, color, label, num_pauses):
     return ax 
 
 
-def plot_longest_pauses(table, ax, color, label, num_pauses):
+def plot_sum_pauses(table, ax, color, label, num_pauses):
     if not table:
         print("No table parameter to plot longest pauses. Abort")
         return
@@ -295,18 +306,19 @@ def __group_buckets(timestamps, pause_information, num_pauses, func):
 
     # Put bottom value of all ranges into hash table. 
     # Actual hash table not needed, because indicies in range [0, n]
-    ranges = [[] for i in range(num_pauses)]
-    
+    buckets = [[] for i in range(num_pauses)]
     for time, pause in zip(timestamps, pause_information):
         bucket = int(time / pause_duration) # floor of division to get bucket.
-        ranges[bucket].append((time , pause))
+        if bucket == len(buckets):
+            bucket = len(buckets) - 1
+        buckets[bucket].append(pause)
     
     p = 1 # index of pause
     for i in range(num_pauses):
-        bucket[i] = func([value[p] for value in bucket[i]]) # find the max in bucket
+        buckets[i] = func([value for value in buckets[i]]) # find the max in bucket
 
     timestamps = [r * pause_duration for r in range(num_pauses)]
-    pause_information = bucket
+    pause_information = buckets
 
     return timestamps, pause_information
     # Take values and sort them into hash tables based on values. 
@@ -356,3 +368,7 @@ def data_plot(ax, timestamps, pause_information, color, label): ## Create data s
     ax.plot(x_data, y_data, color = color, label = label),    
     # return the subplot updated with the new information
     return ax
+
+
+    # https://pycallgraph.readthedocs.io/en/master/ # use to simplify code!!
+    # :D
