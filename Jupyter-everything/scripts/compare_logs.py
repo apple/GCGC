@@ -89,6 +89,9 @@ def plot_pauses(collection):
     fig, ax = plt.subplots() # default 1 row, 1 column
     labels = ["First", "Second", "Third"]
     colors = ["red", "green", "blue"]
+    ax.set_ylabel("Pause duration (miliseconds)")
+    ax.set_xlabel("Time from program start (seconds)")
+    ax.set_title("Pauses for Young Generation GC")
     for file_no in range(len(collection)):
         ax = plot_subplot(collection[file_no], colors[file_no], labels[file_no], ax)
     plt.show()
@@ -112,11 +115,13 @@ def plot_pauses(collection):
 def plot_subplot(table, color, label, ax):
  # Obtain X Y list information from the dataframe.
     shift = 5 - len(table) # account for possible empty rows.
+    print(len(table))
+    print(shift, "Shift")
     y_values = list(map(float, table[4 - shift]))
     x_values = list(map(__time_to_float, table[0 - shift]))
     
     # Create a subplot to apply this effect on.
-    fig, ax = plt.subplots()
+    
     # Show interesting trends
     total_wait = __find_trends(table)
     total_time = pl.getTotalProgramRuntime()
@@ -124,13 +129,12 @@ def plot_subplot(table, color, label, ax):
     print("Total program runtime: " + str(total_time) + " seconds")
     throughput = (total_time - (total_wait)/1000) / (total_time)
     print("Throughput: " + str(round(throughput * 100, 4)) + "%")
- 
+    
     # # # # # # # # # # # # # # # # # # # #
     # Plot 1: Pauses over program's entire runtime.
-    ax.bar(x = np.array(x_values), height= np.array(y_values), width = 2.0, color = color, label = label)
-    ax.set_ylabel("Pause duration (miliseconds)");
-    ax.set_xlabel("Time from program start (seconds)")
-    ax.set_title("Pauses for Young Generation GC")
+    ax = ax.plot(np.array(x_values), height= np.array(y_values), width = 2.0, color = color, label = label)
+    
+  
     #plt.show()
     # # # # # # # # # # # # # # # # # # # #
     return ax
