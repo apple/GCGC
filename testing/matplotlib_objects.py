@@ -1,6 +1,7 @@
 from matplotlib import pyplot as plt
+import pl as pl
 import random as r 
-
+plt.rcParams['figure.figsize'] = [12, 7]
 def main():
     fig, ax = plt.subplots()
     
@@ -13,9 +14,6 @@ def main():
 
 def someFunction(ax, c):
     ax.plot([20 * r.randint(2, 20) for x in range(r.randint(4,8))], color = c)
-    
-    
-    
     return ax 
 
 def addLabels(ax):
@@ -68,9 +66,12 @@ def plot_pauses(table, ax, color = "", label = ""):
         # end pause duration high
         x_data.append(x + y)
         y_data.append(0)
-        
+    
+    # Plot the data created for this table. #
     ax.plot(x_data, y_data, color = color, label = label),    
+    # return the subplot updated with the new information
     return ax
+
 
 # Removes trailing 's' character from time in seconds
 def __time_to_float(time):
@@ -78,7 +79,10 @@ def __time_to_float(time):
 
     
 def generate_random_table(entry_count):
+    entry_count += r.randint(0,5)
     table = [[x * r.randint(20,50) for x in range(entry_count)], [], [], [], [y * r.randint(0,10) for y in range(entry_count)]]
     return table
 
 main()
+
+
