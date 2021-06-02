@@ -1,7 +1,7 @@
 # Purpose: Envoke a method of this function to comapare any N number of logs to each other.
 from scripts import process_log as pl
 import numpy as np
-import matplotlib as plt
+from matplotlib import pyplot as plt
 files = []
 def setFiles(f = []):
     if not f:
@@ -15,8 +15,8 @@ def comparePauses():
         print("No files added. Ending compare pauses.")
         return 
     collection = []
-    for f in files:
-        file = open(f, "r")
+    for file in files:
+        
         choose(file)
         table = pl.getYoungPauses(False)
         collection.append(table)
@@ -28,12 +28,69 @@ def choose(filename):
     #pl.setLogSchema(filename)
     pl.setLogSchema(0)
 
+def compareMetadata():
+    if not files:
+        print("No files added. Ending compare metadata.")
+    metadata_list = []
+    for file in files:
+        choose(file) # set file in pl.
+        metadata = pl.getGCMetadata(False)
+        metadata_list.append(metadata)
+    print_metadata_lists(metadata_list)
+
+def print_metadata_lists(metadata_lists):
+    
+    
+    if not metadata_lists or not metadata_lists[0]:
+        print("No metadata in metadata_lists")
+    doublelist = []
+    for i in range(len(metadata_lists)):
+        doublelist.append(list(metadata_lists[i].items()))
+    metadata_lists = doublelist
+    ### First, find the format for the table. Then, print all in that format.
+    max_title_len = max([len(item[0]) for item in metadata_lists[0]])
+    
+    max_out_len = 0
+    for metadata in metadata_lists:
+        for item in metadata:
+            max_out_len = max(len(item[0]), max_out_len)
+   
+    
+    for index in range(len(metadata_lists[0])): #length of the items to print
+                                                # = num rows
+        
+        # Start with title 
+        print(metadata_lists[0][index][0] +" ", end="")
+        # Determine if an extra whitespace is needed, from even/odd lines
+        whitespace_length = max_title_len - len(metadata_lists[0][index][0])
+        if (whitespace_length % 2 == 1):
+            print(" ", end="")
+       
+       # print("num_whitespace = ",int((max_title_len - len(metadata_lists[0][index][0])) / 2) )
+        print(int((max_title_len - len(metadata_lists[0][index][0])) / 2) * ". ", end = "")
+        for i in range(len(metadata_lists)): # number of columns
+            
+            # check if that column has any values
+            if metadata_lists[i]:
+                thing = metadata_lists[i][index]
+                print(thing, end="")
+
+                if not (max_out_len - len(thing) % 2):
+                    print(" ", end="")
+                
+                print("")
+
+                print((int(max_out_len - len(thing) / 2 ) * " ") + " | ", end="")
+        print("")
+
+
+    
 def plot_pauses(collection):
     fig, ax = plt.subplots() # default 1 row, 1 column
     labels = ["First", "Second", "Third"]
     colors = ["red", "green", "blue"]
     for file_no in range(len(collection)):
-        ax = plot_pauses(collection[file_no], colors[file_no], labels[file_no], ax)
+        ax = plot_subplot(collection[file_no], colors[file_no], labels[file_no], ax)
     plt.show()
     
 
@@ -52,7 +109,7 @@ def plot_pauses(collection):
 #             table with trends within the data
 #
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def plot_pauses(table, color, label, ax):
+def plot_subplot(table, color, label, ax):
  # Obtain X Y list information from the dataframe.
     shift = 5 - len(table) # account for possible empty rows.
     y_values = list(map(float, table[4 - shift]))
