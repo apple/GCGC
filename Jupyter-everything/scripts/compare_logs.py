@@ -1,4 +1,5 @@
 # Purpose: Envoke a method of this function to comapare any N number of logs to each other.
+from os import times
 from scripts import process_log as pl
 import numpy as np
 from matplotlib import pyplot as plt
@@ -198,14 +199,8 @@ def plot_pause(table, ax, color = "", label = ""):
         return
     # Tables may/may not come with datetime information appended.
     # This information is not currently used. Therefore, shift past it
-    if (len(table) == 5):
-        shift = 0
-    elif len(table) == 6:
-        shift = 1
-    else:
-        print("Table length does not match expected.")
-        print("Expected num cols: 5 or 6. Recieved: ", len(table))
-        return
+    shift = getShift(table)
+   
     
     timestamps = table[0 + shift]       # get timestamps from table information
     timestamps = list(map(__time_to_float, timestamps)) # clean data 
@@ -213,6 +208,126 @@ def plot_pause(table, ax, color = "", label = ""):
     pause_information = table[-1]       # get pause information duration
     
     ## Create data set that mimimics an up and down line graph based on pause time.
+    x_data = []
+    y_data = []
+
+    ###### Create X-Y Data. bumps for height based on pause duration #####
+    for x,y in zip(timestamps, pause_information):
+        # convert y from ms to seconds
+        y = y / 1000
+
+        # first, create a point at time before pause
+        x_data.append(x)
+        y_data.append(0)
+
+        # next, create a point of y height, at that initial time
+        x_data.append(x)
+        y_data.append(y)
+
+        # last point in pause duration high
+        x_data.append(x + y)
+        y_data.append(y)
+
+        # end pause duration high
+        x_data.append(x + y)
+        y_data.append(0)
+    
+    # Plot the data created for this table. #
+    ax.plot(x_data, y_data, color = color, label = label),    
+    # return the subplot updated with the new information
+    return ax
+
+
+#### Sum of pauses ####
+# Purpose: Because the output data looks VERY cluttered, take
+# all data from the data set, and create 100 different values, pauses for 
+# the sum over the total time / 100
+
+### Longest pause ###
+# Purpose: because data output looks very cluttered, take all data from
+# the data set and create 100 different values, pauses for the max pause in
+# total time / 100
+
+def plot_longest_pauses(table, ax, color, label, num_pauses):
+    if not table:
+        print("No table parameter to plot longest pauses. Abort")
+        return
+    shift = getShift(table)
+
+    timestamps = table[0 + shift]       # get timestamps from table information
+    if len(timestamps) < num_pauses:
+        print("Less pauses then needed for this table. Returning a normal table")
+        return plot_pause(table, ax, color, label)
+    
+
+    timestamps = list(map(__time_to_float, timestamps)) # clean data 
+    pause_information = table[-1]       # get pause information duration 
+    
+    timestamps, pause_information = __group_buckets(timestamps, pause_information, num_pauses, max)
+    # plots the data onto the existing ax plot, following line/bar pattern
+    ax = data_plot(ax, timestamps, pause_information, color, label)
+    return ax 
+
+
+def plot_longest_pauses(table, ax, color, label, num_pauses):
+    if not table:
+        print("No table parameter to plot longest pauses. Abort")
+        return
+    shift = getShift(table)
+
+    timestamps = table[0 + shift]       # get timestamps from table information
+    if len(timestamps) < num_pauses:
+        print("Less pauses then needed for this table. Returning a normal table")
+        return plot_pause(table, ax, color, label)
+    
+
+    timestamps = list(map(__time_to_float, timestamps)) # clean data 
+    pause_information = table[-1]       # get pause information duration 
+    
+    timestamps, pause_information = __group_buckets(timestamps, pause_information, num_pauses, sum)
+    # plots the data onto the existing ax plot, following line/bar pattern
+    ax = data_plot(ax, timestamps, pause_information, color, label)
+    return ax 
+
+def __group_buckets(timestamps, pause_information, num_pauses, func):
+    full_duration  = timestamps[-1]
+    pause_duration = full_duration / num_pauses
+
+    # Put bottom value of all ranges into hash table. 
+    # Actual hash table not needed, because indicies in range [0, n]
+    ranges = [[] for i in range(num_pauses)]
+    
+    for time, pause in zip(timestamps, pause_information):
+        bucket = int(time / pause_duration) # floor of division to get bucket.
+        ranges[bucket].append((time , pause))
+    
+    p = 1 # index of pause
+    for i in range(num_pauses):
+        bucket[i] = func([value[p] for value in bucket[i]]) # find the max in bucket
+
+    timestamps = [r * pause_duration for r in range(num_pauses)]
+    pause_information = bucket
+
+    return timestamps, pause_information
+    # Take values and sort them into hash tables based on values. 
+
+
+
+
+def getShift(table):
+    if (len(table) == 5):
+        shift = 0
+    elif len(table) == 6:
+        shift = 1
+    else:
+        print("Table length does not match expected.")
+        print("Expected num cols: 5 or 6. Recieved: ", len(table))
+        return [] #illogical value will cause error during runtime. TODO: fix
+
+    return shift 
+
+
+def data_plot(ax, timestamps, pause_information, color, label): ## Create data set that mimimics an up and down line graph based on pause time.
     x_data = []
     y_data = []
 
