@@ -20,6 +20,16 @@ def setFiles(f = []):
     global files
     files = f   # set files for access throughout program during runtime
 
+# Does all comparisons
+# Returns true on success, false otherwise.
+def compareAll():
+    if not files:
+        print("No files added to path. Ending")
+        return False
+    compareMetadata()
+    comparePauses(True, 20, 20, [])
+    return True
+
 
 # # # # # # # # # # # # # # # # # # # # # # # # #
 # Compares the Garbage Collector 
@@ -52,7 +62,7 @@ def compareMetadata():
 #   max_p       (int)     number of bars to create for longest pause during run
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-def comparePauses(full_p = True, sum_p = 0, max_p = 0):
+def comparePauses(full_p = True, sum_p = 0, max_p = 0, file_titles = []):
     if not files or type(files) != list:
         print("No files added. Ending compare pauses.")
         return
@@ -70,28 +80,173 @@ def comparePauses(full_p = True, sum_p = 0, max_p = 0):
         return
 
     if full_p:
-        __gen_comparison(collection, "Pauses during runtime", mapping = None)
+        __gen_comparison(collection, "Pauses during runtime", 0, 
+                         mapping = None, file_titles = file_titles)
     if sum_p > 0:
-        __gen_comparison(collection, "Sum Pauses during runtime", sum_p, mapping = sum)
+        __gen_comparison(collection, "Sum Pauses during runtime",
+                         sum_p, mapping = sum, file_titles = file_titles)
     if max_p > 0:
-        __gen_comparison(collection, "Longest pauses during runtime", max_p, mapping = max)
+        __gen_comparison(collection, "Longest pauses during runtime",
+                         max_p, mapping = max, file_titles = file_titles)
     
-
-def __gen_comparison(collection, title, bucket_count, mapping = None):
+# generate comparison on the same data table, by plotting multiple sets
+# of information to the same table.
+def __gen_comparison(collection, title, bucket_count, mapping = None, file_titles = []):
     if not collection:
         return 
 
     fig, ax = plt.subplots()    # create a subplot for this coomparison
-    ax = __addLabels(ax, title)   # add graph labels
-
-    colors = ["g", "r", "b", "y", "c", "m"] #https://matplotlib.org/stable/gallery/color/named_colors.html
-    for i in range(len(tl)):
-        ax = func(tl[i], ax, colors[i], str(i), count)
     
+    colors = ["g", "r", "b", "y", "c", "m", "k", 
+             "forestgreen", "lime", "dark_orange",
+             "darkred", "coral", "darkgoldenrod"]
+    #https://matplotlib.org/stable/gallery/color/named_colors.html
+
+    
+    # if no file titles have been passed, then simply use numbers for the vals
+    if not file_titles:
+        file_titles = [i for i in range(1, len(collection)) + 1]
+    
+    
+
+    for i in range(len(collection)):
+        ax = __group_and_plot(collection[i], ax, colors[i], file_titles[i], bucket_count, mapping)
+    
+    ax = __addLabelsPauses(ax, title)   # add graph labels
     plt.show()
 
 
-def __addLabels(ax, title):
+## Take data from a table, appropriately map it if needed, and 
+# plot the table to an output figure
+def __group_and_plot(table, ax, color, label, bucket_count, mapping):
+    
+    if not table:
+        print("No table passed as a parameter. Abort.")
+        return
+    # Tables may/may not come with datetime information appended.
+    # This information is not currently used. Therefore, shift past it
+    shift = __getShift(table)
+
+    timestamps = table[0 + shift]
+    timestamps = list(map(__time_from_float, timestamps))
+    pauses = table[-1]
+    
+    if not mapping:
+        ax = __plot_data(ax, timestamps, pauses, 
+                         color, label, x_transformation = False)
+    else:
+        timestamps, pauses = __group_buckets(timestamps, 
+                                            pauses,
+                                            bucket_count,
+                                            mapping)
+        ax = __plot_data(ax, timestamps, pauses, 
+                         color, label, x_transformation = True)
+    
+    return ax
+
+# Based on a passed mapping, sort groupings of data into buckets, 
+# such that they follow a uniform time distribution based on bucket count
+def __group_buckets(timestamps, pauses, bucket_count, mapping):
+    full_duration  = timestamps[-1]
+    pause_duration = full_duration / bucket_count
+
+    # Put bottom value of all ranges into hash table. 
+    # Actual hash table not needed, because indicies in range [0, n]
+    buckets = [[] for i in range(bucket_count)]
+    for time, pause in zip(timestamps, pauses):
+        bucket = int(time / pause_duration) # floor of division to get bucket.
+        if bucket == len(buckets):
+            bucket = len(buckets) - 1
+        buckets[bucket].append(pause)
+    
+    p = 1 # index of pause
+    for i in range(bucket_count):
+        buckets[i] = mapping([value for value in buckets[i]]) # find the max in bucket
+
+    timestamps = [r * pause_duration for r in range(bucket_count)]
+    pauses = buckets
+
+    return timestamps, pauses
+    # Take values and sort them into hash tables based on values. 
+
+
+# Take the data as pairs of (time, pause), and turn those into a line graph
+# showing the pause times throughout runtime.
+def __plot_data(ax, timestamps, pauses, color, label, x_transformation):
+    ## Create data set that mimimics an up and down line graph based on pause time.
+    x_data = []
+    y_data = []
+
+    if not x_transformation:
+        ###### Create X-Y Data. bumps for height based on pause duration #####
+        for x,y in zip(timestamps, pauses):
+            # convert y from ms to seconds
+            y = y / 1000
+
+            # first, create a point at time before pause
+            x_data.append(x)
+            y_data.append(0)
+
+            # next, create a point of y height, at that initial time
+            x_data.append(x)
+            y_data.append(y)
+
+            # last point in pause duration high
+            x_data.append(x + y)
+            y_data.append(y)
+
+            # end pause duration high
+            x_data.append(x + y)
+            y_data.append(0)
+    else:
+        
+        # Create buckets of the same size, placed uniformly over time.
+        pt_uniform = timestamps[1] * 0.7 # 0.7 constant for bar width
+                                         # 1 means bars indistinguishable
+                                         # 0 means no bars
+        for x,y in zip(timestamps, pauses):
+            y = y / 1000
+
+            x_data.append(x)
+            y_data.append(0)
+           
+            x_data.append(x)
+            y_data.append(y)
+           
+            x_data.append(x + pt_uniform)
+            y_data.append(y)
+
+            x_data.append(x + pt_uniform)
+            y_data.append(0)
+
+    # Plot the data created for this table. #
+    ax.plot(x_data, y_data, color = color, label = label),    
+    # return the subplot updated with the new information
+    return ax
+
+
+# Take numbers formatted with a trailing 's' character to signify seconds unit
+# and remove the s. Return the result as a float.
+def __time_from_float(time):
+    return float(time[:-1])
+
+# Obtain the shift amount from the dimensions of the table
+# The shift amount is determined based on the presence of DateTime information
+# If present, the shift amount is 1, else zero.
+def __getShift(table):
+    if (len(table) == 5):
+        shift = 0
+    elif len(table) == 6:
+        shift = 1
+    else:
+        print("Table length does not match expected.")
+        print("Expected num cols: 5 or 6. Recieved: ", len(table))
+        return [] #illogical value will cause error during runtime. TODO: fix
+
+    return shift 
+
+# Add labels to a pause graph
+def __addLabelsPauses(ax, title):
     ax.set_xlabel("Time passed (seconds)")
     ax.set_ylabel("Pause duration (seconds)")
     ax.set_title(title)
@@ -103,15 +258,6 @@ def __addLabels(ax, title):
 def __choose(filename):
     pl.setLogPath(filename)
     pl.setLogSchema(0)
-
-
-
-
-
-
-
-
-
 
 
 

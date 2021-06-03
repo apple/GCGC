@@ -184,7 +184,7 @@ def generate_table_comparison(tl, func, title, count = 0):
     for i in range(len(tl)):
         ax = func(tl[i], ax, colors[i], str(i), count)
     ax = addLabels(ax, title)
-    plt.show()
+    plt.show() 
 
 # def generate_sum_table_comparsion(tl):
 #     fig, ax = plt.subplots()
