@@ -51,6 +51,40 @@ def compareMetadata():
     
     __print_metadata_lists(metadata_list)
 
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+#   Compares the heap allocation after garbage collection run 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+def compareHeap(old = False, young = False, free = False, before = False, after = False):
+    if not files or type(files) != list:
+        print("No files added. Ending compare heap")
+    
+    # If no parameters were passed (or all passed as false), run everything.
+    #   we assume that no parameters wants a full analysis.
+    if not (old or young or free or before or after):
+        old = True
+        young = True
+        free = True
+        before = True
+        after = True
+    
+    # Gather data from all logs
+    heap_alloc_list = []
+    initial_free_mem = []
+    for file in files:
+        __choose(file) # set file in process_log module.
+        heap_alloc = pl.getHeapAllocation()
+
+        heap_alloc_list.append(heap_alloc[0])
+        initial_free_mem.append(heap_alloc[1]) # TODO: fix this data
+    heap_alloc_list = [list(entry.items()) for entry in heap_alloc_list]
+
+    print(heap_alloc_list)
+
+
+
+
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # Compares the GC pauses during runtime by
 # inspecting log information. Plots all pauses
@@ -105,7 +139,7 @@ def __gen_comparison(collection, title, bucket_count, mapping = None, file_title
     
     # if no file titles have been passed, then simply use numbers for the vals
     if not file_titles:
-        file_titles = [i for i in range(1, len(collection)) + 1]
+        file_titles = [i for i in range(1, len(collection) + 1)]
     
     
 
@@ -310,3 +344,4 @@ def __print_metadata_lists(metadata_lists):
 
                 print((int(max_out_len - len(thing) / 2 ) * " ") + " | ", end="")
         print("")
+
