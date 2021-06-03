@@ -23,8 +23,8 @@ def comparePauses():
         table = pl.getYoungPauses(False)
         collection.append(table)
     generate_table_comparison(collection, plot_pause, "Pauses during runtime")
-    generate_table_comparison(collection, plot_sum_pauses, "Sum Pauses during runtime", 10)
-    generate_table_comparison(collection, plot_longest_pauses, "Longest pauses during runtime", 10)
+    generate_table_comparison(collection, plot_sum_pauses, "Sum Pauses during runtime", 20)
+    generate_table_comparison(collection, plot_longest_pauses, "Longest pauses during runtime", 20)
     
 
 def choose(filename):
@@ -45,7 +45,6 @@ def compareMetadata():
 
 def print_metadata_lists(metadata_lists):
     
-    
     if not metadata_lists or not metadata_lists[0]:
         print("No metadata in metadata_lists")
     doublelist = []
@@ -55,11 +54,11 @@ def print_metadata_lists(metadata_lists):
     ### First, find the format for the table. Then, print all in that format.
     max_title_len = max([len(item[0]) for item in metadata_lists[0]])
     
-    max_out_len = 0
+    max_out_len = max_title_len
     for metadata in metadata_lists:
         for item in metadata:
             max_out_len = max(len(item[0]), max_out_len)
-   
+    max_out_len = max_title_len
     
     for index in range(len(metadata_lists[0])): #length of the items to print
                                                 # = num rows
@@ -101,47 +100,47 @@ def plot_pauses(collection):
     plt.show()
     
 
-## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#                               plot_pauses
-#   Purpose:
-#       plots the pauses due to gc across full runtime
-#   
-#   Parameters:
-#       table: a table, with columns as categories
-#           columns as follows: --
-#       datetime (optional), time, [info/debug/...], gc phase, pause time
-#   
-#   Return:
-#       None: Creates multiple tables showing the pauses over runtime, and 
-#             table with trends within the data
-#
-## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def plot_subplot(table, color, label, ax):
- # Obtain X Y list information from the dataframe.
-    shift = 5 - len(table) # account for possible empty rows.
-    print(len(table))
-    print(shift, "Shift")
-    y_values = list(map(float, table[4 - shift]))
-    x_values = list(map(__time_to_float, table[0 - shift]))
+# ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# #                               plot_pauses
+# #   Purpose:
+# #       plots the pauses due to gc across full runtime
+# #   
+# #   Parameters:
+# #       table: a table, with columns as categories
+# #           columns as follows: --
+# #       datetime (optional), time, [info/debug/...], gc phase, pause time
+# #   
+# #   Return:
+# #       None: Creates multiple tables showing the pauses over runtime, and 
+# #             table with trends within the data
+# #
+# ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# def plot_subplot(table, color, label, ax):
+#  # Obtain X Y list information from the dataframe.
+#     shift = 5 - len(table) # account for possible empty rows.
+#     print(len(table))
+#     print(shift, "Shift")
+#     y_values = list(map(float, table[4 - shift]))
+#     x_values = list(map(__time_to_float, table[0 - shift]))
     
-    # Create a subplot to apply this effect on.
+#     # Create a subplot to apply this effect on.
     
-    # Show interesting trends
-    total_wait = __find_trends(table)
-    total_time = pl.getTotalProgramRuntime()
-    print("Total time: " + str(total_time))
-    print("Total program runtime: " + str(total_time) + " seconds")
-    throughput = (total_time - (total_wait)/1000) / (total_time)
-    print("Throughput: " + str(round(throughput * 100, 4)) + "%")
+#     # Show interesting trends
+#     total_wait = __find_trends(table)
+#     total_time = pl.getTotalProgramRuntime()
+#     print("Total time: " + str(total_time))
+#     print("Total program runtime: " + str(total_time) + " seconds")
+#     throughput = (total_time - (total_wait)/1000) / (total_time)
+#     print("Throughput: " + str(round(throughput * 100, 4)) + "%")
     
-    # # # # # # # # # # # # # # # # # # # #
-    # Plot 1: Pauses over program's entire runtime.
-    ax = ax.plot(np.array(x_values), height= np.array(y_values), width = 2.0, color = color, label = label)
+#     # # # # # # # # # # # # # # # # # # # #
+#     # Plot 1: Pauses over program's entire runtime.
+#     ax = ax.plot(np.array(x_values), height= np.array(y_values), width = 2.0, color = color, label = label)
 
   
-    #plt.show()
-    # # # # # # # # # # # # # # # # # # # #
-    return ax
+#     #plt.show()
+#     # # # # # # # # # # # # # # # # # # # #
+#     return ax
 
 # Removes trailing 's' character from time in seconds
 def __time_to_float(time):
@@ -180,28 +179,24 @@ def __find_trends(table):
 
 def generate_table_comparison(tl, func, title, count = 0):
     fig, ax = plt.subplots()
+    ax.set_ylim(bottom = 0, auto = True)
     colors = ["g", "r", "b", "y", "c", "m"] #https://matplotlib.org/stable/gallery/color/named_colors.html
     for i in range(len(tl)):
         ax = func(tl[i], ax, colors[i], str(i), count)
     ax = addLabels(ax, title)
     plt.show()
 
-def generate_sum_table_comparsion(tl):
-    fig, ax = plt.subplots()
-    colors = ["g", "r", "b", "y"]
-    for i in range(len(tl)):
-        ax = plot_sum_pauses(tl[i], ax, colors[i], str(i), 10)
-    ax = addLabels(ax)
-    plt.show()
+# def generate_sum_table_comparsion(tl):
+#     fig, ax = plt.subplots()
+#     colors = ["g", "r", "b", "y"]
+#     for i in range(len(tl)):
+#         ax = plot_sum_pauses(tl[i], ax, colors[i], str(i), 10)
+#     ax = addLabels(ax)
+#     plt.show()
 
 
 
-def addLabels(ax, title):
-    ax.set_xlabel("X LABEL")
-    ax.set_ylabel("Y LABEL")
-    ax.set_title(title)
-    ax.legend()
-    return ax 
+
 
 def plot_pause(table, ax, color = "", label = "", count = 0):
     
