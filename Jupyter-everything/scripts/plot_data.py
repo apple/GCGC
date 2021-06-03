@@ -298,7 +298,7 @@ def __calculate_freemem(data_dictionary, inital_free, before = False, after = Fa
     return free_mem
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-#               function displayMetadata()                    #
+#                      displayMetadata()                      #
 #   Purpose:                                                  #
 #       Take the metadata collected, and print in a well      #
 #       formatted table using ASCII characters                #
@@ -387,3 +387,106 @@ def heap_allocation_beforeafter_gc(breakdown_lst, max_heap = 0):
     plt.legend()
     plt.show()
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+#                     plot_heatmap()                          #
+#   Purpose:                                                  #
+#       Plot a latency heatmap for pauses during runtime.     #
+#   Parameters:                                               #
+#       table : a table containing pause info and time info   #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+def plot_heatmap(table, num_b = 100):
+    if not table:
+        print("No table passed to function plot_heatmap. Abort")
+    
+    heatmap, min_pause, max_pause, max_time = __get_heatmap(table, num_b)
+  #  heatmap = np.rot90(heatmap) # fix orientation
+    t = max_pause / num_b 
+    x_labels = [num * t for num in range(num_b)]# TODO : UPDATE TO BE FASTER
+    x_labels = [str(round(label, 4)) + "s" for label in x_labels]
+
+    t = (max_pause - min_pause) / num_b
+    y_labels = [num * t + min_pause for num in range(num_b, 0)] 
+    y_labels = [str(label) + "ms" for label in y_labels]
+    fig, ax = plt.subplots()
+    im = ax.imshow(np.array(heatmap))
+
+    # EVERYTHING ELSE BELOW IS TAKEN FROM MATPLOTLIB DOCUMENTATION
+    # SEE HERE: https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html 
+
+    # We want to show all ticks...
+    ax.set_xticks(np.arange(len(x_labels))) # x axis
+    ax.set_yticks(np.arange(len(y_labels))) # y axis
+    # ... and label them with the respective list entries
+    ax.set_xticklabels(x_labels)
+    ax.set_yticklabels(y_labels)
+
+    # Rotate the tick labels and set their alignment.
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+             rotation_mode="anchor")
+    # Loop over data dimensions and create text annotations.
+    for i in range(len(y_labels)):
+        for j in range(len(x_labels)):
+            text = ax.text(j, i, heatmap[i, j],
+                           ha="center", va="center", color="w")
+
+    ax.set_title("Latency during runtime.")
+    fig.tight_layout()
+    plt.show()
+
+
+
+################################################
+# Gathers data to properly plot a heatmap.
+################################################
+def __get_heatmap(table, num_b):
+    shift = __getShift(table)
+    timestamps = table[0 + shift]
+    timestamps = list(map(__time_to_float, timestamps))  # clean data.
+    pauses     = table[-1]
+    x_b = [[] for i in range(num_b)]
+    max_time             = timestamps[-1]
+    bucket_time_duration = max_time / num_b
+
+    # populate buckets along the x axis.
+    for pause, time in zip(pauses, timestamps):
+        bucket_no = int(time / bucket_time_duration)
+        if bucket_no >= num_b:
+            bucket_no = num_b - 1
+        x_b[bucket_no].append(pause)
+
+    # calculate the max & min time in any time.
+    max_pause = max(pauses)
+    min_pause = min(pauses)
+
+    bucket_pause_duration = (max_pause - min_pause) / num_b
+    heatmap = []
+    for bucket in x_b:
+        yb = [0 for i in range(num_b)]
+        for time in bucket:
+            y_bucket_no = int((time - min_pause) / bucket_pause_duration)
+            if y_bucket_no >= num_b:
+                y_bucket_no = num_b - 1
+            yb[y_bucket_no] += 1
+        print(yb)
+        print(type(yb))
+        temporary = yb[::-1]
+        print("Reversed: ",temporary)
+        heatmap.append(yb) # reverse so they enter the list correct order.
+
+    return heatmap, min_pause, max_pause, max_time # all data needed to plot a heatmap.
+
+
+# Obtain the shift amount from the dimensions of the table
+# The shift amount is determined based on the presence of DateTime information
+# If present, the shift amount is 1, else zero.
+def __getShift(table):
+    if (len(table) == 5):
+        shift = 0
+    elif len(table) == 6:
+        shift = 1
+    else:
+        print("Table length does not match expected.")
+        print("Expected num cols: 5 or 6. Recieved: ", len(table))
+        return [] #illogical value will cause error during runtime. TODO: fix
+
+    return shift 
