@@ -3,6 +3,7 @@ from os import times
 from scripts import process_log as pl
 import numpy as np
 from matplotlib import pyplot as plt
+
 files = []
 def setFiles(f = []):
     if not f:
@@ -276,7 +277,7 @@ def plot_longest_pauses(table, ax, color, label, num_pauses):
     
     timestamps, pause_information = __group_buckets(timestamps, pause_information, num_pauses, max)
     # plots the data onto the existing ax plot, following line/bar pattern
-    ax = data_plot(ax, timestamps, pause_information, color, label)
+    ax = data_plot_uniform(ax, timestamps, pause_information, color, label)
     return ax 
 
 
@@ -297,7 +298,7 @@ def plot_sum_pauses(table, ax, color, label, num_pauses):
     
     timestamps, pause_information = __group_buckets(timestamps, pause_information, num_pauses, sum)
     # plots the data onto the existing ax plot, following line/bar pattern
-    ax = data_plot(ax, timestamps, pause_information, color, label)
+    ax = data_plot_uniform(ax, timestamps, pause_information, color, label)
     return ax 
 
 def __group_buckets(timestamps, pause_information, num_pauses, func):
@@ -362,6 +363,41 @@ def data_plot(ax, timestamps, pause_information, color, label): ## Create data s
 
         # end pause duration high
         x_data.append(x + y)
+        y_data.append(0)
+    
+    # Plot the data created for this table. #
+    ax.plot(x_data, y_data, color = color, label = label),    
+    # return the subplot updated with the new information
+    return ax
+
+
+    # https://pycallgraph.readthedocs.io/en/master/ # use to simplify code!!
+    # :D
+
+def data_plot_uniform(ax, timestamps, pause_information, color, label): ## Create data set that mimimics an up and down line graph based on pause time.
+    x_data = []
+    y_data = []
+
+    pt_uniform = timestamps[1] * 0.8
+    ###### Create X-Y Data. bumps for height based on pause duration #####
+    for x,y in zip(timestamps, pause_information):
+        # convert y from ms to seconds
+        y = y / 1000
+
+        # first, create a point at time before pause
+        x_data.append(x)
+        y_data.append(0)
+
+        # next, create a point of y height, at that initial time
+        x_data.append(x)
+        y_data.append(y)
+
+        # last point in pause duration high
+        x_data.append(x + pt_uniform)
+        y_data.append(y)
+
+        # end pause duration high
+        x_data.append(x + pt_uniform)
         y_data.append(0)
     
     # Plot the data created for this table. #

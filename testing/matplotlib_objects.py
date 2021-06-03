@@ -1,7 +1,7 @@
 from matplotlib import pyplot as plt
 import pl as pl
 import random as r 
-plt.rcParams['figure.figsize'] = [12, 7]
+
 def main():
     fig, ax = plt.subplots()
     
