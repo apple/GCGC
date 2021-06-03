@@ -12,14 +12,16 @@ from matplotlib import pyplot as plt
 
 # files is all paths to logs to be analyzed
 files = []
-
+file_titles = []
 # Set the log files to be analyzed, as a list.
-def setFiles(f = []):
+def setFiles(f = [], titles = []):
     if not f:
         print("No files added to path. Ending")
     
     global files
     files = f   # set files for access throughout program during runtime
+    global file_titles
+    file_titles = titles
 
 # Does all comparisons
 # Returns true on success, false otherwise.
@@ -56,67 +58,102 @@ def compareMetadata():
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #   Compares the heap allocation after garbage collection run 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-def compareHeap(old = False, young = False, free = False, before = False, after = False):
+def compareHeap(old = False, before = False, after = False):
     if not files or type(files) != list:
         print("No files added. Ending compare heap")
     
     # If no parameters were passed (or all passed as false), run everything.
     #   we assume that no parameters wants a full analysis.
-    if not (old or young or free or before or after):
+    if not (old or before or after):
         old = True
         young = True
-        free = True
         before = True
         after = True
     
     # Gather data from all logs
     heap_alloc_list = []
-    initial_free_mem = []
+    colors = ["g", "r", "b", "y", "c", "m", "k", 
+             "forestgreen", "lime", "dark_orange",
+             "darkred", "coral", "darkgoldenrod"]
+    
     for file in files:
         __choose(file) # set file in process_log module.
         heap_alloc = pl.getHeapAllocation()
 
         heap_alloc_list.append(heap_alloc[0])
-        initial_free_mem.append(heap_alloc[1]) # TODO: fix this data
-    heap_alloc_list = [list(entry.items()) for entry in heap_alloc_list]
-    print(heap_alloc_list)
+        #initial_free_mem.append(heap_alloc[1]) # TODO: fix this data
     
-    # if old:
-    #     fig, ax = plt.subplots()
-    #     for heap_alloc in heap_alloc_list:
-    #         timestamps, allocation = __sum_allocation(heap_alloc_list, ["Old"], after = True)
-    #         ax = __plot_allocation(timestamps, allocation, ax)
+    global file_titles
+    if not file_titles:
+        file_titles = [i for i in range(1, len(heap_alloc_list) + 1)]
+
     
-def __sum_allocation(table, keywords, before = False, after = False):
+    ## Go through each option and create a new plot.
+    if old:
+        fig, ax = plt.subplots()
+        for i in range(len(heap_alloc_list)):
+            ax = __sum_allocation(heap_alloc_list[i], ["Old"], ax, before = False, 
+                color = colors[i], label = file_titles[i])
+        ax = __addLabelsHeap(ax, "Number of Old regions throughout runtime after gc")
+    if before:
+        fig, ax = plt.subplots()
+        for i in range(len(heap_alloc_list)):
+            ax = __sum_allocation(heap_alloc_list[i], ["Old", "Eden", "Survivor", "Archive"], ax, before = True, 
+                color = colors[i], label = file_titles[i])
+        ax = __addLabelsHeap(ax, "Number of regions allocated before gc")
+    if after:
+        fig, ax = plt.subplots()
+        for i in range(len(heap_alloc_list)):
+            ax = __sum_allocation(heap_alloc_list[i], ["Old", "Eden", "Survivor", "Archive"], ax, before = False, 
+                color = colors[i], label = file_titles[i])
+        ax = __addLabelsHeap(ax, "Number of regions allocated after gc")
+    return 
+    
+# Takes in a list of regions, and returns the sum of those regions over a 
+# given time. Updates the plot (ax) by plotting time vs. sum for words.
+# Uses color and label provided.
+def __sum_allocation(table, keywords, ax, before = False, color = "", label = ""):
     
     if not table or not keywords:
         print("__sum_allocation parameters incorrect. Abort.")
         return
     name = 0 # index of the name
     data = 1 # index of the data
-    heap_alloc = table [ magic index ]
+    heap_alloc = table 
     after_regions = []
-    timestamps = get_time()
+    # get timestamps from the time keyword in the table. Convert str->float
+    timestamps = list(map(float, heap_alloc["Time"]))
     before_regions = []
-    for row in heap_alloc[0][data]:
-        for category in heap_alloc:
-            after_tsum = 0 # temp sum
-            before_tsum = 0 
-            for word in keywords:
-                if category[name] == word:
-                    if before:
-                        before_tsum += category[data][0]
-                    if after:
-                        after_tsum += category[data][1]
+    # loop through the length of the found allocation changes
+    for row in range(len(heap_alloc[keywords[0]])):
+        # set up temorary sums to aquire value for each thing we comparing
+        after_tsum = 0 
+        before_tsum = 0 
+        # match all keys for this row, and find the value
+        for key in keywords:
+            if before:
+                before_tsum += float(heap_alloc[key][row][0])
+            else:
+                after_tsum += float(heap_alloc[key][row][1])
 
-        before_regions.append(before_tsum)
-        after_regions.append(after_tsum)            
+        if before:
+            before_regions.append(before_tsum)
+        else:
+            after_regions.append(after_tsum)
 
+    # obtain return variables
+    allocation = before_regions if before else after_regions   
+    ax.plot(timestamps, allocation, color = color, label = label)
+    return ax
 
-
-    return timestamps, allocation
-
-
+# Add labels to a heap allocation chart. 
+# Return updated plot.
+def __addLabelsHeap(ax, title):
+    ax.set_xlabel("Time passed (seconds)")
+    ax.set_ylabel("Regions allocated")
+    ax.set_title(title)
+    ax.legend()
+    return ax 
 
 
 
@@ -131,7 +168,7 @@ def __sum_allocation(table, keywords, before = False, after = False):
 #   max_p       (int)     number of bars to create for longest pause during run
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-def comparePauses(full_p = True, sum_p = 0, max_p = 0, file_titles = []):
+def comparePauses(full_p = True, sum_p = 0, max_p = 0):
     if not files or type(files) != list:
         print("No files added. Ending compare pauses.")
         return
