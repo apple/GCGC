@@ -30,7 +30,8 @@ def compareAll():
         print("No files added to path. Ending")
         return False
     compareMetadata()
-    comparePauses(True, 20, 20, [])
+    comparePauses(True, 20, 20)
+    compareHeap()
     return True
 
 
