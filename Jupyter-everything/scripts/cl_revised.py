@@ -6,6 +6,7 @@
 #   Ellis Brown, 6/3
 #
 # # # # # # # # # # # # # # # # # 
+import re
 from scripts import process_log as pl
 from matplotlib import pyplot as plt
 
@@ -78,8 +79,42 @@ def compareHeap(old = False, young = False, free = False, before = False, after 
         heap_alloc_list.append(heap_alloc[0])
         initial_free_mem.append(heap_alloc[1]) # TODO: fix this data
     heap_alloc_list = [list(entry.items()) for entry in heap_alloc_list]
-
     print(heap_alloc_list)
+    
+    # if old:
+    #     fig, ax = plt.subplots()
+    #     for heap_alloc in heap_alloc_list:
+    #         timestamps, allocation = __sum_allocation(heap_alloc_list, ["Old"], after = True)
+    #         ax = __plot_allocation(timestamps, allocation, ax)
+    
+def __sum_allocation(table, keywords, before = False, after = False):
+    
+    if not table or not keywords:
+        print("__sum_allocation parameters incorrect. Abort.")
+        return
+    name = 0 # index of the name
+    data = 1 # index of the data
+    heap_alloc = table [ magic index ]
+    after_regions = []
+    timestamps = get_time()
+    before_regions = []
+    for row in heap_alloc[0][data]:
+        for category in heap_alloc:
+            after_tsum = 0 # temp sum
+            before_tsum = 0 
+            for word in keywords:
+                if category[name] == word:
+                    if before:
+                        before_tsum += category[data][0]
+                    if after:
+                        after_tsum += category[data][1]
+
+        before_regions.append(before_tsum)
+        after_regions.append(after_tsum)            
+
+
+
+    return timestamps, allocation
 
 
 
