@@ -23,6 +23,7 @@ def setFiles(f = [], titles = []):
     global file_titles
     file_titles = titles
 
+
 # Does all comparisons
 # Returns true on success, false otherwise.
 def compareAll():
@@ -337,6 +338,7 @@ def __plot_data(ax, timestamps, pauses, color, label, x_transformation):
 def __time_from_float(time):
     return float(time[:-1])
 
+
 # Obtain the shift amount from the dimensions of the table
 # The shift amount is determined based on the presence of DateTime information
 # If present, the shift amount is 1, else zero.
@@ -352,6 +354,7 @@ def __getShift(table):
 
     return shift 
 
+
 # Add labels to a pause graph
 def __addLabelsPauses(ax, title):
     ax.set_xlabel("Time passed (seconds)")
@@ -360,12 +363,12 @@ def __addLabelsPauses(ax, title):
     ax.legend()
     return ax 
 
+
 # Sets the active file to be checked in the process_log module
 # TODO: Update process_log (pl) to allow for schema detection
 def __choose(filename):
     pl.setLogPath(filename)
     pl.setLogSchema(0)
-
 
 
 # Takes a list of metadata tables, and prints off
