@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # 
 #  cl_revised.py
-#
+#   compare_logs == cl (TODO: update file names)
 #   Purpose: Allows for visual comparisons on logs
 #
 #   Ellis Brown, 6/3

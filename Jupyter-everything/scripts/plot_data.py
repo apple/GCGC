@@ -388,13 +388,15 @@ def heap_allocation_beforeafter_gc(breakdown_lst, max_heap = 0):
     plt.legend()
     plt.show()
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-#                     plot_heatmap()                          #
-#   Purpose:                                                  #
-#       Plot a latency heatmap for pauses during runtime.     #
-#   Parameters:                                               #
-#       table : a table containing pause info and time info   #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+#                     plot_heatmap()                            #
+#   Purpose:                                                    #
+#       Plot a latency heatmap for pauses during runtime.       #
+#   Parameters:                                                 #
+#       table : a table containing pause info and time info     #
+#       num_b : number of buckets along both axis for heat map  #
+#       labels: True means add frequency labels inside heatmap  #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def plot_heatmap(table, num_b = 20, labels = True):
     if not table:
         print("No table passed to function plot_heatmap. Abort")
@@ -412,16 +414,21 @@ def plot_heatmap(table, num_b = 20, labels = True):
     #     for item in column:
     #         print(item, end=" ")
     #     print("")
-
-    t = max_time / num_b 
-    x_labels = [num * t for num in range(num_b)]# TODO : UPDATE TO BE FASTER
+    
+    multipler = max_time / num_b  # multipler is the size of a bucket for time direction
+    # x labels are the time labels
+    x_labels = [num * multipler for num in range(num_b)]# TODO : UPDATE TO BE FASTER
     x_labels = [str(round(label, 2)) + " s" for label in x_labels]
 
-    t = (max_pause - min_pause) / num_b
-    y_labels = [round((num * t) + min_pause, 2) for num in reversed(range(num_b))] 
+    # size of the buckets for ms pause
+    multipler = (max_pause - min_pause) / num_b
+    # y labels are ms pause time labels
+    y_labels = [round((num * multipler) + min_pause, 2) for num in reversed(range(num_b))] 
     y_labels = [str(label) + " ms" for label in y_labels]
-    ## new below
+    
+    ## Create a figure, and add data to heatmap. Plot then show heatmap.
     fig, ax = plt.subplots()
+    ax.set_title("Latency during runtime.")
     im, cbar = heatmap_make(heatmap, y_labels, x_labels, ax=ax,
                    cmap="YlOrRd", cbarlabel="Frequency")
     if labels:
@@ -452,7 +459,7 @@ def plot_heatmap(table, num_b = 20, labels = True):
             text = ax.text(j, i, heatmap[i, j],
                            ha="center", va="center", color="w")
 
-    ax.set_title("Latency during runtime.")
+    
 
     fig.tight_layout()
     plt.show()
@@ -462,13 +469,23 @@ def plot_heatmap(table, num_b = 20, labels = True):
 
 ################################################
 # Gathers data to properly plot a heatmap.
+# Parameters:
+#   table: 2d array, columns = cateogry, rows = values in each column
+#       column [-1] = pause information in ms 
+#       column [0 + shift] = timestamp information
+#   num_b : number of buckets to sort time into. 
+#       Note: More buckets = more percise heatmap, labels less clear.
 ################################################
 def __get_heatmap(table, num_b):
+
+    # access the two columns from the table with our time/pause info
     shift = __getShift(table)
     timestamps = table[0 + shift]
     timestamps = list(map(__time_to_float, timestamps))  # clean data.
     pauses     = table[-1]
 
+    # create buckets to store the time information.
+    # first, compress into num_b buckets along the time X-axis.
     x_b = [[] for i in range(num_b)]
     max_time             = timestamps[-1]
     bucket_time_duration = max_time / num_b
@@ -480,24 +497,31 @@ def __get_heatmap(table, num_b):
             bucket_no = num_b - 1
         x_b[bucket_no].append(pause)
 
-    # calculate the max & min time in any time.
+   
     max_pause = max(pauses)
     min_pause = min(pauses)
 
+    # calculate the size of the buckets representing a pause
     bucket_pause_duration = (max_pause - min_pause) / num_b
     
+    # create heatmap, which will be a 2d-array
     heatmap = []
+
+    #go through each time interval, and sort the pauses there into frequency lists
     for bucket in x_b:
-        yb = [0 for i in range(num_b)]
+        yb = [0 for i in range(num_b)] # construct a 0 frequency list
         for time in bucket:
+            # determine which ms pause bucket
             y_bucket_no = int((time - min_pause) / bucket_pause_duration)
             if y_bucket_no >= num_b:
                 y_bucket_no = num_b - 1
-            yb[y_bucket_no] += 1
-        
 
-        heatmap.append(yb) # reverse so they enter the list correct order.
-        #heatmap = heatmap[::-1]
+            # increase the frequency of that pause in this time interval
+            yb[y_bucket_no] += 1
+
+        # Add the data to the 2d array
+        heatmap.append(yb)
+
     return np.array(heatmap), min_pause, max_pause, max_time # all data needed to plot a heatmap.
 
 
@@ -582,7 +606,7 @@ def heatmap_make(data, row_labels, col_labels, ax=None,
 
     return im, cbar
 
-
+# add labels in the center of each box showing the frequency
 def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
                      textcolors=("black", "white"),
                      threshold=None, **textkw):
