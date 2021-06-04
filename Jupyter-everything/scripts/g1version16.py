@@ -361,7 +361,7 @@ def manyMatch_LineSearch(match_terms = [],        # regex terms to search for
     for line in data:
         for term in match_terms:
             match = re.search(term, line)
-            if match: 
+            if match:
                 # Find all matches of interest
                 for i in range(1, num_match_groups + 1):
                     table[i - 1].append(match.group(i))

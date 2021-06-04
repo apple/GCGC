@@ -331,6 +331,7 @@ def __getHeapAllocation_schema0(create_csv = False):
     # Graph containing 'free' memory
     
     initial_storage = __getHeapInitialState(False)
+    print(initial_storage)
     if initial_storage:
         init_cap = __remove_metrx_ending(initial_storage["Max"])
         init_region_size = __remove_metrx_ending(initial_storage["Region"])

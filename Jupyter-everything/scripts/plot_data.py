@@ -5,7 +5,9 @@
 ##  Author: Ellis Brown, 6/1
 ##  TODO: Define a general type chart, plots any table 
 #############################################################################
+from typing import KeysView
 import pandas as pd
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from scripts import process_log as pl
@@ -110,13 +112,13 @@ def __find_trends(table):
 #                   list[0] = dictionary, with all region counts               #
 #                   list[2] = integer, size of initial free memory             # 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def plot_heap_allocation_breakdown(breakdown_lst):
+def plot_heap_allocation_breakdown(breakdown_lst, max_heap = 0):
     if not breakdown_lst:
         return
 
     # determine data arrangement from list length
     if (len(breakdown_lst)) == 2:
-        return __plot_HA_schema0(breakdown_lst)
+        return __plot_HA_schema0(breakdown_lst, max_heap)
 
     # Access 2 dimensional list of allocation during runtime    
     allocation_summary = breakdown_lst[0]
@@ -164,13 +166,27 @@ def plot_heap_allocation_breakdown(breakdown_lst):
 #                                                                              #
 #   Note: generates MatPlotLib plot                                            #
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def __plot_HA_schema0(dd):
-    if (not dd) or (len(dd) < 2) or (not dd[0]) or (not dd[1]):
+def __plot_HA_schema0(dd, max_heap = 0):
+    
+    if (not dd) or (len(dd) < 2) or (not dd[0]) :
         return
-
+    if (not dd):
+        print("No data to plot")
+        return 
+    if len(dd) < 2:
+        print("Not enough data to plot Heap Allocation")
+        return
+    if not dd[0]:
+        print("List missing collected Heap Allocation data")
+        return
+    if not dd[1] and not max_heap:
+        print("Failed to find inital memory size. Rerun with parameter max_heap = (int)")
+    if max_heap != 0:
+        dd[1] = max_heap
+    print("This far")
     data_dictionary = dd[0]
     # get free_memory list of memory during runtime
-    free_memory = __calculate_freemem(data_dictionary, dd[1]) 
+    free_memory = __calculate_freemem(data_dictionary, dd[1], before = True, after = True) 
     
     # Create integer list [0...n-1] to help plot allocation
     # TODO: Change this to be based on actual time in program.
@@ -181,7 +197,7 @@ def __plot_HA_schema0(dd):
     x = np.array(x) # *2 for tuples
     
     # Format plot
-    plt.xlabel("GC Run number (not based on time)")
+    plt.xlabel("GC Run : Time in seconds")
     plt.ylabel("Number of memory blocks")
     plt.title("heap allocation throughout runtime")
     plt.legend(list(data_dictionary.keys()))
@@ -210,10 +226,10 @@ def __plot_HA_schema0(dd):
     # Create second plot: (Just memory during runtime)
     # As heap memory could always be 99% free, seeing the changes in the
     # amonut of free memory in it's own plot is valuable 
-    plt.figure(2)
-    plt.plot(x, np.array(free_memory), color = "red", label = "Free Memory")
-    plt.legend()
-    plt.show() 
+    # plt.figure(2)
+    # plt.plot(x, np.array(free_memory), color = "red", label = "Free Memory")
+    # plt.legend()
+    # plt.show() 
 
     # Create third plot
     plt.figure(3)
@@ -249,33 +265,41 @@ def __plot_HA_schema0(dd):
 #   Return: list with the # of free regions sequentially. Memory recorded      #
 #           directly before and after each garbage collection pause.           #
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def __calculate_freemem(data_dictionary, inital_free):
+def __calculate_freemem(data_dictionary, inital_free, before = False, after = False):
     if not data_dictionary:
         return []
 
     free_mem = []
+    keys = list(data_dictionary.keys())
+    # if any sections did not collect data, remove them.
+    for i in range(len(keys)):
+        if not data_dictionary[keys[i]]:
+            del data_dictionary[keys[i]]
+
     for idx in range(len(data_dictionary["Eden"])):
         
         # Calculate the free memory before the GC runs
-        temp_val = 0
-        for key in data_dictionary.keys():
-            if str(key) != "Time":
-                                        # access tuple [0] from list
-                                        # of tuples associated with key
-                temp_val += int(data_dictionary[key][idx][0])
-        free_mem.append(int(inital_free - temp_val))
+        if before:
+            temp_val = 0
+            for key in data_dictionary.keys():
+                if str(key) != "Time":
+                                            # access tuple [0] from list
+                                            # of tuples associated with key
+                    temp_val += int(data_dictionary[key][idx][0])
+            free_mem.append(int(inital_free - temp_val))
         
         # Calculate the free memory after the GC runs
-        temp_val = 0
-        for key in data_dictionary.keys():
-            if str(key) != "Time":
-                temp_val += int(data_dictionary[key][idx][1])
-        free_mem.append(int(inital_free - temp_val))
+        if after:
+            temp_val = 0
+            for key in data_dictionary.keys():
+                if str(key) != "Time":
+                    temp_val += int(data_dictionary[key][idx][1])
+            free_mem.append(int(inital_free - temp_val))
 
     return free_mem
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-#               function displayMetadata()                    #
+#                      displayMetadata()                      #
 #   Purpose:                                                  #
 #       Take the metadata collected, and print in a well      #
 #       formatted table using ASCII characters                #
@@ -302,3 +326,317 @@ def displayMetadata(table):
         
         # Print formatting based on item length, then print the value
         print(int((max_title_len - len(item[0])) / 2) * ". " + "| " + str(item[1]))
+    
+
+# Currently only defined on Schema 0
+def heap_allocation_beforeafter_gc(breakdown_lst, max_heap = 0):
+    if not breakdown_lst:
+        return
+    data = breakdown_lst[0]
+    if not breakdown_lst[1]:
+        breakdown_lst[1] = max_heap
+    free_memory_before = __calculate_freemem(data, breakdown_lst[1], before = True)
+    free_memory_after = __calculate_freemem(data, breakdown_lst[1], after = True)
+    x = []
+    for item in data["Time"]:
+        x.append(float(item))
+    x = np.array(x)
+    ## basic plot setup ##
+    plt.xlabel("Time in seconds")
+    plt.ylabel("Number of memory blocks")
+    plt.title("Heap allocation BEFORE gc")
+    plt.legend(list(data.keys()))
+    # Choose from some color choices. TODO: style colors
+    colors = ["royalblue", "cyan", "black", "green", "purple", 
+              "lime", "brown", "darkmagenta", "lime", "green"]
+    color_index = 0
+    # Create the first plot
+    plt.figure(1)
+    afterl = []
+    labels = []
+    #########################
+    for key in data.keys():
+        if str(key) != "Time":
+            before = []
+            after = []
+            
+            for idx in range(len(data[key])):
+                before.append(int(data[key][idx][0]))
+                after.append(int(data[key][idx][1]))
+            plt.plot(np.array(x), np.array(before), color = colors[color_index], label = str(key))
+            color_index += 1
+            afterl.append(after)
+            labels.append(str(KeysView))
+    plt.plot(x, np.array(free_memory_before), color = "red", label = "Free Memory")            
+    plt.legend()                    #TODO: test if removing this line does anything
+    plt.show()
+    print("\n\n")
+    ###############
+    ### Figure 2 ##
+    ###############
+    plt.figure(2)
+    plt.xlabel("Time in seconds")
+    plt.ylabel("Number of memory blocks")
+    plt.title("Heap allocation AFTER gc")
+    
+    color_index = 0
+    for i in range(len(afterl)):
+        plt.plot(x, np.array(afterl[i]), color = colors[color_index], label = labels[i])
+        color_index += 1
+
+    plt.plot(x, np.array(free_memory_after), color = "red", label = "Free Memory")
+    plt.legend()
+    plt.show()
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+#                     plot_heatmap()                          #
+#   Purpose:                                                  #
+#       Plot a latency heatmap for pauses during runtime.     #
+#   Parameters:                                               #
+#       table : a table containing pause info and time info   #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+def plot_heatmap(table, num_b = 20, labels = True):
+    if not table:
+        print("No table passed to function plot_heatmap. Abort")
+    
+    heatmap, min_pause, max_pause, max_time = __get_heatmap(table, num_b)
+    # for column in heatmap:
+    #     for item in column:
+    #         print(item, end=" ")
+    #     print("")
+        
+    # print("\n\n")
+    heatmap = np.rot90(heatmap) # fix orientation
+   
+    # for column in heatmap:
+    #     for item in column:
+    #         print(item, end=" ")
+    #     print("")
+
+    t = max_time / num_b 
+    x_labels = [num * t for num in range(num_b)]# TODO : UPDATE TO BE FASTER
+    x_labels = [str(round(label, 2)) + " s" for label in x_labels]
+
+    t = (max_pause - min_pause) / num_b
+    y_labels = [round((num * t) + min_pause, 2) for num in reversed(range(num_b))] 
+    y_labels = [str(label) + " ms" for label in y_labels]
+    ## new below
+    fig, ax = plt.subplots()
+    im, cbar = heatmap_make(heatmap, y_labels, x_labels, ax=ax,
+                   cmap="YlOrRd", cbarlabel="Frequency")
+    if labels:
+        texts = annotate_heatmap(im, valfmt="{x}")
+    fig.tight_layout()
+    plt.show()
+    ## end new
+    '''
+    fig, ax = plt.subplots()
+    im = ax.imshow(np.array(heatmap))
+
+    # EVERYTHING ELSE BELOW IS TAKEN FROM MATPLOTLIB DOCUMENTATION
+    # SEE HERE: https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html 
+
+    # We want to show all ticks...
+    ax.set_xticks(np.arange(len(x_labels))) # x axis
+    ax.set_yticks(np.arange(len(y_labels))) # y axis
+    # ... and label them with the respective list entries
+    ax.set_xticklabels(x_labels)
+    ax.set_yticklabels(y_labels)
+
+    # Rotate the tick labels and set their alignment.
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+             rotation_mode="anchor")
+    # Loop over data dimensions and create text annotations.
+    for i in range(len(y_labels)):
+        for j in range(len(x_labels)):
+            text = ax.text(j, i, heatmap[i, j],
+                           ha="center", va="center", color="w")
+
+    ax.set_title("Latency during runtime.")
+
+    fig.tight_layout()
+    plt.show()
+    '''
+
+
+
+################################################
+# Gathers data to properly plot a heatmap.
+################################################
+def __get_heatmap(table, num_b):
+    shift = __getShift(table)
+    timestamps = table[0 + shift]
+    timestamps = list(map(__time_to_float, timestamps))  # clean data.
+    pauses     = table[-1]
+
+    x_b = [[] for i in range(num_b)]
+    max_time             = timestamps[-1]
+    bucket_time_duration = max_time / num_b
+   
+    # populate buckets along the x axis.
+    for pause, time in zip(pauses, timestamps):
+        bucket_no = int(time / bucket_time_duration)
+        if bucket_no >= num_b:
+            bucket_no = num_b - 1
+        x_b[bucket_no].append(pause)
+
+    # calculate the max & min time in any time.
+    max_pause = max(pauses)
+    min_pause = min(pauses)
+
+    bucket_pause_duration = (max_pause - min_pause) / num_b
+    
+    heatmap = []
+    for bucket in x_b:
+        yb = [0 for i in range(num_b)]
+        for time in bucket:
+            y_bucket_no = int((time - min_pause) / bucket_pause_duration)
+            if y_bucket_no >= num_b:
+                y_bucket_no = num_b - 1
+            yb[y_bucket_no] += 1
+        
+
+        heatmap.append(yb) # reverse so they enter the list correct order.
+        #heatmap = heatmap[::-1]
+    return np.array(heatmap), min_pause, max_pause, max_time # all data needed to plot a heatmap.
+
+
+
+# Obtain the shift amount from the dimensions of the table
+# The shift amount is determined based on the presence of DateTime information
+# If present, the shift amount is 1, else zero.
+def __getShift(table):
+    if (len(table) == 5):
+        shift = 0
+    elif len(table) == 6:
+        shift = 1
+    else:
+        print("Table length does not match expected.")
+        print("Expected num cols: 5 or 6. Recieved: ", len(table))
+        return [] #illogical value will cause error during runtime. TODO: fix
+
+    return shift 
+
+###########################################################################
+###########################################################################
+###########################################################################
+# https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html
+# BELOW IS TAKEN DIRECTLY FROM A TUTORIAL
+def heatmap_make(data, row_labels, col_labels, ax=None,
+            cbar_kw={}, cbarlabel="", **kwargs):
+    """
+    Create a heatmap from a numpy array and two lists of labels.
+
+    Parameters
+    ----------
+    data
+        A 2D numpy array of shape (N, M).
+    row_labels
+        A list or array of length N with the labels for the rows.
+    col_labels
+        A list or array of length M with the labels for the columns.
+    ax
+        A `matplotlib.axes.Axes` instance to which the heatmap is plotted.  If
+        not provided, use current axes or create a new one.  Optional.
+    cbar_kw
+        A dictionary with arguments to `matplotlib.Figure.colorbar`.  Optional.
+    cbarlabel
+        The label for the colorbar.  Optional.
+    **kwargs
+        All other arguments are forwarded to `imshow`.
+    """
+
+    if not ax:
+        ax = plt.gca()
+
+    # Plot the heatmap
+    im = ax.imshow(data, **kwargs)
+
+    # Create colorbar
+    cbar = ax.figure.colorbar(im, ax=ax, **cbar_kw)
+    cbar.ax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
+
+    # We want to show all ticks...
+   
+    ax.set_xticks(np.arange(data.shape[1]))
+    ax.set_yticks(np.arange(data.shape[0]))
+    # ... and label them with the respective list entries.
+    ax.set_xticklabels(col_labels)
+    ax.set_yticklabels(row_labels)
+
+    # Let the horizontal axes labeling appear on top.
+    ax.tick_params(top=False, bottom=True,
+                   labeltop=False, labelbottom=True)
+
+    # Rotate the tick labels and set their alignment.
+    plt.setp(ax.get_xticklabels(), rotation=-30, ha="left",
+                    rotation_mode="anchor")
+
+    # Turn spines off and create white grid.
+    ax.spines[:].set_visible(False)
+
+    ax.set_xticks(np.arange(data.shape[1]+1)-.5, minor=True)
+    ax.set_yticks(np.arange(data.shape[0]+1)-.5, minor=True)
+    ax.grid(which="minor", color="w", linestyle='-', linewidth=3)
+    ax.tick_params(which="minor", bottom=False, left=False)
+
+    return im, cbar
+
+
+def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
+                     textcolors=("black", "white"),
+                     threshold=None, **textkw):
+    """
+    A function to annotate a heatmap.
+
+    Parameters
+    ----------
+    im
+        The AxesImage to be labeled.
+    data
+        Data used to annotate.  If None, the image's data is used.  Optional.
+    valfmt
+        The format of the annotations inside the heatmap.  This should either
+        use the string format method, e.g. "$ {x:.2f}", or be a
+        `matplotlib.ticker.Formatter`.  Optional.
+    textcolors
+        A pair of colors.  The first is used for values below a threshold,
+        the second for those above.  Optional.
+    threshold
+        Value in data units according to which the colors from textcolors are
+        applied.  If None (the default) uses the middle of the colormap as
+        separation.  Optional.
+    **kwargs
+        All other arguments are forwarded to each call to `text` used to create
+        the text labels.
+    """
+
+    if not isinstance(data, (list, np.ndarray)):
+        data = im.get_array()
+
+    # Normalize the threshold to the images color range.
+    if threshold is not None:
+        threshold = im.norm(threshold)
+    else:
+        threshold = im.norm(data.max())/2.
+
+    # Set default alignment to center, but allow it to be
+    # overwritten by textkw.
+    kw = dict(horizontalalignment="center",
+              verticalalignment="center")
+    kw.update(textkw)
+
+    # Get the formatter in case a string is supplied
+    if isinstance(valfmt, str):
+        valfmt = matplotlib.ticker.StrMethodFormatter(valfmt)
+
+    # Loop over the data and create a `Text` for each "pixel".
+    # Change the text's color depending on the data.
+    texts = []
+    for i in range(data.shape[0]):
+        for j in range(data.shape[1]):
+            kw.update(color=textcolors[int(im.norm(data[i, j]) > threshold)])
+            text = im.axes.text(j, i, valfmt(data[i, j], None), **kw)
+            texts.append(text)
+
+    return texts
