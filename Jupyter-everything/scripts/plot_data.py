@@ -395,15 +395,23 @@ def heap_allocation_beforeafter_gc(breakdown_lst, max_heap = 0):
 #   Parameters:                                               #
 #       table : a table containing pause info and time info   #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-def plot_heatmap(table, num_b = 100):
+def plot_heatmap(table, num_b = 20, labels = True):
     if not table:
         print("No table passed to function plot_heatmap. Abort")
     
     heatmap, min_pause, max_pause, max_time = __get_heatmap(table, num_b)
-
-    print("Max time:" , max_time)
+    # for column in heatmap:
+    #     for item in column:
+    #         print(item, end=" ")
+    #     print("")
+        
+    # print("\n\n")
     heatmap = np.rot90(heatmap) # fix orientation
-   #
+   
+    # for column in heatmap:
+    #     for item in column:
+    #         print(item, end=" ")
+    #     print("")
 
     t = max_time / num_b 
     x_labels = [num * t for num in range(num_b)]# TODO : UPDATE TO BE FASTER
@@ -416,7 +424,8 @@ def plot_heatmap(table, num_b = 100):
     fig, ax = plt.subplots()
     im, cbar = heatmap_make(heatmap, y_labels, x_labels, ax=ax,
                    cmap="YlOrRd", cbarlabel="Frequency")
-    texts = annotate_heatmap(im, valfmt="{x}")
+    if labels:
+        texts = annotate_heatmap(im, valfmt="{x}")
     fig.tight_layout()
     plt.show()
     ## end new
@@ -459,10 +468,11 @@ def __get_heatmap(table, num_b):
     timestamps = table[0 + shift]
     timestamps = list(map(__time_to_float, timestamps))  # clean data.
     pauses     = table[-1]
+
     x_b = [[] for i in range(num_b)]
     max_time             = timestamps[-1]
     bucket_time_duration = max_time / num_b
-
+   
     # populate buckets along the x axis.
     for pause, time in zip(pauses, timestamps):
         bucket_no = int(time / bucket_time_duration)
@@ -475,6 +485,7 @@ def __get_heatmap(table, num_b):
     min_pause = min(pauses)
 
     bucket_pause_duration = (max_pause - min_pause) / num_b
+    
     heatmap = []
     for bucket in x_b:
         yb = [0 for i in range(num_b)]
@@ -483,10 +494,12 @@ def __get_heatmap(table, num_b):
             if y_bucket_no >= num_b:
                 y_bucket_no = num_b - 1
             yb[y_bucket_no] += 1
-       
-        heatmap.append(yb[::-1]) # reverse so they enter the list correct order.
-        heatmap = heatmap[::-1]
-    return heatmap, min_pause, max_pause, max_time # all data needed to plot a heatmap.
+        
+
+        heatmap.append(yb) # reverse so they enter the list correct order.
+        #heatmap = heatmap[::-1]
+    return np.array(heatmap), min_pause, max_pause, max_time # all data needed to plot a heatmap.
+
 
 
 # Obtain the shift amount from the dimensions of the table
@@ -544,6 +557,7 @@ def heatmap_make(data, row_labels, col_labels, ax=None,
     cbar.ax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
 
     # We want to show all ticks...
+   
     ax.set_xticks(np.arange(data.shape[1]))
     ax.set_yticks(np.arange(data.shape[0]))
     # ... and label them with the respective list entries.
@@ -551,12 +565,12 @@ def heatmap_make(data, row_labels, col_labels, ax=None,
     ax.set_yticklabels(row_labels)
 
     # Let the horizontal axes labeling appear on top.
-    ax.tick_params(top=True, bottom=False,
-                   labeltop=True, labelbottom=False)
+    ax.tick_params(top=False, bottom=True,
+                   labeltop=False, labelbottom=True)
 
     # Rotate the tick labels and set their alignment.
-    plt.setp(ax.get_xticklabels(), rotation=-30, ha="right",
-             rotation_mode="anchor")
+    plt.setp(ax.get_xticklabels(), rotation=-30, ha="left",
+                    rotation_mode="anchor")
 
     # Turn spines off and create white grid.
     ax.spines[:].set_visible(False)
