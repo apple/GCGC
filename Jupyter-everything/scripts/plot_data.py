@@ -5,8 +5,6 @@
 ##  Author: Ellis Brown, 6/1
 ##  TODO: Define a general type chart, plots any table 
 #############################################################################
-from typing import KeysView
-import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np

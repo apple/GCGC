@@ -8,8 +8,6 @@
 # Ellis Brown, 5/26/2020                            #
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-from os import pathconf_names
-import pandas as pd
 import re
 from scripts import g1version16 as g1f # g1format
 
