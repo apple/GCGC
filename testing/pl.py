@@ -1,4 +1,4 @@
-# process_log_updated.py
+# parse_log_updated.py
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # Purpose: Creates functions to process a           #

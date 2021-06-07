@@ -1,4 +1,4 @@
-import process_log_updated as pl
+import parse_log_updated as pl
 #import plot_data as dplt
 
 def main():

@@ -8,7 +8,7 @@
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-from scripts import process_log as pl
+from scripts import parse_log as pl
 
 # Set the size of the figures that appear in the Jupyter notebook
 plt.rcParams['figure.figsize'] = [12, 7]

@@ -1,5 +1,5 @@
 # # # # # # # # # # # # # # # # 
-#  cl_revised.py
+#  compare_logs.py
 #   compare_logs == cl (TODO: update file names)
 #   Purpose: Allows for visual comparisons on logs
 #
@@ -7,7 +7,7 @@
 #
 # # # # # # # # # # # # # # # # # 
 import re
-from scripts import process_log as pl
+from scripts import parse_log as pl
 from matplotlib import pyplot as plt
 
 # files is all paths to logs to be analyzed
@@ -50,7 +50,7 @@ def compareMetadata():
     # generate a collection of metadata information
     metadata_list = []
     for file in files:
-        __choose(file) # set file in process_log module.
+        __choose(file) # set file in parse_log module.
         metadata = pl.getGCMetadata() 
         metadata_list.append(metadata)
     
@@ -79,7 +79,7 @@ def compareHeap(old = False, before = False, after = False):
              "darkred", "coral", "darkgoldenrod"]
     
     for file in files:
-        __choose(file) # set file in process_log module.
+        __choose(file) # set file in parse_log module.
         heap_alloc = pl.getHeapAllocation()
 
         heap_alloc_list.append(heap_alloc[0])
@@ -364,8 +364,8 @@ def __addLabelsPauses(ax, title):
     return ax 
 
 
-# Sets the active file to be checked in the process_log module
-# TODO: Update process_log (pl) to allow for schema detection
+# Sets the active file to be checked in the parse_log module
+# TODO: Update parse_log (pl) to allow for schema detection
 def __choose(filename):
     pl.setLogPath(filename)
     pl.setLogSchema(0)
