@@ -541,11 +541,9 @@ def __getShift(table):
 
     return shift 
 
-###########################################################################
-###########################################################################
-###########################################################################
+## The following code block was taken directly from matplotlib's documentation
+## seen here:
 # https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html
-# BELOW IS TAKEN DIRECTLY FROM A TUTORIAL
 def heatmap_make(data, row_labels, col_labels, ax=None,
             cbar_kw={}, cbarlabel="", **kwargs):
     """
@@ -606,8 +604,10 @@ def heatmap_make(data, row_labels, col_labels, ax=None,
 
     return im, cbar
 
-# add labels in the center of each box showing the frequency
-def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
+# The following code example is taken directly from matplotlib documentation
+# on heat maps, seen below
+# https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html
+def annotate_heatmap(im, data=None, valfmt="{x}",
                      textcolors=("black", "white"),
                      threshold=None, **textkw):
     """
