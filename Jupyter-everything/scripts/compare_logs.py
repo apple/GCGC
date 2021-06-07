@@ -90,7 +90,8 @@ def compareHeap(old = False, before = False, after = False):
         file_titles = [i for i in range(1, len(heap_alloc_list) + 1)]
 
     
-    ## Go through each option and create a new plot.
+    ## Go through each option and create a new plot. Use different titles and
+    ## keyword search parameters.
     if old:
         fig, ax = plt.subplots()
         for i in range(len(heap_alloc_list)):
@@ -119,13 +120,15 @@ def __sum_allocation(table, keywords, ax, before = False, color = "", label = ""
     if not table or not keywords:
         print("__sum_allocation parameters incorrect. Abort.")
         return
-    name = 0 # index of the name
-    data = 1 # index of the data
+
     heap_alloc = table 
-    after_regions = []
+    
     # get timestamps from the time keyword in the table. Convert str->float
     timestamps = list(map(float, heap_alloc["Time"]))
+    
     before_regions = []
+    after_regions = []
+    
     # loop through the length of the found allocation changes
     for row in range(len(heap_alloc[keywords[0]])):
         # set up temorary sums to aquire value for each thing we comparing
@@ -187,6 +190,7 @@ def comparePauses(full_p = True, sum_p = 0, max_p = 0):
         print("No data collected")
         return
 
+    # Plot based on parameters. Each plot type requires a different mapping
     if full_p:
         __gen_comparison(collection, "Pauses during runtime", 0, 
                          mapping = None, file_titles = file_titles)
@@ -200,23 +204,24 @@ def comparePauses(full_p = True, sum_p = 0, max_p = 0):
 # generate comparison on the same data table, by plotting multiple sets
 # of information to the same table.
 def __gen_comparison(collection, title, bucket_count, mapping = None, file_titles = []):
+    
     if not collection:
+        # if no data collected, nothing to plot. Finished.
         return 
 
     fig, ax = plt.subplots()    # create a subplot for this coomparison
     
+    # colors to use for the plot. More colors can be found in the following link
+    #https://matplotlib.org/stable/gallery/color/named_colors.html
     colors = ["g", "r", "b", "y", "c", "m", "k", 
              "forestgreen", "lime", "dark_orange",
              "darkred", "coral", "darkgoldenrod"]
-    #https://matplotlib.org/stable/gallery/color/named_colors.html
-
     
     # if no file titles have been passed, then simply use numbers for the vals
     if not file_titles:
         file_titles = [i for i in range(1, len(collection) + 1)]
-    
-    
 
+    # Create a combined plot for each thing. Group and plot each item in collection
     for i in range(len(collection)):
         ax = __group_and_plot(collection[i], ax, colors[i], file_titles[i], bucket_count, mapping)
     
@@ -235,14 +240,16 @@ def __group_and_plot(table, ax, color, label, bucket_count, mapping):
     # This information is not currently used. Therefore, shift past it
     shift = __getShift(table)
 
-    timestamps = table[0 + shift]
+    timestamps = table[0 + shift]                   # TODO: remove dependency on shift amount
     timestamps = list(map(__time_from_float, timestamps))
-    pauses = table[-2]
+    pauses = table[-2]                              # TODO: remove dependency on shift amount
     
+    # plot data in full, without grouping into buckets
     if not mapping:
         ax = __plot_data(ax, timestamps, pauses, 
                          color, label, x_transformation = False)
     else:
+        # get the timestamps and pauses grouped into buckets based on mapping
         timestamps, pauses = __group_buckets(timestamps, 
                                             pauses,
                                             bucket_count,
@@ -269,7 +276,9 @@ def __group_buckets(timestamps, pauses, bucket_count, mapping):
     
     p = 1 # index of pause
     for i in range(bucket_count):
-        buckets[i] = mapping([value for value in buckets[i]]) # find the max in bucket
+
+        # the mapping is a function that may compute the sum, max, or similar
+        buckets[i] = mapping([value for value in buckets[i]]) # update this bucket
 
     timestamps = [r * pause_duration for r in range(bucket_count)]
     pauses = buckets
@@ -376,12 +385,15 @@ def __choose(filename):
 # TODO: revise and update this functiomn, it is unclear what is happening
 # TODO: update output stdout style 
 # input is metadata_list
-    # metadata_lists =  [ [a] [b] [c] [d] ]
-# where a,b,c,d,..... z are tables
-    # where table = [ [a] [b] [c] ]
-# where a,b,c, .... z are '[category, value]' pairs,
+    # metadata_lists =  [ [a] [b] [c] ... ]
+# where a, b, c,.... z are tables
+    # where table    = [ [x] [y] [z] ... ]
+# where x, y, z , .... z are '[category, value]' pairs,
 # where cateogry = metadata info piece (such as gc versopm)
 # and value is the value for that metadata (such as version 16.0.1+9)
+# NOTE: This function DOES NOT WORK AS INTENDED
+# However, this accidentially made an oK output, so it will be prioritized
+# later to fix. Until then, however, this is TODO: fix broken.
 def __print_metadata_lists(metadata_lists):
     
     if not metadata_lists or not metadata_lists[0]:
