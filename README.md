@@ -16,13 +16,19 @@
 4. Use the in-notebook instructions to run analysis
 
 > ### File Structure
-- /datasets/  
-   
-    - Note: When using a notebook, the 'datasets' file referenced is /Jupyter-everything/datasets. This is not the same folder, but where my actual datasets live: this folder is included in the gitignore
+
 - /Jupyter-everything
     - All Jupyter notebook related files. Contains all needed code for this project
-        - /Jupyter-everything/datasets/
-            - include a list of symbolic links to local files. To access
-the files, download through box using this link [important datasets](https://apple.box.com/s/vcqgyxx8x1jesyj8smc9ow31kpd5u73b)
-            - If needed, you can request access to the box folder
+
+    - `/Jupyter-everything/datasets/`
+        - symbolic link to local files. To access
+the files, download through box using this link [datasets](https://apple.box.com/s/vcqgyxx8x1jesyj8smc9ow31kpd5u73b)
+    - `/Jupyter-everything/scripts`
+        - Scripts used for log parsing and data plotting.
+
+
+
+- /datasets
+   
+    - Note: When using a notebook, the 'datasets' file referenced is /Jupyter-everything/datasets. This is not the same folder, but where my actual datasets live: this folder is included in the gitignore. It is recommended that you use this folder for local files
 
