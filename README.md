@@ -7,7 +7,7 @@
 > ## How to run analysis
 (requirements)
 - python3 and used packages (numpy, matplotlib, matplotlib.pyplot, re)
-- Jupyter  
+- Jupyter notebook
 
 (begin analysis)           
 1. Navigate to /Jupyter-everything/
