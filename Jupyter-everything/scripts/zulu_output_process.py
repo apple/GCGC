@@ -6,7 +6,7 @@ import re
 
 def extract_zulu_pauses(filep):
     # MUST BE MANUALLY SET
-    inital_value_ms = 27.384
+    inital_value_ms = 6.393
 
     zulu_pauses = []
     with open(filep, "r") as file:
@@ -23,9 +23,8 @@ def extract_zulu_pauses(filep):
             if match:
                 #print(float(match.group(1)))
                 zulu_pauses.append(round(float(match.group(1)) / ticks_per_ms, 3))
-
     return zulu_pauses
 
-o = extract_zulu_pauses("../datasets/t")
+o = extract_zulu_pauses("../datasets/zulu_long_jfr.zulu")
 for line in o:
     print(line)

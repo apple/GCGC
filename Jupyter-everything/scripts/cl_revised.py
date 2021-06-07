@@ -237,7 +237,7 @@ def __group_and_plot(table, ax, color, label, bucket_count, mapping):
 
     timestamps = table[0 + shift]
     timestamps = list(map(__time_from_float, timestamps))
-    pauses = table[-1]
+    pauses = table[-2]
     
     if not mapping:
         ax = __plot_data(ax, timestamps, pauses, 
@@ -255,7 +255,7 @@ def __group_and_plot(table, ax, color, label, bucket_count, mapping):
 # Based on a passed mapping, sort groupings of data into buckets, 
 # such that they follow a uniform time distribution based on bucket count
 def __group_buckets(timestamps, pauses, bucket_count, mapping):
-    full_duration  = timestamps[-1]
+    full_duration  = timestamps[-2]
     pause_duration = full_duration / bucket_count
 
     # Put bottom value of all ranges into hash table. 

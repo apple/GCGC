@@ -117,8 +117,8 @@ def getYoungPauses(create_csv = False):
         return []
     
     # remove the ms terminology from the ending
-    for index in range(len(table[-1])):
-        table[-1][index] = __remove_metric_ending_time(table[-1][index])
+    for index in range(len(table[-2])):
+        table[-2][index] = __remove_metric_ending_time(table[-2][index])
 
     table = __remove_empty_columns(table)
 

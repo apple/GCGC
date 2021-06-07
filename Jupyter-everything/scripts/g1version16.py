@@ -356,7 +356,7 @@ def manyMatch_LineSearch(match_terms = [],        # regex terms to search for
         file = open(filepath, "r")
         data = file.readlines()
     
-    table = [[] for i in range(num_match_groups)]
+    table = [[] for i in range(num_match_groups + 1)]
     # If there has been listed groups of interest within the regex search
     for line in data:
         for term in match_terms:
@@ -365,6 +365,8 @@ def manyMatch_LineSearch(match_terms = [],        # regex terms to search for
                 # Find all matches of interest
                 for i in range(1, num_match_groups + 1):
                     table[i - 1].append(match.group(i))
+                    # add the match group number hit, so able to tell what match
+                    table[-1].append(i) 
     return table
 
 

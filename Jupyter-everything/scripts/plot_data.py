@@ -33,7 +33,7 @@ plt.rcParams['figure.figsize'] = [12, 7]
 def plot_pauses(table):
     
     # Obtain X Y list information from the dataframe.
-    shift = 5 - len(table) # account for possible empty rows.
+    shift = __getShift(table)
     y_values = list(map(float, table[4 - shift]))
     x_values = list(map(__time_to_float, table[0 - shift]))
 
@@ -328,7 +328,7 @@ def displayMetadata(table):
         print(int((max_title_len - len(item[0])) / 2) * ". " + "| " + str(item[1]))
     
 
-# Currently only defined on Schema 0
+# Currently only defined on Schema 0    
 def heap_allocation_beforeafter_gc(breakdown_lst, max_heap = 0):
     if not breakdown_lst:
         return
@@ -482,7 +482,7 @@ def __get_heatmap(table, num_b):
     shift = __getShift(table)
     timestamps = table[0 + shift]
     timestamps = list(map(__time_to_float, timestamps))  # clean data.
-    pauses     = table[-1]
+    pauses     = table[-2]
 
     # create buckets to store the time information.
     # first, compress into num_b buckets along the time X-axis.
@@ -530,9 +530,9 @@ def __get_heatmap(table, num_b):
 # The shift amount is determined based on the presence of DateTime information
 # If present, the shift amount is 1, else zero.
 def __getShift(table):
-    if (len(table) == 5):
+    if (len(table) == 6):
         shift = 0
-    elif len(table) == 6:
+    elif len(table) == 7:
         shift = 1
     else:
         print("Table length does not match expected.")
