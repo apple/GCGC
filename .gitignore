@@ -3,7 +3,7 @@
 *.log
 final
 /datasets/*
-
+/datasets
 /workloads/outputs
 /workloads/logs
 /workloads/META-INF
