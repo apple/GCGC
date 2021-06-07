@@ -15,7 +15,7 @@ def main():
     # testHeapAllocation()
     pl.setLogPath("../../datasets/amzn_workload_4.log")
     pl.setLogSchema(0)
-    pl.getGCMetadata2(create_csv = False)
+    pl.getGCMetadata(create_csv = False)
     print(pl.getTotalProgramRuntime())
     
     

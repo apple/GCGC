@@ -65,6 +65,11 @@ def setLogPath(p):
     global path
     path = p
 
+# gets the current log path
+def getLogPath():
+    global path
+    return path
+
 # Set the log schema type, which helps extract information and greatly
 # reduce runtime.
 # TODO: Implement a "-1" schema, which doesn't know which to use, and searches
@@ -503,7 +508,7 @@ def getTotalProgramRuntime():
         return float(columns[1][0][:-1])
 
 
-def getGCMetadata2(create_csv = False):
+def getGCMetadata(create_csv = False):
     if log_schema != 0:
         print("getGCMetadata for log_schema " + str(log_schema) + " unimplemented")
         return

@@ -559,7 +559,7 @@ def getGCMetadata(create_csv = False):
     return metadata
 
 
-def getGCMetadata2(create_csv = False):
+def getGCMetadata(create_csv = False):
     if log_schema != 0:
         print("getGCMetadata for log_schema " + str(log_schema) + " unimplemented")
         return

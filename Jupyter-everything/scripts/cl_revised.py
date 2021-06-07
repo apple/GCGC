@@ -343,9 +343,9 @@ def __time_from_float(time):
 # The shift amount is determined based on the presence of DateTime information
 # If present, the shift amount is 1, else zero.
 def __getShift(table):
-    if (len(table) == 5):
+    if (len(table) == 6):
         shift = 0
-    elif len(table) == 6:
+    elif len(table) == 7:
         shift = 1
     else:
         print("Table length does not match expected.")
@@ -375,16 +375,18 @@ def __choose(filename):
 # each column of the table together
 # TODO: revise and update this functiomn, it is unclear what is happening
 # TODO: update output stdout style 
+# input is metadata_list
+    # metadata_lists =  [ [a] [b] [c] [d] ]
+# where a,b,c,d,..... z are tables
+    # where table = [ [a] [b] [c] ]
+# where a,b,c, .... z are '[category, value]' pairs,
+# where cateogry = metadata info piece (such as gc versopm)
+# and value is the value for that metadata (such as version 16.0.1+9)
 def __print_metadata_lists(metadata_lists):
     
     if not metadata_lists or not metadata_lists[0]:
         print("No metadata in metadata_lists")
-    
-    doublelist = []
-    for i in range(len(metadata_lists)):
-        doublelist.append(list(metadata_lists[i].items()))
-    metadata_lists = doublelist
-    ### First, find the format for the table. Then, print all in that format.
+
     max_title_len = max([len(item[0]) for item in metadata_lists[0]])
     
     max_out_len = 0
@@ -400,12 +402,12 @@ def __print_metadata_lists(metadata_lists):
         # Start with title 
         print(metadata_lists[0][index][0] +" ", end="")
         # Determine if an extra whitespace is needed, from even/odd lines
-        whitespace_length = max_title_len - len(metadata_lists[0][index][0])
+        whitespace_length = max_title_len - len(metadata_lists[0][index][0]) + 4
         if (whitespace_length % 2 == 1):
             print(" ", end="")
        
        # print("num_whitespace = ",int((max_title_len - len(metadata_lists[0][index][0])) / 2) )
-        print(int((max_title_len - len(metadata_lists[0][index][0])) / 2) * ". ", end = "")
+        print(int((max_title_len - len(metadata_lists[0][index][0])) / 2 - 4) * ". ", end = "")
         for i in range(len(metadata_lists)): # number of columns
             
             # check if that column has any values
