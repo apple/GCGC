@@ -39,12 +39,14 @@ def plot_pauses(table):
 
     # Show interesting trends
     total_wait = __find_trends(table)
+    
     total_time = pl.getTotalProgramRuntime()
-    print("Total time: " + str(total_time))
-    print("Total program runtime: " + str(total_time) + " seconds")
+    print("Total time: " + str(total_time) + "\n")
+    print("Total program runtime: " + str(total_time) + " seconds" + "\n")
     throughput = (total_time - (total_wait)/1000) / (total_time)
-    print("Throughput: " + str(round(throughput * 100, 4)) + "%")
- 
+    print("Throughput: " + str(round(throughput * 100, 4)) + "%" + "\n")
+    __get_percentile_table(table)
+    
     # # # # # # # # # # # # # # # # # # # #
     # Plot 1: Pauses over program's entire runtime.
     plt.bar(x = np.array(x_values), height= np.array(y_values), width = 2.0)
@@ -52,15 +54,15 @@ def plot_pauses(table):
     plt.xlabel("Time from program start (seconds)")
     plt.title("Pauses for Young Generation GC")
     plt.show()
-    # # # # # # # # # # # # # # # # # # # #
-    # Plot 2: Pauses showing duration, no timestamps
-    x_values = list(map(int, list(range(len(y_values)))))
-    plt.bar(x = x_values, height= y_values)
-    plt.ylabel("Pause duration (miliseconds)");
-    plt.xlabel("Pause listed in order")
-    plt.title("Pauses for Young Generation GC")
-    plt.show()
-    # # # # # # # # # # # # # # # # # # # #
+    # # # # # # # # # # # # # # # # # # # # #
+    # # Plot 2: Pauses showing duration, no timestamps
+    # x_values = list(map(int, list(range(len(y_values)))))
+    # plt.bar(x = x_values, height= y_values)
+    # plt.ylabel("Pause duration (miliseconds)");
+    # plt.xlabel("Pause listed in order")
+    # plt.title("Pauses for Young Generation GC")
+    # plt.show()
+    # # # # # # # # # # # # # # # # # # # # #
 
     
 # Removes trailing 's' character from time in seconds
@@ -86,17 +88,52 @@ def __time_to_float(time):
 # Column 1 must be pause time, (1 indexed)
 # Column 4 must be time since start of program.
 def __find_trends(table):
-    shift = 5 - len(table)
+    shift = 6 - len(table)
     wait_times = table[4 - shift]
     max_wait = max(wait_times, key = lambda i : float(i))
     total_wait   = round(sum(float(i) for i in wait_times), 4)
     average_wait = round(total_wait / len(wait_times), 4)
     
-    print("Total pauses: " + str(len(wait_times)))
-    print("Max wait: " + str(max_wait) + " ms")
-    print("Total wait: " + str(total_wait) + " ms")
-    print("Average wait: " + str(average_wait) + " ms")
+    print("Total pauses: " + str(len(wait_times))  + "\n")
+    
+    print("Max wait: " + str(max_wait) + " ms\n")
+    
+    print("Total wait: " + str(total_wait) + " ms\n")
+    
+    print("Average (mean) wait: " + str(average_wait) + " ms\n")
+
+    
     return total_wait
+
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                           __get_percentile_table
+#   Purpose:
+#       Given a well formatted table of pause time information, print ascii
+#       table showing the percentile of the pause times.
+#   
+#   Parameters:
+#       table: a table, with columns as categories
+#       --table should contaain the following columns
+#   
+#       datetime (optional), time, [info/debug/...], gc phase, pause duration,
+#                                                                   pause type
+#   Return:
+#       None: Creates a table showing the interesting ascii values
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+def __get_percentile_table(table):
+    shift = 6 - len(table)
+    pauses = table[4 - shift]
+    pauses = sorted(pauses, reverse = True)
+    print("---------------------------\nPause time in ms\n---------------------------")
+    print("50 th percentile: ", round(np.percentile(pauses, 50), 4))
+    print("75 th percentile: ", round(np.percentile(pauses, 75), 4))
+    print("90 th percentile: ", round(np.percentile(pauses, 90), 4))
+    print("95 th percentile: ", round(np.percentile(pauses, 95), 4))
+    print("99 th percentile: ", round(np.percentile(pauses, 99), 4))
+    print("99.9  percentile: ", round(np.percentile(pauses, 99.9), 4))
+    print("99.99 percentile: ", round(np.percentile(pauses, 99.99), 4))
+    return 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                   plot_heap_allocation_breakdown                             #

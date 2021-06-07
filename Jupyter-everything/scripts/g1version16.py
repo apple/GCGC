@@ -1,4 +1,9 @@
-
+# g1version16
+# defines regex strings and a mapping searching pattern to search for
+# strings in logs specific to g1 version 16.
+# Ellis Brown, [in progres] 6/7/2021
+# Longterm TODO if time: Change regex string expression to optimize runtime
+#       by removing wildcards and replacing them with specific characters
 # Defines string formats to be exported
 import re # regular expressions
 # Returns a regex searchable string.

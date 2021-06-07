@@ -73,23 +73,6 @@ def setLogSchema(logtype):
     global log_schema
     log_schema = logtype
 
-# #       -> getPauses
-# # Purpose: Returns a CSV style list of all pauses from the Young Generation
-# # Parameters : none
-# # Requirements: path must be set to the .log file we look to traverse.
-# # Return: List of tuples as pauses, with added metadata.
-# def getYoungPauses(create_csv = False):
-#     pause_data = []
-#     with open(path, "r") as file:
-#         for line in file:
-#             if "Pause Young" in line:
-#                 pause_data.append(line)
-#     data, timestamps = __extract_pause_metadata(pause_data)
-#     ### If create CSV ###
-#     if create_csv:
-#         filename = "pauses_" + output_csv_id + "_OUT.csv"
-#         __export_pause_csv(data, timestamps ,filename)
-#     return __dataframe_from_pause_lists(data, timestamps, "pause_time")
 
 
 
@@ -104,7 +87,9 @@ def getYoungPauses(create_csv = False):
         file_contents = f.readlines()
     
     # Extract metadata and info from each line
-    search_term = [g1f.lineMetadata() + g1f.YoungPause()]
+    search_term = [g1f.lineMetadata() + g1f.YoungPause(), 
+                   g1f.lineMetadata() + g1f.PauseRemark(),
+                   g1f.lineMetadata() + g1f.PauseCleanup()]
 
     # note: by reading the g1f documentation, I know there are 6 regex groups.
     table = g1f.manyMatch_LineSearch(match_terms = search_term, 
@@ -212,9 +197,8 @@ def __remove_empty_columns(table):
 
     return parsed
      
-# TODO: TEST AND VERIFY
+# TODO: use? (is working correctly.)
 def getConcurrentMarkPauses(create_csv = False):
-    print("Fuunction getConcurrentMarkPauses called.")
     match_terms = [g1f.lineMetadata() + g1f.PauseRemark(), 
                    g1f.lineMetadata() + g1f.PauseCleanup()]
     table = g1f.manyMatch_LineSearch(match_terms = match_terms,
@@ -517,45 +501,6 @@ def getTotalProgramRuntime():
         # Access the only row, row 0
         # then remove the second "s" character to create a float.
         return float(columns[1][0][:-1])
-
-# Purpose: Obtain metadata about a particular version of 
-def getGCMetadata(create_csv = False):
-    
-    if log_schema != 0:
-        print("getGCMetadata for log_schema " + str(log_schema) + " unimplemented")
-        return
-    
-    to_search = {}
-    categories = ["Version", "CPUs", "Memory", "Large Page Support",
-                  "NUMA Support", "Compressed Oops", "Pre-touch", 
-                  "Parallel Workers", "Heap Region Size",
-                  "Heap Initial Capacity", "Heap Max Capacity", 
-                  "Heap Min Capacity", "Concurrent Workers", 
-                  "Concurrent Refinement Workers", "Periodic GC"]
-    for item in categories:
-        to_search[item] = "\s+" + str(item) + ":\s+(.+)\s*"
-    metadata = {}
-    # Helps focus search onto "non tag" regions of each log line
-    log_line_key = '\[*(.*)\]*\[\d+\.\d+\w+\]\[(.*)\[(.*)\](.*)'
-    with open(path, "r") as file:
-        for line in file:
-            match_info = re.search(log_line_key, line)
-            # if found
-            if match_info:
-                non_tag_text = match_info.group(len(match_info.groups()))
-                items = list(to_search.keys())
-
-                for idx in range(len(items)):
-                    # Search for each of the interesting fields.
-                    m =  re.search(to_search[items[idx]], non_tag_text)
-                    # m is a possibe match
-                    if m:
-                        del to_search[items[idx]]
-                        metadata[items[idx]] = m.group(1)
-            if not to_search:
-                break
-        
-    return metadata
 
 
 def getGCMetadata2(create_csv = False):
