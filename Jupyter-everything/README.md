@@ -29,4 +29,4 @@ the files, download through box using this link [datasets](https://apple.box.com
     /Jupyter-everything/compare_multiple.ipynb
     /Jupyter-everything/log_analysis.ipynb
 
-    If you are running low on time, I think I could use the most help with `parse_log.py `
+    If you are running low on time, I think I could use the most help with `parse_log.py and any of the notebooks, I have never worked with a notebook before and don't know whats expected for presentation `
