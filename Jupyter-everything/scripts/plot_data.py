@@ -435,11 +435,11 @@ def plot_heatmap(table, width=20, height=20, labels = True):
     multipler = max_time / width  # multipler is the size of a bucket for time direction
     
     # x labels are the time labels
-    x_labels = [num * multipler for num in range(width)]# TODO : UPDATE TO BE FASTER
+    x_labels = [num * multipler for num in range(1, width + 1)]# TODO : UPDATE TO BE FASTER
     
     x_labels_temp = []
     for i in range(len(x_labels)):
-        if i % 2:
+        if not i % 2:
             x_labels_temp.append(str(round(x_labels[i], 2)) + " s" )
         else:
             x_labels_temp.append("")
@@ -450,7 +450,7 @@ def plot_heatmap(table, width=20, height=20, labels = True):
     # size of the buckets for ms pause
     multipler = (max_pause - min_pause) / height
     # y labels are ms pause time labels
-    y_labels = [round((num * multipler) + min_pause, 2) for num in reversed(range(height))] 
+    y_labels = [round((num * multipler) + min_pause, 2) for num in reversed(range(1, height + 1))] 
     y_labels = [str(label) + " ms" for label in y_labels]
     
     ## Create a figure, and add data to heatmap. Plot then show heatmap.

@@ -92,6 +92,7 @@ def compareHeap(old = False, before = False, after = False):
     
     ## Go through each option and create a new plot. Use different titles and
     ## keyword search parameters.
+    # TODO: The following sections can be plotted then output from /scripts/plot_data
     if old:
         fig, ax = plt.subplots()
         for i in range(len(heap_alloc_list)):
