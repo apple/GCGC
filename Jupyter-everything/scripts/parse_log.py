@@ -168,28 +168,10 @@ def __get_unique_filename(filename):
 
 
 
-
+# removes non number (and decimal point) chars.
 def __remove_non_numbers(string):
     return float(re.sub("[^0-9/.]", "", string))
 
-# Checks all columns of a table. If any columbs are empty, remove them.
-def __remove_empty_columns(table):
-
-    if not table:
-        return []
-    
-    parsed = []
-    for index in range(len(table)):
-        column  = table[index]
-        content = False
-        for row in column:
-            if row:
-                content = True
-                break
-        if content == True:
-            parsed.append(table[index])
-
-    return parsed
      
 # TODO: use? (is working correctly.)
 def getConcurrentMarkPauses(create_csv = False):
