@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from collections import KeysView
 from scripts import parse_log as pl
-from scripts import heatmap as hm # TEMPORARY. remove after merge to main branch
+
 
 # Set the size of the figures that appear in the Jupyter notebook
 plt.rcParams['figure.figsize'] = [12, 7]
@@ -430,7 +430,7 @@ def plot_heatmap(table, width=20, height=20, labels = True):
         print("No table passed to function plot_heatmap. Abort")
     
     # get the heat map information
-    heatmap, min_pause, max_pause, max_time = hm.get_heatmap(table, width, height)
+    heatmap, min_pause, max_pause, max_time = __get_heatmap(table, width, height)
     
     multipler = max_time / width  # multipler is the size of a bucket for time direction
     
@@ -456,7 +456,7 @@ def plot_heatmap(table, width=20, height=20, labels = True):
     ## Create a figure, and add data to heatmap. Plot then show heatmap.
     fig, ax = plt.subplots()
     ax.set_title("Latency during runtime.")
-    im, cbar = heatmap_make(heatmap, y_labels, x_labels, ax=ax,
+    im   = heatmap_make(heatmap, y_labels, x_labels, ax=ax,
                    cmap="YlOrRd", cbarlabel="Frequency")
     if labels:
         texts = annotate_heatmap(im, valfmt="{x}")
@@ -500,7 +500,7 @@ def plot_heatmap(table, width=20, height=20, labels = True):
 #   num_b : number of buckets to sort time into. 
 #       Note: More buckets = more percise heatmap, labels less clear.
 ################################################
-def get_heatmap(table, width = 20, height = 20):
+def __get_heatmap(table, width = 20, height = 20):
     if table.empty:
         return 
     # access the two columns from the table with our time/pause info
@@ -562,6 +562,8 @@ def __getShift(table):
 
     return shift 
 
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+
 ## The following code block was taken directly from matplotlib's documentation
 ## seen here:
 # https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html
@@ -596,8 +598,15 @@ def heatmap_make(data, row_labels, col_labels, ax=None,
     im = ax.imshow(data, **kwargs)
 
     # Create colorbar
-    cbar = ax.figure.colorbar(im, ax=ax, **cbar_kw)
-    cbar.ax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
+    #
+
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="5%", pad=0.1)
+    plt.colorbar(im, cax=cax)
+
+
+    # cbar = ax.figure.colorbar(im, ax=ax, **cbar_kw)
+    cax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
 
     # We want to show all ticks...
    
@@ -623,7 +632,7 @@ def heatmap_make(data, row_labels, col_labels, ax=None,
     ax.grid(which="minor", color="w", linestyle='-', linewidth=3)
     ax.tick_params(which="minor", bottom=False, left=False)
 
-    return im, cbar
+    return im
 
 # The following code example is taken directly from matplotlib documentation
 # on heat maps, seen below
