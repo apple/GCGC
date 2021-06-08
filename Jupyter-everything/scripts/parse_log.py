@@ -9,6 +9,8 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 import re
+from numpy import NaN
+import pandas as pd 
 from scripts import g1version16 as g1f # g1format
 
 
@@ -77,15 +79,12 @@ def setLogSchema(logtype):
     log_schema = logtype
 
 
-
-
 # #       -> getPauses
 # # Purpose: Returns a CSV style list of all pauses from the Young Generation
 # # Parameters : none
 # # Requirements: path must be set to the .log file we look to traverse.
 # # Return: List of tuples as pauses, with added metadata.
 def getYoungPauses(create_csv = False):
-    
     with open(path, "r") as f:
         file_contents = f.readlines()
     
@@ -103,16 +102,26 @@ def getYoungPauses(create_csv = False):
     if not table:
         print("Unable to find young pauses in data set")
         return []
+
+    # Construct a pandas 2d table to hold returned information
+    cols = ["DateTime", "TimeFromStart", "TypeLogLine", "GcPhase", "MemoryChange", "PauseDuration", "PauseType"]
+    columns = {cols[i] : table[i] for i in range(len(cols))}
+    table = pd.DataFrame(columns)
     
-    # remove the ms terminology from the ending
-    for index in range(len(table[-2])):
-        table[-2][index] = __remove_metric_ending_time(table[-2][index])
-
-    table = __remove_empty_columns(table)
-
+    # remove the ms / s terminology from the ending
+    # NOTE: it is important to remember that TimeFromStart is in seconds, while
+    # PauseTime is in ms
+    table["PauseDuration"] = table["PauseDuration"].map(__remove_non_numbers)
+    table["TimeFromStart"] = table["TimeFromStart"].map(__remove_non_numbers)
+    
+    # remove any possibly completly empty columns    
+    table.replace("", NaN, inplace=True)
+    table.dropna(how='all', axis=1, inplace=True)
+    
+    print(table)
     #### If create CSV ###
     if create_csv:
-        __create_csv(table, "young_pauses.csv")
+        table.to_csv(__get_unique_filename("young_pauses.csv"))
 
     return table
 
@@ -160,26 +169,10 @@ def __get_unique_filename(filename):
     return filename
 
 
-# Removes the characters from the end of a timing string, and returns a float
-# The default unit is miliseconds (ms), and other units are scaled to that size
-# Note: only tested with ms right now, everything else is untested
-def __remove_metric_ending_time(string):
-    if not string:
-        return None 
-    
-    ending = string[-2:]
-    if len(string) >= 3:
-        if ending == "ms": # milisecond, base unit
-            return float(string[:-2])
-        elif ending == "us": # microsecond = /1k
-            return float(string[:-2]) / 1000
-        
-        elif ending == "ns": #nanosecond = / 1mil
-            return (float(string[:-2]) / 1000000)
-    else:
-        #Im not sure what could hit this case.
-        return float(string)
 
+
+def __remove_non_numbers(string):
+    return float(re.sub("[^0-9/.]", "", string))
 
 # Checks all columns of a table. If any columbs are empty, remove them.
 def __remove_empty_columns(table):

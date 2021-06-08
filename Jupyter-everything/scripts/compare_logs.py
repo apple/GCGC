@@ -233,16 +233,14 @@ def __gen_comparison(collection, title, bucket_count, mapping = None, file_title
 # plot the table to an output figure
 def __group_and_plot(table, ax, color, label, bucket_count, mapping):
     
-    if not table:
+    if table.empty:
         print("No table passed as a parameter. Abort.")
         return
-    # Tables may/may not come with datetime information appended.
-    # This information is not currently used. Therefore, shift past it
-    shift = __getShift(table)
 
-    timestamps = table[0 + shift]                   # TODO: remove dependency on shift amount
-    timestamps = list(map(__time_from_float, timestamps))
-    pauses = table[-2]                              # TODO: remove dependency on shift amount
+ 
+    timestamps = table["TimeFromStart"]                 
+    pauses = table["PauseDuration"]
+
     
     # plot data in full, without grouping into buckets
     if not mapping:
@@ -262,23 +260,27 @@ def __group_and_plot(table, ax, color, label, bucket_count, mapping):
 # Based on a passed mapping, sort groupings of data into buckets, 
 # such that they follow a uniform time distribution based on bucket count
 def __group_buckets(timestamps, pauses, bucket_count, mapping):
-    full_duration  = timestamps[-2]
+    full_duration  = list(timestamps)[-1]
     pause_duration = full_duration / bucket_count
-
+   
     # Put bottom value of all ranges into hash table. 
     # Actual hash table not needed, because indicies in range [0, n]
     buckets = [[] for i in range(bucket_count)]
     for time, pause in zip(timestamps, pauses):
+        
         bucket = int(time / pause_duration) # floor of division to get bucket.
         if bucket == len(buckets):
             bucket = len(buckets) - 1
         buckets[bucket].append(pause)
-    
+   
     p = 1 # index of pause
     for i in range(bucket_count):
 
         # the mapping is a function that may compute the sum, max, or similar
-        buckets[i] = mapping([value for value in buckets[i]]) # update this bucket
+        if buckets[i]:
+            buckets[i] = mapping([value for value in buckets[i]]) # update this bucket
+        else:
+            buckets[i] = 0
 
     timestamps = [r * pause_duration for r in range(bucket_count)]
     pauses = buckets
@@ -293,7 +295,6 @@ def __plot_data(ax, timestamps, pauses, color, label, x_transformation):
     ## Create data set that mimimics an up and down line graph based on pause time.
     x_data = []
     y_data = []
-
     if not x_transformation:
         ###### Create X-Y Data. bumps for height based on pause duration #####
         for x,y in zip(timestamps, pauses):
@@ -322,6 +323,7 @@ def __plot_data(ax, timestamps, pauses, color, label, x_transformation):
                                          # 1 means bars indistinguishable
                                          # 0 means no bars
         for x,y in zip(timestamps, pauses):
+            
             y = y / 1000
 
             x_data.append(x)

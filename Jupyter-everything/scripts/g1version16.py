@@ -364,14 +364,14 @@ def manyMatch_LineSearch(match_terms = [],        # regex terms to search for
     table = [[] for i in range(num_match_groups + 1)]
     # If there has been listed groups of interest within the regex search
     for line in data:
-        for term in match_terms:
-            match = re.search(term, line)
+        for idx in range(len(match_terms)):
+            match = re.search(match_terms[idx], line)
             if match:
                 # Find all matches of interest
                 for i in range(1, num_match_groups + 1):
                     table[i - 1].append(match.group(i))
-                    # add the match group number hit, so able to tell what match
-                    table[-1].append(i) 
+                # add the match group number hit, so able to tell what match
+                table[-1].append(idx) 
     return table
 
 

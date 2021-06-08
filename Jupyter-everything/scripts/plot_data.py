@@ -29,43 +29,37 @@ plt.rcParams['figure.figsize'] = [12, 7]
 #
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def plot_pauses(table):
-    
     # Obtain X Y list information from the dataframe.
-    shift = __getShift(table)
-    y_values = list(map(float, table[4 - shift]))
-    x_values = list(map(__time_to_float, table[0 - shift]))
+    pauses = list(map(float, table["PauseDuration"]))
+    timestamps = list(map(float, table["TimeFromStart"]))
 
     # Show interesting trends
-    total_wait = __find_trends(table)
+    total_wait = __find_trends(pauses)
     
     total_time = pl.getTotalProgramRuntime()
     print("Total time: " + str(total_time) + "\n")
     print("Total program runtime: " + str(total_time) + " seconds" + "\n")
     throughput = (total_time - (total_wait)/1000) / (total_time)
     print("Throughput: " + str(round(throughput * 100, 4)) + "%" + "\n")
-    __get_percentile_table(table)
+    __get_percentile_table(pauses)
     
     # # # # # # # # # # # # # # # # # # # #
     # Plot 1: Pauses over program's entire runtime.
-    plt.bar(x = np.array(x_values), height= np.array(y_values), width = 2.0)
+    plt.bar(x = np.array(timestamps), height= np.array(pauses), width = 2.0)
     plt.ylabel("Pause duration (miliseconds)");
     plt.xlabel("Time from program start (seconds)")
     plt.title("Pauses for Young Generation GC")
     plt.show()
     # # # # # # # # # # # # # # # # # # # # #
     # # Plot 2: Pauses showing duration, no timestamps
-    # x_values = list(map(int, list(range(len(y_values)))))
-    # plt.bar(x = x_values, height= y_values)
+    # timestamps = list(map(int, list(range(len(pauses)))))
+    # plt.bar(x = timestamps, height= pauses)
     # plt.ylabel("Pause duration (miliseconds)");
     # plt.xlabel("Pause listed in order")
     # plt.title("Pauses for Young Generation GC")
     # plt.show()
     # # # # # # # # # # # # # # # # # # # # #
 
-    
-# Removes trailing 's' character from time in seconds
-def __time_to_float(time):
-    return float(time[:-1])
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                               __find_trends
@@ -85,14 +79,14 @@ def __time_to_float(time):
 # Finds trends in dataframe. 
 # Column 1 must be pause time, (1 indexed)
 # Column 4 must be time since start of program.
-def __find_trends(table):
-    shift = 6 - len(table)
-    wait_times = table[4 - shift]
-    max_wait = max(wait_times, key = lambda i : float(i))
-    total_wait   = round(sum(float(i) for i in wait_times), 4)
-    average_wait = round(total_wait / len(wait_times), 4)
+def __find_trends(pauses):
     
-    print("Total pauses: " + str(len(wait_times))  + "\n")
+    
+    max_wait = max(pauses, key = lambda i : float(i))
+    total_wait   = round(sum(float(i) for i in pauses), 4)
+    average_wait = round(total_wait / len(pauses), 4)
+    
+    print("Total pauses: " + str(len(pauses))  + "\n")
     
     print("Max wait: " + str(max_wait) + " ms\n")
     
@@ -119,9 +113,7 @@ def __find_trends(table):
 #   Return:
 #       None: Creates a table showing the interesting ascii values
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def __get_percentile_table(table):
-    shift = 6 - len(table)
-    pauses = table[4 - shift]
+def __get_percentile_table(pauses):
     pauses = sorted(pauses, reverse = True)
     print("---------------------------\nPause time in ms\n---------------------------")
     print("50 th percentile: ", round(np.percentile(pauses, 50), 4))
@@ -514,10 +506,8 @@ def plot_heatmap(table, num_b = 20, labels = True):
 def __get_heatmap(table, num_b):
 
     # access the two columns from the table with our time/pause info
-    shift = __getShift(table)
-    timestamps = table[0 + shift]
-    timestamps = list(map(__time_to_float, timestamps))  # clean data.
-    pauses     = table[-2]
+    timestamps = table["TimeFromStart"]
+    pauses     = table["PauseDuration"]
 
     # create buckets to store the time information.
     # first, compress into num_b buckets along the time X-axis.
