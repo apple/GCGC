@@ -118,8 +118,6 @@ def getYoungPauses(create_csv = False):
     table.replace("", NaN, inplace=True)
     table.dropna(how='all', axis=1, inplace=True)
     
-    print(table)
-    #### If create CSV ###
     if create_csv:
         table.to_csv(__get_unique_filename("young_pauses.csv"))
 

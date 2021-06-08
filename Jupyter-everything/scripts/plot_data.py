@@ -8,6 +8,7 @@
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+from collections import KeysView
 from scripts import parse_log as pl
 
 # Set the size of the figures that appear in the Jupyter notebook
@@ -210,7 +211,6 @@ def __plot_HA_schema0(dd, max_heap = 0):
         print("Failed to find inital memory size. Rerun with parameter max_heap = (int)")
     if max_heap != 0:
         dd[1] = max_heap
-    print("This far")
     data_dictionary = dd[0]
     # get free_memory list of memory during runtime
     free_memory = __calculate_freemem(data_dictionary, dd[1], before = True, after = True) 
@@ -425,26 +425,20 @@ def heap_allocation_beforeafter_gc(breakdown_lst, max_heap = 0):
 #       labels: True means add frequency labels inside heatmap  #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def plot_heatmap(table, num_b = 20, labels = True):
-    if not table:
+    if table.empty:
         print("No table passed to function plot_heatmap. Abort")
     
+    # get the heat map information
     heatmap, min_pause, max_pause, max_time = __get_heatmap(table, num_b)
-    # for column in heatmap:
-    #     for item in column:
-    #         print(item, end=" ")
-    #     print("")
-        
-    # print("\n\n")
+    
     heatmap = np.rot90(heatmap) # fix orientation
    
-    # for column in heatmap:
-    #     for item in column:
-    #         print(item, end=" ")
-    #     print("")
     
     multipler = max_time / num_b  # multipler is the size of a bucket for time direction
+    
     # x labels are the time labels
     x_labels = [num * multipler for num in range(num_b)]# TODO : UPDATE TO BE FASTER
+    
     x_labels = [str(round(label, 2)) + " s" for label in x_labels]
 
     # size of the buckets for ms pause
@@ -512,7 +506,7 @@ def __get_heatmap(table, num_b):
     # create buckets to store the time information.
     # first, compress into num_b buckets along the time X-axis.
     x_b = [[] for i in range(num_b)]
-    max_time             = timestamps[-1]
+    max_time             = list(timestamps)[-1]
     bucket_time_duration = max_time / num_b
    
     # populate buckets along the x axis.
