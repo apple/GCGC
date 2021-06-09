@@ -183,7 +183,7 @@ def comparePauses(full_p = True, sum_p = 0, max_p = 0):
     collection = []
     for file in files:
         __choose(file)
-        table = pl.getYoungPauses()
+        table = pl.getPauses()
         collection.append(table)
     
     # create plots based on parameters

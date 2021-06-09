@@ -13,8 +13,30 @@
 
     - Creates public functions to set a file to parse, and parse through that file for information
 
-### The following two are temporary
-- `heatmap_learning.py` 
-    - Messing around with heatmaps to understand matploptlib documentation
+### The following is temporary
 - `zulu_output_process.py`
     - extract information from a JFR output with strange csv formatting
+
+> Functions for parsing log files. Exported in scripts/parse_log.py
+>- `setLogPath( filename  = '' )`
+>- `getLogPath()`
+>- `getLogSchema( logtype = 0)`
+>- `getPauses( create_csv = False )` 
+>- `getHeapAllocation( create_csv = False )`
+>- `GetGCMetadata( create_csv = False)`
+>- `getHeapInitialState( create_csv = False )`
+>- `getGCdataSections( create_csv = False )` - large output
+>- `getTotalProgramRuntime( create_csv = False)`
+>- `getGCMetadata(create_csv = False )`
+
+> Functions for displaying log data. Exported in scripts/plot_data.py
+>- `plot_pauses( table )`
+>- `plot_heap_allocation_breakdown( table )`
+>- `displayMetadata( table )`
+>- `heap_allocation_before_gc( data_arr, max_heap_size)`
+>- `plot_heatmap( table, width = 20, height = 20, labels = True )`
+>- coming soon (currently in scripts/compare_logs.py):
+>   - Old memory during runtime
+>   - Total allocated before gc run
+>   - Total allocated after gc run
+

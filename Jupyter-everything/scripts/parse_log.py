@@ -61,9 +61,9 @@ log_schema = 0          # type of log formatted file.
  
 # Set the path to the log file, which will then be parsed for specific 
 # attributes.
-def setLogPath(p):
+def setLogPath(filename = ''):
     global path
-    path = p
+    path = filename
 
 # gets the current log path
 def getLogPath():
@@ -74,7 +74,7 @@ def getLogPath():
 # reduce runtime.
 # TODO: Implement a "-1" schema, which doesn't know which to use, and searches
 # all possible log arrangements
-def setLogSchema(logtype):
+def setLogSchema(logtype = 0):
     global log_schema
     log_schema = logtype
 
@@ -84,7 +84,7 @@ def setLogSchema(logtype):
 # # Parameters : none
 # # Requirements: path must be set to the .log file we look to traverse.
 # # Return: List of tuples as pauses, with added metadata.
-def getYoungPauses(create_csv = False):
+def getPauses(create_csv = False):
     with open(path, "r") as f:
         file_contents = f.readlines()
     
@@ -452,12 +452,7 @@ def getGCdataSections(create_csv = False):
                     if not key in data_cards:
                         data_cards[key] = []
                     data_cards[key].append(non_tag_text)
-    ## Temporary testing of idea ##
-    
-    for k in data_cards.keys():
-        print("\n\n\n\n\n")
-        for entry in data_cards[k]:
-            print(entry)
+
     return data_cards
 
 # Finds the last GC log timestamp. Uses that to find time in seconds from

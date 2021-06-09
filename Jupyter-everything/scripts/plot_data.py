@@ -459,7 +459,7 @@ def plot_heatmap(table, width=20, height=20, labels = True):
     im   = heatmap_make(heatmap, y_labels, x_labels, ax=ax,
                    cmap="YlOrRd", cbarlabel="Frequency")
     if labels:
-        texts = annotate_heatmap(im, valfmt="{x}")
+        texts = __annotate_heatmap(im, valfmt="{x}")
     fig.tight_layout()
     plt.show()
     ## end new
@@ -637,7 +637,7 @@ def heatmap_make(data, row_labels, col_labels, ax=None,
 # The following code example is taken directly from matplotlib documentation
 # on heat maps, seen below
 # https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html
-def annotate_heatmap(im, data=None, valfmt="{x}",
+def __annotate_heatmap(im, data=None, valfmt="{x}",
                      textcolors=("black", "white"),
                      threshold=None, **textkw):
     """
