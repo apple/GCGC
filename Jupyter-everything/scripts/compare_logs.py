@@ -409,11 +409,9 @@ def __print_metadata_lists(metadata_lists):
     for metadata in metadata_lists:
         for item in metadata:
             max_out_len = max(len(item[1]), max_out_len)
-   
     
     for index in range(len(metadata_lists[0])): #length of the items to print
                                                 # = num rows
-        
         # Start with title 
         print(metadata_lists[0][index][0] +" ", end="")
         # Determine if an extra whitespace is needed, from even/odd lines
