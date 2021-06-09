@@ -11,6 +11,7 @@ import numpy as np
 from collections import KeysView
 from scripts import parse_log as pl
 
+
 # Set the size of the figures that appear in the Jupyter notebook
 plt.rcParams['figure.figsize'] = [12, 7]
 
@@ -424,36 +425,41 @@ def heap_allocation_beforeafter_gc(breakdown_lst, max_heap = 0):
 #       num_b : number of buckets along both axis for heat map  #
 #       labels: True means add frequency labels inside heatmap  #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def plot_heatmap(table, num_b = 20, labels = True):
+def plot_heatmap(table, width=20, height=20, labels = True):
     if table.empty:
         print("No table passed to function plot_heatmap. Abort")
     
     # get the heat map information
-    heatmap, min_pause, max_pause, max_time = __get_heatmap(table, num_b)
+    heatmap, min_pause, max_pause, max_time = __get_heatmap(table, width, height)
     
-    heatmap = np.rot90(heatmap) # fix orientation
-   
-    
-    multipler = max_time / num_b  # multipler is the size of a bucket for time direction
+    multipler = max_time / width  # multipler is the size of a bucket for time direction
     
     # x labels are the time labels
-    x_labels = [num * multipler for num in range(num_b)]# TODO : UPDATE TO BE FASTER
+    x_labels = [num * multipler for num in range(1, width + 1)]# TODO : UPDATE TO BE FASTER
     
-    x_labels = [str(round(label, 2)) + " s" for label in x_labels]
+    x_labels_temp = []
+    for i in range(len(x_labels)):
+        if not i % 2:
+            x_labels_temp.append(str(round(x_labels[i], 2)) + " s" )
+        else:
+            x_labels_temp.append("")
+
+    #x_labels = [str(round(label, 2)) + " s" for label in x_labels]
+    x_labels = x_labels_temp
 
     # size of the buckets for ms pause
-    multipler = (max_pause - min_pause) / num_b
+    multipler = (max_pause - min_pause) / height
     # y labels are ms pause time labels
-    y_labels = [round((num * multipler) + min_pause, 2) for num in reversed(range(num_b))] 
+    y_labels = [round((num * multipler) + min_pause, 2) for num in reversed(range(1, height + 1))] 
     y_labels = [str(label) + " ms" for label in y_labels]
     
     ## Create a figure, and add data to heatmap. Plot then show heatmap.
     fig, ax = plt.subplots()
     ax.set_title("Latency during runtime.")
-    im, cbar = heatmap_make(heatmap, y_labels, x_labels, ax=ax,
+    im   = heatmap_make(heatmap, y_labels, x_labels, ax=ax,
                    cmap="YlOrRd", cbarlabel="Frequency")
     if labels:
-        texts = annotate_heatmap(im, valfmt="{x}")
+        texts = __annotate_heatmap(im, valfmt="{x}")
     fig.tight_layout()
     plt.show()
     ## end new
@@ -485,64 +491,60 @@ def plot_heatmap(table, num_b = 20, labels = True):
     fig.tight_layout()
     plt.show()
     '''
-
-
-
 ################################################
 # Gathers data to properly plot a heatmap.
-# Parameters:
-#   table: 2d array, columns = cateogry, rows = values in each column
-#       column [-1] = pause information in ms 
-#       column [0 + shift] = timestamp information
+# Parameters: 
+#   table: a pandas dataframe.  Notable columns: 
+#       TimeFromStart - time in seconds from program start. float
+#       PauseDuration - time in miliseconds for a pause. float
 #   num_b : number of buckets to sort time into. 
 #       Note: More buckets = more percise heatmap, labels less clear.
 ################################################
-def __get_heatmap(table, num_b):
-
+def __get_heatmap(table, width = 20, height = 20):
+    if table.empty:
+        return 
     # access the two columns from the table with our time/pause info
     timestamps = table["TimeFromStart"]
     pauses     = table["PauseDuration"]
 
     # create buckets to store the time information.
     # first, compress into num_b buckets along the time X-axis.
-    x_b = [[] for i in range(num_b)]
+    x_b = [[] for i in range(width)]
     max_time             = list(timestamps)[-1]
-    bucket_time_duration = max_time / num_b
+    bucket_time_duration = max_time / width
    
     # populate buckets along the x axis.
     for pause, time in zip(pauses, timestamps):
         bucket_no = int(time / bucket_time_duration)
-        if bucket_no >= num_b:
-            bucket_no = num_b - 1
+        if bucket_no >= width:
+            bucket_no = (width - 1)
         x_b[bucket_no].append(pause)
-
    
     max_pause = max(pauses)
     min_pause = min(pauses)
 
     # calculate the size of the buckets representing a pause
-    bucket_pause_duration = (max_pause - min_pause) / num_b
+    bucket_pause_duration = (max_pause - min_pause) / height
     
     # create heatmap, which will be a 2d-array
     heatmap = []
 
     #go through each time interval, and sort the pauses there into frequency lists
     for bucket in x_b:
-        yb = [0 for i in range(num_b)] # construct a 0 frequency list
+        yb = [0 for i in range(height)] # construct a 0 frequency list
         for time in bucket:
             # determine which ms pause bucket
             y_bucket_no = int((time - min_pause) / bucket_pause_duration)
-            if y_bucket_no >= num_b:
-                y_bucket_no = num_b - 1
+            if y_bucket_no >= height:
+                y_bucket_no = (height - 1)
 
             # increase the frequency of that pause in this time interval
             yb[y_bucket_no] += 1
 
         # Add the data to the 2d array
         heatmap.append(yb)
-
+    heatmap = np.rot90(heatmap) # fix orientation
     return np.array(heatmap), min_pause, max_pause, max_time # all data needed to plot a heatmap.
-
 
 
 # Obtain the shift amount from the dimensions of the table
@@ -559,6 +561,8 @@ def __getShift(table):
         return [] #illogical value will cause error during runtime. TODO: fix
 
     return shift 
+
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 ## The following code block was taken directly from matplotlib's documentation
 ## seen here:
@@ -594,8 +598,15 @@ def heatmap_make(data, row_labels, col_labels, ax=None,
     im = ax.imshow(data, **kwargs)
 
     # Create colorbar
-    cbar = ax.figure.colorbar(im, ax=ax, **cbar_kw)
-    cbar.ax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
+    #
+
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="5%", pad=0.1)
+    plt.colorbar(im, cax=cax)
+
+
+    # cbar = ax.figure.colorbar(im, ax=ax, **cbar_kw)
+    cax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
 
     # We want to show all ticks...
    
@@ -621,12 +632,12 @@ def heatmap_make(data, row_labels, col_labels, ax=None,
     ax.grid(which="minor", color="w", linestyle='-', linewidth=3)
     ax.tick_params(which="minor", bottom=False, left=False)
 
-    return im, cbar
+    return im
 
 # The following code example is taken directly from matplotlib documentation
 # on heat maps, seen below
 # https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html
-def annotate_heatmap(im, data=None, valfmt="{x}",
+def __annotate_heatmap(im, data=None, valfmt="{x}",
                      textcolors=("black", "white"),
                      threshold=None, **textkw):
     """

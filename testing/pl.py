@@ -78,7 +78,7 @@ def setLogSchema(logtype):
 # # Parameters : none
 # # Requirements: path must be set to the .log file we look to traverse.
 # # Return: List of tuples as pauses, with added metadata.
-# def getYoungPauses(create_csv = False):
+# def getPauses(create_csv = False):
 #     pause_data = []
 #     with open(path, "r") as file:
 #         for line in file:
@@ -98,7 +98,7 @@ def setLogSchema(logtype):
 # # Parameters : none
 # # Requirements: path must be set to the .log file we look to traverse.
 # # Return: List of tuples as pauses, with added metadata.
-def getYoungPauses(create_csv = False):
+def getPauses(create_csv = False):
     
     with open(path, "r") as f:
         file_contents = f.readlines()

@@ -92,6 +92,7 @@ def compareHeap(old = False, before = False, after = False):
     
     ## Go through each option and create a new plot. Use different titles and
     ## keyword search parameters.
+    # TODO: The following sections can be plotted then output from /scripts/plot_data
     if old:
         fig, ax = plt.subplots()
         for i in range(len(heap_alloc_list)):
@@ -182,7 +183,7 @@ def comparePauses(full_p = True, sum_p = 0, max_p = 0):
     collection = []
     for file in files:
         __choose(file)
-        table = pl.getYoungPauses()
+        table = pl.getPauses()
         collection.append(table)
     
     # create plots based on parameters
@@ -408,11 +409,9 @@ def __print_metadata_lists(metadata_lists):
     for metadata in metadata_lists:
         for item in metadata:
             max_out_len = max(len(item[1]), max_out_len)
-   
     
     for index in range(len(metadata_lists[0])): #length of the items to print
                                                 # = num rows
-        
         # Start with title 
         print(metadata_lists[0][index][0] +" ", end="")
         # Determine if an extra whitespace is needed, from even/odd lines
