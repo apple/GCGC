@@ -25,7 +25,9 @@ import re # regular expressions
 #
 ##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def YoungPause():
-    return ".*Pause Young.*?(\d+\w*->\d+\w*\(*.*\)*)\s(\d+.*)\s*"
+    #return ".*Pause Young.*?(\d+\w*->\d+\w*\(*.*\)*)\s(\d+.*)\s*"
+    # GC\(\d+\) Pause Young( \((\w+ ?){1,}\)){1,} (\d+\w->\d+\w\(?\d+?\w?\)?) (\d+.\w+)
+    return "Pause Young(?: \([\w ]*?\)){1,3} (\d+\w->\d+\w\(?\d+?\w?\)?) (\d+.\w+)"
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -42,7 +44,7 @@ def YoungPause():
 #
 ##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def PauseCleanup():
-    return ".*Pause Cleanup.*?(\d+\w*->\d+\w*\(*.*\)*) (\d+.*)\s"
+    return "Pause Cleanup.*?(\d+\w*->\d+\w*\(*.*\)*) (\d+.*)\s"
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                               PauseRemark
@@ -58,7 +60,7 @@ def PauseCleanup():
 #
 ##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def PauseRemark():
-    return ".*Pause Remark.*?(\d+\w*->\d+\w*\(*.*\)*) (\d+.*)\s"
+    return "Pause Remark.*?(\d+\w*->\d+\w*\(*.*\)*) (\d+.*)\s"
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                               DateTimestamp
@@ -90,7 +92,7 @@ def DateTimestamp():
 #       3) Next anticipated number of young regions before GC runs
 ##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def EdenHR():
-    return "\s+Eden regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
+    return "Eden regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -108,7 +110,7 @@ def EdenHR():
 #
 ##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def SurvivorHR():
-    return "\s+Survivor regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
+    return "Survivor regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -125,7 +127,7 @@ def SurvivorHR():
 #       
 ##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def OldHR():
-    return "\s+Old regions:\s+(\d+)->(\d+)\(?\d*\)?\s*"
+    return "Old regions:\s+(\d+)->(\d+)\(?\d*\)?\s*"
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -142,7 +144,7 @@ def OldHR():
 #
 ##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def ArchiveHR():
-    return "\s+Archive regions:\s+(\d+)->(\d+)\(?\d*\)?\s*"
+    return "Archive regions:\s+(\d+)->(\d+)\(?\d*\)?\s*"
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -157,7 +159,7 @@ def ArchiveHR():
 #       1)
 ##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def HugeHR():
-    return "\s+Humongous regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
+    return "Humongous regions:\s+(\d+)->(\d+)\(?(\d*)\)?\s*"
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                               HeapRegions_schema1
@@ -291,7 +293,7 @@ def HeapInitalMaxMin_schema1():
 #
 ##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def fullLineInfo():
-    return  '^\[*(.*)\]*\[(\d+\.\d+\w+)\]\[(.*)\]\[(.*)\](.*)\s+'
+    return '^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?\[(\d+\.\d+\w+)\]\[(\w+ ?)\]\[gc(\w+,?){0,2}\s*\] GC\(\d+\) (.*)\s'
 
 
 
@@ -311,7 +313,8 @@ def fullLineInfo():
 #
 ##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def lineMetadata():
-    return  '^\[*(.*)\]*\[(\d+\.\d+\w+)\]\[(.*)\]\[(.*)\].*\s*'
+    #return  '^\[*(.*)\]*\[(\d+\.\d+\w+)\]\[(.*)\]\[(.*)\].*\s*'
+    return '^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?\[(\d+\.\d+\w+)\]\[(\w+ ?)\]\[gc(\w+,?){0,2}\s*\] GC\(\d+\) '
 
 
 
@@ -458,3 +461,4 @@ def __sort_to_list(dictWords, keysOrder, search_titles):
             ordered.append([key, dictWords[key]])
 
     return ordered
+

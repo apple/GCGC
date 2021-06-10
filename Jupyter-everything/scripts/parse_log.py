@@ -89,10 +89,10 @@ def getPauses(create_csv = False):
         file_contents = f.readlines()
     
     # Extract metadata and info from each line
-    search_term = [g1f.lineMetadata() + g1f.YoungPause(), 
-                   g1f.lineMetadata() + g1f.PauseRemark(),
-                   g1f.lineMetadata() + g1f.PauseCleanup()]
-
+    search_term = [g1f.lineMetadata() + g1f.YoungPause()]
+                  # g1f.lineMetadata() + g1f.PauseRemark(),
+                  # g1f.lineMetadata() + g1f.PauseCleanup()]
+    #search_term = ["^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?\[(\d+\.\d+\w+)\]\[(\w+ ?)\]\[gc(\w+,?){0,2}\s*\] GC\(\d+\) Pause Young(?: \([\w ]*?\)){1,3} (\d+\w->\d+\w\(?\d+?\w?\)?) (\d+.\w+)"]
     # note: by reading the g1f documentation, I know there are 6 regex groups.
     table = g1f.manyMatch_LineSearch(match_terms = search_term, 
                                      num_match_groups = 6,
@@ -102,7 +102,7 @@ def getPauses(create_csv = False):
     if not table:
         print("Unable to find young pauses in data set")
         return []
-
+    print("This far line 105")
     # Construct a pandas 2d table to hold returned information
     cols = ["DateTime", "TimeFromStart", "TypeLogLine", "GcPhase", "MemoryChange", "PauseDuration", "PauseType"]
     columns = {cols[i] : table[i] for i in range(len(cols))}
@@ -117,6 +117,7 @@ def getPauses(create_csv = False):
     # remove any possibly completly empty columns    
     table.replace("", NaN, inplace=True)
     table.dropna(how='all', axis=1, inplace=True)
+    print("This far line 120")
     
     if create_csv:
         table.to_csv(__get_unique_filename("young_pauses.csv"))
@@ -185,8 +186,6 @@ def getConcurrentMarkPauses(create_csv = False):
     if create_csv:
         __create_csv(table, "Concurrent_mark_pauses.csv")
     return table
-
-    
 
 
 # ### Purpose: Extracts the time information for any GC log line.
