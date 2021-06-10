@@ -37,6 +37,7 @@ from scripts import g1version16 as g1f # g1format
 path= ""                # path to log data
 output_csv_id = "extra" # name-scheme of output data file
 log_schema = 0          # type of log formatted file.
+gctype = ""
 '''Current log formats: 
     [0] amzn_workload 
     [1] gc.log
@@ -64,6 +65,9 @@ log_schema = 0          # type of log formatted file.
 def setLogPath(filename = ''):
     global path
     path = filename
+    __setGCType()
+
+
 
 # gets the current log path
 def getLogPath():
@@ -92,7 +96,6 @@ def getPauses(create_csv = False):
     search_term = [g1f.lineMetadata() + g1f.YoungPause(),
                    g1f.lineMetadata() + g1f.PauseRemark(),
                    g1f.lineMetadata() + g1f.PauseCleanup()]
-    #search_term = ["^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?\[(\d+\.\d+\w+)\]\[(\w+ ?)\]\[gc(\w+,?){0,2}\s*\] GC\(\d+\) Pause Young(?: \([\w ]*?\)){1,3} (\d+\w->\d+\w\(?\d+?\w?\)?) (\d+.\w+)"]
     # note: by reading the g1f documentation, I know there are 6 regex groups.
     table = g1f.manyMatch_LineSearch(match_terms = search_term, 
                                      num_match_groups = 6,
