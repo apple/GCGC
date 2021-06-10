@@ -44,7 +44,7 @@ def YoungPause():
 #
 ##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def PauseCleanup():
-    return "Pause Cleanup.*?(\d+\w*->\d+\w*\(*.*\)*) (\d+.*)\s"
+    return "Pause Cleanup(?: \([\w ]*?\)){0,2} (\d+\w->\d+\w\(?\d+?\w?\)?) (\d+.\w+)"
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                               PauseRemark
@@ -60,7 +60,7 @@ def PauseCleanup():
 #
 ##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def PauseRemark():
-    return "Pause Remark.*?(\d+\w*->\d+\w*\(*.*\)*) (\d+.*)\s"
+    return "Pause Remark(?: \([\w ]*?\)){0,2} (\d+\w->\d+\w\(?\d+?\w?\)?) (\d+.\w+)"
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                               DateTimestamp
