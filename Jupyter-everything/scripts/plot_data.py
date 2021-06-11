@@ -32,33 +32,33 @@ plt.rcParams['figure.figsize'] = [12, 7]
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def plot_pauses(table):
     # Obtain X Y list information from the dataframe.
-    pauses = list(map(float, table["PauseDuration"]))
-    timestamps = list(map(float, table["TimeFromStart"]))
+    pauses_ms = list(map(float, table["PauseDuration"]))
+    timestamps_seconds = list(map(float, table["TimeFromStart"]))
 
     # Show interesting trends
-    total_wait = __find_trends(pauses)
+    total_wait = __find_trends(pauses_ms)
     
     total_time = pl.getTotalProgramRuntime()
     print("Total time: " + str(total_time) + "\n")
     print("Total program runtime: " + str(total_time) + " seconds" + "\n")
     throughput = (total_time - (total_wait)/1000) / (total_time)
     print("Throughput: " + str(round(throughput * 100, 4)) + "%" + "\n")
-    __get_percentile_table(pauses)
+    __get_percentile_table(pauses_ms)
     
     # # # # # # # # # # # # # # # # # # # #
-    # Plot 1: Pauses over program's entire runtime.
-    plt.bar(x = np.array(timestamps), height= np.array(pauses), width = 2.0)
+    # Plot 1: Pauses_ms over program's entire runtime.
+    plt.bar(x = np.array(timestamps_seconds), height= np.array(pauses_ms), width = 2.0)
     plt.ylabel("Pause duration (miliseconds)");
     plt.xlabel("Time from program start (seconds)")
-    plt.title("Pauses for Young Generation GC")
+    plt.title("Pauses for Young Generation GC (miliseconds)")
     plt.show()
     # # # # # # # # # # # # # # # # # # # # #
-    # # Plot 2: Pauses showing duration, no timestamps
-    # timestamps = list(map(int, list(range(len(pauses)))))
-    # plt.bar(x = timestamps, height= pauses)
+    # # Plot 2: Pauses_ms showing duration, no timestamps_seconds
+    # timestamps_seconds = list(map(int, list(range(len(pauses_ms)))))
+    # plt.bar(x = timestamps_seconds, height= pauses_ms)
     # plt.ylabel("Pause duration (miliseconds)");
     # plt.xlabel("Pause listed in order")
-    # plt.title("Pauses for Young Generation GC")
+    # plt.title("Pauses_ms for Young Generation GC")
     # plt.show()
     # # # # # # # # # # # # # # # # # # # # #
 
@@ -81,20 +81,20 @@ def plot_pauses(table):
 # Finds trends in dataframe. 
 # Column 1 must be pause time, (1 indexed)
 # Column 4 must be time since start of program.
-def __find_trends(pauses):
+def __find_trends(pauses_ms):
     
     
-    max_wait = max(pauses, key = lambda i : float(i))
-    total_wait   = round(sum(float(i) for i in pauses), 4)
-    average_wait = round(total_wait / len(pauses), 4)
+    max_wait = max(pauses_ms, key = lambda i : float(i))
+    total_wait   = round(sum(float(i) for i in pauses_ms), 4)
+    average_wait = round(total_wait / len(pauses_ms), 4)
     
-    print("Total pauses: " + str(len(pauses))  + "\n")
+    print("Total pause in ms: " + str(len(pauses_ms))  + "\n")
     
-    print("Max wait: " + str(max_wait) + " ms\n")
+    print("Max wait in  ms: " + str(max_wait) + " ms\n")
     
-    print("Total wait: " + str(total_wait) + " ms\n")
+    print("Total wait in ms: " + str(total_wait) + " ms\n")
     
-    print("Average (mean) wait: " + str(average_wait) + " ms\n")
+    print("Average (mean) wait in ms: " + str(average_wait) + " ms\n")
 
     
     return total_wait
@@ -115,16 +115,16 @@ def __find_trends(pauses):
 #   Return:
 #       None: Creates a table showing the interesting ascii values
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def __get_percentile_table(pauses):
-    pauses = sorted(pauses, reverse = True)
+def __get_percentile_table(pauses_ms):
+    pauses = sorted(pauses_ms, reverse = True)
     print("---------------------------\nPause time in ms\n---------------------------")
-    print("50 th percentile: ", round(np.percentile(pauses, 50), 4))
-    print("75 th percentile: ", round(np.percentile(pauses, 75), 4))
-    print("90 th percentile: ", round(np.percentile(pauses, 90), 4))
-    print("95 th percentile: ", round(np.percentile(pauses, 95), 4))
-    print("99 th percentile: ", round(np.percentile(pauses, 99), 4))
-    print("99.9  percentile: ", round(np.percentile(pauses, 99.9), 4))
-    print("99.99 percentile: ", round(np.percentile(pauses, 99.99), 4))
+    print("50 th percentile: ", round(np.percentile(pauses_ms, 50), 4))
+    print("75 th percentile: ", round(np.percentile(pauses_ms, 75), 4))
+    print("90 th percentile: ", round(np.percentile(pauses_ms, 90), 4))
+    print("95 th percentile: ", round(np.percentile(pauses_ms, 95), 4))
+    print("99 th percentile: ", round(np.percentile(pauses_ms, 99), 4))
+    print("99.9  percentile: ", round(np.percentile(pauses_ms, 99.9), 4))
+    print("99.99 percentile: ", round(np.percentile(pauses_ms, 99.99), 4))
     return 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -141,6 +141,7 @@ def __get_percentile_table(pauses):
 #                   list[0] = dictionary, with all region counts               #
 #                   list[2] = integer, size of initial free memory             # 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# TODO: This is very hard to understand function. WILL FIX SOON
 def plot_heap_allocation_breakdown(breakdown_lst, max_heap = 0):
     if not breakdown_lst:
         return
@@ -430,9 +431,9 @@ def plot_heatmap(table, width=20, height=20, labels = True):
         print("No table passed to function plot_heatmap. Abort")
     
     # get the heat map information
-    heatmap, min_pause, max_pause, max_time = __get_heatmap(table, width, height)
+    heatmap, min_pause_ms, max_pause_ms, max_time_ms = __get_heatmap(table, width, height)
     
-    multipler = max_time / width  # multipler is the size of a bucket for time direction
+    multipler = max_time_ms / width  # multipler is the size of a bucket for time direction
     
     # x labels are the time labels
     x_labels = [num * multipler for num in range(1, width + 1)]# TODO : UPDATE TO BE FASTER
@@ -448,18 +449,18 @@ def plot_heatmap(table, width=20, height=20, labels = True):
     x_labels = x_labels_temp
 
     # size of the buckets for ms pause
-    multipler = (max_pause - min_pause) / height
+    multipler = (max_pause_ms - min_pause_ms) / height
     # y labels are ms pause time labels
-    y_labels = [round((num * multipler) + min_pause, 2) for num in reversed(range(1, height + 1))] 
+    y_labels = [round((num * multipler) + min_pause_ms, 2) for num in reversed(range(1, height + 1))] 
     y_labels = [str(label) + " ms" for label in y_labels]
     
     ## Create a figure, and add data to heatmap. Plot then show heatmap.
     fig, ax = plt.subplots()
     ax.set_title("Latency during runtime.")
-    im   = heatmap_make(heatmap, y_labels, x_labels, ax=ax,
+    im = heatmap_make(heatmap, y_labels, x_labels, ax=ax,
                    cmap="YlOrRd", cbarlabel="Frequency")
     if labels:
-        texts = __annotate_heatmap(im, valfmt="{x}")
+        __annotate_heatmap(im, valfmt="{x}")
     fig.tight_layout()
     plt.show()
     ## end new
@@ -504,27 +505,27 @@ def __get_heatmap(table, width = 20, height = 20):
     if table.empty:
         return 
     # access the two columns from the table with our time/pause info
-    timestamps = table["TimeFromStart"]
-    pauses     = table["PauseDuration"]
+    timestamps_seconds = table["TimeFromStart"]
+    pauses_ms     = table["PauseDuration"]
 
     # create buckets to store the time information.
     # first, compress into num_b buckets along the time X-axis.
     x_b = [[] for i in range(width)]
-    max_time             = list(timestamps)[-1]
-    bucket_time_duration = max_time / width
+    max_time_ms             = list(timestamps_seconds)[-1]
+    bucket_time_duration = max_time_ms / width
    
     # populate buckets along the x axis.
-    for pause, time in zip(pauses, timestamps):
+    for pause, time in zip(pauses_ms, timestamps_seconds):
         bucket_no = int(time / bucket_time_duration)
         if bucket_no >= width:
             bucket_no = (width - 1)
         x_b[bucket_no].append(pause)
    
-    max_pause = max(pauses)
-    min_pause = min(pauses)
+    max_pause_ms = max(pauses_ms)
+    min_pause_ms = min(pauses_ms)
 
     # calculate the size of the buckets representing a pause
-    bucket_pause_duration = (max_pause - min_pause) / height
+    bucket_pause_duration = (max_pause_ms - min_pause_ms) / height
     
     # create heatmap, which will be a 2d-array
     heatmap = []
@@ -534,7 +535,7 @@ def __get_heatmap(table, width = 20, height = 20):
         yb = [0 for i in range(height)] # construct a 0 frequency list
         for time in bucket:
             # determine which ms pause bucket
-            y_bucket_no = int((time - min_pause) / bucket_pause_duration)
+            y_bucket_no = int((time - min_pause_ms) / bucket_pause_duration)
             if y_bucket_no >= height:
                 y_bucket_no = (height - 1)
 
@@ -544,23 +545,9 @@ def __get_heatmap(table, width = 20, height = 20):
         # Add the data to the 2d array
         heatmap.append(yb)
     heatmap = np.rot90(heatmap) # fix orientation
-    return np.array(heatmap), min_pause, max_pause, max_time # all data needed to plot a heatmap.
+    return np.array(heatmap), min_pause_ms, max_pause_ms, max_time_ms # all data needed to plot a heatmap.
 
 
-# Obtain the shift amount from the dimensions of the table
-# The shift amount is determined based on the presence of DateTime information
-# If present, the shift amount is 1, else zero.
-def __getShift(table):
-    if (len(table) == 6):
-        shift = 0
-    elif len(table) == 7:
-        shift = 1
-    else:
-        print("Table length does not match expected.")
-        print("Expected num cols: 5 or 6. Recieved: ", len(table))
-        return [] #illogical value will cause error during runtime. TODO: fix
-
-    return shift 
 
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
