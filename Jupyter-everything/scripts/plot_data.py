@@ -681,3 +681,55 @@ def __annotate_heatmap(im, data=None, valfmt="{x}",
             texts.append(text)
 
     return texts
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+#                     plot_scatter()                            #
+#   Purpose:                                                    #
+#       Plot a latency scatterplot for different pause types    #
+#   Parameters:                                                 #
+#       table : a pd df containing pause info and time info     #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+def plot_scatter(table, labels = []):
+    if table.empty:
+        return
+    # access the interesting information directly
+    times = table["TimeFromStart"]
+    pauses = table["PauseDuration"]
+    types = table["PauseType"]
+    
+    # determine what types of pauses exist in this data
+    gctype = pl.getGCType()
+    if not labels:   
+        if gctype == "Shenandoah":
+            labels = ["Init Mark", "Final Mark", "Init Update Refs",
+                    "Final Update Refs", "Degenerated GC", "Pause Full"]
+        elif gctype == "G1":
+            labels = ["YoungPause", "PauseRemark", "PauseClenaup"]
+        
+    
+    numT = 0
+    # determine the number of types
+    for i in range(len(types)):
+        numT = max(numT, types[i])
+    
+    pauseArray = [[[], []] for i in range(numT + 1)]
+
+    # Add the labels
+    plt.xlabel("Time in seconds")
+    plt.ylabel("Pause time in miliseconds")
+    plt.title("Latency of different pauses during runtime")
+
+    # Arrange the data into buckets based on the pause type
+    for i in range(len(types)):   
+        pauseArray[types[i]][0].append(times[i])
+        pauseArray[types[i]][1].append(pauses[i])
+    
+    colors = ["c", "g", "y", "b", "r", "k", "cyan", "chocolate", "lightgreen", "grey", "hotpink" ]
+    
+    
+    # for each type of pause, print a scatter with unique color and label
+    for i in range(len(pauseArray)):
+        plt.scatter(pauseArray[i][0], pauseArray[i][1], c = colors[i], label = labels[i])
+    
+    plt.legend()
+    plt.show()

@@ -12,6 +12,7 @@ import re
 from numpy import NaN
 import pandas as pd 
 from scripts import g1version16 as g1f # g1format
+from scripts import shenandoah_p as shen #shenandoah regex
 
 
 '''TODO: The following are catogries of information to parse from the log '''
@@ -68,6 +69,23 @@ def setLogPath(filename = ''):
     __setGCType()
 
 
+def __setGCType():
+    global path
+    global gctype
+    file = open(path, "r")
+    lines_read = 0
+    
+    while lines_read < 100:
+        line = file.readline()
+        if "Using G1" in line:
+            gctype = "G1"
+            return
+        if "Using Shenandoah" in line:
+            gctype = "Shenandoah"
+            return
+        lines_read += 1
+    
+    print("Warning: GC Type not set")
 
 # gets the current log path
 def getLogPath():
@@ -89,13 +107,22 @@ def setLogSchema(logtype = 0):
 # # Requirements: path must be set to the .log file we look to traverse.
 # # Return: List of tuples as pauses, with added metadata.
 def getPauses(create_csv = False):
-
     # Extract metadata and info from each line
-    match_terms = [g1f.lineMetadata() + g1f.YoungPause(),
-                   g1f.lineMetadata() + g1f.PauseRemark(),
-                   g1f.lineMetadata() + g1f.PauseCleanup()]
+    search_term = []
+    if gctype == "G1":
+        search_term = [g1f.lineMetadata() + g1f.YoungPause(),
+                       g1f.lineMetadata() + g1f.PauseRemark(),
+                       g1f.lineMetadata() + g1f.PauseCleanup()]
+        
+
+    elif gctype == "Shenandoah":
+        search_term = shen.pauses()
+        
+    else:
+        print("GCtype unknown. GcType = ", gctype, " Abort.")
+
     # note: by reading the g1f documentation, I know there are 6 regex groups.
-    table = g1f.manyMatch_LineSearch(match_terms = match_terms, 
+    table = g1f.manyMatch_LineSearch(match_terms = search_term, 
                                      num_match_groups = 6,
                                      data = [],     #reading from file, no data
                                      filepath = path, #global
@@ -187,6 +214,26 @@ def getConcurrentMarkPauses(create_csv = False):
     if create_csv:
         __create_csv(table, "Concurrent_mark_pauses.csv")
     return table
+
+
+## Returnns a list of all concurrent periods and their durations
+def getConcurrentDurations(create_csv = False):
+    if gctype == "Shenandoah":
+        match_terms = [shen.ConcurrentLine()]
+        num_groups = 8
+    else:
+        print("Not implemented: getConcurrentDurations on " + str(gctype))
+    
+    table = g1f.manyMatch_LineSearch(match_terms = match_terms,
+                                     num_match_groups = num_groups,
+                                     data = [],
+                                     filepath = path,
+                                     in_file = True)
+    
+    if not table:
+        print("Unable to find young pauses in data set")
+        return []
+
 
 # Get the contents of the heap at each GC log moment. 
 # Note:  UNIMPLEMENTED create_csv = true.

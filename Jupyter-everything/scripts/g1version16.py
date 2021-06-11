@@ -27,7 +27,7 @@ import re # regular expressions
 def YoungPause():
     #return ".*Pause Young.*?(\d+\w*->\d+\w*\(*.*\)*)\s(\d+.*)\s*"
     # GC\(\d+\) Pause Young( \((\w+ ?){1,}\)){1,} (\d+\w->\d+\w\(?\d+?\w?\)?) (\d+.\w+)
-    return "Pause Young(?: \([\w ]*?\)){1,3} (\d+\w->\d+\w\(?\d+?\w?\)?) (\d+.\w+)"
+    return "Pause Young(?: \([\w ]*?\)){1,3} (\d+\w->\d+\w\(?\d+?\w?\)?) (\d+\.\d+\w+)"
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -367,15 +367,18 @@ def manyMatch_LineSearch(match_terms = [],        # regex terms to search for
     
     table = [[] for i in range(num_match_groups + 1)]
     # If there has been listed groups of interest within the regex search
+
     for line in data:
         for idx in range(len(match_terms)):
             match = re.search(match_terms[idx], line)
             if match:
+                found = True # temp
                 # Find all matches of interest
                 for i in range(1, num_match_groups + 1):
                     table[i - 1].append(match.group(i))
                 # add the match group number hit, so able to tell what match
                 table[-1].append(idx) 
+            
     return table
 
 
