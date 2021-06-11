@@ -68,7 +68,6 @@ def compareHeap(old = False, before = False, after = False):
     #   we assume that no parameters wants a full analysis.
     if not (old or before or after):
         old = True
-        young = True
         before = True
         after = True
     
@@ -267,12 +266,12 @@ def __group_buckets(timestamps_seconds, pauses_ms, bucket_count, mapping):
     # Put bottom value of all ranges into hash table. 
     # Actual hash table not needed, because indicies in range [0, n]
     buckets = [[] for i in range(bucket_count)]
-    for time, pause in zip(timestamps_seconds, pauses_ms):
+    for time_s, pause_ms in zip(timestamps_seconds, pauses_ms):
         
-        bucket = int(time / pause_duration) # floor of division to get bucket.
+        bucket = int(time_s / pause_duration) # floor of division to get bucket.
         if bucket == len(buckets):
             bucket = len(buckets) - 1
-        buckets[bucket].append(pause)
+        buckets[bucket].append(pause_ms)
    
     p = 1 # index of pause
     for i in range(bucket_count):
