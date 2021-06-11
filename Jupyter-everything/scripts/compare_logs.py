@@ -80,7 +80,7 @@ def compareHeap(old = False, before = False, after = False):
     
     for file in files:
         __choose(file) # set file in parse_log module.
-        heap_alloc = pl.getHeapAllocation()
+        heap_alloc = pl.getHeapAllocation() # has a set of timestamps_seconds with associated heap allocation
 
         heap_alloc_list.append(heap_alloc[0])
         #initial_free_mem.append(heap_alloc[1]) # TODO: fix this data
@@ -124,8 +124,8 @@ def __sum_allocation(table, keywords, ax, before = False, color = "", label = ""
 
     heap_alloc = table 
     
-    # get timestamps from the time keyword in the table. Convert str->float
-    timestamps = list(map(float, heap_alloc["Time"]))
+    # get timestamps_seconds from the time keyword in the table. Convert str->float
+    timestamps_seconds = list(map(float, heap_alloc["Time"]))
     
     before_regions = []
     after_regions = []
@@ -149,7 +149,7 @@ def __sum_allocation(table, keywords, ax, before = False, color = "", label = ""
 
     # obtain return variables
     allocation = before_regions if before else after_regions   
-    ax.plot(timestamps, allocation, color = color, label = label)
+    ax.plot(timestamps_seconds, allocation, color = color, label = label)
     return ax
 
 # Add labels to a heap allocation chart. 
@@ -239,35 +239,35 @@ def __group_and_plot(table, ax, color, label, bucket_count, mapping):
         return
 
  
-    timestamps = table["TimeFromStart"]                 
-    pauses = table["PauseDuration"]
+    timestamps_seconds = table["TimeFromStart"]                 
+    pauses_ms = table["PauseDuration"]
 
     
     # plot data in full, without grouping into buckets
     if not mapping:
-        ax = __plot_data(ax, timestamps, pauses, 
+        ax = __plot_data(ax, timestamps_seconds, pauses_ms, 
                          color, label, x_transformation = False)
     else:
-        # get the timestamps and pauses grouped into buckets based on mapping
-        timestamps, pauses = __group_buckets(timestamps, 
-                                            pauses,
+        # get the timestamps_seconds and pauses_ms grouped into buckets based on mapping
+        timestamps_seconds, pauses_ms = __group_buckets(timestamps_seconds, 
+                                            pauses_ms,
                                             bucket_count,
                                             mapping)
-        ax = __plot_data(ax, timestamps, pauses, 
+        ax = __plot_data(ax, timestamps_seconds, pauses_ms, 
                          color, label, x_transformation = True)
     
     return ax
 
 # Based on a passed mapping, sort groupings of data into buckets, 
 # such that they follow a uniform time distribution based on bucket count
-def __group_buckets(timestamps, pauses, bucket_count, mapping):
-    full_duration  = list(timestamps)[-1]
+def __group_buckets(timestamps_seconds, pauses_ms, bucket_count, mapping):
+    full_duration  = list(timestamps_seconds)[-1]
     pause_duration = full_duration / bucket_count
    
     # Put bottom value of all ranges into hash table. 
     # Actual hash table not needed, because indicies in range [0, n]
     buckets = [[] for i in range(bucket_count)]
-    for time, pause in zip(timestamps, pauses):
+    for time, pause in zip(timestamps_seconds, pauses_ms):
         
         bucket = int(time / pause_duration) # floor of division to get bucket.
         if bucket == len(buckets):
@@ -283,22 +283,22 @@ def __group_buckets(timestamps, pauses, bucket_count, mapping):
         else:
             buckets[i] = 0
 
-    timestamps = [r * pause_duration for r in range(bucket_count)]
-    pauses = buckets
+    timestamps_seconds = [r * pause_duration for r in range(bucket_count)]
+    pauses_ms = buckets
 
-    return timestamps, pauses
+    return timestamps_seconds, pauses_ms
     # Take values and sort them into hash tables based on values. 
 
 
 # Take the data as pairs of (time, pause), and turn those into a line graph
 # showing the pause times throughout runtime.
-def __plot_data(ax, timestamps, pauses, color, label, x_transformation):
+def __plot_data(ax, timestamps_seconds, pauses_ms, color, label, x_transformation):
     ## Create data set that mimimics an up and down line graph based on pause time.
     x_data = []
     y_data = []
     if not x_transformation:
         ###### Create X-Y Data. bumps for height based on pause duration #####
-        for x,y in zip(timestamps, pauses):
+        for x,y in zip(timestamps_seconds, pauses_ms):
             # convert y from ms to seconds
             y = y / 1000
 
@@ -320,10 +320,10 @@ def __plot_data(ax, timestamps, pauses, color, label, x_transformation):
     else:
         
         # Create buckets of the same size, placed uniformly over time.
-        pt_uniform = timestamps[1] * 0.7 # 0.7 constant for bar width
+        pt_uniform = timestamps_seconds[1] * 0.7 # 0.7 constant for bar width
                                          # 1 means bars indistinguishable
                                          # 0 means no bars
-        for x,y in zip(timestamps, pauses):
+        for x,y in zip(timestamps_seconds, pauses_ms):
             
             y = y / 1000
 
@@ -347,8 +347,8 @@ def __plot_data(ax, timestamps, pauses, color, label, x_transformation):
 
 # Take numbers formatted with a trailing 's' character to signify seconds unit
 # and remove the s. Return the result as a float.
-def __time_from_float(time):
-    return float(time[:-1])
+def __time_from_float(time_in_seconds):
+    return float(time_in_seconds[:-1])
 
 
 # Obtain the shift amount from the dimensions of the table
@@ -394,7 +394,7 @@ def __choose(filename):
 # where x, y, z , .... z are '[category, value]' pairs,
 # where cateogry = metadata info piece (such as gc versopm)
 # and value is the value for that metadata (such as version 16.0.1+9)
-# NOTE: This function DOES NOT WORK AS INTENDED
+# IMPORTANT NOTE: This function DOES NOT WORK AS INTENDED
 # However, this accidentially made an oK output, so it will be prioritized
 # later to fix. Until then, however, this is TODO: fix broken.
 def __print_metadata_lists(metadata_lists):
