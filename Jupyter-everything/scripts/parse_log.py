@@ -89,9 +89,7 @@ def setLogSchema(logtype = 0):
 # # Requirements: path must be set to the .log file we look to traverse.
 # # Return: List of tuples as pauses, with added metadata.
 def getPauses(create_csv = False):
-    with open(path, "r") as f:
-        file_contents = f.readlines()
-    
+
     # Extract metadata and info from each line
     match_terms = [g1f.lineMetadata() + g1f.YoungPause(),
                    g1f.lineMetadata() + g1f.PauseRemark(),
@@ -171,11 +169,9 @@ def __get_unique_filename(filename):
     return filename
 
 
-
 # removes non number (and decimal point) chars.
 def __remove_non_numbers(string_with_number):
     return float(re.sub("[^0-9/.]", "", string_with_number))
-
      
 # TODO: use? (is working correctly.)
 # TODO: CONFIRM OUTPUT. (seems to work) This feature is paused while I go over
@@ -430,15 +426,19 @@ def getGCdataSections(create_csv = False):
 # start, and returns it as a float.
 # Note: not efficient if looking to optimize
 def getTotalProgramRuntime():
-    with open(path, "r") as file:
-        data = file.readlines()        
-        # get last logtime to view timestamp at program end
-        final_line = data[-1]
+
+
+    with open(path, 'rb') as file:
+        file.seek(-2, os.SEEK_END)
+        while file.read(1) != b'\n':
+            file.seek(-2, os.SEEK_CUR)
+        last_line = file.readline().decode()
+        
         
         # Search for the metadata line match
         columns = g1f.manyMatch_LineSearch( match_terms = [g1f.fullLineInfo()],
-                                  num_match_groups = 5,
-                                  data = [final_line] )                                    
+                                            num_match_groups = 5,
+                                            data = [last_line] )                                    
         # Data is returned in table format. Access table column 1
         # Access the only row, row 0
         # then remove the second "s" character to create a float.
