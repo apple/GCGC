@@ -8,6 +8,7 @@
 (requirements)
 - python3 and used packages (numpy, matplotlib, matplotlib.pyplot, re)
 - Jupyter notebook
+Setup for both explained in Jupyter-everything/setup
 
 (begin analysis)           
 1. Navigate to /Jupyter-everything/
