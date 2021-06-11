@@ -22,7 +22,7 @@ You can use pip package manager to install additional packages.
 2. Use `pip3` for installing packages. 
 3. `pip3 install <package name>`. 
 (For Example: `pip3 install matplotlib`)
-4. If you do not already have pip3 installed , you may need to update the version. Follow the command line error output to update the version, if needed. Otherwise, follow [this guide](https://packaging.python.org/tutorials/installing-packages/) in the offical python documentation 
+4. If you do not already have pip3 installed , you may need to update the version. Follow the command line error output to update the version, if needed (`python3 -m pip install --upgrade pip`). Otherwise, follow [this guide](https://packaging.python.org/tutorials/installing-packages/) in the offical python documentation 
 5. Currently, the following packages are needed. Install all.
     - matplotlib 
     - pandas
