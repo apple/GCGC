@@ -27,6 +27,7 @@ You can use pip package manager to install additional packages.
     - matplotlib 
     - pandas
     - numpy
+    - notebook
 
 
 ## Part 2 - Jupyter notebooks
