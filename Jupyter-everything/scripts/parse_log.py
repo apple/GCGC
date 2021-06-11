@@ -173,11 +173,13 @@ def __get_unique_filename(filename):
 
 
 # removes non number (and decimal point) chars.
-def __remove_non_numbers(string):
-    return float(re.sub("[^0-9/.]", "", string))
+def __remove_non_numbers(string_with_number):
+    return float(re.sub("[^0-9/.]", "", string_with_number))
 
      
 # TODO: use? (is working correctly.)
+# TODO: CONFIRM OUTPUT. (seems to work) This feature is paused while I go over
+# code feedback
 def getConcurrentMarkPauses(create_csv = False):
     match_terms = [g1f.lineMetadata() + g1f.PauseRemark(), 
                    g1f.lineMetadata() + g1f.PauseCleanup()]
@@ -189,36 +191,6 @@ def getConcurrentMarkPauses(create_csv = False):
     if create_csv:
         __create_csv(table, "Concurrent_mark_pauses.csv")
     return table
-
-
-# ### Purpose: Extracts the time information for any GC log line.
-# ### Returns both time stamps, in their entirety, as a 2 length list.
-# def __get_timestamps(line):
-#     if not line[0] == "[":
-#             return None
-#     ## We assume we are extracting a line, following the following
-#     ## format.
-#     #[2020-11-16T14:54:23.755+0000][7.353s][info ] ...
-#     '''However, if a line does not contain a Original timestamp, instead format
-#        by returning time from start twice.'''
-#     pattern = "\[\d\d\d\d-\d\d-\d\d.*\]"
-#     match = re.search(pattern, line) # Search the regex line for a match
-#     index_seperator = line.index("]")
-#     real_time  = line[1:index_seperator]
-#     if match:  
-#         # Now, we assume we have a valid line. Extract information based on this assumption.    
-#         from_start = line[index_seperator + 2 : index_seperator + 2
-#                          + line[index_seperator + 2:].index("]")]
-#         return [real_time, from_start] 
-#     else: 
-#         # We assume we have NO date format, but DO have time stamps.
-#         from_start = real_time # We will just use the same information. 
-#                                # Let the client detect and handle this case
-#                                # Rational: Currently, there are no plans for
-#                                # use of the "real time", but we provide 
-#                                # infrastructure to allow it.
-#         return [real_time, from_start]
-
 
 # Get the contents of the heap at each GC log moment. 
 # Note:  UNIMPLEMENTED create_csv = true.
