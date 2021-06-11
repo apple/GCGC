@@ -68,6 +68,8 @@ def setLogPath(filename = ''):
     path = filename
     __setGCType()
 
+def getGCType():
+    return gctype
 
 def __setGCType():
     global path
@@ -233,6 +235,29 @@ def getConcurrentDurations(create_csv = False):
     if not table:
         print("Unable to find young pauses in data set")
         return []
+    
+#### NOTE:  this is curtrently the same as GetPauses(). Consider modularizing
+    # Construct a pandas 2d table to hold returned information 
+    cols = ["DateTime", "TimeFromStart", "TypeLogLine", "GcPhase",
+            "ConcurrentPhase", "AdditionalNotes", "MemoryChange",
+            "PauseDuration", "PauseType"]
+    columns = {cols[i] : table[i] for i in range(len(cols))}
+    table = pd.DataFrame(columns)
+    # remove the ms / s terminology from the ending
+    # NOTE: it is important to remember that TimeFromStart is in seconds, while
+    # PauseTime is in ms
+    table["TimeFromStart"] = table["TimeFromStart"].map(__remove_non_numbers)
+    table["ConcurrentPhase"]
+    
+    # remove any possibly completly empty columns    
+    table.replace("", NaN, inplace=True)
+    table.dropna(how='all', axis=1, inplace=True)
+    
+    
+    if create_csv:
+        table.to_csv(__get_unique_filename("concurrent_pauses_shenandoah.csv"))
+
+    return table
 
 
 # Get the contents of the heap at each GC log moment. 
@@ -481,16 +506,18 @@ def getTotalProgramRuntime():
         while file.read(1) != b'\n':
             file.seek(-2, os.SEEK_CUR)
         last_line = file.readline().decode()
+        print(last_line)
         
         
         # Search for the metadata line match
-        columns = g1f.manyMatch_LineSearch( match_terms = [g1f.fullLineInfo()],
-                                            num_match_groups = 5,
-                                            data = [last_line] )                                    
-        # Data is returned in table format. Access table column 1
-        # Access the only row, row 0
-        # then remove the second "s" character to create a float.
-        return float(columns[1][0][:-1])
+        match_term =".*\[(\d+\.\d+)s\].*"
+        columns = g1f.manyMatch_LineSearch( match_terms = [match_term],
+                                            num_match_groups = 1,
+                                            data = [last_line] )   
+        # The columns is a list, contaning a list of columsn
+        # enter column zero to get access to the associated match term
+        # in column zero, enter row zero, to access the first and only entry
+        return float(columns[0][0])
 
 
 def getGCMetadata(create_csv = False):

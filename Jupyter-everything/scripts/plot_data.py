@@ -705,7 +705,7 @@ def plot_scatter(table, labels = []):
                     "Final Update Refs", "Degenerated GC", "Pause Full"]
         elif gctype == "G1":
             labels = ["YoungPause", "PauseRemark", "PauseClenaup"]
-        
+       
     
     numT = 0
     # determine the number of types

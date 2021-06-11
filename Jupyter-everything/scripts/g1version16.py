@@ -367,12 +367,11 @@ def manyMatch_LineSearch(match_terms = [],        # regex terms to search for
     
     table = [[] for i in range(num_match_groups + 1)]
     # If there has been listed groups of interest within the regex search
-
+    
     for line in data:
         for idx in range(len(match_terms)):
             match = re.search(match_terms[idx], line)
             if match:
-                found = True # temp
                 # Find all matches of interest
                 for i in range(1, num_match_groups + 1):
                     table[i - 1].append(match.group(i))
@@ -419,7 +418,7 @@ def singleMatch_LineSearch( match_terms = [],        # regex terms to search for
     found    = {}
     for term in match_terms:
         toSearch[term] = term
-
+    
     for line in data:
         search_terms = list(toSearch.keys()) # get all terms to search
         for index in range(len(search_terms)): # iterate through using indicies
