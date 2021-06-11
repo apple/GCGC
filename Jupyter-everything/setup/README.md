@@ -37,4 +37,4 @@ You can find the official documentation on how to install [here](https://jupyter
 2. Navigate to the [correct folder](https://github.pie.apple.com/ellis-brown/gc-analysis/tree/main/Jupyter-everything), that holds your `.ipynb` files. 
 3. run `jupyter notebook` in terminal to launch a local notebook server
 4. Use the web based notebook to interact with the notebook
-> Note: You can use some IDEs to edit and run your Jupyter-notebook, if desired. One example is VS-Code, which lets you run the notebook locally, if the server is being hosted.
+> Note: You can use some IDEs to edit and run your Jupyter-notebook, if desired. One example is VS-Code, which lets you modifiy and run the notebook in the IDE if the server is being hosted.
