@@ -132,7 +132,7 @@ def getPauses(create_csv = False):
     if not table:
         print("Unable to find young pauses in data set")
         return []
-    print("This far line 105")
+    
     # Construct a pandas 2d table to hold returned information
     cols = ["DateTime", "TimeFromStart", "TypeLogLine", "GcPhase", "MemoryChange", "PauseDuration", "PauseType"]
     columns = {cols[i] : table[i] for i in range(len(cols))}
@@ -147,7 +147,7 @@ def getPauses(create_csv = False):
     # remove any possibly completly empty columns    
     table.replace("", NaN, inplace=True)
     table.dropna(how='all', axis=1, inplace=True)
-    print("This far line 120")
+    
     
     if create_csv:
         table.to_csv(__get_unique_filename("young_pauses.csv"))
@@ -224,6 +224,8 @@ def getConcurrentDurations(create_csv = False):
         match_terms = [shen.ConcurrentLine()]
         num_groups = 8
     else:
+        match_terms = [shen.ConcurrentLine()]
+        num_groups = 8
         print("Not implemented: getConcurrentDurations on " + str(gctype))
     
     table = g1f.manyMatch_LineSearch(match_terms = match_terms,
@@ -265,7 +267,7 @@ def getConcurrentDurations(create_csv = False):
 # Example:
 # Heap could be 50% free, 25% young, 25% old at a moment in time. This
 #   determines that breakdown from the log information, if it exists, and 
-#   produces a frequencies list for it.
+#   produces a frequencies list for it. 
 def getHeapAllocation(create_csv = False):
     if (log_schema == 0):
         return __getHeapAllocation_schema0(create_csv)
