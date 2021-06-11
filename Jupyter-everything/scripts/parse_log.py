@@ -93,11 +93,11 @@ def getPauses(create_csv = False):
         file_contents = f.readlines()
     
     # Extract metadata and info from each line
-    search_term = [g1f.lineMetadata() + g1f.YoungPause(),
+    match_terms = [g1f.lineMetadata() + g1f.YoungPause(),
                    g1f.lineMetadata() + g1f.PauseRemark(),
                    g1f.lineMetadata() + g1f.PauseCleanup()]
     # note: by reading the g1f documentation, I know there are 6 regex groups.
-    table = g1f.manyMatch_LineSearch(match_terms = search_term, 
+    table = g1f.manyMatch_LineSearch(match_terms = match_terms, 
                                      num_match_groups = 6,
                                      data = [],     #reading from file, no data
                                      filepath = path, #global
@@ -204,18 +204,15 @@ def getHeapAllocation(create_csv = False):
     accepting = False
     heap_regions = []
     with open(path, "r") as file:
-        filedata = file.readlines()
-        idx = 0
-        filesize = len(filedata)
-        while (idx < filesize):
-            if "Heap Regions" in filedata[idx]:
+        for line in file:    
+            if "Heap Regions" in line:
                 accepting = True
                 heap_regions.append([])
-            elif accepting and "0x" not in filedata[idx]:
+            elif accepting and "0x" not in line:
                 accepting = False
             elif accepting:
-                heap_regions[-1].append(filedata[idx])
-            idx += 1
+                heap_regions[-1].append(line)
+
     parsed_heap_regions = __simplify_regions(heap_regions)
     if create_csv:
         __create_csv(parsed_heap_regions, "heap_allocation.csv")
