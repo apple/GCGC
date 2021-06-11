@@ -427,7 +427,8 @@ def getGCdataSections(create_csv = False):
 # Note: not efficient if looking to optimize
 def getTotalProgramRuntime():
 
-
+    # The following 5 lines are borrowed from this stack over flow question source
+    # https://stackoverflow.com/questions/46258499/how-to-read-the-last-line-of-a-file-in-python/54278929#54278929
     with open(path, 'rb') as file:
         file.seek(-2, os.SEEK_END)
         while file.read(1) != b'\n':
