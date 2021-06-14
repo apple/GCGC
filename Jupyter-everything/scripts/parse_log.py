@@ -9,7 +9,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 import re
-from numpy import NaN
+from numpy import NaN, number
 import pandas as pd 
 from scripts import g1version16 as g1f # g1format
 from scripts import shenandoah_p as shen #shenandoah regex
@@ -100,7 +100,9 @@ def __setGCType():
             gctype = "G1"
             return
         lines_read += 1
-    print("Warning: GC Type not set")
+    print("Warning: GC Type not set, defaulting to G1")
+    gctype = "G1"
+    return
 
 # gets the current log path
 def getLogPath():
@@ -145,15 +147,13 @@ def getPauses(create_csv = False):
         return []
     
     # Construct a pandas 2d table to hold returned information
-    cols = ["DateTime", "TimeFromStart", "TypeLogLine", "GcPhase", "MemoryChange", "PauseDuration", "PauseType"]
+    cols = ["DateTime", "TimeFromStart_seconds", "TypeLogLine", "GcPhase", "MemoryChange", "PauseDuration_miliseconds", "PauseType"]
     columns = {cols[i] : table[i] for i in range(len(cols))}
     table_df = pd.DataFrame(columns)
     
     # remove the ms / s terminology from the ending
-    # NOTE: it is important to remember that TimeFromStart is in seconds, while
-    # PauseTime is in ms
-    table_df["PauseDuration"] = table_df["PauseDuration"].map(__remove_non_numbers)
-    table_df["TimeFromStart"] = table_df["TimeFromStart"].map(__remove_non_numbers)
+    table_df["PauseDuration_miliseconds"] = table_df["PauseDuration_miliseconds"].map(__remove_non_numbers)
+    table_df["TimeFromStart_seconds"] = table_df["TimeFromStart_seconds"].map(__remove_non_numbers)
     
     # remove any possibly completly empty columns    
     table_df.replace("", NaN, inplace=True)
@@ -204,6 +204,7 @@ def __get_unique_filename(filename):
                 count = i
                 break
         filename = filename[0:count] + str(digits + 1)  + ".csv"
+        # make sure the new created filename is unique.
         filename = __get_unique_filename(filename)
     
     return filename
@@ -211,6 +212,7 @@ def __get_unique_filename(filename):
 
 # removes non number (and decimal point) chars.
 def __remove_non_numbers(string_with_number):
+    # regex string, remove anything thats not 0-9, or a "."
     return float(re.sub("[^0-9/.]", "", string_with_number))
 
 
@@ -236,15 +238,15 @@ def getConcurrentDurations(create_csv = False):
     
 #### NOTE:  this is curtrently the same as GetPauses(). Consider modularizing
     # Construct a pandas 2d table to hold returned information 
-    cols = ["DateTime", "TimeFromStart", "TypeLogLine", "GcPhase",
+    cols = ["DateTime", "TimeFromStart_seconds", "TypeLogLine", "GcPhase",
             "ConcurrentPhase", "AdditionalNotes", "MemoryChange",
-            "PauseDuration", "PauseType"]
+            "PauseDuration_miliseconds", "PauseType"]
     columns = {cols[i] : table[i] for i in range(len(cols))}
     table = pd.DataFrame(columns)
     # remove the ms / s terminology from the ending
-    # NOTE: it is important to remember that TimeFromStart is in seconds, while
+    # NOTE: it is important to remember that TimeFromStart_seconds is in seconds, while
     # PauseTime is in ms
-    table["TimeFromStart"] = table["TimeFromStart"].map(__remove_non_numbers)
+    table["TimeFromStart_seconds"] = table["TimeFromStart_seconds"].map(__remove_non_numbers)
     table["ConcurrentPhase"]
     
     # remove any possibly completly empty columns    
@@ -474,22 +476,18 @@ def getGCdataSections(create_csv = False):
     if create_csv == True:
         print("Creating this CSV is currently unimplemented")
     # Helps focus search onto "non tag" regions of each log line
-    log_line_key = '\[*(.*)\]*\[\d+\.\d+\w+\]\[(.*)\[(.*)\](.*)'
-    gc_data_key = ".*GC\((\d+)\).*"
+    log_line_key = g1f.fullLineInfo()
+    
     data_cards = {}
-    with open(path, "r") as file:
-        for line in file:
-            match_info = re.search(log_line_key, line)
-            # if found
-            if match_info:
-                non_tag_text = match_info.group(len(match_info.groups()))
-                m = re.search(gc_data_key, non_tag_text)
-                if m:
-                    key = m.group(len(m.groups()))
-                    if not key in data_cards:
-                        data_cards[key] = []
-                    data_cards[key].append(non_tag_text)
-    return data_cards
+    table = g1f.manyMatch_LineSearch(match_terms = [log_line_key],
+                                     num_match_groups = 5,
+                                     data =[],
+                                     filepath = path,
+                                     in_file = True)
+    columns = [i for i in range(int(table[4][-1]))]
+    print(columns)
+    table_df = pd.DataFrame(table).transpose()
+    return table_df
 
 # Finds the last GC log timestamp. Uses that to find time in seconds from
 # start, and returns it as a float.
