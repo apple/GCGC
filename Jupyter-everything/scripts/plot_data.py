@@ -32,8 +32,8 @@ plt.rcParams['figure.figsize'] = [12, 7]
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def plot_pauses(table):
     # Obtain X Y list information from the dataframe.
-    pauses_ms = list(map(float, table["PauseDuration"]))
-    timestamps_seconds = list(map(float, table["TimeFromStart"]))
+    pauses_ms = list(map(float, table["PauseDuration_miliseconds"]))
+    timestamps_seconds = list(map(float, table["TimeFromStart_seconds"]))
 
     # Show interesting trends
     total_wait = __find_trends(pauses_ms)
@@ -496,8 +496,8 @@ def plot_heatmap(table, width=20, height=20, labels = True):
 # Gathers data to properly plot a heatmap.
 # Parameters: 
 #   table: a pandas dataframe.  Notable columns: 
-#       TimeFromStart - time in seconds from program start. float
-#       PauseDuration - time in miliseconds for a pause. float
+#       TimeFromStart_seconds - time in seconds from program start. float
+#       PauseDuration_miliseconds - time in miliseconds for a pause. float
 #   num_b : number of buckets to sort time into. 
 #       Note: More buckets = more percise heatmap, labels less clear.
 ################################################
@@ -505,8 +505,8 @@ def __get_heatmap(table, width = 20, height = 20):
     if table.empty:
         return 
     # access the two columns from the table with our time/pause info
-    timestamps_seconds = table["TimeFromStart"]
-    pauses_ms     = table["PauseDuration"]
+    timestamps_seconds = table["TimeFromStart_seconds"]
+    pauses_ms     = table["PauseDuration_miliseconds"]
 
     # create buckets to store the time information.
     # first, compress into num_b buckets along the time X-axis.
@@ -693,8 +693,8 @@ def plot_scatter(table, labels = []):
     if table.empty:
         return
     # access the interesting information directly
-    times = table["TimeFromStart"]
-    pauses = table["PauseDuration"]
+    times = table["TimeFromStart_seconds"]
+    pauses = table["PauseDuration_miliseconds"]
     types = table["PauseType"]
     
     # determine what types of pauses exist in this data

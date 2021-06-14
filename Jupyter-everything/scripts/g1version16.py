@@ -289,11 +289,12 @@ def HeapInitalMaxMin_schema1():
 #       2) Time since program began (integer with a metric unit)
 #       3) Reason for log entry [info/debug/...]
 #       4) gc phase
-#       5) log line info
+#       5) Entry number for log
+#       6) log line info
 #
 ##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 def fullLineInfo():
-    return '^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?\[(\d+\.\d+\w+)\]\[(\w+ ?)\]\[gc(\w+,?){0,2}\s*\] GC\(\d+\) (.*)\s'
+    return '^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?\[(\d+\.\d+\w+)\]\[(\w+ ?)\]\[gc,(\w+,?){0,2}\s*\] GC\((\d+)\)(.*)'
 
 
 
