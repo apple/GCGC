@@ -119,12 +119,11 @@ def setLogSchema(logtype = 0):
 
 
 # #       -> getPauses
-# # Purpose: Returns a CSV style list of all pauses from the Young Generation
-# # Parameters : none
-# # Requirements: path must be set to the .log file we look to traverse.
-# # Return: List of tuples as pauses, with added metadata.
+# Purpose. Extract all "Stop the world" pauses during garbage collection
+# runtime, to find latency during runtime.
+# Requirements: global variable 'path' must be set.
 def getPauses(create_csv = False):
-    # Extract metadata and info from each line
+    # get the regex search terms to look for based on the garbage collector type
     search_term = []
     if gctype == "G1":
         search_term = [g1f.lineMetadata() + g1f.YoungPause(),
@@ -475,17 +474,16 @@ def __getHeapInitialState(create_csv):
 def getGCdataSections(create_csv = False):
     if create_csv == True:
         print("Creating this CSV is currently unimplemented")
-    # Helps focus search onto "non tag" regions of each log line
-    log_line_key = g1f.fullLineInfo()
     
-    data_cards = {}
-    table = g1f.manyMatch_LineSearch(match_terms = [log_line_key],
-                                     num_match_groups = 5,
+
+    search_term = g1f.fullLineInfo()
+    table = g1f.manyMatch_LineSearch(match_terms = [search_term],
+                                     num_match_groups = 6,
                                      data =[],
                                      filepath = path,
                                      in_file = True)
+    table = table[:-1] # remove column of only zeros.
     columns = [i for i in range(int(table[4][-1]))]
-    print(columns)
     table_df = pd.DataFrame(table).transpose()
     return table_df
 
