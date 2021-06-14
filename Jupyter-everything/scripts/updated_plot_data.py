@@ -9,13 +9,14 @@ def plot_pauses_bar(xdata = [], ydata = [], axs = None, color = "", label = ""):
         print("No axes supplied. Create one using\nf, axs = matplotlib.pyplot.subplots()")
         return
     # If the color and label parameters have not been passed, use a random color as the new label
-    if not color:
+    
+    if not label:
+        label = "No label provided"
+    if not color: 
         r = random.random()
         b = random.random()
         g = random.random()
         color = (r, g, b)
-    if not label:
-        label = str(__rgb_to_hex(color))
 
     axs.bar(x = xdata, height = ydata, color = color, label = label)
     axs.set_ylabel("Pause duration (miliseconds)");
@@ -23,6 +24,26 @@ def plot_pauses_bar(xdata = [], ydata = [], axs = None, color = "", label = ""):
     axs.set_title("Pauses during runtime")
     axs.legend()
 
+def plot_pauses_scatter(xdata = [], ydata = [], axs = None, color = "", label = ""):
+    if not axs:
+        print("No axes supplied. Create one using\nf, axs = matplotlib.pyplot.subplots()")
+        return
+    # If the color and label parameters have not been passed, use a random color as the new label
+    
+    if not label:
+        label = "No label provided"
+    if not color: 
+        r = random.random()
+        b = random.random()
+        g = random.random()
+        color = (r, g, b)
+
+    axs.scatter(x = xdata, y = ydata, color = color, label = label)
+    axs.set_ylabel("Pause duration (miliseconds)");
+    axs.set_xlabel("Time from program start (seconds)")
+    axs.set_title("Pauses during runtime (scatter)")
+    axs.legend()
+    
 
 # Take a rgb tuple triplet, and turn it into a hex code representing the rgb color
 def __rgb_to_hex(rgb):
