@@ -483,7 +483,6 @@ def getGCdataSections(create_csv = False):
                                      filepath = path,
                                      in_file = True)
     table = table[:-1] # remove column of only zeros.
-    columns = [i for i in range(int(table[4][-1]))]
     table_df = pd.DataFrame(table).transpose()
     return table_df
 
