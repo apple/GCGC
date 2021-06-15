@@ -1,9 +1,9 @@
 #############################################################################
 ##                          plot_data.py
 ##  Defines functions to plot tables of information collected from logs.
-##  
+##
 ##  Author: Ellis Brown, 6/1
-##  TODO: Define a general type chart, plots any table 
+##  TODO: Define a general type chart, plots any table
 #############################################################################
 import matplotlib
 import matplotlib.pyplot as plt
@@ -13,20 +13,20 @@ from scripts import parse_log as pl
 
 
 # Set the size of the figures that appear in the Jupyter notebook
-plt.rcParams['figure.figsize'] = [12, 7]
+plt.rcParams["figure.figsize"] = [12, 7]
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                               plot_pauses
 #   Purpose:
 #       plots the pauses due to gc across full runtime
-#   
+#
 #   Parameters:
 #       table: a table, with columns as categories
 #           columns as follows: --
 #       datetime (optional), time, [info/debug/...], gc phase, pause time
-#   
+#
 #   Return:
-#       None: Creates multiple tables showing the pauses over runtime, and 
+#       None: Creates multiple tables showing the pauses over runtime, and
 #             table with trends within the data
 #
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -37,18 +37,18 @@ def plot_pauses(table):
 
     # Show interesting trends
     total_wait = __find_trends(pauses_ms)
-    
+
     total_time = pl.getTotalProgramRuntime()
     print("Total time: " + str(total_time) + "\n")
     print("Total program runtime: " + str(total_time) + " seconds" + "\n")
-    throughput = (total_time - (total_wait)/1000) / (total_time)
+    throughput = (total_time - (total_wait) / 1000) / (total_time)
     print("Throughput: " + str(round(throughput * 100, 4)) + "%" + "\n")
     __get_percentile_table(pauses_ms)
-    
+
     # # # # # # # # # # # # # # # # # # # #
     # Plot 1: Pauses_ms over program's entire runtime.
-    plt.bar(x = np.array(timestamps_seconds), height= np.array(pauses_ms), width = 2.0)
-    plt.ylabel("Pause duration (miliseconds)");
+    plt.bar(x=np.array(timestamps_seconds), height=np.array(pauses_ms), width=2.0)
+    plt.ylabel("Pause duration (miliseconds)")
     plt.xlabel("Time from program start (seconds)")
     plt.title("Pauses for Young Generation GC (miliseconds)")
     plt.show()
@@ -67,36 +67,34 @@ def plot_pauses(table):
 #                               __find_trends
 #   Purpose:
 #       Finds trends for pause data in a dataset
-#   
+#
 #   Parameters:
 #       table: a table, with columns as categories
 #       --table should contaain the following columns
-#   
+#
 #       datetime (optional), time, [info/debug/...], gc phase, pause time
-#   
+#
 #   Return:
 #       None: Creates a table showing the interesting ascii values
 #
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Finds trends in dataframe. 
+# Finds trends in dataframe.
 # Column 1 must be pause time, (1 indexed)
 # Column 4 must be time since start of program.
 def __find_trends(pauses_ms):
-    
-    
-    max_wait = max(pauses_ms, key = lambda i : float(i))
-    total_wait   = round(sum(float(i) for i in pauses_ms), 4)
+
+    max_wait = max(pauses_ms, key=lambda i: float(i))
+    total_wait = round(sum(float(i) for i in pauses_ms), 4)
     average_wait = round(total_wait / len(pauses_ms), 4)
-    
-    print("Total pause in ms: " + str(len(pauses_ms))  + "\n")
-    
+
+    print("Total pause in ms: " + str(len(pauses_ms)) + "\n")
+
     print("Max wait in  ms: " + str(max_wait) + " ms\n")
-    
+
     print("Total wait in ms: " + str(total_wait) + " ms\n")
-    
+
     print("Average (mean) wait in ms: " + str(average_wait) + " ms\n")
 
-    
     return total_wait
 
 
@@ -105,18 +103,18 @@ def __find_trends(pauses_ms):
 #   Purpose:
 #       Given a well formatted table of pause time information, print ascii
 #       table showing the percentile of the pause times.
-#   
+#
 #   Parameters:
 #       table: a table, with columns as categories
 #       --table should contaain the following columns
-#   
+#
 #       datetime (optional), time, [info/debug/...], gc phase, pause duration,
 #                                                                   pause type
 #   Return:
 #       None: Creates a table showing the interesting ascii values
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def __get_percentile_table(pauses_ms):
-    pauses = sorted(pauses_ms, reverse = True)
+    pauses = sorted(pauses_ms, reverse=True)
     print("---------------------------\nPause time in ms\n---------------------------")
     print("50 th percentile: ", round(np.percentile(pauses_ms, 50), 4))
     print("75 th percentile: ", round(np.percentile(pauses_ms, 75), 4))
@@ -125,7 +123,8 @@ def __get_percentile_table(pauses_ms):
     print("99 th percentile: ", round(np.percentile(pauses_ms, 99), 4))
     print("99.9  percentile: ", round(np.percentile(pauses_ms, 99.9), 4))
     print("99.99 percentile: ", round(np.percentile(pauses_ms, 99.99), 4))
-    return 
+    return
+
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                   plot_heap_allocation_breakdown                             #
@@ -139,10 +138,10 @@ def __get_percentile_table(pauses_ms):
 #                   before and after gc pauses                                 #
 #            if len(list) == 2:                                                #
 #                   list[0] = dictionary, with all region counts               #
-#                   list[2] = integer, size of initial free memory             # 
+#                   list[2] = integer, size of initial free memory             #
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # TODO: This is very hard to understand function. WILL FIX SOON
-def plot_heap_allocation_breakdown(breakdown_lst, max_heap = 0):
+def plot_heap_allocation_breakdown(breakdown_lst, max_heap=0):
     if not breakdown_lst:
         return
 
@@ -150,18 +149,26 @@ def plot_heap_allocation_breakdown(breakdown_lst, max_heap = 0):
     if (len(breakdown_lst)) == 2:
         return __plot_HA_schema0(breakdown_lst, max_heap)
 
-    # Access 2 dimensional list of allocation during runtime    
+    # Access 2 dimensional list of allocation during runtime
     allocation_summary = breakdown_lst[0]
 
     # Create helper list [0...n-1] to plot
     x = np.array(list(range(len(allocation_summary))))
-    
-    
+
     # Order matters here, associated with order collected this data.
     # TODO: Remove dependence on Order, use dictionary instead
-    region_names = ["Free", "Young", "Survivor", "Old", "Humongus_start", 
-                    "Humongus_continue", "Collection_set",  
-                    "Open_archive", "Closed_archive", "TAMS"]
+    region_names = [
+        "Free",
+        "Young",
+        "Survivor",
+        "Old",
+        "Humongus_start",
+        "Humongus_continue",
+        "Collection_set",
+        "Open_archive",
+        "Closed_archive",
+        "TAMS",
+    ]
 
     # Add titles and format style to plot
     colors = ["royalblue", "cyan", "black", "green", "purple", "lime", "brown", "darkmagenta", "lime", "green"]
@@ -171,9 +178,9 @@ def plot_heap_allocation_breakdown(breakdown_lst, max_heap = 0):
     plt.legend(region_names)
     # Plot information for each region
     for idx in range(len(allocation_summary[0])):
-        plt.plot(x, np.array(list(row[idx] for row in allocation_summary)), color = colors[idx], label = region_names[idx])
+        plt.plot(x, np.array(list(row[idx] for row in allocation_summary)), color=colors[idx], label=region_names[idx])
     plt.legend()
-    plt.show() 
+    plt.show()
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -191,18 +198,18 @@ def plot_heap_allocation_breakdown(breakdown_lst, max_heap = 0):
 #               keys:   names of regions during runtime                        #
 #              values:  list of before/after tuple pairs of size when gc runs  #
 #       dd[1] : Initial number of free regions before runtime.                 #
-#                                                                              #    
+#                                                                              #
 #   Return: None                                                               #
 #                                                                              #
 #   Note: generates MatPlotLib plot                                            #
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def __plot_HA_schema0(dd, max_heap = 0):
-    
-    if (not dd) or (len(dd) < 2) or (not dd[0]) :
+def __plot_HA_schema0(dd, max_heap=0):
+
+    if (not dd) or (len(dd) < 2) or (not dd[0]):
         return
-    if (not dd):
+    if not dd:
         print("No data to plot")
-        return 
+        return
     if len(dd) < 2:
         print("Not enough data to plot Heap Allocation")
         return
@@ -215,50 +222,49 @@ def __plot_HA_schema0(dd, max_heap = 0):
         dd[1] = max_heap
     data_dictionary = dd[0]
     # get free_memory list of memory during runtime
-    free_memory = __calculate_freemem(data_dictionary, dd[1], before = True, after = True) 
-    
+    free_memory = __calculate_freemem(data_dictionary, dd[1], before=True, after=True)
+
     # Create integer list [0...n-1] to help plot allocation
     # TODO: Change this to be based on actual time in program.
     x = []
     for item in data_dictionary["Time"]:
         x.append(float(item))
         x.append(float(item))
-    x = np.array(x) # *2 for tuples
-    
+    x = np.array(x)  # *2 for tuples
+
     # Format plot
     plt.xlabel("GC Run : Time in seconds")
     plt.ylabel("Number of memory blocks")
     plt.title("heap allocation throughout runtime")
     plt.legend(list(data_dictionary.keys()))
     # Choose from some color choices. TODO: style colors
-    colors = ["royalblue", "cyan", "black", "green", "purple", 
-              "lime", "brown", "darkmagenta", "lime", "green"]
+    colors = ["royalblue", "cyan", "black", "green", "purple", "lime", "brown", "darkmagenta", "lime", "green"]
     color_index = 0
     # Create the first plot
     plt.figure(1)
-    
+
     for key in data_dictionary.keys():
         if str(key) != "Time":
-        # Get list of the region size before & after every gc run
+            # Get list of the region size before & after every gc run
             pairs = []
             for idx in range(len(data_dictionary[key])):
                 pairs.append(int(data_dictionary[key][idx][0]))
                 pairs.append(int(data_dictionary[key][idx][1]))
             # Add to the current plot
-            plt.plot(np.array(x), np.array(pairs), color = colors[color_index], label = str(key))
+            plt.plot(np.array(x), np.array(pairs), color=colors[color_index], label=str(key))
             color_index += 1
-    
+
     # Show plot (without memory)
-    plt.legend()                    #TODO: test if removing this line does anything
+    plt.legend()  # TODO: test if removing this line does anything
     plt.show()
 
     # Create second plot: (Just memory during runtime)
     # As heap memory could always be 99% free, seeing the changes in the
-    # amonut of free memory in it's own plot is valuable 
+    # amonut of free memory in it's own plot is valuable
     # plt.figure(2)
     # plt.plot(x, np.array(free_memory), color = "red", label = "Free Memory")
     # plt.legend()
-    # plt.show() 
+    # plt.show()
 
     # Create third plot
     plt.figure(3)
@@ -269,14 +275,14 @@ def __plot_HA_schema0(dd, max_heap = 0):
             for idx in range(len(data_dictionary[key])):
                 pairs.append(int(data_dictionary[key][idx][0]))
                 pairs.append(int(data_dictionary[key][idx][1]))
-            plt.plot(np.array(x), np.array(pairs), color = colors[color_index], label = str(key))
+            plt.plot(np.array(x), np.array(pairs), color=colors[color_index], label=str(key))
             color_index += 1
     # add the free memory to the plot
-    plt.plot(x, np.array(free_memory), color = "red", label = "Free Memory")
-    
+    plt.plot(x, np.array(free_memory), color="red", label="Free Memory")
+
     # Display plot
     plt.legend()
-    plt.show() 
+    plt.show()
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -294,7 +300,7 @@ def __plot_HA_schema0(dd, max_heap = 0):
 #   Return: list with the # of free regions sequentially. Memory recorded      #
 #           directly before and after each garbage collection pause.           #
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def __calculate_freemem(data_dictionary, inital_free, before = False, after = False):
+def __calculate_freemem(data_dictionary, inital_free, before=False, after=False):
     if not data_dictionary:
         return []
 
@@ -306,17 +312,17 @@ def __calculate_freemem(data_dictionary, inital_free, before = False, after = Fa
             del data_dictionary[keys[i]]
 
     for idx in range(len(data_dictionary["Eden"])):
-        
+
         # Calculate the free memory before the GC runs
         if before:
             temp_val = 0
             for key in data_dictionary.keys():
                 if str(key) != "Time":
-                                            # access tuple [0] from list
-                                            # of tuples associated with key
+                    # access tuple [0] from list
+                    # of tuples associated with key
                     temp_val += int(data_dictionary[key][idx][0])
             free_mem.append(int(inital_free - temp_val))
-        
+
         # Calculate the free memory after the GC runs
         if after:
             temp_val = 0
@@ -327,7 +333,8 @@ def __calculate_freemem(data_dictionary, inital_free, before = False, after = Fa
 
     return free_mem
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                      displayMetadata()                      #
 #   Purpose:                                                  #
 #       Take the metadata collected, and print in a well      #
@@ -338,34 +345,35 @@ def __calculate_freemem(data_dictionary, inital_free, before = False, after = Fa
 #                  values:  The value of the metadata item    #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def displayMetadata(table):
+    print("Uwu u called?")
     # table is a list of lists
     # [ [title, value], [title, value], ... ]
-    
+
     # determine line length for formatting.
     max_title_len = max([len(item[0]) for item in table])
 
     for item in table:
-        # Start with title 
-        print(item[0] +" ", end="")
-        
+        # Start with title
+        print(item[0] + " ", end="")
+
         # Determine if an extra whitespace is needed, from even/odd lines
         whitespace_length = max_title_len - len(item[0])
-        if (whitespace_length % 2 == 1):
+        if whitespace_length % 2 == 1:
             print(" ", end="")
-        
+
         # Print formatting based on item length, then print the value
         print(int((max_title_len - len(item[0])) / 2) * ". " + "| " + str(item[1]))
-    
 
-# Currently only defined on Schema 0    
-def heap_allocation_beforeafter_gc(breakdown_lst, max_heap = 0):
+
+# Currently only defined on Schema 0
+def heap_allocation_beforeafter_gc(breakdown_lst, max_heap=0):
     if not breakdown_lst:
         return
     data = breakdown_lst[0]
     if not breakdown_lst[1]:
         breakdown_lst[1] = max_heap
-    free_memory_before = __calculate_freemem(data, breakdown_lst[1], before = True)
-    free_memory_after = __calculate_freemem(data, breakdown_lst[1], after = True)
+    free_memory_before = __calculate_freemem(data, breakdown_lst[1], before=True)
+    free_memory_after = __calculate_freemem(data, breakdown_lst[1], after=True)
     x = []
     for item in data["Time"]:
         x.append(float(item))
@@ -376,8 +384,7 @@ def heap_allocation_beforeafter_gc(breakdown_lst, max_heap = 0):
     plt.title("Heap allocation BEFORE gc")
     plt.legend(list(data.keys()))
     # Choose from some color choices. TODO: style colors
-    colors = ["royalblue", "cyan", "black", "green", "purple", 
-              "lime", "brown", "darkmagenta", "lime", "green"]
+    colors = ["royalblue", "cyan", "black", "green", "purple", "lime", "brown", "darkmagenta", "lime", "green"]
     color_index = 0
     # Create the first plot
     plt.figure(1)
@@ -388,16 +395,16 @@ def heap_allocation_beforeafter_gc(breakdown_lst, max_heap = 0):
         if str(key) != "Time":
             before = []
             after = []
-            
+
             for idx in range(len(data[key])):
                 before.append(int(data[key][idx][0]))
                 after.append(int(data[key][idx][1]))
-            plt.plot(np.array(x), np.array(before), color = colors[color_index], label = str(key))
+            plt.plot(np.array(x), np.array(before), color=colors[color_index], label=str(key))
             color_index += 1
             afterl.append(after)
             labels.append(str(KeysView))
-    plt.plot(x, np.array(free_memory_before), color = "red", label = "Free Memory")            
-    plt.legend()                    #TODO: test if removing this line does anything
+    plt.plot(x, np.array(free_memory_before), color="red", label="Free Memory")
+    plt.legend()  # TODO: test if removing this line does anything
     plt.show()
     print("\n\n")
     ###############
@@ -407,17 +414,18 @@ def heap_allocation_beforeafter_gc(breakdown_lst, max_heap = 0):
     plt.xlabel("Time in seconds")
     plt.ylabel("Number of memory blocks")
     plt.title("Heap allocation AFTER gc")
-    
+
     color_index = 0
     for i in range(len(afterl)):
-        plt.plot(x, np.array(afterl[i]), color = colors[color_index], label = labels[i])
+        plt.plot(x, np.array(afterl[i]), color=colors[color_index], label=labels[i])
         color_index += 1
 
-    plt.plot(x, np.array(free_memory_after), color = "red", label = "Free Memory")
+    plt.plot(x, np.array(free_memory_after), color="red", label="Free Memory")
     plt.legend()
     plt.show()
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                     plot_heatmap()                            #
 #   Purpose:                                                    #
 #       Plot a latency heatmap for pauses during runtime.       #
@@ -426,45 +434,44 @@ def heap_allocation_beforeafter_gc(breakdown_lst, max_heap = 0):
 #       num_b : number of buckets along both axis for heat map  #
 #       labels: True means add frequency labels inside heatmap  #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def plot_heatmap(table, width=20, height=20, labels = True):
+def plot_heatmap(table, width=20, height=20, labels=True):
     if table.empty:
         print("No table passed to function plot_heatmap. Abort")
-    
+
     # get the heat map information
     heatmap, min_pause_ms, max_pause_ms, max_time_ms = __get_heatmap(table, width, height)
-    
+
     multipler = max_time_ms / width  # multipler is the size of a bucket for time direction
-    
+
     # x labels are the time labels
-    x_labels = [num * multipler for num in range(1, width + 1)]# TODO : UPDATE TO BE FASTER
-    
+    x_labels = [num * multipler for num in range(1, width + 1)]  # TODO : UPDATE TO BE FASTER
+
     x_labels_temp = []
     for i in range(len(x_labels)):
         if not i % 2:
-            x_labels_temp.append(str(round(x_labels[i], 2)) + " s" )
+            x_labels_temp.append(str(round(x_labels[i], 2)) + " s")
         else:
             x_labels_temp.append("")
 
-    #x_labels = [str(round(label, 2)) + " s" for label in x_labels]
+    # x_labels = [str(round(label, 2)) + " s" for label in x_labels]
     x_labels = x_labels_temp
 
     # size of the buckets for ms pause
     multipler = (max_pause_ms - min_pause_ms) / height
     # y labels are ms pause time labels
-    y_labels = [round((num * multipler) + min_pause_ms, 2) for num in reversed(range(1, height + 1))] 
+    y_labels = [round((num * multipler) + min_pause_ms, 2) for num in reversed(range(1, height + 1))]
     y_labels = [str(label) + " ms" for label in y_labels]
-    
+
     ## Create a figure, and add data to heatmap. Plot then show heatmap.
     fig, ax = plt.subplots()
     ax.set_title("Latency during runtime.")
-    im = heatmap_make(heatmap, y_labels, x_labels, ax=ax,
-                   cmap="YlOrRd", cbarlabel="Frequency")
+    im = heatmap_make(heatmap, y_labels, x_labels, ax=ax, cmap="YlOrRd", cbarlabel="Frequency")
     if labels:
         __annotate_heatmap(im, valfmt="{x}")
     fig.tight_layout()
     plt.show()
     ## end new
-    '''
+    """
     fig, ax = plt.subplots()
     im = ax.imshow(np.array(heatmap))
 
@@ -491,62 +498,63 @@ def plot_heatmap(table, width=20, height=20, labels = True):
 
     fig.tight_layout()
     plt.show()
-    '''
+    """
+
+
 ################################################
 # Gathers data to properly plot a heatmap.
-# Parameters: 
-#   table: a pandas dataframe.  Notable columns: 
+# Parameters:
+#   table: a pandas dataframe.  Notable columns:
 #       TimeFromStart_seconds - time in seconds from program start. float
 #       PauseDuration_miliseconds - time in miliseconds for a pause. float
-#   num_b : number of buckets to sort time into. 
+#   num_b : number of buckets to sort time into.
 #       Note: More buckets = more percise heatmap, labels less clear.
 ################################################
-def __get_heatmap(table, width = 20, height = 20):
+def __get_heatmap(table, width=20, height=20):
     if table.empty:
-        return 
+        return
     # access the two columns from the table with our time/pause info
     timestamps_seconds = table["TimeFromStart_seconds"]
-    pauses_ms     = table["PauseDuration_miliseconds"]
+    pauses_ms = table["PauseDuration_miliseconds"]
 
     # create buckets to store the time information.
     # first, compress into num_b buckets along the time X-axis.
     x_b = [[] for i in range(width)]
-    max_time_ms             = list(timestamps_seconds)[-1]
+    max_time_ms = list(timestamps_seconds)[-1]
     bucket_time_duration = max_time_ms / width
-   
+
     # populate buckets along the x axis.
     for pause, time in zip(pauses_ms, timestamps_seconds):
         bucket_no = int(time / bucket_time_duration)
         if bucket_no >= width:
-            bucket_no = (width - 1)
+            bucket_no = width - 1
         x_b[bucket_no].append(pause)
-   
+
     max_pause_ms = max(pauses_ms)
     min_pause_ms = min(pauses_ms)
 
     # calculate the size of the buckets representing a pause
     bucket_pause_duration = (max_pause_ms - min_pause_ms) / height
-    
+
     # create heatmap, which will be a 2d-array
     heatmap = []
 
-    #go through each time interval, and sort the pauses there into frequency lists
+    # go through each time interval, and sort the pauses there into frequency lists
     for bucket in x_b:
-        yb = [0 for i in range(height)] # construct a 0 frequency list
+        yb = [0 for i in range(height)]  # construct a 0 frequency list
         for time in bucket:
             # determine which ms pause bucket
             y_bucket_no = int((time - min_pause_ms) / bucket_pause_duration)
             if y_bucket_no >= height:
-                y_bucket_no = (height - 1)
+                y_bucket_no = height - 1
 
             # increase the frequency of that pause in this time interval
             yb[y_bucket_no] += 1
 
         # Add the data to the 2d array
         heatmap.append(yb)
-    heatmap = np.rot90(heatmap) # fix orientation
-    return np.array(heatmap), min_pause_ms, max_pause_ms, max_time_ms # all data needed to plot a heatmap.
-
+    heatmap = np.rot90(heatmap)  # fix orientation
+    return np.array(heatmap), min_pause_ms, max_pause_ms, max_time_ms  # all data needed to plot a heatmap.
 
 
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -554,8 +562,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 ## The following code block was taken directly from matplotlib's documentation
 ## seen here:
 # https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html
-def heatmap_make(data, row_labels, col_labels, ax=None,
-            cbar_kw={}, cbarlabel="", **kwargs):
+def heatmap_make(data, row_labels, col_labels, ax=None, cbar_kw={}, cbarlabel="", **kwargs):
     """
     Create a heatmap from a numpy array and two lists of labels.
 
@@ -591,12 +598,11 @@ def heatmap_make(data, row_labels, col_labels, ax=None,
     cax = divider.append_axes("right", size="5%", pad=0.1)
     plt.colorbar(im, cax=cax)
 
-
     # cbar = ax.figure.colorbar(im, ax=ax, **cbar_kw)
     cax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
 
     # We want to show all ticks...
-   
+
     ax.set_xticks(np.arange(data.shape[1]))
     ax.set_yticks(np.arange(data.shape[0]))
     # ... and label them with the respective list entries.
@@ -604,29 +610,26 @@ def heatmap_make(data, row_labels, col_labels, ax=None,
     ax.set_yticklabels(row_labels)
 
     # Let the horizontal axes labeling appear on top.
-    ax.tick_params(top=False, bottom=True,
-                   labeltop=False, labelbottom=True)
+    ax.tick_params(top=False, bottom=True, labeltop=False, labelbottom=True)
 
     # Rotate the tick labels and set their alignment.
-    plt.setp(ax.get_xticklabels(), rotation=-30, ha="left",
-                    rotation_mode="anchor")
+    plt.setp(ax.get_xticklabels(), rotation=-30, ha="left", rotation_mode="anchor")
 
     # Turn spines off and create white grid.
     ax.spines[:].set_visible(False)
 
-    ax.set_xticks(np.arange(data.shape[1]+1)-.5, minor=True)
-    ax.set_yticks(np.arange(data.shape[0]+1)-.5, minor=True)
-    ax.grid(which="minor", color="w", linestyle='-', linewidth=3)
+    ax.set_xticks(np.arange(data.shape[1] + 1) - 0.5, minor=True)
+    ax.set_yticks(np.arange(data.shape[0] + 1) - 0.5, minor=True)
+    ax.grid(which="minor", color="w", linestyle="-", linewidth=3)
     ax.tick_params(which="minor", bottom=False, left=False)
 
     return im
 
+
 # The following code example is taken directly from matplotlib documentation
 # on heat maps, seen below
 # https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html
-def __annotate_heatmap(im, data=None, valfmt="{x}",
-                     textcolors=("black", "white"),
-                     threshold=None, **textkw):
+def __annotate_heatmap(im, data=None, valfmt="{x}", textcolors=("black", "white"), threshold=None, **textkw):
     """
     A function to annotate a heatmap.
 
@@ -659,12 +662,11 @@ def __annotate_heatmap(im, data=None, valfmt="{x}",
     if threshold is not None:
         threshold = im.norm(threshold)
     else:
-        threshold = im.norm(data.max())/2.
+        threshold = im.norm(data.max()) / 2.0
 
     # Set default alignment to center, but allow it to be
     # overwritten by textkw.
-    kw = dict(horizontalalignment="center",
-              verticalalignment="center")
+    kw = dict(horizontalalignment="center", verticalalignment="center")
     kw.update(textkw)
 
     # Get the formatter in case a string is supplied
@@ -682,36 +684,42 @@ def __annotate_heatmap(im, data=None, valfmt="{x}",
 
     return texts
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                     plot_scatter()                            #
 #   Purpose:                                                    #
 #       Plot a latency scatterplot for different pause types    #
 #   Parameters:                                                 #
 #       table : a pd df containing pause info and time info     #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def plot_scatter(table, labels = []):
+def plot_scatter(table, labels=[]):
     if table.empty:
         return
     # access the interesting information directly
     times = table["TimeFromStart_seconds"]
     pauses = table["PauseDuration_miliseconds"]
     types = table["PauseType"]
-    
+
     # determine what types of pauses exist in this data
     gctype = pl.getGCType()
-    if not labels:   
+    if not labels:
         if gctype == "Shenandoah":
-            labels = ["Init Mark", "Final Mark", "Init Update Refs",
-                    "Final Update Refs", "Degenerated GC", "Pause Full"]
+            labels = [
+                "Init Mark",
+                "Final Mark",
+                "Init Update Refs",
+                "Final Update Refs",
+                "Degenerated GC",
+                "Pause Full",
+            ]
         elif gctype == "G1":
             labels = ["YoungPause", "PauseRemark", "PauseClenaup"]
-       
-    
+
     numT = 0
     # determine the number of types
     for i in range(len(types)):
         numT = max(numT, types[i])
-    
+
     pauseArray = [[[], []] for i in range(numT + 1)]
 
     # Add the labels
@@ -720,16 +728,15 @@ def plot_scatter(table, labels = []):
     plt.title("Latency of different pauses during runtime")
 
     # Arrange the data into buckets based on the pause type
-    for i in range(len(types)):   
+    for i in range(len(types)):
         pauseArray[types[i]][0].append(times[i])
         pauseArray[types[i]][1].append(pauses[i])
-    
-    colors = ["c", "g", "y", "b", "r", "k", "cyan", "chocolate", "lightgreen", "grey", "hotpink" ]
-    
-    
+
+    colors = ["c", "g", "y", "b", "r", "k", "cyan", "chocolate", "lightgreen", "grey", "hotpink"]
+
     # for each type of pause, print a scatter with unique color and label
     for i in range(len(pauseArray)):
-        plt.scatter(pauseArray[i][0], pauseArray[i][1], c = colors[i], label = labels[i])
-    
+        plt.scatter(pauseArray[i][0], pauseArray[i][1], c=colors[i], label=labels[i])
+
     plt.legend()
     plt.show()

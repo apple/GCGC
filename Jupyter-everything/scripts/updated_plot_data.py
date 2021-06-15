@@ -92,20 +92,15 @@ def plot_bar_comparison(timedata_lists=[], heightdata_lists=[], axs=None, colors
     return axs
 
 
-def plot_pauses_line(xdata=[], ydata=[], axs=None, color="", label=""):
-    if not axs:
-        print("No axes supplied. Create one using\nf, axs = matplotlib.pyplot.subplots()")
-        return
-    if not label:
-        label = "No label provided"
-    if not color:
-        r = random.random()
-        b = random.random()
-        g = random.random()
-        color = (r, g, b)
-    axs.plot(xdata, ydata, color=color, label=label)
-
-
+# Plots multiple sets of data onto the same scatter plot
+# Parameters:
+#   xdata_list       : list of [lists of x data, typically timestamps in seconds]
+#   ydata_list       : list of [lists of y data, typically pauses in miliseconds]
+#   axs(optional)    : A current plot with metadata/plotted values. None => new figure created
+#   colors(optional) : A list of colors to plot corresponding to each of the passed list. None => random color
+#   label_list       : A list of labels to describe each passed list being plotted.
+# Return:
+#   axes (matplotlib.pyplot.Axes object) with everything plotted on it.
 def plot_comparison_scatter(xdata_list, ydata_list, axs=None, colors=[], label_list=[]):
     if not xdata_list:
         print("No timedata list in function plot_bar_comparison()")
@@ -133,10 +128,6 @@ def plot_comparison_scatter(xdata_list, ydata_list, axs=None, colors=[], label_l
     for i in range(len(xdata_list)):
         plot_pauses_scatter(xdata_list[i], ydata_list[i], axs, colors[i], label_list[i])
     return axs
-
-
-def plot_latency():
-    return False
 
 
 # Display what percent of pauses meet a certain percentile threshold
@@ -197,11 +188,8 @@ def print_trends(pauses_miliseconds, print_to_screen=True):
 
     if print_to_screen:
         print("Total num pauses in ms: " + str(len(pauses_miliseconds)) + "\n")
-
         print("Max wait in  ms: " + str(max_wait) + " ms\n")
-
         print("Total wait in ms: " + str(total_wait) + " ms\n")
-
         print("Average (mean) wait in ms: " + str(average_wait) + " ms\n")
 
     return total_wait
@@ -220,5 +208,65 @@ def __string_const_chars(string, numchars):
             return char_list
     for i in range(numchars):
         char_list += " "
-
     return char_list
+
+
+# Plots pauses from a passed set of timestamps in seconds and pause durations in miliseconds.
+# Parameters:
+#   time_seconds       : list of timestamps in seconds
+#   pauses_miliseconds : list of pauses in miliseconds
+#   axs                : plot with existing metadata.
+#   color(optional)    : Color for this line. None => random color
+def plot_pauses_line(time_seconds=[], pauses_miliseconds=[], axs=None, color="", label=""):
+    if not axs:
+        print("No axes supplied. Create one using\nf, axs = matplotlib.pyplot.subplots()")
+        return
+    if not label:
+        label = "No label provided"
+    if not color:
+        r = random.random()
+        b = random.random()
+        g = random.random()
+        color = (r, g, b)
+    axs.plot(time_seconds, pauses_miliseconds, color=color, label=label)
+    axs.set_ylabel("Pause duration (miliseconds)")
+    axs.set_xlabel("Time from program start (seconds)")
+    axs.set_title("Pauses during runtime")
+    axs.legend()
+
+
+# Compare a different lists of timestamps and ydata on the same line graph.
+# Parameters:
+#   timedata_lists : list of [list of timestamps in seconds]
+#   ydata_lists    : list of [list of pause durations, in miliseconds]
+#   axs(optional)  : a matplotlib.pyplot.Axes object. Contains plot information. None => new figure
+#   colors(optiona): The colors in order to plot onto the line graph. None => Random colors
+#   labels         : The list of labels for each list of data.
+#  Return : axs (matplotlib.pyplot.Axes object) with updated information plotted from the graph
+def comparison_pauses_line(timedata_lists=[], ydata_lists=[], axs=None, colors=None, labels=[]):
+    if not timedata_lists:
+        print("No timedata list in function plot_bar_comparison()")
+        return
+    if not ydata_lists:
+        print("No heightdata list in plot_bar_comparison()")
+        return
+    if not labels:
+        print("No label list in plot_bar_comparison()")
+    if len(timedata_lists) != len(ydata_lists):
+        print("Length of timedata_lists and heightdata_lists do not match.", end="")
+        print("timedata_lists: " + str(len(timedata_lists)) + ", heightdata_lists: " + str(len(ydata_lists)))
+        return
+    if len(timedata_lists) != len(ydata_lists):
+        print("Length of timedata_lists and label_list do not match.", end="")
+        print("timedata_lists: " + str(len(timedata_lists)) + ", label_list: " + str(len(labels)))
+        return
+    if not colors:
+        colors = []
+    if not axs:
+        fig, axs = plt.subplots()
+    while len(colors) < len(timedata_lists):
+        colors.append(None)
+
+    for i in range(len(timedata_lists)):
+        plot_pauses_line(timedata_lists[i], ydata_lists[i], axs, colors[i], labels[i])
+    return axs
