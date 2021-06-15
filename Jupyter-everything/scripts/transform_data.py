@@ -44,6 +44,22 @@ def get_pauses_in_miliseconds(dataframe, to_list=True):
         return dataframe["PauseDuration_miliseconds"]
 
 
+# Group all pauses & time data into N evenly distributed buckets, based on time
+# def get_sum_pauses_n_buckets(timedata, pausedata, num_buckets):
+
+# Group all pasue & time data into some number of buckets with a given bucket duration
+# def get_sum_pauses_n_duration(timestamps, pausedata, duration):
+
+# Get the max pause in a specified duration, such that there are n buckets
+# def get_max_pauses_n_buckets(timestamps, pausedata, num_buckets):
+
+# Get the max pauses over buckets of n duration length
+# def get_max_pauses_n_duration(timestamps, pausedata, duration):
+
+
+# def __put_into_buckets(timestamps, pausedata, bucket_size, bucket_count):
+
+# Make a heatmap from given parameters. Recommended: Use default or change default for ALL runs.
 def get_heatmap_data(
     table,
     x_bucket_count=20,
@@ -95,7 +111,8 @@ def get_heatmap_data(
                         "Warning: Value for latency lies outside of range: "
                         + str(time)
                         + " > "
-                        + str(y_bucket_count * y_bucket_duration) + " ms"
+                        + str(y_bucket_count * y_bucket_duration)
+                        + " ms"
                     )
 
             if y_bucket_no >= y_bucket_count:

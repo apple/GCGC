@@ -290,5 +290,5 @@ def generic_plotting(xdata_list, ydata_list, axs=None, colors=[], labels=[], plo
     return axs
 
 
-def plot_heatmap(heatmap_2d_arr, axs=None, labels=True, width_min_max_count=[], height_min_max_count=[]):
-    return mh.make_heatmap(heatmap_2d_arr, axs, labels, width_min_max_count, height_min_max_count)
+def plot_heatmap(heatmap, dimensions, labels=True):
+    return mh.plot_heatmap(heatmap, dimensions, labels)
