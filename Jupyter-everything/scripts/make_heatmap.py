@@ -1,5 +1,7 @@
 import matplotlib
 from matplotlib import pyplot as plt
+import numpy as np
+
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                     plot_heatmap()                            #
@@ -10,64 +12,38 @@ from matplotlib import pyplot as plt
 #       num_b : number of buckets along both axis for heat map  #
 #       labels: True means add frequency labels inside heatmap  #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def make_heatmap(heatmap, axs=None, labels=True, width_bucket_specs=None, height_bucket_specs=None):
-    if not heatmap:
-        return "No value passed to make heatmap."
-    if not axs:
-        fig, axs = plt.subplots()
-    if not width_bucket_specs_s:  # _s for seconds
-        print("Warning: no width bucket specs provided to heatmap. Using default time of 10 seconds, 20 buckets")
-        width_bucket_specs = [20, 10]  # 20 buckets, # 10 pauses
-    if not height_bucket_specs_ms:
-        print("Warning: no height bucket specs provided to heatmap. Using default pause time of 10ms and 20 buckets")
-        height_bucket_specs = [20, 10]
-    # Assign variables to clear naming schemes
-    num_buckets_width = width_bucket_specs[0]
-    num_buckets_height = height_bucket_specs[0]
-    bucket_size_width = width_bucket_specs[1]
-    bucket_size_height = height_bucket_specs[1]
+def plot_heatmap(heatmap, dimensions, labels=True):
 
-    time_labels = [i * bucket_size_width for i in range(1, num_buckets_width + 1)]
-    time_labels = [str(label) + " s" for label in time_labels]
-    latency_labels = [i * bucket_size_height for i in range(1, num_buckets_height + 1)]
-    latency_labels = [str(label) + " ms" for label in time_labels]
-    print(time_labels)
-    print(latency_labels)
-    return
-
-
-def plot_heatmap(table, width=20, height=20, labels=True):
-    if table.empty:
-        print("No table passed to function plot_heatmap. Abort")
-
-    # get the heat map information
-    heatmap, min_pause_ms, max_pause_ms, max_time_ms = __get_heatmap(table, width, height)
-
+    width = dimensions[0]  # x_bucket_count
+    height = dimensions[1]  # y_bucket_count
+    max_pause_ms = height * dimensions[3]
+    max_time_ms = width * dimensions[2]
+    min_pause_ms = 0
     multipler = max_time_ms / width  # multipler is the size of a bucket for time direction
 
     # x labels are the time labels
-    x_labels = [num * multipler for num in range(1, width + 1)]  # TODO : UPDATE TO BE FASTER
+    time_labels = [num * multipler for num in range(1, width + 1)]  # TODO : UPDATE TO BE FASTER
 
-    x_labels_temp = []
-    for i in range(len(x_labels)):
+    time_labels_temp = []
+    for i in range(len(time_labels)):
         if not i % 2:
-            x_labels_temp.append(str(round(x_labels[i], 2)) + " s")
+            time_labels_temp.append(str(round(time_labels[i], 2)) + " s")
         else:
-            x_labels_temp.append("")
+            time_labels_temp.append("")
 
-    # x_labels = [str(round(label, 2)) + " s" for label in x_labels]
-    x_labels = x_labels_temp
+    # time_labels = [str(round(label, 2)) + " s" for label in time_labels]
+    time_labels = time_labels_temp
 
     # size of the buckets for ms pause
     multipler = (max_pause_ms - min_pause_ms) / height
     # y labels are ms pause time labels
-    y_labels = [round((num * multipler) + min_pause_ms, 2) for num in reversed(range(1, height + 1))]
-    y_labels = [str(label) + " ms" for label in y_labels]
+    latency_labels = [round((num * multipler) + min_pause_ms, 2) for num in reversed(range(1, height + 1))]
+    latency_labels = [str(label) + " ms" for label in latency_labels]
 
     ## Create a figure, and add data to heatmap. Plot then show heatmap.
     fig, ax = plt.subplots()
     ax.set_title("Latency during runtime.")
-    im = heatmap_make(heatmap, y_labels, x_labels, ax=ax, cmap="YlOrRd", cbarlabel="Frequency")
+    im = heatmap_make(heatmap, latency_labels, time_labels, ax=ax, cmap="YlOrRd", cbarlabel="Frequency")
     if labels:
         __annotate_heatmap(im, valfmt="{x}")
     fig.tight_layout()
@@ -81,18 +57,18 @@ def plot_heatmap(table, width=20, height=20, labels=True):
     # SEE HERE: https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html 
 
     # We want to show all ticks...
-    ax.set_xticks(np.arange(len(x_labels))) # x axis
-    ax.set_yticks(np.arange(len(y_labels))) # y axis
+    ax.set_xticks(np.arange(len(time_labels))) # x axis
+    ax.set_yticks(np.arange(len(latency_labels))) # y axis
     # ... and label them with the respective list entries
-    ax.set_xticklabels(x_labels)
-    ax.set_yticklabels(y_labels)
+    ax.set_xticklabels(time_labels)
+    ax.set_yticklabels(latency_labels)
 
     # Rotate the tick labels and set their alignment.
     plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
              rotation_mode="anchor")
     # Loop over data dimensions and create text annotations.
-    for i in range(len(y_labels)):
-        for j in range(len(x_labels)):
+    for i in range(len(latency_labels)):
+        for j in range(len(time_labels)):
             text = ax.text(j, i, heatmap[i, j],
                            ha="center", va="center", color="w")
 
