@@ -3,6 +3,7 @@ from os import times
 import matplotlib.pyplot as plt
 import random
 import numpy as np
+from scripts import make_heatmap as mh
 
 # Set the size of the figures that appear in the Jupyter notebook
 plt.rcParams["figure.figsize"] = [12, 7]
@@ -153,6 +154,7 @@ def print_trends(pauses_miliseconds, label=None, print_title=True):
     print(line)
 
 
+# Compares trends from a list of pauses lists
 def compare_trends(pauses_ms_lists, labels=None):
     if not pauses_ms_lists:
         print("No pauses_ms_lists in compare_trends.")
@@ -286,3 +288,7 @@ def generic_plotting(xdata_list, ydata_list, axs=None, colors=[], labels=[], plo
     for i in range(len(xdata_list)):
         plotting_function(xdata_list[i], ydata_list[i], axs, colors[i], labels[i])
     return axs
+
+
+def plot_heatmap(heatmap_2d_arr, axs=None, labels=True, width_min_max_count=[], height_min_max_count=[]):
+    return mh.make_heatmap(heatmap_2d_arr, axs, labels, width_min_max_count, height_min_max_count)
