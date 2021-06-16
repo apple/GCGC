@@ -4,6 +4,64 @@ from scripts import updated_parse_log as pl
 import matplotlib.pyplot as plt
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                   plot_heap_allocation_breakdown                             #
+#                                                                              #
+#   Purpose:                                                                   #
+#       Print a graph showing the heap breakdown throughout runtime            #
+#   Parameters:                                                                #
+#       counts: list  -> could represent two different data formats            #
+#            if len(list) == 1:                                                #
+#                   2 dimensional list, with all region counts                 #
+#                   before and after gc pauses                                 #
+#            if len(list) == 2:                                                #
+#                   list[0] = dictionary, with all region counts               #
+#                   list[2] = integer, size of initial free memory             #
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# TODO: This is very hard to understand function. WILL FIX SOON
+# THE TIME TO FIX IS NOW!!!! TODO when back! :D
+def plot_heap_allocation_breakdown(breakdown_lst, max_heap=0):
+    if not breakdown_lst:
+        return
+
+    # determine data arrangement from list length
+    if (len(breakdown_lst)) == 2:
+        return __plot_HA_schema0(breakdown_lst, max_heap)
+
+    # Access 2 dimensional list of allocation during runtime
+    allocation_summary = breakdown_lst[0]
+
+    # Create helper list [0...n-1] to plot
+    x = np.array(list(range(len(allocation_summary))))
+
+    # Order matters here, associated with order collected this data.
+    # TODO: Remove dependence on Order, use dictionary instead
+    region_names = [
+        "Free",
+        "Young",
+        "Survivor",
+        "Old",
+        "Humongus_start",
+        "Humongus_continue",
+        "Collection_set",
+        "Open_archive",
+        "Closed_archive",
+        "TAMS",
+    ]
+
+    # Add titles and format style to plot
+    colors = ["royalblue", "cyan", "black", "green", "purple", "lime", "brown", "darkmagenta", "lime", "green"]
+    plt.xlabel("GC Run number (not based on time)")
+    plt.ylabel("Number of memory blocks")
+    plt.title("heap allocation throughout runtime")
+    plt.legend(region_names)
+    # Plot information for each region
+    for idx in range(len(allocation_summary[0])):
+        plt.plot(x, np.array(list(row[idx] for row in allocation_summary)), color=colors[idx], label=region_names[idx])
+    plt.legend()
+    plt.show()
+
+
+## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                   __plot_HA_schema0                                          #
 #   Purpose:                                                                   #
 #       Plot the heap breakdown throughout program using memory collected      #
