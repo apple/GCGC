@@ -88,7 +88,10 @@ def __put_into_buckets(timestamps, pausedata, duration, num_buckets, grouping_me
         buckets[index_of_bucket].append(pause)
 
     for idx in range(len(buckets)):
-        buckets[idx] = grouping_method(buckets[idx])
+        if buckets[idx]:
+            buckets[idx] = grouping_method(buckets[idx])
+        else:  # untested else case. TODO.
+            buckets[idx] = 0
 
     return times, buckets
 
