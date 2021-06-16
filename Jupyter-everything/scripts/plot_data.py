@@ -345,7 +345,6 @@ def __calculate_freemem(data_dictionary, inital_free, before=False, after=False)
 #                  values:  The value of the metadata item    #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def displayMetadata(table):
-    print("Uwu u called?")
     # table is a list of lists
     # [ [title, value], [title, value], ... ]
 

@@ -1,5 +1,3 @@
-
-
 import re
 import numpy as np
 from scripts import updated_parse_log as pl
@@ -44,7 +42,6 @@ def __plot_HA_schema0(dd, max_heap=0):
         dd[1] = max_heap
     data_dictionary = dd[0]
     # get free_memory list of memory during runtime
-    free_memory = __calculate_freemem(data_dictionary, dd[1], before=True, after=True)
 
     # Create integer list [0...n-1] to help plot allocation
     # TODO: Change this to be based on actual time in program.
@@ -89,43 +86,43 @@ def __plot_HA_schema0(dd, max_heap=0):
     # plt.show()
 
     # Create third plot
-    plt.figure(3)
-    # Add back all information from plot 1
-    for key in data_dictionary.keys():
-        if str(key) != "Time":
-            pairs = []
-            for idx in range(len(data_dictionary[key])):
-                pairs.append(int(data_dictionary[key][idx][0]))
-                pairs.append(int(data_dictionary[key][idx][1]))
-            plt.plot(np.array(x), np.array(pairs), color=colors[color_index], label=str(key))
-            color_index += 1
-    # add the free memory to the plot
-    plt.plot(x, np.array(free_memory), color="red", label="Free Memory")
+    # plt.figure(3)
+    # # Add back all information from plot 1
+    # for key in data_dictionary.keys():
+    #     if str(key) != "Time":
+    #         pairs = []
+    #         for idx in range(len(data_dictionary[key])):
+    #             pairs.append(int(data_dictionary[key][idx][0]))
+    #             pairs.append(int(data_dictionary[key][idx][1]))
+    #         plt.plot(np.array(x), np.array(pairs), color=colors[color_index], label=str(key))
+    #         color_index += 1
+    # # add the free memory to the plot
+    # plt.plot(x, np.array(free_memory), color="red", label="Free Memory")
 
-    # Display plot
-    plt.legend()
-    plt.show()
+    # # Display plot
+    # plt.legend()
+    # plt.show()
 
 
-ef __sum_allocation(table, keywords, ax, before = False, color = "", label = ""):
-    
+def __sum_allocation(table, keywords, ax, before=False, color="", label=""):
+
     if not table or not keywords:
         print("__sum_allocation parameters incorrect. Abort.")
         return
 
-    heap_alloc = table 
-    
+    heap_alloc = table
+
     # get timestamps_seconds from the time keyword in the table. Convert str->float
     timestamps_seconds = list(map(float, heap_alloc["Time"]))
-    
+
     before_regions = []
     after_regions = []
-    
+
     # loop through the length of the found allocation changes
     for row in range(len(heap_alloc[keywords[0]])):
         # set up temorary sums to aquire value for each thing we comparing
-        after_tsum = 0 
-        before_tsum = 0 
+        after_tsum = 0
+        before_tsum = 0
         # match all keys for this row, and find the value
         for key in keywords:
             if before:
@@ -139,15 +136,16 @@ ef __sum_allocation(table, keywords, ax, before = False, color = "", label = "")
             after_regions.append(after_tsum)
 
     # obtain return variables
-    allocation = before_regions if before else after_regions   
-    ax.plot(timestamps_seconds, allocation, color = color, label = label)
+    allocation = before_regions if before else after_regions
+    ax.plot(timestamps_seconds, allocation, color=color, label=label)
     return ax
 
-# Add labels to a heap allocation chart. 
+
+# Add labels to a heap allocation chart.
 # Return updated plot.
 def __addLabelsHeap(ax, title):
     ax.set_xlabel("Time passed (seconds)")
     ax.set_ylabel("Regions allocated")
     ax.set_title(title)
     ax.legend()
-    return ax 
+    return ax
