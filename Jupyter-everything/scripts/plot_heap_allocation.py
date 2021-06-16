@@ -1,5 +1,6 @@
 import re
 import numpy as np
+import random
 
 # from scripts import updated_parse_log as pl
 import matplotlib.pyplot as plt
@@ -23,9 +24,9 @@ def plot_heap_regions(region_descriptions, axs=None, region_size=None):
     # determine data arrangement from list length
     # Robust arrangements will have type 'list'.
     # Non robust arrangements will have type 'dict'
-    if type(region_descriptions == dict):
+    if type(region_descriptions) == dict:
         return plot_heap_regions_normal(region_descriptions, axs, region_size)
-    elif type(region_descriptions == list):
+    elif type(region_descriptions) == list:
         return plot_heap_regions_robust(region_descriptions, axs, region_size)
     else:
         print("Unkown region_descriptions datatype. Abort.")
@@ -39,6 +40,20 @@ def plot_heap_regions(region_descriptions, axs=None, region_size=None):
 #   axs  (optional)       : matplotlib plot
 #   region_size (optional): The size in MB of each region. Allows for plotting memory allocation rather than regions
 def plot_heap_regions_robust(region_descriptions, axs=None, region_size=None):
+
+    # Remove all 'after' gc collection data points, which appear every other entry.
+    ###############################################################
+    # The following removes every other entry for each region, as to only contain
+    # the region size BEFORE garbage collection runs. I think I would like to make
+    # this a permanant feautre, but imm not sure.
+
+    for region in range(len(region_descriptions)):
+        without_after_gc = []
+        for index in range(len(region_descriptions[region])):
+            if (index) % 2:
+                without_after_gc.append(region_descriptions[region][index])
+        region_descriptions[region] = without_after_gc
+    ###############################################################
     if not axs:
         fig, axs = plt.subplots()
     # Create helper list [0...n-1] to plot for x axis based on time?
@@ -59,7 +74,7 @@ def plot_heap_regions_robust(region_descriptions, axs=None, region_size=None):
         "TAMS",
     ]
     # Add titles and format style to plot
-    colors = ["royalblue", "cyan", "black", "green", "purple", "lime", "brown", "darkmagenta", "lime", "green"]
+    colors = ["royalblue", "cyan", "black", "red", "purple", "purple", "brown", "darkmagenta", "lime", "green"]
     axs.set_xlabel("GC Run number (not based on time)")
 
     if region_size:
@@ -87,24 +102,13 @@ def plot_heap_regions_robust(region_descriptions, axs=None, region_size=None):
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#                   __plot_HA_schema0                                          #
+#                   plot_heap_regions_normal                                   #
 #   Purpose:                                                                   #
 #       Plot the heap breakdown throughout program using memory collected      #
 #       following a log schema0. Display 3 plots                               #
 #       -> Memory regions during runtime (without free memory)                 #
 #       -> Free heap memory regions                                            #
 #       -> Memory regions + free regions during runtime                        #
-#                                                                              #
-#   Parameters:                                                                #
-#       dd : list, 2 items                                                     #
-#       dd[0] : dictionary containing                                          #
-#               keys:   names of regions during runtime                        #
-#              values:  list of before/after tuple pairs of size when gc runs  #
-#       dd[1] : Initial number of free regions before runtime.                 #
-#                                                                              #
-#   Return: None                                                               #
-#                                                                              #
-#   Note: generates MatPlotLib plot                                            #
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def plot_heap_regions_normal(region_descriptions, axs=None, region_size=None):
     if not region_descriptions:
@@ -193,9 +197,49 @@ def __sum_allocation(table, keywords, ax, before=False, color="", label=""):
 
 # Add labels to a heap allocation chart.
 # Return updated plot.
-def __addLabelsHeap(ax, title):
-    ax.set_xlabel("Time passed (seconds)")
-    ax.set_ylabel("Regions allocated")
-    ax.set_title(title)
-    ax.legend()
-    return ax
+def __addLabelsHeap(axs, title):
+    axs.set_xlabel("Time passed (seconds)")
+    axs.set_ylabel("Regions allocated")
+    axs.set_title(title)
+    axs.legend()
+    return axs
+
+
+def plot_heap_allocation_outof_max(
+    timedata_seconds=[],
+    memorydata=[],
+    memorydata_unit="MB",
+    heapsize=1,
+    heapsize_unit="GB",
+    axs=None,
+    color=None,
+    label=None,
+):
+    max_heap_size = __get_standardized_unit_size(heapsize, heapsize_unit)
+    for i in range(len(memorydata)):
+        memorydata[i] = __get_standardized_unit_size(memorydata[i], memorydata_unit)
+    if not axs:
+        f, axs = plt.subplots()
+    if not color:
+        color = (random.random(), random.random(), random.random())
+    if not label:
+        label = "Current heap usage"
+    axs.plot(timedata_seconds, memorydata, color=color, label=label)
+    return axs
+
+
+def __get_standardized_unit_size(value, unit):
+    # We will convert everything to MB
+
+    if unit == "M":
+        return value
+    if unit == "G":
+        return value * 1000
+    if unit == "MB":
+        return value
+    if unit == "GB":
+        return value * 1000
+    if unit == "KB":
+        return value / 1000
+    print('Warning: Unkown unit "' + unit + '"')
+    return value
