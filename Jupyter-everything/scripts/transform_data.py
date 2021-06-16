@@ -6,6 +6,7 @@
 import numpy as np
 import pandas as pd  # implicit. TODO: check if this is needed
 import math
+import re
 
 # Access a Pandas dataframe constructed through parse_data.py with labeled columns.
 # Return the timestamps and pauses as a list
@@ -218,3 +219,32 @@ def get_heatmap_data(
         x_bucket_duration,
         y_bucket_duration,
     ]
+
+
+def get_heap_occupancy(dataframe):
+    if dataframe.empty:
+        print("Empty dataframe in get_heap_occupancy")
+        return
+    memory_change = list(dataframe["MemoryChange"])
+    before_gc = []
+    after_gc = []
+    max_heap = []
+    unit = None
+    regex_pattern_memory = "(\d+)(\w+)->(\d+)\w+\((\d+)\w+\)"
+    #   String parses things in this pattern: 1234M->123M(9999M)
+    # Capture pattern 1: Before
+    # Capture pattern 2: unit
+    # Capture pattern 3: After
+    # Capture pattern 4: Current maximum heap size (can change... lol)
+    for line in memory_change:
+        match = re.search(regex_pattern_memory, line)
+        if match:
+            before_gc.append(int(match.group(1)))
+            unit = match.group(2)
+            after_gc.append(int(match.group(3)))
+            max_heap.append(int(match.group(4)))
+
+        else:
+            print("Warning: Unable to parse this line: " + line)
+            # final return value is the unit as a string
+    return before_gc, after_gc, max_heap, match.group(2)
