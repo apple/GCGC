@@ -59,22 +59,38 @@ Ellis Brown. 6/16/2021
 >
 
 > ### compare_max_pauses_n_buckets
+> Compares multiple lists, and puts them into n constant buckets, based on time. Finds the max pause in each bucket per list
 - `xdata_lists` list of float lists, showing timestamps for gc runs
 - `ydata_lists` list of float lists, showing pause durations
 - `duration` size of one pause bucket, to group max intos
 
 > ### compare_sum_pauses_n_duration
+> Compares multiple lists, and puts them into buckets of n duration, based on time. Finds the sum of pauses in each bucket per list
 - `xdata_lists` list of float lists, showing timestamps for gc runs
 - `ydata_lists` list of float lists, showing pause durations
 - `duration` size of one pause bucket, to group sums intos
 
 > ### compare_sum_pauses_n_buckets
+> Compares multiple lists, and puts them into n constant buckets, based on time. Finds the sum of pauses in each bucket per list
 - `xdata_lists` list of float lists, showing timestamps for gc runs
 - `ydata_lists` list of float lists, showing pause durations
 - `duration` size of one pause bucket, to group sums intos
 
 > ### get_heatmap_data
+> Groups timestamps and latency information into a 2d array resembling a heatmap of frequencies.
+- `table` a pandas dataframe containing latency information
+- `x_bucket_count=20` the number of buckets along the x axis for the heatmap. typically, the number of buckets for timestamps
+- `y_bucket_count=20` the number of buckets along the y axis for the heatmap. typically, the number of buckets for latency pauses
+- `x_bucket_duration=100` the time in seconds for each bucket . Typically for timestamp information
+- `y_bucket_duration=10` the time in miliseconds for each pause bucket. Typically for latency pause information.
+- `suppress_warnings=False` If true, warnings about datapoints that lie outside of the specified ranges for x & y will not be printed to the screen.
+
 
 > ### get_heap_occupancy
-- `dataframe`
+> Returns four values from a dataframe: 
+> - (list) before_gc : heapsize occupancy of live data before gc run
+> - (list) after gc : heapsize occpancy of live data after gc run
+> - (list) current_max_heap : maximum heapsize at the moment in time at gc run
+> - (str) unit of the above 3 meassurements.
+- `dataframe` A [pandas dataframe](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html) containing the data to parse. Should contain column named `MemoryChange`
 
