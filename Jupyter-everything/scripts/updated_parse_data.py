@@ -127,9 +127,7 @@ def getConcurrentDurations(logfile=None, gctype="", create_csv=False):
     return table
 
 
-# Goes to each of the pauses in the garbage collector phases
 # and dumps all data. TODO: Fix data and make it simpler
-# Requirement: Path is set.
 def getGCdataSections(logfile=None, gctype="", create_csv=False):
     # Verify parameters are correct.
     if not logfile:
@@ -138,7 +136,7 @@ def getGCdataSections(logfile=None, gctype="", create_csv=False):
     if not gctype:
         gctype = get_gc_type(logfile)
 
-    search_term = g1f.fullLineInfo()
+    search_term = g1f.fullLineInfo()  # read the documentation to understand columns from regex capture groups.
     table = g1f.manyMatch_LineSearch(match_terms=[search_term], num_match_groups=6, filepath=logfile, in_file=True)
     table = table[:-1]  # remove column of only zeros.
     table_df = pd.DataFrame(table).transpose()
