@@ -108,13 +108,13 @@ def print_percentiles(pauses_miliseconds=[], print_title=True, percentiles=None,
 # Parameters:
 #   pauses_miliseconds    : list of [list of pauses as floats in ms]
 #   percentiles(optional) : list of float value percentiles to be viewed.
-def compare_pauses_percentiles(pauses_miliseconds=[], percentiles=None, labels=None):
-    if not pauses_miliseconds:
-        print("No pauses_miliseconds provided to plot_compare_percentiles")
+def compare_pauses_percentiles(list_of_list_pauses_ms=[], percentiles=None, labels=None):
+    if not list_of_list_pauses_ms:
+        print("No list_of_list_pauses_ms provided to plot_compare_percentiles")
         return
     if not labels:
-        labels = [str(i) for i in range(len(pauses_miliseconds))]
-    print_percentiles(pauses_miliseconds[0], True, percentiles, labels[0])
+        labels = [str(i) for i in range(len(list_of_list_pauses_ms))]
+    print_percentiles(list_of_list_pauses_ms[0], True, percentiles, labels[0])
 
     for i in range(1, len(pauses_miliseconds)):
         print_percentiles(pauses_miliseconds[i], False, percentiles, labels[i])
