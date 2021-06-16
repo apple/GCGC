@@ -60,14 +60,14 @@ def get_sum_pauses_n_duration(timestamps, pausedata, duration):
 
 
 # Get the max pause in a specified duration, such that there are n buckets
-def get_max_pauses_n_buckets(timestamps, pausedata, num_buckets, max):
+def get_max_pauses_n_buckets(timestamps, pausedata, num_buckets):
     max_time = timestamps[-1]
     duration = max_time / num_buckets
     return __put_into_buckets(timestamps, pausedata, duration, num_buckets, max)
 
 
 # Get the max pauses over buckets of n duration length
-def get_max_pauses_n_duration(timestamps, pausedata, duration, max):
+def get_max_pauses_n_duration(timestamps, pausedata, duration):
     max_time = timestamps[-1]
     num_buckets = max_time / duration
     return __put_into_buckets(timestamps, pausedata, duration, num_buckets, max)

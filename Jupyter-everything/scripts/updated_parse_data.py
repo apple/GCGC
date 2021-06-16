@@ -53,12 +53,8 @@ def getPauses(logfile=None, gctype="", create_csv=False):
     table_df = pd.DataFrame(columns)
 
     # remove the ms / s terminology from the ending
-    table_df["PauseDuration_miliseconds"] = table_df["PauseDuration_miliseconds"].map(
-        __remove_non_numbers
-    )
-    table_df["TimeFromStart_seconds"] = table_df["TimeFromStart_seconds"].map(
-        __remove_non_numbers
-    )
+    table_df["PauseDuration_miliseconds"] = table_df["PauseDuration_miliseconds"].map(__remove_non_numbers)
+    table_df["TimeFromStart_seconds"] = table_df["TimeFromStart_seconds"].map(__remove_non_numbers)
 
     # remove any possibly completly empty columns
     table_df.replace("", NaN, inplace=True)
@@ -118,9 +114,7 @@ def getConcurrentDurations(logfile=None, gctype="", create_csv=False):
     # remove the ms / s terminology from the ending
     # NOTE: it is important to remember that TimeFromStart_seconds is in seconds, while
     # PauseTime is in ms
-    table["TimeFromStart_seconds"] = table["TimeFromStart_seconds"].map(
-        __remove_non_numbers
-    )
+    table["TimeFromStart_seconds"] = table["TimeFromStart_seconds"].map(__remove_non_numbers)
     table["ConcurrentPhase"]
 
     # remove any possibly completly empty columns
@@ -145,9 +139,7 @@ def getGCdataSections(logfile=None, gctype="", create_csv=False):
         gctype = get_gc_type(logfile)
 
     search_term = g1f.fullLineInfo()
-    table = g1f.manyMatch_LineSearch(
-        match_terms=[search_term], num_match_groups=6, filepath=logfile, in_file=True
-    )
+    table = g1f.manyMatch_LineSearch(match_terms=[search_term], num_match_groups=6, filepath=logfile, in_file=True)
     table = table[:-1]  # remove column of only zeros.
     table_df = pd.DataFrame(table).transpose()
     if create_csv:
@@ -174,9 +166,7 @@ def getTotalProgramRuntime(logfile=None):
 
         # Search for the metadata line match
         match_term = ".*\[(\d+\.\d+)s\].*"
-        columns = g1f.manyMatch_LineSearch(
-            match_terms=[match_term], num_match_groups=1, data=[last_line]
-        )
+        columns = g1f.manyMatch_LineSearch(match_terms=[match_term], num_match_groups=1, data=[last_line])
         # The columns is a list, contaning a list of columsn
         # enter column zero to get access to the associated match term
         # in column zero, enter row zero, to access the first and only entry
@@ -189,7 +179,6 @@ def getGCMetadata(logfile="", create_csv=False):
     # columns = each metadata term
     table = g1f.singleMatch_LineSearch(
         match_terms=g1f.G1Metadata_searchable(),
-        data=[],
         search_titles=g1f.G1Metadata_titles(),
         filepath=logfile,
         in_file=True,
@@ -364,9 +353,7 @@ def __getHeapInitialState(filepath, create_csv, robust):
         to_search["Region"] = "^\s*Heap\s+Region\s+Size:\s*(.+)\s*"
     else:
         to_search["Region"] = "\s*Heap\s+region\s+size:\s*(\d*\w*)\s*"
-        to_search[
-            "Metadata"
-        ] = "\s*Minimum\sheap\s(\d+)\s+Initial\sheap\s(\d+\w*)\s+Maximum\sheap\s(\d+)\s*"
+        to_search["Metadata"] = "\s*Minimum\sheap\s(\d+)\s+Initial\sheap\s(\d+\w*)\s+Maximum\sheap\s(\d+)\s*"
 
     # Create a set of found values.
     found_values = {}
@@ -394,9 +381,7 @@ def __getHeapInitialState(filepath, create_csv, robust):
                         del to_search[keys[i]]
                         # Every interesting value lives in its own line
                         if not robust:
-                            found_values[keys[i]] = possible_match.group(
-                                len(possible_match.groups())
-                            )
+                            found_values[keys[i]] = possible_match.group(len(possible_match.groups()))
                         # This log schema has all on one line, so make 3 entries
                         # to the found dictionary, if we found 3. Else, 1
                         elif robust:
@@ -405,9 +390,7 @@ def __getHeapInitialState(filepath, create_csv, robust):
                                 found_values["Init"] = possible_match.group(2)
                                 found_values["Max"] = possible_match.group(3)
                             else:
-                                found_values[keys[i]] = possible_match.group(
-                                    len(possible_match.groups())
-                                )
+                                found_values[keys[i]] = possible_match.group(len(possible_match.groups()))
 
             if not to_search:  # If the dictionary to search is empty.
                 break

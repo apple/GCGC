@@ -11,7 +11,7 @@ plt.rcParams["figure.figsize"] = [12, 7]
 # axs is an array of plt.Axes objects.
 # think about them as all data associated with a plot
 # TODO: Consider axis :: what should be done along the x and y axis for units?
-def plot_pauses_bar(xdata=[], ydata=[], axs=None, color="", label=""):
+def plot_pauses_bar(xdata=[], ydata=[], axs=None, color="", label="", optional=None):
     if not axs:
         print("No axes supplied. Create one using\nf, axs = matplotlib.pyplot.subplots()")
         return
@@ -30,7 +30,7 @@ def plot_pauses_bar(xdata=[], ydata=[], axs=None, color="", label=""):
     axs.legend()
 
 
-def plot_pauses_scatter(xdata=[], ydata=[], axs=None, color="", label=""):
+def plot_pauses_scatter(xdata=[], ydata=[], axs=None, color="", label="", optional=None):
     if not axs:
         print("No axes supplied. Create one using\nf, axs = matplotlib.pyplot.subplots()")
         return
@@ -171,6 +171,7 @@ def compare_trends(pauses_ms_lists, labels=None):
 # if len(string) < numchars, spaces are appended to the back of the string.
 # returns a string containing the update string with len = numchars.
 def __string_const_chars(string, numchars):
+    string = str(string)
     char_list = ""
     for i in range(len(string)):
         char_list += string[i]
@@ -188,7 +189,7 @@ def __string_const_chars(string, numchars):
 #   pauses_miliseconds : list of pauses in miliseconds
 #   axs                : plot with existing metadata.
 #   color(optional)    : Color for this line. None => random color
-def plot_pauses_line(time_seconds=[], pauses_miliseconds=[], axs=None, color="", label=""):
+def plot_pauses_line(time_seconds=[], pauses_miliseconds=[], axs=None, color="", label="", optional=None):
     if not axs:
         print("No axes supplied. Create one using\nf, axs = matplotlib.pyplot.subplots()")
         return
@@ -218,7 +219,9 @@ def compare_pauses_line(timedata_lists=[], ydata_lists=[], axs=None, colors=None
     return generic_plotting(timedata_lists, ydata_lists, axs, colors, labels, plot_pauses_line)
 
 
-def plot_paused_and_running_line(time_seconds=[], pauses_miliseconds=[], axs=None, color="", label=""):
+def plot_paused_and_running_line(
+    time_seconds=[], pauses_miliseconds=[], axs=None, color="", label="", const_bar_width=False
+):
     if not axs:
         print("No axes supplied. Create one using\nf, axs = matplotlib.pyplot.subplots()")
         return
@@ -232,21 +235,35 @@ def plot_paused_and_running_line(time_seconds=[], pauses_miliseconds=[], axs=Non
     x_data = []
     y_data = []
     ###### Create X-Y Data. bumps for height based on pause duration #####
-    for x, y in zip(time_seconds, pauses_miliseconds):
-        # convert y from ms to seconds
-        y_scaled = y / 1000
-        # first, create a point at time before pause
-        x_data.append(x)
-        y_data.append(0)
-        # next, create a point of y height, at that initial time
-        x_data.append(x)
-        y_data.append(y)
-        # last point in pause duration high
-        x_data.append(x + y_scaled)
-        y_data.append(y)
-        # end pause duration high
-        x_data.append(x + y_scaled)
-        y_data.append(0)
+    if not const_bar_width:
+        for x, y in zip(time_seconds, pauses_miliseconds):
+            # convert y from ms to seconds
+            y_scaled = y / 1000
+            # first, create a point at time before pause
+            x_data.append(x)
+            y_data.append(0)
+            # next, create a point of y height, at that initial time
+            x_data.append(x)
+            y_data.append(y)
+            # last point in pause duration high
+            x_data.append(x + y_scaled)
+            y_data.append(y)
+            # end pause duration high
+            x_data.append(x + y_scaled)
+            y_data.append(0)
+    else:  # Create buckets of the same size, placed uniformly over time.
+        pt_uniform = time_seconds[0] * 0.7  # 0.7 constant for bar width
+        # 1 means bars indistinguishable
+        # 0 means no bars
+        for x, y in zip(time_seconds, pauses_miliseconds):
+            x_data.append(x)
+            y_data.append(0)
+            x_data.append(x)
+            y_data.append(y)
+            x_data.append(x + pt_uniform)
+            y_data.append(y)
+            x_data.append(x + pt_uniform)
+            y_data.append(0)
 
     axs.plot(x_data, y_data, color=color, label=label),
     axs.set_ylabel("Pause duration (miliseconds)")
@@ -256,11 +273,11 @@ def plot_paused_and_running_line(time_seconds=[], pauses_miliseconds=[], axs=Non
 
 
 # Applys a mapping for each list entry to the needed plotting function
-def compare_paused_running_line(xdata_list, ydata_list, axs=None, colors=[], labels=[]):
-    return generic_plotting(xdata_list, ydata_list, axs, colors, labels, plot_paused_and_running_line)
+def compare_paused_running_line(xdata_list, ydata_list, axs=None, colors=[], labels=[], const_bar_width=False):
+    return generic_plotting(xdata_list, ydata_list, axs, colors, labels, plot_paused_and_running_line, const_bar_width)
 
 
-def generic_plotting(xdata_list, ydata_list, axs=None, colors=[], labels=[], plotting_function=None):
+def generic_plotting(xdata_list, ydata_list, axs=None, colors=[], labels=[], plotting_function=None, optional=None):
     if not xdata_list:
         print("No timedata list in function plot_bar_compare()")
         return
@@ -286,9 +303,63 @@ def generic_plotting(xdata_list, ydata_list, axs=None, colors=[], labels=[], plo
 
     # Apply the specific plotting
     for i in range(len(xdata_list)):
-        plotting_function(xdata_list[i], ydata_list[i], axs, colors[i], labels[i])
+        plotting_function(xdata_list[i], ydata_list[i], axs, colors[i], labels[i], optional)
     return axs
 
 
 def plot_heatmap(heatmap, dimensions, labels=True):
     return mh.plot_heatmap(heatmap, dimensions, labels)
+
+
+def print_metadata_short(metadata_table, label=None, print_title=True):
+
+    num_chars = 4
+    if print_title:
+        title = __string_const_chars(" Metadata", num_chars) + " | "
+        for i in range(len(metadata_table)):
+            title += __string_const_chars(metadata_table[i][0], num_chars) + " | "
+        print(title)
+        print("-" * len(title))
+
+    if not label:
+        label = "Run:"
+    # print with correct formatting the values
+    line = __string_const_chars(label, num_chars) + " | "
+    for i in range(len(metadata_table)):
+        line += __string_const_chars(metadata_table[i][1], num_chars) + " | "
+
+    print(line)
+
+
+def print_metadata(metadata_table, labels=None, column_width=14):
+    if not labels:
+        labels = [i for i in range(len(metadata_table))]
+    categories = {}
+    for item in metadata_table[0]:
+        categories[item[0]] = [item[0]]
+    for metadata in metadata_table:
+        for section in metadata:
+            categories[section[0]].append(section[1])
+    labels.insert(0, "Category")
+    __print_metadata_section(labels, column_width)
+    for section in metadata_table[0]:
+        __print_metadata_section(categories[section[0]], column_width)
+
+
+def __print_metadata_section(values_list, column_width):
+    num_chars = column_width - 1
+    line = ""
+    for value in values_list:
+        if len(value) < num_chars:
+            line += __string_const_chars(value, num_chars) + "|"
+        else:
+            line += __string_const_chars(value[:num_chars], num_chars) + "|"
+    print(line)
+    line = ""
+    for value in values_list:
+        if len(value) < num_chars:
+            line += __string_const_chars(" ", num_chars) + "|"
+        else:
+            line += __string_const_chars(value[num_chars:], num_chars) + "|"
+    print(line)
+    print(len(line) * "-")
