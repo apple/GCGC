@@ -1,6 +1,7 @@
 import re
 import numpy as np
-from scripts import updated_parse_log as pl
+
+# from scripts import updated_parse_log as pl
 import matplotlib.pyplot as plt
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -9,32 +10,42 @@ import matplotlib.pyplot as plt
 #   Purpose:                                                                   #
 #       Print a graph showing the heap breakdown throughout runtime            #
 #   Parameters:                                                                #
-#       counts: list  -> could represent two different data formats            #
-#            if len(list) == 1:                                                #
-#                   2 dimensional list, with all region counts                 #
-#                   before and after gc pauses                                 #
-#            if len(list) == 2:                                                #
-#                   list[0] = dictionary, with all region counts               #
-#                   list[2] = integer, size of initial free memory             #
+#        region_descriptions: Holds data about region breakdown during runtime #
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # TODO: This is very hard to understand function. WILL FIX SOON
 # THE TIME TO FIX IS NOW!!!! TODO when back! :D
-def plot_heap_allocation_breakdown(breakdown_lst, max_heap=0):
-    if not breakdown_lst:
+
+
+def plot_heap_regions(region_descriptions, axs=None, region_size=None):
+    if not region_descriptions:
+        print("No data passed into plot_heap_allocation_breakdown")
         return
-
     # determine data arrangement from list length
-    if (len(breakdown_lst)) == 2:
-        return __plot_HA_schema0(breakdown_lst, max_heap)
+    # Robust arrangements will have type 'list'.
+    # Non robust arrangements will have type 'dict'
+    if type(region_descriptions == dict):
+        return plot_heap_regions_normal(region_descriptions, axs, region_size)
+    elif type(region_descriptions == list):
+        return plot_heap_regions_robust(region_descriptions, axs, region_size)
+    else:
+        print("Unkown region_descriptions datatype. Abort.")
+    return
 
-    # Access 2 dimensional list of allocation during runtime
-    allocation_summary = breakdown_lst[0]
 
-    # Create helper list [0...n-1] to plot
-    x = np.array(list(range(len(allocation_summary))))
+# TODO: base the following information on time.
+# It should not be too hard to do, its just nice to view data before doing that.
+# Parameters:
+#   region_descriptions   :  list of amount in the heap at each moment in time, before and after gc.
+#   axs  (optional)       : matplotlib plot
+#   region_size (optional): The size in MB of each region. Allows for plotting memory allocation rather than regions
+def plot_heap_regions_robust(region_descriptions, axs=None, region_size=None):
+    if not axs:
+        fig, axs = plt.subplots()
+    # Create helper list [0...n-1] to plot for x axis based on time?
+    x = np.array(list(range(len(region_descriptions[0]))))
 
     # Order matters here, associated with order collected this data.
-    # TODO: Remove dependence on Order, use dictionary instead
+    # TODO: Remove dependence on Order, use dictionary instead if possible
     region_names = [
         "Free",
         "Young",
@@ -47,18 +58,32 @@ def plot_heap_allocation_breakdown(breakdown_lst, max_heap=0):
         "Closed_archive",
         "TAMS",
     ]
-
     # Add titles and format style to plot
     colors = ["royalblue", "cyan", "black", "green", "purple", "lime", "brown", "darkmagenta", "lime", "green"]
-    plt.xlabel("GC Run number (not based on time)")
-    plt.ylabel("Number of memory blocks")
-    plt.title("heap allocation throughout runtime")
-    plt.legend(region_names)
+    axs.set_xlabel("GC Run number (not based on time)")
+
+    if region_size:
+        axs.set_ylabel("Megabytes allocated")
+    else:
+        axs.set_ylabel("Number of memory blocks")
+    axs.set_title("heap allocation throughout runtime")
+    axs.legend(region_names)
+
     # Plot information for each region
-    for idx in range(len(allocation_summary[0])):
-        plt.plot(x, np.array(list(row[idx] for row in allocation_summary)), color=colors[idx], label=region_names[idx])
-    plt.legend()
-    plt.show()
+    for idx in range(len(region_descriptions)):
+        if region_size:
+            axs.plot(
+                x,
+                np.array(list(row * region_size for row in region_descriptions[idx])),
+                color=colors[idx],
+                label=region_names[idx],
+            )
+        else:
+            axs.plot(
+                x, np.array(list(row for row in region_descriptions[idx])), color=colors[idx], label=region_names[idx]
+            )
+    axs.legend()
+    return axs
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -81,85 +106,52 @@ def plot_heap_allocation_breakdown(breakdown_lst, max_heap=0):
 #                                                                              #
 #   Note: generates MatPlotLib plot                                            #
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def __plot_HA_schema0(dd, max_heap=0):
-
-    if (not dd) or (len(dd) < 2) or (not dd[0]):
+def plot_heap_regions_normal(region_descriptions, axs=None, region_size=None):
+    if not region_descriptions:
+        print("No data passed into plot_heap_regions_normal.")
         return
-    if not dd:
-        print("No data to plot")
-        return
-    if len(dd) < 2:
-        print("Not enough data to plot Heap Allocation")
-        return
-    if not dd[0]:
-        print("List missing collected Heap Allocation data")
-        return
-    if not dd[1] and not max_heap:
-        print("Failed to find inital memory size. Rerun with parameter max_heap = (int)")
-    if max_heap != 0:
-        dd[1] = max_heap
-    data_dictionary = dd[0]
-    # get free_memory list of memory during runtime
-
     # Create integer list [0...n-1] to help plot allocation
-    # TODO: Change this to be based on actual time in program.
     x = []
-    for item in data_dictionary["Time"]:
+    for item in region_descriptions["Time"]:
         x.append(float(item))
-        x.append(float(item))
-    x = np.array(x)  # *2 for tuples
-
+    x = np.array(x)
+    if not axs:
+        fig, axs = plt.subplots()
     # Format plot
-    plt.xlabel("GC Run : Time in seconds")
-    plt.ylabel("Number of memory blocks")
-    plt.title("heap allocation throughout runtime")
-    plt.legend(list(data_dictionary.keys()))
+    axs.set_xlabel("Program runtime in seconds")
+    if region_size:
+        axs.set_ylabel("Memory allocation in MB")
+    else:
+        axs.set_ylabel("Memory allocation in number of regions")
+
+    axs.set_title("Heap allocation before GC collection")
+    axs.legend(list(region_descriptions.keys()))
     # Choose from some color choices. TODO: style colors
     colors = ["royalblue", "cyan", "black", "green", "purple", "lime", "brown", "darkmagenta", "lime", "green"]
     color_index = 0
     # Create the first plot
-    plt.figure(1)
 
-    for key in data_dictionary.keys():
+    for key in region_descriptions.keys():
         if str(key) != "Time":
             # Get list of the region size before & after every gc run
             pairs = []
-            for idx in range(len(data_dictionary[key])):
-                pairs.append(int(data_dictionary[key][idx][0]))
-                pairs.append(int(data_dictionary[key][idx][1]))
+            for idx in range(len(region_descriptions[key])):
+                pairs.append(int(region_descriptions[key][idx][0]))
+                # pairs.append(int(region_descriptions[key][idx][1])) # We dont care to see the after GC data at this time for a regional collector's regions.
             # Add to the current plot
-            plt.plot(np.array(x), np.array(pairs), color=colors[color_index], label=str(key))
+            if region_size:
+                axs.plot(
+                    np.array(x),
+                    np.array([pair * region_size for pair in pairs]),
+                    color=colors[color_index],
+                    label=str(key),
+                )
+            else:
+                axs.plot(np.array(x), np.array(pairs), color=colors[color_index], label=str(key))
             color_index += 1
 
     # Show plot (without memory)
-    plt.legend()  # TODO: test if removing this line does anything
-    plt.show()
-
-    # Create second plot: (Just memory during runtime)
-    # As heap memory could always be 99% free, seeing the changes in the
-    # amonut of free memory in it's own plot is valuable
-    # plt.figure(2)
-    # plt.plot(x, np.array(free_memory), color = "red", label = "Free Memory")
-    # plt.legend()
-    # plt.show()
-
-    # Create third plot
-    # plt.figure(3)
-    # # Add back all information from plot 1
-    # for key in data_dictionary.keys():
-    #     if str(key) != "Time":
-    #         pairs = []
-    #         for idx in range(len(data_dictionary[key])):
-    #             pairs.append(int(data_dictionary[key][idx][0]))
-    #             pairs.append(int(data_dictionary[key][idx][1]))
-    #         plt.plot(np.array(x), np.array(pairs), color=colors[color_index], label=str(key))
-    #         color_index += 1
-    # # add the free memory to the plot
-    # plt.plot(x, np.array(free_memory), color="red", label="Free Memory")
-
-    # # Display plot
-    # plt.legend()
-    # plt.show()
+    axs.legend()  # TODO: test if removing this line does anything
 
 
 def __sum_allocation(table, keywords, ax, before=False, color="", label=""):

@@ -219,7 +219,7 @@ def getHeapAllocation(logfile="", gctype=None, create_csv=False, robust=False):
     parsed_heap_regions = __simplify_regions(heap_regions)
     if create_csv:
         __create_csv(parsed_heap_regions, "heap_allocation.csv")
-    return [parsed_heap_regions]
+    return parsed_heap_regions
 
 
 ############### ############### ###############
@@ -264,7 +264,7 @@ def __getHeapAllocation(logfile="", gctype="", create_csv=False):
 
     # Helps focus search onto "non tag" regions of each log line
     log_line_key = "\[*(.*)\]*\[(\d+\.\d+)\w+\]\[(.*)\[(.*)\](.*)"
-    print(logfile)
+
     with open(logfile, "r") as file:
         for line in file:
             match_info = re.search(log_line_key, line)
