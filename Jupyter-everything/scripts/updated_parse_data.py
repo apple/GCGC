@@ -194,7 +194,7 @@ def getGCMetadata(logfile="", create_csv=False):
 # Heap could be 50% free, 25% young, 25% old at a moment in time. This
 #   determines that breakdown from the log information, if it exists, and
 #   produces a frequencies list for it.
-def getHeapAllocation(logfile=None, gctype="", create_csv=False, robust=False):
+def getHeapAllocation(logfile="", gctype=None, create_csv=False, robust=False):
     # Verify parameters are correct.
     if not logfile:
         print("No logfile supplied to function getHeapAllocation.")
@@ -203,7 +203,7 @@ def getHeapAllocation(logfile=None, gctype="", create_csv=False, robust=False):
         gctype = get_gc_type(logfile)
 
     if not robust:
-        return __getHeapAllocation(logfile=None, gctype="", create_csv=create_csv)
+        return __getHeapAllocation(logfile, gctype, create_csv)
     accepting = False
     heap_regions = []
     with open(logfile, "r") as file:
@@ -247,7 +247,7 @@ def __create_csv(table, filename):
 
 # This is hard to transform with readable code.
 # TODO: transform such that return type is reasonable.
-def __getHeapAllocation(logfile=None, gctype="", create_csv=False):
+def __getHeapAllocation(logfile="", gctype="", create_csv=False):
 
     to_search = {}
     to_search["Eden"] = g1f.EdenHR()
@@ -264,7 +264,7 @@ def __getHeapAllocation(logfile=None, gctype="", create_csv=False):
 
     # Helps focus search onto "non tag" regions of each log line
     log_line_key = "\[*(.*)\]*\[(\d+\.\d+)\w+\]\[(.*)\[(.*)\](.*)"
-
+    print(logfile)
     with open(logfile, "r") as file:
         for line in file:
             match_info = re.search(log_line_key, line)
@@ -285,12 +285,7 @@ def __getHeapAllocation(logfile=None, gctype="", create_csv=False):
     # Calculate the total memory avilable, to correctly display
     # Graph containing 'free' memory
 
-    initial_storage = __getHeapInitialState(False)
-    if initial_storage:
-        init_cap = __remove_metrx_ending(initial_storage["Max"])
-        init_region_size = __remove_metrx_ending(initial_storage["Region"])
-        return [heap_regions, int(init_cap / init_region_size)]
-    return [heap_regions, 0]
+    return heap_regions
 
 
 # Takes in a number such as "1M" or "255G", and properly scales it
