@@ -5,6 +5,7 @@
 # 6/15/2021
 import numpy as np
 import pandas as pd  # implicit. TODO: check if this is needed
+import math
 
 # Access a Pandas dataframe constructed through parse_data.py with labeled columns.
 # Return the timestamps and pauses as a list
@@ -45,19 +46,106 @@ def get_pauses_in_miliseconds(dataframe, to_list=True):
 
 
 # Group all pauses & time data into N evenly distributed buckets, based on time
-# def get_sum_pauses_n_buckets(timedata, pausedata, num_buckets):
+def get_sum_pauses_n_buckets(timestamps, pausedata, num_buckets):
+    max_time = timestamps[-1]
+    duration = max_time / num_buckets
+    return __put_into_buckets(timestamps, pausedata, duration, num_buckets, sum)
+
 
 # Group all pasue & time data into some number of buckets with a given bucket duration
-# def get_sum_pauses_n_duration(timestamps, pausedata, duration):
+def get_sum_pauses_n_duration(timestamps, pausedata, duration):
+    max_time = timestamps[-1]
+    num_buckets = max_time / duration
+    return __put_into_buckets(timestamps, pausedata, duration, num_buckets, sum)
+
 
 # Get the max pause in a specified duration, such that there are n buckets
-# def get_max_pauses_n_buckets(timestamps, pausedata, num_buckets):
+def get_max_pauses_n_buckets(timestamps, pausedata, num_buckets, max):
+    max_time = timestamps[-1]
+    duration = max_time / num_buckets
+    return __put_into_buckets(timestamps, pausedata, duration, num_buckets, max)
+
 
 # Get the max pauses over buckets of n duration length
-# def get_max_pauses_n_duration(timestamps, pausedata, duration):
+def get_max_pauses_n_duration(timestamps, pausedata, duration, max):
+    max_time = timestamps[-1]
+    num_buckets = max_time / duration
+    return __put_into_buckets(timestamps, pausedata, duration, num_buckets, max)
 
 
-# def __put_into_buckets(timestamps, pausedata, bucket_size, bucket_count):
+def __put_into_buckets(timestamps, pausedata, duration, num_buckets, grouping_method):
+    num_buckets = math.ceil(num_buckets)
+
+    buckets = [[] for i in range(num_buckets)]
+    times = [duration * i for i in range(1, num_buckets + 1)]
+
+    # First, sort all values into buckets based on the timestamp.
+    for time, pause in zip(timestamps, pausedata):
+        index_of_bucket = int(time / duration)
+        if index_of_bucket >= num_buckets:
+            index_of_bucket = num_buckets - 1
+        buckets[index_of_bucket].append(pause)
+
+    for idx in range(len(buckets)):
+        buckets[idx] = grouping_method(buckets[idx])
+
+    return times, buckets
+
+
+# Given lists of multiple pauses / stops, compare the runtime of the data.
+def compare_max_pauses_n_duration(xdata_lists, ydata_lists, duration):
+    xdata_bucketed_lists = []
+    ydata_bucketed_lists = []
+    for i in range(len(xdata_lists)):
+        xdata, ydata = get_max_pauses_n_duration(xdata_lists[i], ydata_lists[i], duration)
+        xdata_bucketed_lists.append(xdata)
+        ydata_bucketed_lists.append(ydata)
+    return xdata_bucketed_lists, ydata_bucketed_lists
+
+
+def compare_max_pauses_n_buckets(xdata_lists, ydata_lists, num_buckets):
+    # Get the correct duration for a bucket to be applied to all data
+    max_pause = 0
+    for datalist in xdata_lists:
+        max_p = max(datalist)
+        max_pause = max(max_p, max_pause)
+    duration = math.ceil(max_pause / num_buckets)
+    # Gather the data using a constant duration and return
+    xdata_bucketed_lists = []
+    ydata_bucketed_lists = []
+    for i in range(len(xdata_lists)):
+        xdata, ydata = get_max_pauses_n_duration(xdata_lists[i], ydata_lists[i], duration)
+        xdata_bucketed_lists.append(xdata)
+        ydata_bucketed_lists.append(ydata)
+    return xdata_bucketed_lists, ydata_bucketed_lists
+
+
+def compare_sum_pauses_n_duration(xdata_lists, ydata_lists, duration):
+    xdata_bucketed_lists = []
+    ydata_bucketed_lists = []
+    for i in range(len(xdata_lists)):
+        xdata, ydata = get_sum_pauses_n_duration(xdata_lists[i], ydata_lists[i], duration)
+        xdata_bucketed_lists.append(xdata)
+        ydata_bucketed_lists.append(ydata)
+    return xdata_bucketed_lists, ydata_bucketed_lists
+
+
+def compare_sum_pauses_n_buckets(xdata_lists, ydata_lists, num_buckets):
+    # Get the correct duration for a bucket to be applied to all data
+    max_pause = 0
+    for datalist in xdata_lists:
+        max_p = max(datalist)
+        max_pause = max(max_p, max_pause)
+    duration = math.ceil(max_pause / num_buckets)
+    # Gather the data using a constant duration and return
+    xdata_bucketed_lists = []
+    ydata_bucketed_lists = []
+    for i in range(len(xdata_lists)):
+        xdata, ydata = get_sum_pauses_n_duration(xdata_lists[i], ydata_lists[i], duration)
+        xdata_bucketed_lists.append(xdata)
+        ydata_bucketed_lists.append(ydata)
+    return xdata_bucketed_lists, ydata_bucketed_lists
+
 
 # Make a heatmap from given parameters. Recommended: Use default or change default for ALL runs.
 def get_heatmap_data(
