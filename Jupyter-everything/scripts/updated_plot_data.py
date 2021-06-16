@@ -59,7 +59,7 @@ def plot_pauses_scatter(xdata=[], ydata=[], axs=None, color="", label="", option
 #   colors(optional) :  list of colors to plot for each list passed. None => random colors
 #   axs(optional)    :  plot with existing metadata. None => new figure created
 def compare_pauses_bar(timedata_lists=[], heightdata_lists=[], axs=None, colors=None, labels=[]):
-    return generic_plotting(timedata_lists, heightdata_lists, axs, colors, labels, plot_pauses_bar)
+    return __generic_plotting(timedata_lists, heightdata_lists, axs, colors, labels, plot_pauses_bar)
 
 
 # Plots multiple sets of data onto the same scatter plot
@@ -72,7 +72,7 @@ def compare_pauses_bar(timedata_lists=[], heightdata_lists=[], axs=None, colors=
 # Return:
 #   axes (matplotlib.pyplot.Axes object) with everything plotted on it.
 def comparrison_scatter(xdata_list, ydata_list, axs=None, colors=[], labels=[]):
-    return generic_plotting(xdata_list, ydata_list, axs, colors, labels, plot_pauses_scatter)
+    return __generic_plotting(xdata_list, ydata_list, axs, colors, labels, plot_pauses_scatter)
 
 
 # Display what percent of pauses meet a certain percentile threshold
@@ -116,8 +116,8 @@ def compare_pauses_percentiles(list_of_list_pauses_ms=[], percentiles=None, labe
         labels = [str(i) for i in range(len(list_of_list_pauses_ms))]
     print_percentiles(list_of_list_pauses_ms[0], True, percentiles, labels[0])
 
-    for i in range(1, len(pauses_miliseconds)):
-        print_percentiles(pauses_miliseconds[i], False, percentiles, labels[i])
+    for i in range(1, len(list_of_list_pauses_ms)):
+        print_percentiles(list_of_list_pauses_ms[i], False, percentiles, labels[i])
 
 
 # Print the trends within the data (total number of pauses, max wait, total wait mean wait)
@@ -216,7 +216,7 @@ def plot_pauses_line(time_seconds=[], pauses_miliseconds=[], axs=None, color="",
 #   labels         : The list of labels for each list of data.
 #  Return : axs (matplotlib.pyplot.Axes object) with updated information plotted from the graph
 def compare_pauses_line(timedata_lists=[], ydata_lists=[], axs=None, colors=None, labels=[]):
-    return generic_plotting(timedata_lists, ydata_lists, axs, colors, labels, plot_pauses_line)
+    return __generic_plotting(timedata_lists, ydata_lists, axs, colors, labels, plot_pauses_line)
 
 
 def plot_paused_and_running_line(
@@ -274,10 +274,12 @@ def plot_paused_and_running_line(
 
 # Applys a mapping for each list entry to the needed plotting function
 def compare_paused_running_line(xdata_list, ydata_list, axs=None, colors=[], labels=[], const_bar_width=False):
-    return generic_plotting(xdata_list, ydata_list, axs, colors, labels, plot_paused_and_running_line, const_bar_width)
+    return __generic_plotting(
+        xdata_list, ydata_list, axs, colors, labels, plot_paused_and_running_line, const_bar_width
+    )
 
 
-def generic_plotting(xdata_list, ydata_list, axs=None, colors=[], labels=[], plotting_function=None, optional=None):
+def __generic_plotting(xdata_list, ydata_list, axs=None, colors=[], labels=[], plotting_function=None, optional=None):
     if not xdata_list:
         print("No timedata list in function plot_bar_compare()")
         return
@@ -309,26 +311,6 @@ def generic_plotting(xdata_list, ydata_list, axs=None, colors=[], labels=[], plo
 
 def plot_heatmap(heatmap, dimensions, labels=True):
     return mh.plot_heatmap(heatmap, dimensions, labels)
-
-
-def print_metadata_short(metadata_table, label=None, print_title=True):
-
-    num_chars = 4
-    if print_title:
-        title = __string_const_chars(" Metadata", num_chars) + " | "
-        for i in range(len(metadata_table)):
-            title += __string_const_chars(metadata_table[i][0], num_chars) + " | "
-        print(title)
-        print("-" * len(title))
-
-    if not label:
-        label = "Run:"
-    # print with correct formatting the values
-    line = __string_const_chars(label, num_chars) + " | "
-    for i in range(len(metadata_table)):
-        line += __string_const_chars(metadata_table[i][1], num_chars) + " | "
-
-    print(line)
 
 
 def print_metadata(metadata_table, labels=None, column_width=14):
