@@ -52,10 +52,12 @@ Ellis Brown. 6/16/2021
 - `labels` a list of string labels to describe each entry in the pauses_miliseconds list. If none are provided, each label is displayed as "label". 
 
 > ### print_trends
-> Desribes trends within the data. Shows max, number of pauses, mean, and sum. Outputs an ASCII table.
+> Desribes trends within the data. Shows max, number of pauses, mean, sum, and maybe throughput. Outputs an ASCII table.
 - `pauses_miliseconds` List of pauses to analyze
 - `label` Label for this row in the table, to explain what data has been passed in
 - `print_title=True` True to print title for ASCII table output by function
+- `total_runtime_seconds` The total runtime in seconds (optional). Used to calculate throughput
+- `timestamps` list of float time stamps for pause times (optional). Used to calculate throughput.
 
 > ### compare_trends
 > Compares trends of latency lists. Outputs an ASCII table.

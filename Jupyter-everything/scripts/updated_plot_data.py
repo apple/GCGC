@@ -128,11 +128,17 @@ def compare_pauses_percentiles(list_of_list_pauses_ms=[], percentiles=None, labe
 #   print_title(optional) : bool, True => print recorded values
 
 
-def print_trends(pauses_miliseconds, label=None, print_title=True):
-    # Analyze trends
+def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime_seconds=0, timestamps=None):
+    # Analyze trends. ALL PAUSES ARE IN MILISECONDS.
     max_pause = round(max(pauses_miliseconds, key=lambda i: float(i)), 4)
     sum_pauses = round(sum(float(i) for i in pauses_miliseconds), 4)
     average_wait = round(sum_pauses / len(pauses_miliseconds), 4)
+    throughput = None
+    if total_runtime_seconds:
+        throughput = ((total_runtime_seconds * 1000) - sum_pauses) / (total_runtime_seconds * 1000)
+    elif timestamps:
+        throughput = ((timestamps[-1] * 1000) - sum_pauses) / (timestamps[-1] * 1000)
+
     # Print title with formatting
     if print_title:
         title = " Trends       | "  # 16 characters
@@ -140,6 +146,8 @@ def print_trends(pauses_miliseconds, label=None, print_title=True):
         title += " Max pause    | "
         title += " Sum pauses   | "
         title += " Mean pauses  | "
+        if throughput:
+            title += " Throughput   |"
         print(title)
         print("-" * len(title))
     num_chars = 16 - 3  # 16 = line length, 3 for ending char sequence " | "
@@ -151,6 +159,8 @@ def print_trends(pauses_miliseconds, label=None, print_title=True):
     line += __string_const_chars(str(max_pause), num_chars) + " | "
     line += __string_const_chars(str(sum_pauses), num_chars) + " | "
     line += __string_const_chars(str(average_wait), num_chars) + " | "
+    if throughput:
+        line += __string_const_chars(str(throughput) + "%", num_chars) + " | "
     print(line)
 
 
