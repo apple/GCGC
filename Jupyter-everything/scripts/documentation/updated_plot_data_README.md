@@ -63,6 +63,8 @@ Ellis Brown. 6/16/2021
 > Compares trends of latency lists. Outputs an ASCII table.
 - `pauses_ms_lists` List of lists of pauses to analyze. Pauses in miliseconds
 - `labels` List of string labels to describe each pause list.
+- `lists_of_total_program_runtime` list of floats showing the total runtime for each of the pause lists to analyze (optional) Used to calculate throughput.
+- `lists_of_timestamps` lists of timestamps associated with each pause. (optional). Used to calculate throughput.
 
 > ### plot_pauses_line
 > Plots data on a line graph to compare latency over runtime.

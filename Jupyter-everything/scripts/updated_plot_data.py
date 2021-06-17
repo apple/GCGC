@@ -96,11 +96,11 @@ def print_percentiles(pauses_miliseconds=[], print_title=True, percentiles=None,
     if print_title:
         title = ""
         for p in percentiles:
-            title += __string_const_chars(str(p) + "%", 6) + " | "
+            title += __string_const_chars(str(p) + "%", 9) + " | "
         print("Percentiles| " + title + "\n" + "-" * (len(title) + 12))
     print(__string_const_chars(label, 10) + " | ", end="")
     for p in percentiles:
-        print(__string_const_chars(str(round(percentile_table[p], 3)), 6) + " | ", end="")
+        print(__string_const_chars(str(round(percentile_table[p], 3)) + " ms", 9) + " | ", end="")
     print("")
 
 
@@ -135,9 +135,10 @@ def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime
     average_wait = round(sum_pauses / len(pauses_miliseconds), 4)
     throughput = None
     if total_runtime_seconds:
-        throughput = ((total_runtime_seconds * 1000) - sum_pauses) / (total_runtime_seconds * 1000)
+        print(total_runtime_seconds)
+        throughput = round(((total_runtime_seconds * 1000) - sum_pauses) / (total_runtime_seconds * 1000), 4) * 100
     elif timestamps:
-        throughput = ((timestamps[-1] * 1000) - sum_pauses) / (timestamps[-1] * 1000)
+        throughput = round(((timestamps[-1] * 1000) - sum_pauses) / (timestamps[-1] * 1000), 4) * 100
 
     # Print title with formatting
     if print_title:
@@ -160,20 +161,31 @@ def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime
     line += __string_const_chars(str(sum_pauses), num_chars) + " | "
     line += __string_const_chars(str(average_wait), num_chars) + " | "
     if throughput:
-        line += __string_const_chars(str(throughput) + "%", num_chars) + " | "
+        line += __string_const_chars(str(round(throughput, 4)) + "%", num_chars) + " | "
     print(line)
 
 
 # Compares trends from a list of pauses lists
-def compare_trends(pauses_ms_lists, labels=None):
+def compare_trends(pauses_ms_lists, labels=None, lists_of_total_program_runtime=[], lists_of_timestamps=[]):
     if not pauses_ms_lists:
         print("No pauses_ms_lists in compare_trends.")
         return
     if not labels:
         labels = [str(i) for i in range(len(pauses_ms_lists))]
-    print_trends(pauses_ms_lists[0], labels[0], True)
-    for i in range(1, len(pauses_ms_lists)):
-        print_trends(pauses_ms_lists[i], labels[i], False)
+    # The second and third parameters are optionally lists. Pass them if the parameter exists , and decide between the two.
+    # Otherwise, pass none. Pass the first (index 0) with title TRUE, the rest in loop title FALSE.
+    if lists_of_total_program_runtime:
+        print_trends(pauses_ms_lists[0], labels[0], True, lists_of_total_program_runtime[0])
+        for i in range(1, len(pauses_ms_lists)):
+            print_trends(pauses_ms_lists[i], labels[i], False, lists_of_total_program_runtime[i])
+    elif lists_of_timestamps:
+        print_trends(pauses_ms_lists[0], labels[0], True, timestamps=lists_of_timestamps[0])
+        for i in range(1, len(pauses_ms_lists)):
+            print_trends(pauses_ms_lists[i], labels[i], False, timestamps=lists_of_timestamps[i])
+    else:
+        print_trends(pauses_ms_lists[0], labels[0], True)
+        for i in range(1, len(pauses_ms_lists)):
+            print_trends(pauses_ms_lists[i], labels[i], False)
 
 
 # Creates a string in exactly the specified numchars.
@@ -303,8 +315,9 @@ def __generic_plotting(xdata_list, ydata_list, axs=None, colors=[], labels=[], p
         print("xdata_lists: " + str(len(xdata_list)) + ", ydata_list: " + str(len(ydata_list)))
         return
     if len(xdata_list) != len(labels):
-        print("Length of timedata_lists and labels do not match.", end="")
+        print("Length of xdata_lists and labels do not match. ", end="")
         print("xdata_lists: " + str(len(xdata_list)) + ", labels: " + str(len(labels)))
+        print(labels)
         return
     if not colors:
         colors = []
@@ -332,8 +345,8 @@ def print_metadata(metadata_table, labels=None, column_width=14):
     for metadata in metadata_table:
         for section in metadata:
             categories[section[0]].append(section[1])
-    labels.insert(0, "Category")
-    __print_metadata_section(labels, column_width)
+    labels_new = ["Category"] + labels
+    __print_metadata_section(labels_new, column_width)
     for section in metadata_table[0]:
         __print_metadata_section(categories[section[0]], column_width)
 
