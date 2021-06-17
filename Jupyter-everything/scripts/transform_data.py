@@ -228,26 +228,44 @@ def get_heap_occupancy(dataframe):
     if dataframe.empty:
         print("Empty dataframe in get_heap_occupancy")
         return
-    memory_change = list(dataframe["MemoryChange"])
+    if "AdditionalNotes" in dataframe.columns:
+        memory_change = list(dataframe["AdditionalNotes"])
+    else:
+        memory_change = list(dataframe["MemoryChange"])
     before_gc = []
     after_gc = []
     max_heap = []
     unit = None
+    times = get_time_in_seconds(dataframe)
+    parsed_timestamps = []
+
     regex_pattern_memory = "(\d+)(\w+)->(\d+)\w+\((\d+)\w+\)"
     #   String parses things in this pattern: 1234M->123M(9999M)
     # Capture pattern 1: Before
     # Capture pattern 2: unit
     # Capture pattern 3: After
     # Capture pattern 4: Current maximum heap size (can change... lol)
-    for line in memory_change:
-        match = re.search(regex_pattern_memory, line)
-        if match:
-            before_gc.append(int(match.group(1)))
-            unit = match.group(2)
-            after_gc.append(int(match.group(3)))
-            max_heap.append(int(match.group(4)))
+    for idx in range(len(memory_change)):
+        if memory_change[idx]:
+            match = re.search(regex_pattern_memory, memory_change[idx])
+            if match:
+                before_gc.append(int(match.group(1)))
+                unit = match.group(2)
+                after_gc.append(int(match.group(3)))
+                max_heap.append(int(match.group(4)))
+                parsed_timestamps.append(times[idx])
 
-        else:
-            print("Warning: Unable to parse this line: " + line)
-            # final return value is the unit as a string
-    return before_gc, after_gc, max_heap, match.group(2)
+            else:
+                print("Warning: Unable to parse this memory_change[idx]: " + memory_change[idx])
+                # final return value is the unit as a string
+    return before_gc, after_gc, max_heap, unit, parsed_timestamps
+
+
+# TODO: documentation
+# Remove every other value from an array. The offset is either 1 or 0 to show if removing first or second value.
+def remove_every_other(arr, offset):
+    half_arr = []
+    for i in range(len(arr)):
+        if (i + offset) % 2:
+            half_arr.append(arr[i])
+    return half_arr

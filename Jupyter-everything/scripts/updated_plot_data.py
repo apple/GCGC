@@ -142,7 +142,7 @@ def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime
 
     # Print title with formatting
     if print_title:
-        title = " Trends       | "  # 16 characters
+        title = " Trends (ms)  | "  # 16 characters
         title += " Total Pauses | "
         title += " Max pause    | "
         title += " Sum pauses   | "
