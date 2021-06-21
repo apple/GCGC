@@ -83,8 +83,12 @@ def manyMatch_LineSearch(
 
 
 def trueString():
-    # return "^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?\[(\d+\.\d+\w+)\]\[(\w+ ?)\]\[gc\s*\] GC\(\d+\) ((?:Concurrent)|(?:Pause)) ((?:\w+ ?){1,3}) (\((?:\w+ ?){1,3}\) ){0,3}(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?(\d+\.\d+)ms"
-    return "^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?\[(\d+\.\d+\w+)\]\[(\w+ ?)\]\[gc(?:,\w+)?\s*\] GC\(\d+\) ((?:Concurrent)|(?:Pause)) ((?:\w+ ?){1,3}) (\((?:\w+ ?){1,3}\) ){0,3}(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?(\d+\.\d+)ms"
+    return "^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?\[(\d+\.\d+\w+)\]\[(\w+ ?)\]\[gc\s*\] GC\(\d+\) ((?:Concurrent)|(?:Pause)) ((?:\w+ ?){1,3}) (\((?:\w+ ?){1,3}\) ){0,3}(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?(\d+\.\d+)ms"
+
+
+# (\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?\[(\d+\.\d+\w)\]\[(\w+ ?)\]\[gc\s*\] GC\(\d+\) ((?:Concurrent)|(?:Pause)) ((?:\w+ ?){1,3}) (\((?:\w+ ?){1,3}\) ){0,3}(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?(\d+\.\d+)ms
+# with ?? : ^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])??\[(\d+?\.\d+?\w)\]\[(\w+ ?)\]\[gc(?:,\w+)??\s*?\] GC\(\d+\) ((?:Concurrent)|(?:Pause)) ((?:\w+ ?){1,3}) (\((?:\w+ ?){1,3}\) ){0,3}(\d+\w->\d+\w\(?\d+?\w?\)??){0,1} ?(\d+\.\d+)ms
+# return "^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?\[(\d+\.\d+\w+)\]\[(\w+ ?)\]\[gc(?:,\w+)?\s*\] GC\(\d+\) ((?:Concurrent)|(?:Pause)) ((?:\w+ ?){1,3}) (\((?:\w+ ?){1,3}\) ){0,3}(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?(\d+\.\d+)ms"
 
 
 import re
@@ -104,7 +108,12 @@ def main():
     #     print("\n\n")
     # print(getSearchRegex())
     print(len(table[0]))
-    # print("time: ", time.time() - startTime)
+    print("time: ", time.time() - startTime)
 
 
 main()
+#####
+"""THIS IS THE NEXT TO DO
+DEBUG THIS REGEX"""
+# Young (Normal) (G1 Evacuation Pause)
+# ^ ((?:\w+ ?){1,3}?) (\((?:\w+ ?){1,3}?\) ){0,3}?(\d+\w->\d+\w\(?\d+?\w?\)?){0,1}? ?(\d+\.\d+)ms
