@@ -238,8 +238,8 @@ def __group_and_plot(table, ax, color, label, bucket_count, mapping):
         return
 
  
-    timestamps_seconds = table["TimeFromStart"]                 
-    pauses_ms = table["PauseDuration"]
+    timestamps_seconds = table["TimeFromStart_seconds"]                 
+    pauses_ms = table["PauseDuration_miliseconds"]
 
     
     # plot data in full, without grouping into buckets

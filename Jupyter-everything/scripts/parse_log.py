@@ -9,7 +9,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 import re
-from numpy import NaN
+from numpy import NaN, number
 import pandas as pd 
 from scripts import g1version16 as g1f # g1format
 from scripts import shenandoah_p as shen #shenandoah regex
@@ -77,6 +77,8 @@ def __setGCType():
     file = open(path, "r")
     lines_read = 0
     
+    # Look through the first 100 log lines to find 
+    # what garbage collector being used
     while lines_read < 100:
         line = file.readline()
         if "Using G1" in line:
@@ -87,7 +89,20 @@ def __setGCType():
             return
         lines_read += 1
     
-    print("Warning: GC Type not set")
+    # if none found, use a more general search to look for used garbage collectors
+    # reopen the file to begin search from start.
+    lines_read = 0
+    file.close()
+    file = open(path, "r")
+    line = file.readline()
+    while lines_read < 100:
+        if "G1" in line:
+            gctype = "G1"
+            return
+        lines_read += 1
+    print("Warning: GC Type not set, defaulting to G1")
+    gctype = "G1"
+    return
 
 # gets the current log path
 def getLogPath():
@@ -104,19 +119,16 @@ def setLogSchema(logtype = 0):
 
 
 # #       -> getPauses
-# # Purpose: Returns a CSV style list of all pauses from the Young Generation
-# # Parameters : none
-# # Requirements: path must be set to the .log file we look to traverse.
-# # Return: List of tuples as pauses, with added metadata.
+# Purpose. Extract all "Stop the world" pauses during garbage collection
+# runtime, to find latency during runtime.
+# Requirements: global variable 'path' must be set.
 def getPauses(create_csv = False):
-    # Extract metadata and info from each line
+    # get the regex search terms to look for based on the garbage collector type
     search_term = []
     if gctype == "G1":
         search_term = [g1f.lineMetadata() + g1f.YoungPause(),
                        g1f.lineMetadata() + g1f.PauseRemark(),
                        g1f.lineMetadata() + g1f.PauseCleanup()]
-        
-
     elif gctype == "Shenandoah":
         search_term = shen.pauses()
         
@@ -134,25 +146,23 @@ def getPauses(create_csv = False):
         return []
     
     # Construct a pandas 2d table to hold returned information
-    cols = ["DateTime", "TimeFromStart", "TypeLogLine", "GcPhase", "MemoryChange", "PauseDuration", "PauseType"]
+    cols = ["DateTime", "TimeFromStart_seconds", "TypeLogLine", "GcPhase", "MemoryChange", "PauseDuration_miliseconds", "PauseType"]
     columns = {cols[i] : table[i] for i in range(len(cols))}
-    table = pd.DataFrame(columns)
+    table_df = pd.DataFrame(columns)
     
     # remove the ms / s terminology from the ending
-    # NOTE: it is important to remember that TimeFromStart is in seconds, while
-    # PauseTime is in ms
-    table["PauseDuration"] = table["PauseDuration"].map(__remove_non_numbers)
-    table["TimeFromStart"] = table["TimeFromStart"].map(__remove_non_numbers)
+    table_df["PauseDuration_miliseconds"] = table_df["PauseDuration_miliseconds"].map(__remove_non_numbers)
+    table_df["TimeFromStart_seconds"] = table_df["TimeFromStart_seconds"].map(__remove_non_numbers)
     
     # remove any possibly completly empty columns    
-    table.replace("", NaN, inplace=True)
-    table.dropna(how='all', axis=1, inplace=True)
+    table_df.replace("", NaN, inplace=True)
+    table_df.dropna(how='all', axis=1, inplace=True)
     
     
     if create_csv:
-        table.to_csv(__get_unique_filename("young_pauses.csv"))
+        table_df.to_csv(__get_unique_filename("young_pauses.csv"))
 
-    return table
+    return table_df, table
 
 ####
 # Purpose: Print the contents of a 'table' as a csv file
@@ -193,6 +203,7 @@ def __get_unique_filename(filename):
                 count = i
                 break
         filename = filename[0:count] + str(digits + 1)  + ".csv"
+        # make sure the new created filename is unique.
         filename = __get_unique_filename(filename)
     
     return filename
@@ -200,22 +211,8 @@ def __get_unique_filename(filename):
 
 # removes non number (and decimal point) chars.
 def __remove_non_numbers(string_with_number):
+    # regex string, remove anything thats not 0-9, or a "."
     return float(re.sub("[^0-9/.]", "", string_with_number))
-     
-# TODO: use? (is working correctly.)
-# TODO: CONFIRM OUTPUT. (seems to work) This feature is paused while I go over
-# code feedback
-def getConcurrentMarkPauses(create_csv = False):
-    match_terms = [g1f.lineMetadata() + g1f.PauseRemark(), 
-                   g1f.lineMetadata() + g1f.PauseCleanup()]
-    table = g1f.manyMatch_LineSearch(match_terms = match_terms,
-                                    num_match_groups = 5,
-                                    data = [],
-                                    filepath = path,
-                                    in_file = True)
-    if create_csv:
-        __create_csv(table, "Concurrent_mark_pauses.csv")
-    return table
 
 
 ## Returnns a list of all concurrent periods and their durations
@@ -240,15 +237,15 @@ def getConcurrentDurations(create_csv = False):
     
 #### NOTE:  this is curtrently the same as GetPauses(). Consider modularizing
     # Construct a pandas 2d table to hold returned information 
-    cols = ["DateTime", "TimeFromStart", "TypeLogLine", "GcPhase",
+    cols = ["DateTime", "TimeFromStart_seconds", "TypeLogLine", "GcPhase",
             "ConcurrentPhase", "AdditionalNotes", "MemoryChange",
-            "PauseDuration", "PauseType"]
+            "PauseDuration_miliseconds", "PauseType"]
     columns = {cols[i] : table[i] for i in range(len(cols))}
     table = pd.DataFrame(columns)
     # remove the ms / s terminology from the ending
-    # NOTE: it is important to remember that TimeFromStart is in seconds, while
+    # NOTE: it is important to remember that TimeFromStart_seconds is in seconds, while
     # PauseTime is in ms
-    table["TimeFromStart"] = table["TimeFromStart"].map(__remove_non_numbers)
+    table["TimeFromStart_seconds"] = table["TimeFromStart_seconds"].map(__remove_non_numbers)
     table["ConcurrentPhase"]
     
     # remove any possibly completly empty columns    
@@ -477,24 +474,17 @@ def __getHeapInitialState(create_csv):
 def getGCdataSections(create_csv = False):
     if create_csv == True:
         print("Creating this CSV is currently unimplemented")
-    # Helps focus search onto "non tag" regions of each log line
-    log_line_key = '\[*(.*)\]*\[\d+\.\d+\w+\]\[(.*)\[(.*)\](.*)'
-    gc_data_key = ".*GC\((\d+)\).*"
-    data_cards = {}
-    with open(path, "r") as file:
-        for line in file:
-            match_info = re.search(log_line_key, line)
-            # if found
-            if match_info:
-                non_tag_text = match_info.group(len(match_info.groups()))
-                m = re.search(gc_data_key, non_tag_text)
-                if m:
-                    key = m.group(len(m.groups()))
-                    if not key in data_cards:
-                        data_cards[key] = []
-                    data_cards[key].append(non_tag_text)
+    
 
-    return data_cards
+    search_term = g1f.fullLineInfo()
+    table = g1f.manyMatch_LineSearch(match_terms = [search_term],
+                                     num_match_groups = 6,
+                                     data =[],
+                                     filepath = path,
+                                     in_file = True)
+    table = table[:-1] # remove column of only zeros.
+    table_df = pd.DataFrame(table).transpose()
+    return table_df
 
 # Finds the last GC log timestamp. Uses that to find time in seconds from
 # start, and returns it as a float.
