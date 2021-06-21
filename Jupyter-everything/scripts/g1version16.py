@@ -476,7 +476,8 @@ def __sort_to_list(dictWords, keysOrder, search_titles):
     ordered = []
     if search_titles:
         for i in range(len(keysOrder)):
-            ordered.append([search_titles[i], dictWords[keysOrder[i]]])
+            if search_titles[i] in dictWords:
+                ordered.append([search_titles[i], dictWords[keysOrder[i]]])
     else:
         for key in keysOrder:
             ordered.append([key, dictWords[key]])

@@ -174,12 +174,17 @@ def getTotalProgramRuntime(logfile=None):
 def getGCMetadata(logfile="", create_csv=False):
     if not logfile:
         print("No logfile supplied to function getGCMetadata.")
+    # Limit the search to finding GC metadata only to the first 100 lines
+    data = []
+    with open(logfile, "r") as file:
+        for i in range(100):
+            data.append(file.readline())
     # columns = each metadata term
     table = g1f.singleMatch_LineSearch(
         match_terms=g1f.G1Metadata_searchable(),
         search_titles=g1f.G1Metadata_titles(),
-        filepath=logfile,
-        in_file=True,
+        data=data,
+        in_file=False,
     )
     if create_csv:
         __create_csv(table, "gc_metadata.csv")

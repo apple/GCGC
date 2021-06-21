@@ -269,3 +269,16 @@ def remove_every_other(arr, offset):
         if (i + offset) % 2:
             half_arr.append(arr[i])
     return half_arr
+
+
+# Removes all data from a log file after a specified timestamp
+def setMaxTime(df, maxtime):
+    times = get_time_in_seconds(df)
+    cutoff = -1
+    for i in range(len(times)):
+        if times[i] > maxtime:
+            cutoff = i
+            break
+    if cutoff != -1:
+        to_cut = [idx for idx in range(cutoff, len(times))]
+    df.drop(to_cut, inplace=True)
