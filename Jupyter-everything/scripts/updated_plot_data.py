@@ -23,7 +23,7 @@ def plot_pauses_bar(xdata=[], ydata=[], axs=None, color="", label="", optional=N
         g = random.random()
         color = (r, g, b)
 
-    axs.bar(x=xdata, height=ydata, color=color, label=label, width=2.0)
+    axs.bar(x=xdata, height=ydata, color=color, label=label, width=9.0)
     axs.set_ylabel("Pause duration (miliseconds)")
     axs.set_xlabel("Time from program start (seconds)")
     axs.set_title("Pauses during runtime in miliseconds, bar graph")
