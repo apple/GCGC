@@ -281,4 +281,4 @@ def setMaxTime(df, maxtime):
             break
     if cutoff != -1:
         to_cut = [idx for idx in range(cutoff, len(times))]
-    df.drop(to_cut, inplace=True)
+        df.drop(to_cut, inplace=True)

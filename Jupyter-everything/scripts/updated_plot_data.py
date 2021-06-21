@@ -26,7 +26,7 @@ def plot_pauses_bar(xdata=[], ydata=[], axs=None, color="", label="", optional=N
     axs.bar(x=xdata, height=ydata, color=color, label=label, width=2.0)
     axs.set_ylabel("Pause duration (miliseconds)")
     axs.set_xlabel("Time from program start (seconds)")
-    axs.set_title("Pauses during runtime")
+    axs.set_title("Pauses during runtime in miliseconds, bar graph")
     axs.legend()
 
 
@@ -47,7 +47,8 @@ def plot_pauses_scatter(xdata=[], ydata=[], axs=None, color="", label="", option
     axs.scatter(x=xdata, y=ydata, color=color, label=label)
     axs.set_ylabel("Pause duration (miliseconds)")
     axs.set_xlabel("Time from program start (seconds)")
-    axs.set_title("Pauses during runtime (scatter)")
+    axs.set_title("Pauses during runtime in miliseconds over time (scatter)")
+    axs.grid()
     axs.legend()
 
 
@@ -225,7 +226,7 @@ def plot_pauses_line(time_seconds=[], pauses_miliseconds=[], axs=None, color="",
     axs.plot(time_seconds, pauses_miliseconds, color=color, label=label)
     axs.set_ylabel("Pause duration (miliseconds)")
     axs.set_xlabel("Time from program start (seconds)")
-    axs.set_title("Pauses during runtime")
+    axs.set_title("Pauses in miliseconds during program runtime, line graph")
     axs.legend()
 
 
@@ -258,6 +259,7 @@ def plot_paused_and_running_line(
     y_data = []
     ###### Create X-Y Data. bumps for height based on pause duration #####
     if not const_bar_width:
+
         for x, y in zip(time_seconds, pauses_miliseconds):
             # convert y from ms to seconds
             y_scaled = y / 1000
@@ -266,10 +268,10 @@ def plot_paused_and_running_line(
             y_data.append(0)
             # next, create a point of y height, at that initial time
             x_data.append(x)
-            y_data.append(y)
+            y_data.append(y)  # CHANGED PLEASE FIX BACK TO 'y'
             # last point in pause duration high
             x_data.append(x + y_scaled)
-            y_data.append(y)
+            y_data.append(y)  # CHANGED PLEASE FIX BACK TO 'y'
             # end pause duration high
             x_data.append(x + y_scaled)
             y_data.append(0)
@@ -290,7 +292,7 @@ def plot_paused_and_running_line(
     axs.plot(x_data, y_data, color=color, label=label),
     axs.set_ylabel("Pause duration (miliseconds)")
     axs.set_xlabel("Time from program start (seconds)")
-    axs.set_title("Pauses during runtime")
+    axs.set_title("Pauses during runtime, running line graph")
     axs.legend()
 
 
