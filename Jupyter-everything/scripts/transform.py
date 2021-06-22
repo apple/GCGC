@@ -14,12 +14,13 @@ def get_combined_xy_pauses(dataframe, to_list=True):
     if dataframe.empty:
         print("Warning: Empty dataframe")
         return [], []
+    temp = dataframe.loc[dataframe["EventType"] == "Pause"]
     if to_list:
-        time_in_seconds = list(dataframe["TimeFromStart_seconds"])
-        pauses_in_ms = list(dataframe["PauseDuration_miliseconds"])
+        time_in_seconds = list(temp["TimeFromStart_seconds"])
+        pauses_in_ms = list(temp["Duration_miliseconds"])
     else:
-        time_in_seconds = dataframe["TimeFromStart_seconds"]
-        pauses_in_ms = dataframe["PauseDuration_miliseconds"]
+        time_in_seconds = temp["TimeFromStart_seconds"]
+        pauses_in_ms = temp["Duration_miliseconds"]
 
     return time_in_seconds, pauses_in_ms
 
@@ -33,7 +34,7 @@ def get_time_in_seconds(dataframe, to_list=True):
         return []
     else:
         if to_list:
-            return list(dataframe["TimeFromStart_seconds"])
+            return list(map(float, dataframe["TimeFromStart_seconds"]))
         return dataframe["TimeFromStart_seconds"]
 
 
@@ -42,8 +43,8 @@ def get_pauses_in_miliseconds(dataframe, to_list=True):
         return []
     else:
         if to_list:
-            return list(dataframe["PauseDuration_miliseconds"])
-        return dataframe["PauseDuration_miliseconds"]
+            return list(map(float, dataframe["Duration_miliseconds"]))
+        return dataframe["Duration_miliseconds"]
 
 
 # Group all pauses & time data into N evenly distributed buckets, based on time
@@ -282,3 +283,55 @@ def setMaxTime(df, maxtime):
     if cutoff != -1:
         to_cut = [idx for idx in range(cutoff, len(times))]
         df.drop(to_cut, inplace=True)
+
+
+""" [
+        "DateTime",
+        "TimeFromStart_seconds",
+        "EventType",
+        "EventName",
+        "AdditionalEventInfo",
+        "MemoryChange_MB",
+        "Duration_miliseconds",
+    ]
+    """
+
+########
+# Given a populated pandas dataframe, find all rows that specify
+# that they represent a concurrent pause, and return a modified dataframe.
+def getConcurrentData(parsed_dataframe):
+    concurrent = parsed_dataframe.loc[parsed_dataframe["EventType"] == "Concurrent"]
+    return concurrent
+
+
+def getPausesData(parsed_dataframe):
+    stoptheworld = parsed_dataframe.loc[parsed_dataframe["EventType"] == "Pause"]
+    return stoptheworld
+
+
+def seperatePausesConcurrent(parsed_dataframe):
+    return getPausesData(parsed_dataframe), getConcurrentData(parsed_dataframe)
+
+
+# QUESTION: Would it be nice to append "Concurrent" to each type of concurrent event? Not needed?
+def seperateEventName(dataframe):
+    # Step 1: Sort based on column names in alphabetical order
+    # Step 2: Traverse throuhgh the "EventName" column and find indicies where the event name switches
+    # Step 3: transform each range into its own dataframe
+    # Step 4: Return a list of dataframes.
+    sorted_data = dataframe.sort_values(["EventName"])
+    sorted_data = sorted_data.reset_index(drop=True)
+    previousname = ""
+    change_indicies = []
+    for index in range(len(sorted_data["EventName"])):
+        eventname = sorted_data["EventName"][index]
+        # print(index, eventname)
+        if previousname != eventname:
+            change_indicies.append(index)
+        previousname = eventname
+    change_indicies.append(len(sorted_data["EventName"]))
+    dfs = []
+    for index in range(len(change_indicies) - 1):
+        dfs.append(sorted_data.iloc[change_indicies[index] : change_indicies[index + 1]])
+
+    return dfs

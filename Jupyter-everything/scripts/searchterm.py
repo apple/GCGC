@@ -1,48 +1,5 @@
-## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ##                               lineMetadata
-#   Purpose:
-#       Parse an entire log line, and extract each and only the metadata
-#
-#   Return:
-#       A regex searchable string for this particular field
-#
-#   Regex Group Info
-#       1) DateTime information (if present)
-#       2) Time since program began (integer with a metric unit)
-#       3) Reason for log entry [info/debug/...]
-#       4) gc phase
-#
-##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def lineMetadata():
-    # return  '^\[*(.*)\]*\[(\d+\.\d+\w+)\]\[(.*)\]\[(.*)\].*\s*'
-    return "^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?\[(\d+\.\d+\w+)\]\[(\w+ ?)\]\[gc(\w+,?){0,2}\s*\] GC\(\d+\) "
-
-
-## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#                               searchActions
-#   Purpose:
-#       Parse an entire log line, and extract each and only the metadata
-#
-#   Return:
-#       A regex searchable string for this particular field
-#
-#   Regex Group Info
-#       1) Type of action: (concurrent or pause)
-#       2) Description of concurrent/pause. (Cleanup? Young GC?)
-#       3) Extra info on pause, if any.
-#       4) Starting size of region in MB
-#       5) Ending size of region in MB
-#       6) Heapsize remaining
-#       7) Time taken in miliseconds
-#
-##  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def searchActions():
-    # return "((?:Concurrent)|(?:Pause)) ((?:\w+ ?){1,3}) (\((?:\w+ ){1, 3}\) {0, 2})?(\d+\w->\d+\w\(?\d+?\w?\)?){0,1}(\((?:\w+ ?){0,2}\))? ?(\d+\.\d+)ms"
-    return "((?:Concurrent)|(?:Pause)) ((?:\w+ ?){1,3}) (\((?:\w+ ?){1,3}\) ){0,3}(\((?:\w+ ){1, 3}\) {0, 2})?(\d+\w->\d+\w\(?\d+?\w?\)?){0,1}(\((?:\w+ ?){0,2}\))? ?(\d+\.\d+)ms"
-
-
-def getSearchRegex():
-    return lineMetadata() + searchActions()
-
+import pandas as pd
+import re
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                         manyMatch_LineSearch
@@ -82,38 +39,27 @@ def manyMatch_LineSearch(
     return table
 
 
-def trueString():
-    return "^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?\[(\d+\.\d+\w+)\]\[(\w+ ?)\]\[gc\s*\] GC\(\d+\) ((?:Concurrent)|(?:Pause)) ((?:\w+ ?){1,3}) (\((?:\w+ ?){1,3}\) ){0,3}(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?(\d+\.\d+)ms"
+def loglineKey():
+    return "^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?\[(\d+\.\d+)s\]\[\w+ ?\]\[gc\s*\] GC\(\d+\) ((?:Pause)|(?:Concurrent)) ((?:\w+ ?){1,3}) (\((?:\w+ ?){1,3}\) ){0,3}(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?(\d+\.\d+)ms"
 
 
-# (\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?\[(\d+\.\d+\w)\]\[(\w+ ?)\]\[gc\s*\] GC\(\d+\) ((?:Concurrent)|(?:Pause)) ((?:\w+ ?){1,3}) (\((?:\w+ ?){1,3}\) ){0,3}(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?(\d+\.\d+)ms
-# with ?? : ^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])??\[(\d+?\.\d+?\w)\]\[(\w+ ?)\]\[gc(?:,\w+)??\s*?\] GC\(\d+\) ((?:Concurrent)|(?:Pause)) ((?:\w+ ?){1,3}) (\((?:\w+ ?){1,3}\) ){0,3}(\d+\w->\d+\w\(?\d+?\w?\)??){0,1} ?(\d+\.\d+)ms
-# return "^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?\[(\d+\.\d+\w+)\]\[(\w+ ?)\]\[gc(?:,\w+)?\s*\] GC\(\d+\) ((?:Concurrent)|(?:Pause)) ((?:\w+ ?){1,3}) (\((?:\w+ ?){1,3}\) ){0,3}(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?(\d+\.\d+)ms"
+def columnNames():
+    return [
+        "DateTime",
+        "TimeFromStart_seconds",
+        "EventType",
+        "EventName",
+        "AdditionalEventInfo",
+        "MemoryChange_MB",
+        "Duration_miliseconds",
+    ]
 
 
-import re
-import time
-
-
-def main():
-    startTime = time.time()
-    filename = "/Users/ellisbrown/Desktop/Project/datasets/demo_data/demo_g1_limited.log"
-    # filename = "/Users/ellisbrown/Desktop/Project/datasets/gc.log"
-    # print("/.../" + filename[43:])
-    table = manyMatch_LineSearch(trueString(), filename)
-    # for idx in range(len(table)):
-    #     print("Idx:", idx)
-    #     print("")
-    #     print(table[idx])
-    #     print("\n\n")
-    # print(getSearchRegex())
-    print(len(table[0]))
-    print("time: ", time.time() - startTime)
-
-
-main()
-#####
-"""THIS IS THE NEXT TO DO
-DEBUG THIS REGEX"""
-# Young (Normal) (G1 Evacuation Pause)
-# ^ ((?:\w+ ?){1,3}?) (\((?:\w+ ?){1,3}?\) ){0,3}?(\d+\w->\d+\w\(?\d+?\w?\)?){0,1}? ?(\d+\.\d+)ms
+def getParsedData(logfile):
+    if not logfile:
+        print("No logfile provided")
+        return
+    table = manyMatch_LineSearch(loglineKey(), logfile)
+    df = pd.DataFrame(table).transpose()
+    df.columns = columnNames()
+    return df
