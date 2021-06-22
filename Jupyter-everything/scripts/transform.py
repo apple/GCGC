@@ -11,22 +11,7 @@ import re
 # Access a Pandas dataframe constructed through parse_data.py with labeled columns.
 # Return the timestamps and pauses as a list
 def get_combined_xy_pauses(dataframe, to_list=True):
-    if dataframe.empty:
-        print("Warning: Empty dataframe")
-        return [], []
-    temp = dataframe.loc[dataframe["EventType"] == "Pause"]
-    if to_list:
-        time_in_seconds = list(temp["TimeFromStart_seconds"])
-        pauses_in_ms = list(temp["Duration_miliseconds"])
-    else:
-        time_in_seconds = temp["TimeFromStart_seconds"]
-        pauses_in_ms = temp["Duration_miliseconds"]
-
-    return time_in_seconds, pauses_in_ms
-
-
-def remove_last_character(line):
-    return line[:-1]
+    return get_time_in_seconds(dataframe), get_pauses_in_miliseconds(dataframe)
 
 
 def get_time_in_seconds(dataframe, to_list=True):
@@ -61,7 +46,7 @@ def get_sum_pauses_n_duration(timestamps, pausedata, duration):
     return __put_into_buckets(timestamps, pausedata, duration, num_buckets, sum)
 
 
-# Get the max pause in a specified duration, such that there are n buckets
+# Group all data based on event time into buckets, such that each bucket has the same duration
 def get_max_pauses_n_buckets(timestamps, pausedata, num_buckets):
     max_time = timestamps[-1]
     duration = max_time / num_buckets

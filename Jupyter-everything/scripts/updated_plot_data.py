@@ -5,6 +5,7 @@ import random
 import numpy as np
 from scripts import make_heatmap as mh
 
+
 # Set the size of the figures that appear in the Jupyter notebook
 plt.rcParams["figure.figsize"] = [12, 7]
 
