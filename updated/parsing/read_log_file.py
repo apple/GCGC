@@ -27,6 +27,9 @@ def getParsedData(logfile):
         print("No logfile provided")
         return
     table = __manyMatch_LineSearch(event_parsing_string(), logfile)
+    if not any(table):
+        print("Unable to parse file " + str(logfile))
+        return None
     parsed_data_table = pd.DataFrame(table).transpose()  # transpose to orient correctly
     parsed_data_table.columns = __columnNames()  # add column titles, allow for clear references
     return parsed_data_table
@@ -60,6 +63,7 @@ def __manyMatch_LineSearch(
             for i in range(0, num_match_groups):
                 table[i].append(match.group(i + 1))  # +1 because group(0) is the whole string
             # add the match group number hit, so able to tell what match
+    file.close()
     return table
 
 
@@ -78,6 +82,8 @@ def __columnNames():
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                       event_parsing_string
+#
 # Returns a regex-searchable string to handle parsing log lines.
 # Defined regex groups are each section of the code
 #
@@ -93,17 +99,16 @@ def __columnNames():
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def event_parsing_string():
     # Implementation note: Be aware that spaces within the strings are intentional.
-    datetime = "^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?"
-    timefromstart = "\[(\d+\.\d+)s\]"
-    outputlevel = "\[\w+ ?\]"
-    phase = "\[gc\s*\]"  # NOTE: this does NOT accept anything but gc level outputs
-    log_number = " GC\(\d+\) "
-    event_type = "((?:Pause)|(?:Concurrent)) "
-    event_name = "((?:\w+ ?){1,3}) "
-    additional_event_info = "(\((?:\w+ ?){1,3}\) ){0,3}"
-    memory_change = "(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?"
-    event_duration_ms = "(\d+\.\d+)ms"
-
+    datetime = "^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?"  # [2020-11-16T14:54:16.414+0000]
+    timefromstart = "\[(\d+\.\d+)s\]"  #                                 [123.321s]
+    outputlevel = "\[\w+ ?\]"  #                                         [info]
+    phase = "\[gc\s*\]"  # NOTE: this does NOT accept anything but 'gc' level outputs
+    log_number = " GC\(\d+\) "  #                                        GC(123)
+    event_type = "((?:Pause)|(?:Concurrent)) "  #                        Pause
+    event_name = "((?:\w+ ?){1,3}) "  #                                  Young
+    additional_event_info = "(\((?:\w+ ?){1,3}\) ){0,3}"  #             (Evacuation Pause) (Normal)
+    memory_change = "(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?"  #              500M->212M(1200M)
+    event_duration_ms = "(\d+\.\d+)ms"  #                                200.31ms
     return (
         datetime
         + timefromstart
