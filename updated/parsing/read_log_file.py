@@ -22,7 +22,7 @@ import re
 #   collect information on each event, such as when it occured, how long it lasted, and the name
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def getParsedData(logfile):
-    assert isinstance(logfile, str)
+    assert isinstance(logfile, str)  # input must be a string
     if not logfile:
         print("No logfile provided")
         return
@@ -99,7 +99,7 @@ def __columnNames():
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def event_parsing_string():
     # Implementation note: Be aware that spaces within the strings are intentional.
-    datetime = "^(\[\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4}\])?"  # [2020-11-16T14:54:16.414+0000]
+    datetime = "^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?"  # [2020-11-16T14:54:16.414+0000]
     timefromstart = "\[(\d+\.\d+)s\]"  #                                 [123.321s]
     outputlevel = "\[\w+ ?\]"  #                                         [info]
     phase = "\[gc\s*\]"  # NOTE: this does NOT accept anything but 'gc' level outputs
