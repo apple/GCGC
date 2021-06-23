@@ -3,7 +3,10 @@ from os import times
 import matplotlib.pyplot as plt
 import random
 import numpy as np
+import sys
 
+sys.path.append("/Users/ellisbrown/Desktop/Project/updated/src/")
+import transform
 
 # Set the size of the figures that appear in the Jupyter notebook
 plt.rcParams["figure.figsize"] = [12, 7]
@@ -28,6 +31,29 @@ plt.rcParams["figure.figsize"] = [12, 7]
 #     axs.set_xlabel("Time from program start (seconds)")
 #     axs.set_title("Pauses during runtime in miliseconds, bar graph")
 #     axs.legend()
+def compare_eventtypes_pie(database_table):
+    fig, axs = plt.subplots()
+    pauses_time, concurr_time = transform.compare_eventtype_time(database_table)  # get the ratios of pause time
+    axs.axis("equal")  # center axis
+    axs.set_title("Comparison of Event Types")  # set the title
+    axs = axs.pie([pauses_time, concurr_time], labels=["STW Pauses", "Concurrent Time"])
+    return axs
+
+
+def compare_eventtypes_bar(database_table):  # TODO FIX
+    fig1, axs = plt.subplots()
+    pauses_time, concurr_time = transform.compare_eventtype_time(database_table)  # get the ratios of pause time
+    pauses_time = pauses_time / 1000
+    concurr_time = concurr_time / 1000
+    #  Plot using a bar graph.
+    bars = ["STW Pauses", "Concurrent Time"]
+    bars = ["A", "B"]
+    heights = [pauses_time, concurr_time]
+    axs.bar(bars, heights)
+    axs.set_ylabel("Total pause time in seconds")
+    axs.set_title("Comparison of event types")
+    axs.set_xlabel("Types of events")
+    return axs
 
 
 def plot_pauses_scatter(xdata=[], ydata=[], axs=None, color="", label="", optional=None):

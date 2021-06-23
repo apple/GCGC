@@ -49,6 +49,15 @@ def get_event_table_labels(event_tables):
     return labels
 
 
+def compare_eventtype_time(event_table):
+    concurrent = getConcurrentData(event_table)
+    concurrent_total_time = sum(get_event_durations_in_miliseconds(concurrent))
+
+    stw = getPausesData(event_table)
+    stw_total_time = sum(get_event_durations_in_miliseconds(stw))
+    return stw_total_time, concurrent_total_time
+
+
 ########
 # Given a populated pandas database_table, find all rows that specify
 # that they represent a concurrent pause, and return a modified database_table.
