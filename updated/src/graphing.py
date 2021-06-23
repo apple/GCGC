@@ -160,6 +160,7 @@ def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime
     max_pause = round(max(pauses_miliseconds, key=lambda i: float(i)), 4)
     sum_pauses = round(sum(float(i) for i in pauses_miliseconds), 4)
     average_wait = round(sum_pauses / len(pauses_miliseconds), 4)
+    std_deviation = round(np.std(pauses_miliseconds), 4)
     throughput = None
     if total_runtime_seconds:
         print(total_runtime_seconds)
@@ -169,16 +170,17 @@ def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime
 
     # Print title with formatting
     if print_title:
-        title = " Trends (ms)  | "  # 16 characters
-        title += " Total Pauses | "
-        title += " Max pause    | "
-        title += " Sum pauses   | "
-        title += " Mean pauses  | "
+        title = " Trends (ms) | "  # 16 characters
+        title += " Total Pauses| "
+        title += " Max pause   | "
+        title += " Sum pauses  | "
+        title += " Mean pauses | "
+        title += " Std Dev.    |"
         if throughput:
             title += " Throughput   |"
         print(title)
         print("-" * len(title))
-    num_chars = 16 - 3  # 16 = line length, 3 for ending char sequence " | "
+    num_chars = 16 - 4  # 16 = line length, 3 for ending char sequence " | "
     if not label:
         label = "Run:"
     # print with correct formatting the values
@@ -187,6 +189,7 @@ def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime
     line += __string_const_chars(str(max_pause), num_chars) + " | "
     line += __string_const_chars(str(sum_pauses), num_chars) + " | "
     line += __string_const_chars(str(average_wait), num_chars) + " | "
+    line += __string_const_chars(str(std_deviation), num_chars) + " | "
     if throughput:
         line += __string_const_chars(str(round(throughput, 4)) + "%", num_chars) + " | "
     print(line)

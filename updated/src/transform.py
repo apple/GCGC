@@ -41,12 +41,15 @@ def get_times_and_durations_from_event_lists(event_tables):
     return xdatas_list, ydatas_list
 
 
-def get_event_table_labels(event_tables):
-    labels = [
-        event_tables[i]["EventType"].iloc[0] + " " + event_tables[i]["EventName"].iloc[0]
-        for i in range(len(event_tables))
-    ]
-    return labels
+def get_event_table_labels(event_tables, eventtype=True):
+
+    if eventtype:
+        return [
+            event_tables[i]["EventType"].iloc[0] + " " + event_tables[i]["EventName"].iloc[0]
+            for i in range(len(event_tables))
+        ]
+    else:
+        return [event_tables[i]["EventName"].iloc[0] for i in range(len(event_tables))]
 
 
 def compare_eventtype_time(event_table):
