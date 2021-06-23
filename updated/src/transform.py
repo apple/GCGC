@@ -10,7 +10,7 @@ import re
 
 # Access a Pandas database_table constructed through parse_data.py with labeled columns.
 # Return the timestamps and pauses as a list
-def get_combined_xy_pauses(database_table):
+def get_time_and_event_durations(database_table):
     return get_time_in_seconds(database_table), get_event_durations_in_miliseconds(database_table)
 
 
@@ -28,7 +28,25 @@ def get_time_in_seconds(database_table):
         return list(map(float, database_table["TimeFromStart_seconds"]))
 
 
-#
+# Given a list of tables,
+# Extract the event timestamp and event durations from each
+# And return a list of lists of all event timestamps, and all event durations
+def get_times_and_durations_from_event_lists(event_tables):
+    xdatas_list = []
+    ydatas_list = []
+    for event_table in event_tables:
+        xdata, ydata = get_time_and_event_durations(event_table)
+        xdatas_list.append(xdata)
+        ydatas_list.append(ydata)
+    return xdatas_list, ydatas_list
+
+
+def get_event_table_labels(event_tables):
+    labels = [
+        event_tables[i]["EventType"].iloc[0] + " " + event_tables[i]["EventName"].iloc[0]
+        for i in range(len(event_tables))
+    ]
+    return labels
 
 
 ########
@@ -49,7 +67,7 @@ def seperatePausesConcurrent(database_table):
 
 
 # QUESTION: Would it be nice to append "Concurrent" to each type of concurrent event? Not needed?
-def seperateEventName(database_table):
+def seperate_by_event_name(database_table):
     # Step 1: Sort based on column names in alphabetical order
     # Step 2: Traverse throuhgh the "EventName" column and find indicies where the event name switches
     # Step 3: transform each range into its own database_table
