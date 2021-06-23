@@ -2,13 +2,12 @@
 
 # defines functions to parse and extract information from a specified log file
 # Ellis Brown, June 2021
-
 import pandas as pd
 import re
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#                               getParsedData
+#                               get_parsed_data_from_file
 #
 # Purpose:
 #   Given a filepath to a log file, create a pandas dataframe holding all information
@@ -21,12 +20,12 @@ import re
 #   a pandas dataframe, where rows are each an individual event. Columns are labeled, and
 #   collect information on each event, such as when it occured, how long it lasted, and the name
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def getParsedData(logfile):
+def get_parsed_data_from_file(logfile):
     assert isinstance(logfile, str)  # input must be a string
     if not logfile:
         print("No logfile provided")
         return
-    table = __manyMatch_LineSearch(event_parsing_string(), logfile)
+    table = __manyMatch_LineSearch(__event_parsing_string(), logfile)
     if not any(table):
         print("Unable to parse file " + str(logfile))
         return None
@@ -82,7 +81,7 @@ def __columnNames():
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#                       event_parsing_string
+#                       __event_parsing_string
 #
 # Returns a regex-searchable string to handle parsing log lines.
 # Defined regex groups are each section of the code
@@ -97,7 +96,7 @@ def __columnNames():
 #
 #  Return: string
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def event_parsing_string():
+def __event_parsing_string():
     # Implementation note: Be aware that spaces within the strings are intentional.
     datetime = "^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?"  # [2020-11-16T14:54:16.414+0000]
     timefromstart = "\[(\d+\.\d+)s\]"  #                                 [123.321s]
@@ -106,7 +105,7 @@ def event_parsing_string():
     log_number = " GC\(\d+\) "  #                                        GC(123)
     event_type = "((?:Pause)|(?:Concurrent)) "  #                        Pause
     event_name = "((?:\w+ ?){1,3}) "  #                                  Young
-    additional_event_info = "(\((?:\w+ ?){1,3}\) ){0,3}"  #             (Evacuation Pause) (Normal)
+    additional_event_info = "((?:\((?:\w+ ?){1,3}\) ){0,3})"  #             (Evacuation Pause) (Normal)
     memory_change = "(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?"  #              500M->212M(1200M)
     event_duration_ms = "(\d+\.\d+)ms"  #                                200.31ms
     return (
@@ -121,3 +120,5 @@ def event_parsing_string():
         + memory_change
         + event_duration_ms
     )
+    # For reference, here is the final string returned
+    # ^(?:\[(\d{4}-\d\\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\]\[\w+ ?\]\[gc\s*\] GC\(\d+\) ((?:Pause)|(?:Concurrent)) ((?:\w+ ?){1,3}) ((?:\((?:\w+ ?){1,3}\) ){0,3})(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?(\d+\.\d+)ms
