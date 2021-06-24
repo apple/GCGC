@@ -313,7 +313,7 @@ def get_pauses_data(parsed_dataframe):
     return stoptheworld
 
 
-def seperatePausesConcurrent(parsed_dataframe):
+def seperate_pauses_concurrent(parsed_dataframe):
     return get_pauses_data(parsed_dataframe), get_concurrent_data(parsed_dataframe)
 
 

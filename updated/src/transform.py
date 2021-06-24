@@ -119,7 +119,7 @@ def compare_eventtype_time_sums(database_table):
 def get_concurrent_data(database_table):
     assert isinstance(database_table, pd.DataFrame)
     if database_table.empty:
-        print("Empty database table in get_concurrent_data")
+        print("Warning: Empty database table in get_concurrent_data")
         return None
     concurrent = database_table.loc[database_table["EventType"] == "Concurrent"]
     return concurrent
@@ -132,18 +132,24 @@ def get_concurrent_data(database_table):
 #
 def get_pauses_data(database_table):
     assert isinstance(database_table, pd.DataFrame)
+    if database_table.empty:
+        print("Warning: Empty database table in get_pauses_data")
+        return None
     stoptheworld = database_table.loc[database_table["EventType"] == "Pause"]
     return stoptheworld
 
 
-#   seperatePausesConcurrent
+#   seperate_pauses_concurrent
 #
 #   From a complete database_table, seperate the table into two
 #   tables, one for all pause events, and the second for all concurrent events
 #   Note: the original table is not modified.
 #
-def seperatePausesConcurrent(database_table):
+def seperate_pauses_concurrent(database_table):
     assert isinstance(database_table, pd.DataFrame)
+    if database_table.empty:
+        print("Warning: Empty database table in seperate_pauses_concurrent")
+        return None
     return get_pauses_data(database_table), get_concurrent_data(database_table)
 
 
@@ -155,6 +161,9 @@ def seperatePausesConcurrent(database_table):
 #
 def seperate_by_event_name(database_table):
     assert isinstance(database_table, pd.DataFrame)
+    if database_table.empty:
+        print("Warning: Empty database table in seperate_by_event_name")
+        return None
     # Step 1: Sort based on column names in alphabetical order
     # Step 2: Traverse throuhgh the "EventName" column and find indicies where the event name switches
     # Step 3: transform each range into its own database_table
@@ -187,8 +196,8 @@ def seperate_by_event_name(database_table):
 def get_heap_occupancy(database_table):
     assert isinstance(database_table, pd.DataFrame)
     if database_table.empty:
-        print("Empty database_table in get_heap_occupancy")
-        return
+        print("Warning: Empty database_table in get_heap_occupancy")
+        return None
     memory_change = list(database_table["MemoryChange_MB"])
     before_gc = []
     after_gc = []
@@ -223,6 +232,9 @@ def get_heap_occupancy(database_table):
 #
 def get_reclaimed_mb_over_time(database_table):
     assert isinstance(database_table, pd.DataFrame)
+    if database_table.empty:
+        print("Warning: Empty database_table in get_reclaimed_mb_over_time")
+        return [], []
     before_gc, after_gc, max_heap, parsed_timestamps = get_heap_occupancy(database_table)
     relcaimed_bytes = [before - after for before, after in zip(before_gc, after_gc)]
     return relcaimed_bytes, parsed_timestamps
@@ -234,6 +246,15 @@ def get_reclaimed_mb_over_time(database_table):
 #   bucket_size_ms, and return a frequency list from that information.
 #
 def group_into_pause_buckets(stw_table, bucket_size_ms):
+    assert isinstance(stw_table, pd.DataFrame)
+    assert (type(bucket_size_ms) == int) or (type(bucket_size_ms) == float)
+    if stw_table.empty:
+        print("Warning: Empty table in group_into_pause_buckets.")
+        return None
+    if bucket_size_ms <= 0:
+        print("Warning: Bucket_size_ms is equal to zero. Please use a positive number.")
+        return None
+
     pauses = get_event_durations_in_miliseconds(stw_table)
     max_pause = max(pauses)
     interval_bucket_count = max_pause / bucket_size_ms + 1
@@ -252,16 +273,31 @@ def group_into_pause_buckets(stw_table, bucket_size_ms):
 #   the 2d array represents the frequencies of latency events, based on the specified dimensions.
 def get_heatmap_data(
     event_table,  # database_table of events. Typically only pause events
-    x_bucket_count=20,  # Number of time intervals to group gc events into
-    y_bucket_count=20,  # Number of latency time intervals to group events into
+    x_bucket_count=20,  # Number of time intervals to group gc events into. INT ONLY
+    y_bucket_count=20,  # Number of latency time intervals to group events into. INT ONLY
     x_bucket_duration=100,  # Duration in seconds that each time interval bucket has for gc event timestamps
     y_bucket_duration=10,  # Duration in miliseconds for the length of each latency interval bucket
     suppress_warnings=False,  # If True, warnings about values lying outside of dimension range will not be printed.
 ):
     assert isinstance(event_table, pd.DataFrame)
     if event_table.empty:
+        print("Warning: Empty table in get_heatmap_data.")
+        return None, None
+    for x in [x_bucket_count, y_bucket_count]:
+        assert type(x) == int, "Warning: x_bucket_count and y_bucket_count must be integers"
+
+    for x in [x_bucket_duration, y_bucket_duration]:
+        assert (
+            type(x) == int or type(x) == float
+        ), "Warning: x_bucket_duration and y_bucket_duration must be floats or integers"
+    for x in [x_bucket_count, y_bucket_count, x_bucket_duration, y_bucket_duration]:
+        if x <= 0:
+            print("Warning: All dimensions must be greater than zero.")
+            return None, None
+
+    if event_table.empty:
         print("Empty event_table in get_heatmap_data")
-        return
+        return None, None
     times_seconds, pauses_ms = get_time_and_event_durations(event_table)
 
     # create buckets to store the time information.
