@@ -387,6 +387,8 @@ def manyMatch_LineSearch(
     # If there has been listed groups of interest within the regex search
 
     for line in data:
+        if "OutOfMemoryError" in line:
+            return table
         for idx in range(len(match_terms)):
             match = re.search(match_terms[idx], line)
             if match:

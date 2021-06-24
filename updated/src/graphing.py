@@ -50,6 +50,7 @@ def compare_eventtypes_bar(database_table):  # TODO FIX
     bars = ["A", "B"]
     heights = [pauses_time, concurr_time]
     axs.bar(bars, heights)
+    axs.grid()
     axs.set_ylabel("Total pause time in seconds")
     axs.set_title("Comparison of event types")
     axs.set_xlabel("Types of events")
@@ -127,7 +128,7 @@ def print_percentiles(pauses_miliseconds=[], print_title=True, percentiles=None,
         print("Percentiles| " + title + "\n" + "-" * (len(title) + 12))
     print(__string_const_chars(label, 10) + " | ", end="")
     for p in percentiles:
-        print(__string_const_chars(str(round(percentile_table[p], 3)) + " ms", 9) + " | ", end="")
+        print(__string_const_chars(str(round(percentile_table[p], 2)) + " ms", 9) + " | ", end="")
     print("")
 
 
@@ -318,7 +319,8 @@ def plot_paused_and_running_line(
             x_data.append(x + pt_uniform)
             y_data.append(0)
 
-    axs.plot(x_data, y_data, color=color, label=label),
+    axs.plot(x_data, y_data, color=color, label=label)
+    axs.grid()
     axs.set_ylabel("Pause duration (miliseconds)")
     axs.set_xlabel("Time from program start (seconds)")
     axs.set_title("Pauses during runtime, running line graph")

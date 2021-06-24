@@ -11,6 +11,7 @@ import re
 # Access a Pandas database_table constructed through parse_data.py with labeled columns.
 # Return the timestamps and pauses as a list
 def get_time_and_event_durations(database_table):
+    assert isinstance(database_table, pd.DataFrame)
     return get_time_in_seconds(database_table), get_event_durations_in_miliseconds(database_table)
 
 
