@@ -170,21 +170,21 @@ def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime
 
     # Print title with formatting
     if print_title:
-        title = " Trends (ms) | "  # 16 characters
-        title += " Total Pauses| "
-        title += " Max pause   | "
-        title += " Sum pauses  | "
-        title += " Mean pauses | "
-        title += " Std Dev.    |"
+        title = " Trends (ms)      | "  # 17 + 3 characters
+        title += " Event Count| "
+        title += " Max pause  | "
+        title += " Sum pauses | "
+        title += " Mean pauses| "
+        title += " Std Dev.   |"
         if throughput:
             title += " Throughput   |"
         print(title)
         print("-" * len(title))
-    num_chars = 16 - 4  # 16 = line length, 3 for ending char sequence " | "
+    num_chars = 15 - 4  # 16 = line length, 3 for ending char sequence " | "
     if not label:
         label = "Run:"
     # print with correct formatting the values
-    line = __string_const_chars(label, num_chars) + " | "
+    line = __string_const_chars(label, 17) + " | "
     line += __string_const_chars(str(len(pauses_miliseconds)), num_chars) + " | "
     line += __string_const_chars(str(max_pause), num_chars) + " | "
     line += __string_const_chars(str(sum_pauses), num_chars) + " | "
@@ -363,8 +363,11 @@ def __generic_plotting(xdata_list, ydata_list, axs=None, colors=[], labels=[], p
     return axs
 
 
-# def plot_heatmap(heatmap, dimensions, labels=True):
-#     return mh.plot_heatmap(heatmap, dimensions, labels)
+from src import make_heatmap_temporary as mh
+
+
+def plot_heatmap(heatmap, dimensions, labels=True):
+    return mh.plot_heatmap(heatmap, dimensions, labels)
 
 
 # def print_metadata(metadata_table, labels=None, column_width=14):
@@ -399,3 +402,90 @@ def __generic_plotting(xdata_list, ydata_list, axs=None, colors=[], labels=[], p
 #             line += __string_const_chars(value[num_chars:], num_chars) + "|"
 #     print(line)
 #     print(len(line) * "-")
+
+
+def plot_heap_occupancy(
+    timedata_seconds=[],
+    memorydata=[],
+    memorydata_unit="MB",
+    heapsize=1,
+    heapsize_unit="GB",
+    axs=None,
+    color=None,
+    label=None,
+    plot_max=True,
+):
+    max_heap_size = __get_standardized_unit_size(heapsize, heapsize_unit)
+    for i in range(len(memorydata)):
+        memorydata[i] = __get_standardized_unit_size(memorydata[i], memorydata_unit)
+    if not axs:
+        f, axs = plt.subplots()
+    if not color:
+        color = (random.random(), random.random(), random.random())
+    if not label:
+        label = "Current heap usage"
+    axs.plot(timedata_seconds, memorydata, color=color, label=label)
+    # Plot the maximum heap size during runtime.
+    if plot_max:
+        x = [0, timedata_seconds[-1]]
+        y = [max_heap_size, max_heap_size]
+        axs.plot(x, y, color="k", label="Maximum heap size")
+    axs.set_ylabel("Heap space in Megabytes (MB)")
+    axs.set_xlabel("Time in seconds during program runtime")
+    axs.set_title("Heap space used during runtime")
+    axs.legend()
+    return axs
+
+
+# Plots how much of the heap is used, as a percentage of the maximum heap size
+def plot_heap_occupancy_percentage(
+    timedata_seconds=[],
+    memorydata=[],
+    memorydata_unit="MB",
+    heapsize=1,
+    heapsize_unit="GB",
+    axs=None,
+    color=None,
+    label=None,
+    plot_max=True,
+):
+    max_heap_size = __get_standardized_unit_size(heapsize, heapsize_unit)
+    for i in range(len(memorydata)):
+        memorydata[i] = __get_standardized_unit_size(memorydata[i], memorydata_unit)
+    if not axs:
+        f, axs = plt.subplots()
+    if not color:
+        color = (random.random(), random.random(), random.random())
+    if not label:
+        label = "Current heap usage"
+    # Transform the data from a number to percentage.
+    for i in range(len(memorydata)):
+        memorydata[i] = memorydata[i] / max_heap_size * 100
+    axs.plot(timedata_seconds, memorydata, color=color, label=label)
+    # Plot the maximum heap size during runtime.
+    if plot_max:
+        x = [0, timedata_seconds[-1]]
+        y = [100, 100]
+        axs.plot(x, y, color="k", label=("100% : " + str(heapsize) + heapsize_unit))
+    axs.set_ylabel("Percentage of heap filled")
+    axs.set_xlabel("Time in seconds during program runtime")
+    axs.set_title("Percentage of heap space used during runtime")
+    axs.legend()
+    return axs
+
+
+def __get_standardized_unit_size(value, unit):
+    # We will convert everything to MB
+
+    if unit == "M":
+        return value
+    if unit == "G":
+        return value * 1000
+    if unit == "MB":
+        return value
+    if unit == "GB":
+        return value * 1000
+    if unit == "KB":
+        return value / 1000
+    print('Warning: Unkown unit "' + unit + '"')
+    return value

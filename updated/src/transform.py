@@ -217,120 +217,122 @@ def seperate_by_event_name(database_table):
 
 
 # # Make a heatmap from given parameters. Recommended: Use default or change default for ALL runs.
-# def get_heatmap_data(
-#     table,
-#     x_bucket_count=20,
-#     y_bucket_count=20,
-#     x_bucket_duration=100,
-#     y_bucket_duration=10,
-#     suppress_warnings=False,
-# ):
+def get_heatmap_data(
+    table,
+    x_bucket_count=20,
+    y_bucket_count=20,
+    x_bucket_duration=100,
+    y_bucket_duration=10,
+    suppress_warnings=False,
+):
 
-#     if table.empty:
-#         print("Empty table in get_heatmap_data")
-#         return
-#     times_seconds, pauses_ms = get_combined_xy_pauses(table)
+    if table.empty:
+        print("Empty table in get_heatmap_data")
+        return
+    times_seconds, pauses_ms = get_time_and_event_durations(table)
 
-#     # create buckets to store the time information.
-#     # first, compress into num_b buckets along the time X-axis.
-#     x_b = [[] for i in range(x_bucket_count)]
+    # create buckets to store the time information.
+    # first, compress into num_b buckets along the time X-axis.
+    x_b = [[] for i in range(x_bucket_count)]
 
-#     # populate buckets along the x axis.
-#     for pause, time in zip(pauses_ms, times_seconds):
-#         bucket_no = int(time / x_bucket_duration)
-#         if not suppress_warnings:
-#             if bucket_no >= (x_bucket_count + 1):
+    # populate buckets along the x axis.
+    for pause, time in zip(pauses_ms, times_seconds):
+        bucket_no = int(time / x_bucket_duration)
+        if not suppress_warnings:
+            if bucket_no >= (x_bucket_count + 1):
 
-#                 print(
-#                     "Warning: Time recorded lies outside of specified time range: "
-#                     + str(time)
-#                     + " > "
-#                     + str(x_bucket_count * x_bucket_duration)
-#                 )
-#         if bucket_no >= x_bucket_count:
-#             bucket_no = x_bucket_count - 1
-#         x_b[bucket_no].append(pause)
+                print(
+                    "Warning: Time recorded lies outside of specified time range: "
+                    + str(time)
+                    + " > "
+                    + str(x_bucket_count * x_bucket_duration)
+                )
+        if bucket_no >= x_bucket_count:
+            bucket_no = x_bucket_count - 1
+        x_b[bucket_no].append(pause)
 
-#     max_pause_ms = max(pauses_ms)
-#     min_pause_ms = min(pauses_ms)
-#     # create heatmap, which will be a 2d-array
-#     heatmap = []
+    # create heatmap, which will be a 2d-array
+    heatmap = []
 
-#     # go through each time interval, and sort the pauses there into frequency lists
-#     for bucket in x_b:
-#         yb = [0 for i in range(y_bucket_count)]  # construct a 0 frequency list
-#         for time in bucket:
-#             # determine which ms pause bucket
-#             y_bucket_no = int(time / y_bucket_duration)
-#             if not suppress_warnings:
-#                 if y_bucket_no >= y_bucket_count + 1:
-#                     print(
-#                         "Warning: Value for latency lies outside of range: "
-#                         + str(time)
-#                         + " > "
-#                         + str(y_bucket_count * y_bucket_duration)
-#                         + " ms"
-#                     )
+    # go through each time interval, and sort the pauses there into frequency lists
+    for bucket in x_b:
+        yb = [0 for i in range(y_bucket_count)]  # construct a 0 frequency list
+        for time in bucket:
+            # determine which ms pause bucket
+            y_bucket_no = int(time / y_bucket_duration)
+            if not suppress_warnings:
+                if y_bucket_no >= y_bucket_count + 1:
+                    print(
+                        "Warning: Value for latency lies outside of range: "
+                        + str(time)
+                        + " > "
+                        + str(y_bucket_count * y_bucket_duration)
+                        + " ms"
+                    )
 
-#             if y_bucket_no >= y_bucket_count:
-#                 y_bucket_no = y_bucket_count - 1
+            if y_bucket_no >= y_bucket_count:
+                y_bucket_no = y_bucket_count - 1
 
-#             # increase the frequency of that pause in this time interval
-#             yb[y_bucket_no] += 1
+            # increase the frequency of that pause in this time interval
+            yb[y_bucket_no] += 1
 
-#         # Add the data to the 2d array
-#         heatmap.append(yb)
-#     heatmap = np.rot90(heatmap)  # fix orientation
-#     return np.array(heatmap), [
-#         x_bucket_count,
-#         y_bucket_count,
-#         x_bucket_duration,
-#         y_bucket_duration,
-#     ]
+        # Add the data to the 2d array
+        heatmap.append(yb)
+    heatmap = np.rot90(heatmap)  # fix orientation
+    return np.array(heatmap), [
+        x_bucket_count,
+        y_bucket_count,
+        x_bucket_duration,
+        y_bucket_duration,
+    ]
 
 
-# def get_heap_occupancy(database_table):
-#     if database_table.empty:
-#         print("Empty database_table in get_heap_occupancy")
-#         return
-#     if "AdditionalNotes" in database_table.columns:
-#         memory_change = list(database_table["AdditionalNotes"])
-#     else:
-#         memory_change = list(database_table["MemoryChange"])
-#     before_gc = []
-#     after_gc = []
-#     max_heap = []
-#     unit = None
-#     times = get_time_in_seconds(database_table)
-#     parsed_timestamps = []
+# get the heap occupancy over runtime as a result of particular phases
+def get_heap_occupancy(database_table):
+    if database_table.empty:
+        print("Empty database_table in get_heap_occupancy")
+        return
+    memory_change = list(database_table["MemoryChange_MB"])
+    before_gc = []
+    after_gc = []
+    max_heap = []
+    parsed_timestamps = []
+    times = get_time_in_seconds(database_table)
+    regex_pattern_memory = "(\d+)\w+->(\d+)\w+\((\d+)\w+\)"
+    #   String parses things in this pattern: 1234M->123M(9999M)
+    # Capture pattern 1: Before
+    # Capture pattern 2: After
+    # Capture pattern 3: Current maximum heap size (can change... lol)
+    for idx in range(len(memory_change)):
+        if memory_change[idx]:
+            match = re.search(regex_pattern_memory, memory_change[idx])
+            if match:
+                before_gc.append(int(match.group(1)))
+                after_gc.append(int(match.group(2)))
+                max_heap.append(int(match.group(3)))
+                parsed_timestamps.append(times[idx])
 
-#     regex_pattern_memory = "(\d+)(\w+)->(\d+)\w+\((\d+)\w+\)"
-#     #   String parses things in this pattern: 1234M->123M(9999M)
-#     # Capture pattern 1: Before
-#     # Capture pattern 2: unit
-#     # Capture pattern 3: After
-#     # Capture pattern 4: Current maximum heap size (can change... lol)
-#     for idx in range(len(memory_change)):
-#         if memory_change[idx]:
-#             match = re.search(regex_pattern_memory, memory_change[idx])
-#             if match:
-#                 before_gc.append(int(match.group(1)))
-#                 unit = match.group(2)
-#                 after_gc.append(int(match.group(3)))
-#                 max_heap.append(int(match.group(4)))
-#                 parsed_timestamps.append(times[idx])
-
-#             else:
-#                 print("Warning: Unable to parse this memory_change[idx]: " + memory_change[idx])
-#                 # final return value is the unit as a string
-#     return before_gc, after_gc, max_heap, unit, parsed_timestamps
+            else:
+                print("Warning: Unable to parse this memory_change[idx]: " + memory_change[idx])
+                # final return value is the unit as a string
+    return before_gc, after_gc, max_heap, parsed_timestamps
 
 
-# # TODO: documentation
-# # Remove every other value from an array. The offset is either 1 or 0 to show if removing first or second value.
-# def remove_every_other(arr, offset):
-#     half_arr = []
-#     for i in range(len(arr)):
-#         if (i + offset) % 2:
-#             half_arr.append(arr[i])
-#     return half_arr
+#  See how much memory is free'd per phase of the gc
+def get_reclaimed_mb_over_time(database_table):
+    before_gc, after_gc, max_heap, parsed_timestamps = get_heap_occupancy(database_table)
+    relcaimed_bytes = [before - after for before, after in zip(before_gc, after_gc)]
+    return relcaimed_bytes, parsed_timestamps
+
+
+def group_into_pause_buckets(stw_table, bucket_size_ms):
+    pauses = get_event_durations_in_miliseconds(stw_table)
+    max_pause = max(pauses)
+    interval_bucket_count = max_pause / bucket_size_ms + 1
+    frequencies = [0 for i in range(int(interval_bucket_count))]
+    for pause in pauses:
+        idx = int(pause / bucket_size_ms)
+        if idx >= interval_bucket_count:
+            print("Error: idx is >= interval_bucket_count, transform.py line 336")
+        frequencies[idx] += 1
+    return frequencies
