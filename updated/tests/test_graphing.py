@@ -1,10 +1,11 @@
+from numpy import select
 import pandas
 import unittest as utest
 from io import StringIO
 from unittest.mock import patch
 import sys
 
-# How to test file: python3 -m unittest -v test_read_log_file.py
+# How to test file: python3 -m unittest -v test_graphing.py
 
 sys.path.append("/Users/ellisbrown/Desktop/Project/updated/src/")
 import transform
@@ -80,6 +81,102 @@ class Test_get_time_in_seconds(utest.TestCase):
     def test_empty_case(self):
         a = transform.get_time_in_seconds(pandas.DataFrame())
         self.assertEqual(a, [])
+
+
+class Test_get_times_and_durations_from_event_lists(utest.TestCase):
+    def test_correct_parameters(self):
+        self.assertRaises(AssertionError, transform.get_times_and_durations_from_event_lists, 0)
+        self.assertRaises(AssertionError, transform.get_times_and_durations_from_event_lists, 100)
+        self.assertRaises(AssertionError, transform.get_times_and_durations_from_event_lists, {})
+        self.assertRaises(AssertionError, transform.get_times_and_durations_from_event_lists, {"Hello": "World"})
+        self.assertRaises(AssertionError, transform.get_times_and_durations_from_event_lists, [200, "Yes!"])
+        self.assertRaises(AssertionError, transform.get_times_and_durations_from_event_lists, "String")
+        self.assertRaises(AssertionError, transform.get_times_and_durations_from_event_lists, [[], []])
+
+    def test_non_empty_case(self):
+        data = get_parsed_data_from_file(small_log)
+        pauses, concurrent = transform.seperatePausesConcurrent(data)
+        a, b = transform.get_times_and_durations_from_event_lists([pauses, concurrent])
+        self.assertNotEqual(a, [])
+        self.assertNotEqual(b, [])
+
+    def test_empty_case(self):
+        with patch("sys.stdout", new=StringIO()) as fake_out:
+            a, b = transform.get_times_and_durations_from_event_lists([])
+            self.assertEqual(fake_out.getvalue(), "Error: event_tables empty\n")
+            self.assertEqual(a, [])
+            self.assertEqual(b, [])
+
+
+class Test_get_event_table_labels(utest.TestCase):
+    def test_correct_parameters(self):
+        self.assertRaises(AssertionError, transform.get_event_table_labels, 0)
+        self.assertRaises(AssertionError, transform.get_event_table_labels, 100)
+        self.assertRaises(AssertionError, transform.get_event_table_labels, {})
+        self.assertRaises(AssertionError, transform.get_event_table_labels, {"Hello": "World"})
+        self.assertRaises(AssertionError, transform.get_event_table_labels, [200, "Yes!"])
+        self.assertRaises(AssertionError, transform.get_event_table_labels, "String")
+        self.assertRaises(AssertionError, transform.get_event_table_labels, [[], []])
+
+    def test_empty_case(self):
+        with patch("sys.stdout", new=StringIO()) as fake_out:
+            result = transform.get_event_table_labels([], True)
+            self.assertEqual(None, result)
+            self.assertEqual(fake_out.getvalue(), "Error: event_tables empty\n")
+
+    def test_non_empty_case(self):
+        data = get_parsed_data_from_file(small_log)
+        stw, con = transform.seperatePausesConcurrent(data)
+        result = transform.get_event_table_labels([stw])
+        self.assertNotEqual(result, [])
+        self.assertEqual(result[0], "Pause Young")
+        result = transform.get_event_table_labels([stw], False)
+        self.assertNotEqual(result, [])
+        self.assertEqual(result[0], "Young")
+
+        with patch("sys.stdout", new=StringIO()) as fake_out:
+            data = get_parsed_data_from_file(small_log)
+            stw, con = transform.seperatePausesConcurrent(data)
+            result = transform.get_event_table_labels([stw, con])
+            self.assertEqual(result, [])
+            self.assertEqual(fake_out.getvalue(), "Error: Empty table in event_table, unable to assign it a label\n")
+
+
+class Test_compare_eventtype_time_sums(utest.TestCase):
+    def test_correct_parameters(self):
+        self.assertRaises(AssertionError, transform.compare_eventtype_time_sums, 0)
+        self.assertRaises(AssertionError, transform.compare_eventtype_time_sums, 100)
+        self.assertRaises(AssertionError, transform.compare_eventtype_time_sums, {})
+        self.assertRaises(AssertionError, transform.compare_eventtype_time_sums, {"Hello": "World"})
+        self.assertRaises(AssertionError, transform.compare_eventtype_time_sums, [200, "Yes!"])
+        self.assertRaises(AssertionError, transform.compare_eventtype_time_sums, "String")
+        self.assertRaises(AssertionError, transform.compare_eventtype_time_sums, [[], []])
+
+    def test_empty_case(self):
+        with patch("sys.stdout", new=StringIO()) as fake_out:
+            result = transform.compare_eventtype_time_sums(pandas.DataFrame())
+            self.assertEqual(result, (0, 0))
+            self.assertEqual(fake_out.getvalue(), "Error: Database_table is empty\n")
+
+    def test_non_empty_case(self):
+        data = get_parsed_data_from_file(small_log)
+        a, b = transform.compare_eventtype_time_sums(data)
+        self.assertNotEqual(a, 0)  # there are young pauses
+        self.assertEqual(b, 0)  # there are no concurrent periods in the dataset.
+
+
+class Test_get_concurrent_data(utest.TestCase):
+    def test_correct_parameters(self):
+        self.assertRaises(AssertionError, transform.get_concurrent_data, 0)
+        self.assertRaises(AssertionError, transform.get_concurrent_data, 100)
+        self.assertRaises(AssertionError, transform.get_concurrent_data, {})
+        self.assertRaises(AssertionError, transform.get_concurrent_data, {"Hello": "World"})
+        self.assertRaises(AssertionError, transform.get_concurrent_data, [200, "Yes!"])
+        self.assertRaises(AssertionError, transform.get_concurrent_data, "String")
+        self.assertRaises(AssertionError, transform.get_concurrent_data, [[], []])
+    
+    def test_empty_case(self):
+        
 
 
 if __name__ == "__main__":

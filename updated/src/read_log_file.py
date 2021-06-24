@@ -31,7 +31,6 @@ def get_parsed_data_from_file(logfile):
         return None
     parsed_data_table = pd.DataFrame(table).transpose()  # transpose to orient correctly
     parsed_data_table.columns = __columnNames()  # add column titles, allow for clear references
-    print("Successfully got parsed data from file")
     return parsed_data_table
 
 

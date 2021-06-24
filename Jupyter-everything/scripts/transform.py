@@ -303,18 +303,18 @@ def setMaxTime(df, maxtime):
 ########
 # Given a populated pandas dataframe, find all rows that specify
 # that they represent a concurrent pause, and return a modified dataframe.
-def getConcurrentData(parsed_dataframe):
+def get_concurrent_data(parsed_dataframe):
     concurrent = parsed_dataframe.loc[parsed_dataframe["EventType"] == "Concurrent"]
     return concurrent
 
 
-def getPausesData(parsed_dataframe):
+def get_pauses_data(parsed_dataframe):
     stoptheworld = parsed_dataframe.loc[parsed_dataframe["EventType"] == "Pause"]
     return stoptheworld
 
 
 def seperatePausesConcurrent(parsed_dataframe):
-    return getPausesData(parsed_dataframe), getConcurrentData(parsed_dataframe)
+    return get_pauses_data(parsed_dataframe), get_concurrent_data(parsed_dataframe)
 
 
 # QUESTION: Would it be nice to append "Concurrent" to each type of concurrent event? Not needed?

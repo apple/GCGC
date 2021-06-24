@@ -33,7 +33,7 @@ plt.rcParams["figure.figsize"] = [12, 7]
 #     axs.legend()
 def compare_eventtypes_pie(database_table):
     fig, axs = plt.subplots()
-    pauses_time, concurr_time = transform.compare_eventtype_time(database_table)  # get the ratios of pause time
+    pauses_time, concurr_time = transform.compare_eventtype_time_sums(database_table)  # get the ratios of pause time
     axs.axis("equal")  # center axis
     axs.set_title("Comparison of Event Types")  # set the title
     axs = axs.pie([pauses_time, concurr_time], labels=["STW Pauses", "Concurrent Time"])
@@ -42,7 +42,7 @@ def compare_eventtypes_pie(database_table):
 
 def compare_eventtypes_bar(database_table):  # TODO FIX
     fig1, axs = plt.subplots()
-    pauses_time, concurr_time = transform.compare_eventtype_time(database_table)  # get the ratios of pause time
+    pauses_time, concurr_time = transform.compare_eventtype_time_sums(database_table)  # get the ratios of pause time
     pauses_time = pauses_time / 1000
     concurr_time = concurr_time / 1000
     #  Plot using a bar graph.

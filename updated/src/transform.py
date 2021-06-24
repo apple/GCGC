@@ -15,24 +15,46 @@ def get_time_and_event_durations(database_table):
     return get_time_in_seconds(database_table), get_event_durations_in_miliseconds(database_table)
 
 
+#       get_event_durations_in_miliseconds
+#
+#   Given a pandas dataframe table populated with parsed log information,
+#   extract all 'event durations' from the Duration_miliseconds column, and
+#   return them as a list of floats.
+#
 def get_event_durations_in_miliseconds(database_table):
+    assert isinstance(database_table, pd.DataFrame)
     if database_table.empty:
         return []
     else:
         return list(map(float, database_table["Duration_miliseconds"]))
 
 
+#       get_time_in_seconds
+#
+#   Given a pandas dataframe table populated with parsed information, exact only
+#   the time since program start timestamps, and return them as a list of floats
+#
 def get_time_in_seconds(database_table):
+    assert isinstance(database_table, pd.DataFrame)
     if database_table.empty:
         return []
     else:
         return list(map(float, database_table["TimeFromStart_seconds"]))
 
 
-# Given a list of tables,
-# Extract the event timestamp and event durations from each
-# And return a list of lists of all event timestamps, and all event durations
+#    get_times_and_durations_from_event_lists
+#
+#   Given a list of tables, extract the event timestamp and event durations from each
+#   and return 2 lists, one being a list containing lists of floats, corresponding to
+#   timestamps, and the second being a list of floats corresponding to event durations
+#
 def get_times_and_durations_from_event_lists(event_tables):
+    assert isinstance(event_tables, list)
+    if not event_tables:
+        print("Error: event_tables empty")
+        return [], []
+    for table in event_tables:
+        assert isinstance(table, pd.DataFrame)
     xdatas_list = []
     ydatas_list = []
     for event_table in event_tables:
@@ -42,8 +64,25 @@ def get_times_and_durations_from_event_lists(event_tables):
     return xdatas_list, ydatas_list
 
 
+#       get_event_table_labels
+#
+#   From a list of event_tables, gather the name of the
+#   event type and event name and return that as a label,
+#   one label corresponding to each event_table. If eventtype
+#   is true, then the eventtype is part of the returned label.
+#
 def get_event_table_labels(event_tables, eventtype=True):
-
+    # assert the correct parameter types
+    assert isinstance(event_tables, list)
+    if not event_tables:
+        print("Error: event_tables empty")
+        return None
+    for table in event_tables:
+        assert isinstance(table, pd.DataFrame)
+        if table.empty:
+            print("Error: Empty table in event_table, unable to assign it a label")
+            return []
+    # return the labels
     if eventtype:
         return [
             event_tables[i]["EventType"].iloc[0] + " " + event_tables[i]["EventName"].iloc[0]
@@ -53,34 +92,69 @@ def get_event_table_labels(event_tables, eventtype=True):
         return [event_tables[i]["EventName"].iloc[0] for i in range(len(event_tables))]
 
 
-def compare_eventtype_time(event_table):
-    concurrent = getConcurrentData(event_table)
+#       compare_eventtype_time_sums
+#
+#   Gathers from a complete database_table the set of
+#   Stop The World pause durations, and concurrent durations,
+#   and returns the sum of each, as a pair of floats.
+#
+def compare_eventtype_time_sums(database_table):
+    assert isinstance(database_table, pd.DataFrame)
+    if database_table.empty:
+        print("Error: Database_table is empty")
+        return 0, 0
+    concurrent = get_concurrent_data(database_table)
     concurrent_total_time = sum(get_event_durations_in_miliseconds(concurrent))
 
-    stw = getPausesData(event_table)
+    stw = get_pauses_data(database_table)
     stw_total_time = sum(get_event_durations_in_miliseconds(stw))
     return stw_total_time, concurrent_total_time
 
 
-########
-# Given a populated pandas database_table, find all rows that specify
-# that they represent a concurrent pause, and return a modified database_table.
-def getConcurrentData(database_table):
+#   get_concurrent_data
+#
+#   From a complete database_table, return the table rows that represent
+#   a concurrent event.
+#
+def get_concurrent_data(database_table):
+    assert isinstance(database_table, pd.DataFrame)
+    if database_table.empty:
+        print("Empty database table in get_concurrent_data")
+        return None
     concurrent = database_table.loc[database_table["EventType"] == "Concurrent"]
     return concurrent
 
 
-def getPausesData(database_table):
+#   getPauseData
+#
+#   From a complete database_table, return the table rows that
+#   represent all STW pause events.
+#
+def get_pauses_data(database_table):
+    assert isinstance(database_table, pd.DataFrame)
     stoptheworld = database_table.loc[database_table["EventType"] == "Pause"]
     return stoptheworld
 
 
+#   seperatePausesConcurrent
+#
+#   From a complete database_table, seperate the table into two
+#   tables, one for all pause events, and the second for all concurrent events
+#   Note: the original table is not modified.
+#
 def seperatePausesConcurrent(database_table):
-    return getPausesData(database_table), getConcurrentData(database_table)
+    assert isinstance(database_table, pd.DataFrame)
+    return get_pauses_data(database_table), get_concurrent_data(database_table)
 
 
-# QUESTION: Would it be nice to append "Concurrent" to each type of concurrent event? Not needed?
+#   seperate_by_event_name
+#
+#   Given a database_table with some number of rows, return a list
+#   of tables sorted based on alphanetical order by EventName. Each index in
+#   the returned list is a table, all of whose rows share the same EventName
+#
 def seperate_by_event_name(database_table):
+    assert isinstance(database_table, pd.DataFrame)
     # Step 1: Sort based on column names in alphabetical order
     # Step 2: Traverse throuhgh the "EventName" column and find indicies where the event name switches
     # Step 3: transform each range into its own database_table
@@ -103,134 +177,92 @@ def seperate_by_event_name(database_table):
     return list_of_tables
 
 
-# # Group all pauses & time data into N evenly distributed buckets, based on time
-# def get_sum_pauses_n_buckets(timestamps, pausedata, num_buckets):
-#     max_time = timestamps[-1]
-#     duration = max_time / num_buckets
-#     return __put_into_buckets(timestamps, pausedata, duration, num_buckets, sum)
-
-
-# # Group all pasue & time data into some number of buckets with a given bucket duration
-# def get_sum_pauses_n_duration(timestamps, pausedata, duration):
-#     max_time = timestamps[-1]
-#     num_buckets = max_time / duration
-#     return __put_into_buckets(timestamps, pausedata, duration, num_buckets, sum)
-
-
-# # Group all data based on event time into buckets, such that each bucket has the same duration
-# def get_max_pauses_n_buckets(timestamps, pausedata, num_buckets):
-#     max_time = timestamps[-1]
-#     duration = max_time / num_buckets
-#     return __put_into_buckets(timestamps, pausedata, duration, num_buckets, max)
-
-
-# # Get the max pauses over buckets of n duration length
-# def get_max_pauses_n_duration(timestamps, pausedata, duration):
-#     max_time = timestamps[-1]
-#     num_buckets = max_time / duration
-#     return __put_into_buckets(timestamps, pausedata, duration, num_buckets, max)
-
-
-# def __put_into_buckets(timestamps, pausedata, duration, num_buckets, grouping_method):
-#     num_buckets = math.ceil(num_buckets)
-
-#     buckets = [[] for i in range(num_buckets)]
-#     times = [duration * i for i in range(1, num_buckets + 1)]
-
-#     # First, sort all values into buckets based on the timestamp.
-#     for time, pause in zip(timestamps, pausedata):
-#         index_of_bucket = int(time / duration)
-#         if index_of_bucket >= num_buckets:
-#             index_of_bucket = num_buckets - 1
-#         buckets[index_of_bucket].append(pause)
-
-#     for idx in range(len(buckets)):
-#         if buckets[idx]:
-#             buckets[idx] = grouping_method(buckets[idx])
-#         else:  # untested else case. TODO.
-#             buckets[idx] = 0
-
-#     return times, buckets
-
-# Given lists of multiple pauses / stops, compare the runtime of the data.
-# def compare_max_pauses_n_duration(xdata_lists, ydata_lists, duration):
-#     xdata_bucketed_lists = []
-#     ydata_bucketed_lists = []
-#     for i in range(len(xdata_lists)):
-#         xdata, ydata = SOMEFUNCTIONGOESHERE(xdata_lists[i], ydata_lists[i], duration)
-#         xdata_bucketed_lists.append(xdata)
-#         ydata_bucketed_lists.append(ydata)
-#     return xdata_bucketed_lists, ydata_bucketed_lists
-
-# def compare_max_pauses_n_buckets(xdata_lists, ydata_lists, num_buckets):
-#     # Get the correct duration for a bucket to be applied to all data
-#     max_pause = 0
-#     for datalist in xdata_lists:
-#         max_p = max(datalist)
-#         max_pause = max(max_p, max_pause)
-#     duration = math.ceil(max_pause / num_buckets)
-#     # Gather the data using a constant duration and return
-#     xdata_bucketed_lists = []
-#     ydata_bucketed_lists = []
-#     for i in range(len(xdata_lists)):
-#         xdata, ydata = SOMEFUNCTIONGOESHERE(xdata_lists[i], ydata_lists[i], duration)
-#         xdata_bucketed_lists.append(xdata)
-#         ydata_bucketed_lists.append(ydata)
-#     return xdata_bucketed_lists, ydata_bucketed_lists
-
-
-# def compare_sum_pauses_n_duration(xdata_lists, ydata_lists, duration):
-#     xdata_bucketed_lists = []
-#     ydata_bucketed_lists = []
-#     for i in range(len(xdata_lists)):
-#         xdata, ydata = SOMEFUNCTIONGOESHERE(xdata_lists[i], ydata_lists[i], duration)
-#         xdata_bucketed_lists.append(xdata)
-#         ydata_bucketed_lists.append(ydata)
-#     return xdata_bucketed_lists, ydata_bucketed_lists
-
-# # Removes all data from a log file after a specified timestamp
-# def setMaxTime(df, maxtime):
-#     times = get_time_in_seconds(df)
-#     cutoff = -1
-#     for i in range(len(times)):
-#         if times[i] > maxtime:
-#             cutoff = i
-#             break
-#     if cutoff != -1:
-#         to_cut = [idx for idx in range(cutoff, len(times))]
-#         df.drop(to_cut, inplace=True)
-
-# def compare_sum_pauses_n_buckets(xdata_lists, ydata_lists, num_buckets):
-#     # Get the correct duration for a bucket to be applied to all data
-#     max_pause = 0
-#     for datalist in xdata_lists:
-#         max_p = max(datalist)
-#         max_pause = max(max_p, max_pause)
-#     duration = math.ceil(max_pause / num_buckets)
-#     # Gather the data using a constant duration and return
-#     xdata_bucketed_lists = []
-#     ydata_bucketed_lists = []
-#     for i in range(len(xdata_lists)):
-#         xdata, ydata = SOMEFUNCTIONGOESHERE(xdata_lists[i], ydata_lists[i], duration)
-#         xdata_bucketed_lists.append(xdata)
-#         ydata_bucketed_lists.append(ydata)
-#     return xdata_bucketed_lists, ydata_bucketed_lists
-
-
-# # Make a heatmap from given parameters. Recommended: Use default or change default for ALL runs.
-def get_heatmap_data(
-    table,
-    x_bucket_count=20,
-    y_bucket_count=20,
-    x_bucket_duration=100,
-    y_bucket_duration=10,
-    suppress_warnings=False,
-):
-
-    if table.empty:
-        print("Empty table in get_heatmap_data")
+#       get_heap_occupancy
+#
+#   From a database table, return all associated information about heap
+#   occupancy before and after each event, if reported. Because not all
+#   events change heap occupancy (free/used memory), this also returns
+#   a lists of floats corresponding to the times where the memory did change
+#
+def get_heap_occupancy(database_table):
+    assert isinstance(database_table, pd.DataFrame)
+    if database_table.empty:
+        print("Empty database_table in get_heap_occupancy")
         return
-    times_seconds, pauses_ms = get_time_and_event_durations(table)
+    memory_change = list(database_table["MemoryChange_MB"])
+    before_gc = []
+    after_gc = []
+    max_heap = []
+    parsed_timestamps = []
+    times = get_time_in_seconds(database_table)
+    regex_pattern_memory = "(\d+)\w+->(\d+)\w+\((\d+)\w+\)"
+    # String parses things in this pattern: 1234M->123M(9999M)
+    # Capture pattern 1: Before
+    # Capture pattern 2: After
+    # Capture pattern 3: Current maximum heap size (can change... lol)
+    for idx in range(len(memory_change)):
+        if memory_change[idx]:
+            match = re.search(regex_pattern_memory, memory_change[idx])
+            if match:
+                before_gc.append(int(match.group(1)))
+                after_gc.append(int(match.group(2)))
+                max_heap.append(int(match.group(3)))
+                parsed_timestamps.append(times[idx])
+
+            else:
+                print("Warning: Unable to parse this memory_change[idx]: " + memory_change[idx])
+                # final return value is the unit as a string
+    return before_gc, after_gc, max_heap, parsed_timestamps
+
+
+#       get_reclaimed_mb_over_time
+#
+#  Given a database table, find the change in total memory allocated after each event,
+#   to find the total reclaimed bytes. Because not all events reclaim bytes, report the times
+#   where they do change. Both lists returned contain floats.
+#
+def get_reclaimed_mb_over_time(database_table):
+    assert isinstance(database_table, pd.DataFrame)
+    before_gc, after_gc, max_heap, parsed_timestamps = get_heap_occupancy(database_table)
+    relcaimed_bytes = [before - after for before, after in zip(before_gc, after_gc)]
+    return relcaimed_bytes, parsed_timestamps
+
+
+#       group_into_pause_buckets
+#
+#   Given a table containing events, place the events into time intervals of size
+#   bucket_size_ms, and return a frequency list from that information.
+#
+def group_into_pause_buckets(stw_table, bucket_size_ms):
+    pauses = get_event_durations_in_miliseconds(stw_table)
+    max_pause = max(pauses)
+    interval_bucket_count = max_pause / bucket_size_ms + 1
+    frequencies = [0 for i in range(int(interval_bucket_count))]
+    for pause in pauses:
+        idx = int(pause / bucket_size_ms)
+        if idx >= interval_bucket_count:
+            print("Error: idx is >= interval_bucket_count, transform.py line 336")
+        frequencies[idx] += 1
+    return frequencies
+
+
+#       get_heatmap_data
+#
+#   Create a 2d numpy array, and dimensions list associated with a event_table, such that
+#   the 2d array represents the frequencies of latency events, based on the specified dimensions.
+def get_heatmap_data(
+    event_table,  # database_table of events. Typically only pause events
+    x_bucket_count=20,  # Number of time intervals to group gc events into
+    y_bucket_count=20,  # Number of latency time intervals to group events into
+    x_bucket_duration=100,  # Duration in seconds that each time interval bucket has for gc event timestamps
+    y_bucket_duration=10,  # Duration in miliseconds for the length of each latency interval bucket
+    suppress_warnings=False,  # If True, warnings about values lying outside of dimension range will not be printed.
+):
+    assert isinstance(event_table, pd.DataFrame)
+    if event_table.empty:
+        print("Empty event_table in get_heatmap_data")
+        return
+    times_seconds, pauses_ms = get_time_and_event_durations(event_table)
 
     # create buckets to store the time information.
     # first, compress into num_b buckets along the time X-axis.
@@ -286,54 +318,3 @@ def get_heatmap_data(
         x_bucket_duration,
         y_bucket_duration,
     ]
-
-
-# get the heap occupancy over runtime as a result of particular phases
-def get_heap_occupancy(database_table):
-    if database_table.empty:
-        print("Empty database_table in get_heap_occupancy")
-        return
-    memory_change = list(database_table["MemoryChange_MB"])
-    before_gc = []
-    after_gc = []
-    max_heap = []
-    parsed_timestamps = []
-    times = get_time_in_seconds(database_table)
-    regex_pattern_memory = "(\d+)\w+->(\d+)\w+\((\d+)\w+\)"
-    #   String parses things in this pattern: 1234M->123M(9999M)
-    # Capture pattern 1: Before
-    # Capture pattern 2: After
-    # Capture pattern 3: Current maximum heap size (can change... lol)
-    for idx in range(len(memory_change)):
-        if memory_change[idx]:
-            match = re.search(regex_pattern_memory, memory_change[idx])
-            if match:
-                before_gc.append(int(match.group(1)))
-                after_gc.append(int(match.group(2)))
-                max_heap.append(int(match.group(3)))
-                parsed_timestamps.append(times[idx])
-
-            else:
-                print("Warning: Unable to parse this memory_change[idx]: " + memory_change[idx])
-                # final return value is the unit as a string
-    return before_gc, after_gc, max_heap, parsed_timestamps
-
-
-#  See how much memory is free'd per phase of the gc
-def get_reclaimed_mb_over_time(database_table):
-    before_gc, after_gc, max_heap, parsed_timestamps = get_heap_occupancy(database_table)
-    relcaimed_bytes = [before - after for before, after in zip(before_gc, after_gc)]
-    return relcaimed_bytes, parsed_timestamps
-
-
-def group_into_pause_buckets(stw_table, bucket_size_ms):
-    pauses = get_event_durations_in_miliseconds(stw_table)
-    max_pause = max(pauses)
-    interval_bucket_count = max_pause / bucket_size_ms + 1
-    frequencies = [0 for i in range(int(interval_bucket_count))]
-    for pause in pauses:
-        idx = int(pause / bucket_size_ms)
-        if idx >= interval_bucket_count:
-            print("Error: idx is >= interval_bucket_count, transform.py line 336")
-        frequencies[idx] += 1
-    return frequencies
