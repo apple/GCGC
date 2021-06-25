@@ -25,7 +25,7 @@ def get_parsed_data_from_file(logfile):
     if not logfile:
         print("No logfile provided")
         return
-    table = __manyMatch_LineSearch(__event_parsing_string(), logfile)
+    table = __manyMatch_LineSearch(event_parsing_string(), logfile)
     if not any(table):
         print("Unable to parse file " + str(logfile))
         return None
@@ -81,7 +81,7 @@ def __columnNames():
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#                       __event_parsing_string
+#                       event_parsing_string
 #
 # Returns a regex-searchable string to handle parsing log lines.
 # Defined regex groups are each section of the code
@@ -96,29 +96,38 @@ def __columnNames():
 #
 #  Return: string
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def __event_parsing_string():
+def event_parsing_string():
     # Implementation note: Be aware that spaces within the strings are intentional.
     datetime = "^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?"  # [2020-11-16T14:54:16.414+0000]
     timefromstart = "\[(\d+\.\d+)s\]"  #                                 [123.321s]
     outputlevel = "\[\w+ *\]"  #                                         [info]
     phase = "\[gc\s*\]"  # NOTE: this does NOT accept anything but 'gc' level outputs
     log_number = " GC\(\d+\) "  #                                        GC(123)
-    event_type = "((?:Pause)|(?:Concurrent)) "  #                        Pause
+    event_type = (
+        "((?:Pause)|(?:Concurrent)|(?:Garbage Collection)) "  # Pause   or   Concurrent    or   Garbage Collection
+    )
     event_name = "((?:\w+ ?){1,3}) "  #                                  Young
     additional_event_info = "((?:\((?:\w+ ?){1,3}\) ){0,3})"  #             (Evacuation Pause) (Normal)
     memory_change = "(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?"  #              500M->212M(1200M)
     event_duration_ms = "(\d+\.\d+)ms"  #                                200.31ms
-    return (
-        datetime
-        + timefromstart
-        + outputlevel
-        + phase
-        + log_number
-        + event_type
-        + event_name
-        + additional_event_info
-        + memory_change
-        + event_duration_ms
-    )
+    # return (
+    #     datetime
+    #     + timefromstart
+    #     + outputlevel
+    #     + phase
+    #     + log_number
+    #     + event_type
+    #     + event_name
+    #     + additional_event_info
+    #     + memory_change
+    #     + event_duration_ms
+    # )
+    return "^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\]\[\w+ *\]\[gc(?:,\w+)?\s*\] GC\(\d+\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) (?:((?:\w+ ?){1,3}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})((?:(?:\d+\w->\d+\w(?:\(\d+\w\)?)?)?(?= ?(\d+\.\d+)ms))|(?:\d+\w\(\d+%\)->\d+\w\(\d+%\)))"
     # For reference, here is the final string returned
     # ^(?:\[(\d{4}-\d\\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\]\[\w+ ?\]\[gc\s*\] GC\(\d+\) ((?:Pause)|(?:Concurrent)) ((?:\w+ ?){1,3}) ((?:\((?:\w+ ?){1,3}\) ){0,3})(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?(\d+\.\d+)ms
+
+
+# Included to support ZGC parsing (which has a SOMEWHAT DIFFERENT FORMAT) >:(
+# ^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\]\[\w+ *\]\[gc(:?,\w+)?\s*\] GC\(\d+\) ((?:Pause)|(?:Concurrent)|(?:Garbage Collection)) (?:((?:\w+ ?){1,3}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})((?:\d+\w->\d+\w(?:\(\d+\w\)?)?)? ?(\d+\.\d+)ms|(?:\d+\w\(\d+%\)->\d+\w\(\d+%\))?)
+# Update string with lookaheads to assert the ms pauses!
+# ^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\]\[\w+ *\]\[gc(?:,\w+)?\s*\] GC\(\d+\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) (?:((?:\w+ ?){1,3}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})((?:(?:\d+\w->\d+\w(?:\(\d+\w\)?)?)?(?= ?(\d+\.\d+)ms))|(?:\d+\w\(\d+%\)->\d+\w\(\d+%\)))#
