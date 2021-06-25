@@ -20,8 +20,9 @@ import re
 #   a pandas dataframe, where rows are each an individual event. Columns are labeled, and
 #   collect information on each event, such as when it occured, how long it lasted, and the name
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def get_parsed_data_from_file(logfile):
+def get_parsed_data_from_file(logfile, time_range_seconds=None):
     assert isinstance(logfile, str)  # input must be a string
+    min_time, max_time = __get_time_range(time_range_seconds)
     if not logfile:
         print("No logfile provided")
         return
@@ -29,9 +30,29 @@ def get_parsed_data_from_file(logfile):
     if not any(table):
         print("Unable to parse file " + str(logfile))
         return None
+    # Convert the paused and time from start from string datatypes to floats
+    table[1] = list(map(float, table[1]))
+    table[6] = list(map(float, table[6]))
     parsed_data_table = pd.DataFrame(table).transpose()  # transpose to orient correctly
     parsed_data_table.columns = __columnNames()  # add column titles, allow for clear references
+    if time_range_seconds:
+        # Get the maximum and minimums and enforce the time range
+        in_minimum = parsed_data_table["TimeFromStart_seconds"] >= min_time
+        in_maximum = parsed_data_table["TimeFromStart_seconds"] <= max_time
+        # Create the combined time table
+    parsed_data_table = parsed_data_table[in_minimum & in_maximum]
     return parsed_data_table
+
+
+def __get_time_range(time_range):
+    if type(time_range) == int or type(time_range) == float:
+        min_time = 0
+        max_time = time_range
+    else:
+        #   assert len(time_range) == 2
+        min_time = time_range[0]
+        max_time = time_range[1]
+    return min_time, max_time
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
