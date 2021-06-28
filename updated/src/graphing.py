@@ -75,7 +75,6 @@ def plot_pauses_scatter(xdata=[], ydata=[], axs=None, color="", label="", option
         b = random.random()
         g = random.random()
         color = (r, g, b)
-
     axs.scatter(x=xdata, y=ydata, color=color, label=label)
     axs.set_ylabel("Pause duration (miliseconds)")
     axs.set_xlabel("Time from program start (seconds)")
