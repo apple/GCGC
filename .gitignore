@@ -11,3 +11,4 @@ final
 /workloads/*.log
 /updated/datasets
 /updated/datasets/*
+/updated/src/__pycache__
