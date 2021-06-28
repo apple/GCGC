@@ -3,6 +3,7 @@ from os import times
 import matplotlib.pyplot as plt
 import random
 import numpy as np
+import pandas as pd
 import sys
 
 sys.path.append("/Users/ellisbrown/Desktop/Project/updated/src/")
@@ -32,6 +33,10 @@ plt.rcParams["figure.figsize"] = [12, 7]
 #     axs.set_title("Pauses during runtime in miliseconds, bar graph")
 #     axs.legend()
 def compare_eventtypes_pie(database_table):
+    assert isinstance(database_table, pd.DataFrame)
+    if database_table.empty:
+        print("Error: Empty database_table in compare_eventtypes_pie")
+        return None
     fig, axs = plt.subplots()
     pauses_time, concurr_time = transform.compare_eventtype_time_sums(database_table)  # get the ratios of pause time
     axs.axis("equal")  # center axis
@@ -172,16 +177,16 @@ def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime
     # Print title with formatting
     if print_title:
         title = " Trends (ms)      | "  # 17 + 3 characters
-        title += " Event Count| "
-        title += " Max pause  | "
-        title += " Sum pauses | "
-        title += " Mean pauses| "
-        title += " Std Dev.   |"
+        title += "Event Count  | "
+        title += "Max Duration | "
+        title += "Sum Duration | "
+        title += "Mean Duration| "
+        title += "Std Dev.     |"
         if throughput:
             title += " Throughput   |"
         print(title)
         print("-" * len(title))
-    num_chars = 15 - 4  # 16 = line length, 3 for ending char sequence " | "
+    num_chars = 16 - 4  # 16 = line length, 3 for ending char sequence " | "
     if not label:
         label = "Run:"
     # print with correct formatting the values

@@ -8,11 +8,11 @@ import pandas as pd  # implicit. TODO: check if this is needed
 import math
 import re
 
-# Access a Pandas database_table constructed through parse_data.py with labeled columns.
+# Access a Pandas gc_event_dataframe constructed through parse_data.py with labeled columns.
 # Return the timestamps and pauses as a list
-def get_time_and_event_durations(database_table):
-    assert isinstance(database_table, pd.DataFrame)
-    return get_time_in_seconds(database_table), get_event_durations_in_miliseconds(database_table)
+def get_time_and_event_durations(gc_event_dataframe):
+    assert isinstance(gc_event_dataframe, pd.DataFrame)
+    return get_time_in_seconds(gc_event_dataframe), get_event_durations_in_miliseconds(gc_event_dataframe)
 
 
 #       get_event_durations_in_miliseconds
@@ -21,12 +21,12 @@ def get_time_and_event_durations(database_table):
 #   extract all 'event durations' from the Duration_miliseconds column, and
 #   return them as a list of floats.
 #
-def get_event_durations_in_miliseconds(database_table):
-    assert isinstance(database_table, pd.DataFrame)
-    if database_table.empty:
+def get_event_durations_in_miliseconds(gc_event_dataframe):
+    assert isinstance(gc_event_dataframe, pd.DataFrame)
+    if gc_event_dataframe.empty:
         return []
     else:
-        return list(map(float, database_table["Duration_miliseconds"]))
+        return list(map(float, gc_event_dataframe["Duration_miliseconds"]))
 
 
 #       get_time_in_seconds
@@ -34,12 +34,12 @@ def get_event_durations_in_miliseconds(database_table):
 #   Given a pandas dataframe table populated with parsed information, exact only
 #   the time since program start timestamps, and return them as a list of floats
 #
-def get_time_in_seconds(database_table):
-    assert isinstance(database_table, pd.DataFrame)
-    if database_table.empty:
+def get_time_in_seconds(gc_event_dataframe):
+    assert isinstance(gc_event_dataframe, pd.DataFrame)
+    if gc_event_dataframe.empty:
         return []
     else:
-        return list(map(float, database_table["TimeFromStart_seconds"]))
+        return list(map(float, gc_event_dataframe["TimeFromStart_seconds"]))
 
 
 #    get_times_and_durations_from_event_lists
@@ -48,16 +48,16 @@ def get_time_in_seconds(database_table):
 #   and return 2 lists, one being a list containing lists of floats, corresponding to
 #   timestamps, and the second being a list of floats corresponding to event durations
 #
-def get_times_and_durations_from_event_lists(event_tables):
-    assert isinstance(event_tables, list)
-    if not event_tables:
-        print("Error: event_tables empty")
+def get_times_and_durations_from_event_lists(gc_event_dataframes):
+    assert isinstance(gc_event_dataframes, list)
+    if not gc_event_dataframes:
+        print("Error: gc_event_dataframes empty")
         return [], []
-    for table in event_tables:
+    for table in gc_event_dataframes:
         assert isinstance(table, pd.DataFrame)
     xdatas_list = []
     ydatas_list = []
-    for event_table in event_tables:
+    for event_table in gc_event_dataframes:
         xdata, ydata = get_time_and_event_durations(event_table)
         xdatas_list.append(xdata)
         ydatas_list.append(ydata)
@@ -66,18 +66,18 @@ def get_times_and_durations_from_event_lists(event_tables):
 
 #       get_event_table_labels
 #
-#   From a list of event_tables, gather the name of the
+#   From a list of gc_event_dataframes, gather the name of the
 #   event type and event name and return that as a label,
 #   one label corresponding to each event_table. If eventtype
 #   is true, then the eventtype is part of the returned label.
 #
-def get_event_table_labels(event_tables, eventtype=True):
+def get_event_table_labels(gc_event_dataframes, eventtype=True):
     # assert the correct parameter types
-    assert isinstance(event_tables, list)
-    if not event_tables:
-        print("Error: event_tables empty")
+    assert isinstance(gc_event_dataframes, list)
+    if not gc_event_dataframes:
+        print("Error: gc_event_dataframes empty")
         return None
-    for table in event_tables:
+    for table in gc_event_dataframes:
         assert isinstance(table, pd.DataFrame)
         if table.empty:
             print("Error: Empty table in event_table, unable to assign it a label")
@@ -85,90 +85,90 @@ def get_event_table_labels(event_tables, eventtype=True):
     # return the labels
     if eventtype:
         return [
-            event_tables[i]["EventType"].iloc[0] + " " + event_tables[i]["EventName"].iloc[0]
-            for i in range(len(event_tables))
+            gc_event_dataframes[i]["EventType"].iloc[0] + " " + gc_event_dataframes[i]["EventName"].iloc[0]
+            for i in range(len(gc_event_dataframes))
         ]
     else:
-        return [event_tables[i]["EventName"].iloc[0] for i in range(len(event_tables))]
+        return [gc_event_dataframes[i]["EventName"].iloc[0] for i in range(len(gc_event_dataframes))]
 
 
 #       compare_eventtype_time_sums
 #
-#   Gathers from a complete database_table the set of
+#   Gathers from a complete gc_event_dataframe the set of
 #   Stop The World pause durations, and concurrent durations,
 #   and returns the sum of each, as a pair of floats.
 #
-def compare_eventtype_time_sums(database_table):
-    assert isinstance(database_table, pd.DataFrame)
-    if database_table.empty:
-        print("Error: Database_table is empty")
+def compare_eventtype_time_sums(gc_event_dataframe):
+    assert isinstance(gc_event_dataframe, pd.DataFrame)
+    if gc_event_dataframe.empty:
+        print("Error: gc_event_dataframe is empty")
         return 0, 0
-    concurrent = get_concurrent_data(database_table)
+    concurrent = get_concurrent_data(gc_event_dataframe)
     concurrent_total_time = sum(get_event_durations_in_miliseconds(concurrent))
 
-    stw = get_pauses_data(database_table)
+    stw = get_pauses_data(gc_event_dataframe)
     stw_total_time = sum(get_event_durations_in_miliseconds(stw))
     return stw_total_time, concurrent_total_time
 
 
 #   get_concurrent_data
 #
-#   From a complete database_table, return the table rows that represent
+#   From a complete gc_event_dataframe, return the table rows that represent
 #   a concurrent event.
 #
-def get_concurrent_data(database_table):
-    assert isinstance(database_table, pd.DataFrame)
-    if database_table.empty:
+def get_concurrent_data(gc_event_dataframe):
+    assert isinstance(gc_event_dataframe, pd.DataFrame)
+    if gc_event_dataframe.empty:
         print("Warning: Empty database table in get_concurrent_data")
         return None
-    concurrent = database_table.loc[database_table["EventType"] == "Concurrent"]
+    concurrent = gc_event_dataframe.loc[gc_event_dataframe["EventType"] == "Concurrent"]
     return concurrent
 
 
 #   getPauseData
 #
-#   From a complete database_table, return the table rows that
+#   From a complete gc_event_dataframe, return the table rows that
 #   represent all STW pause events.
 #
-def get_pauses_data(database_table):
-    assert isinstance(database_table, pd.DataFrame)
-    if database_table.empty:
+def get_pauses_data(gc_event_dataframe):
+    assert isinstance(gc_event_dataframe, pd.DataFrame)
+    if gc_event_dataframe.empty:
         print("Warning: Empty database table in get_pauses_data")
         return None
-    stoptheworld = database_table.loc[database_table["EventType"] == "Pause"]
+    stoptheworld = gc_event_dataframe.loc[gc_event_dataframe["EventType"] == "Pause"]
     return stoptheworld
 
 
 #   seperate_pauses_concurrent
 #
-#   From a complete database_table, seperate the table into two
+#   From a complete gc_event_dataframe, seperate the table into two
 #   tables, one for all pause events, and the second for all concurrent events
 #   Note: the original table is not modified.
 #
-def seperate_pauses_concurrent(database_table):
-    assert isinstance(database_table, pd.DataFrame)
-    if database_table.empty:
+def seperate_pauses_concurrent(gc_event_dataframe):
+    assert isinstance(gc_event_dataframe, pd.DataFrame)
+    if gc_event_dataframe.empty:
         print("Warning: Empty database table in seperate_pauses_concurrent")
         return None
-    return get_pauses_data(database_table), get_concurrent_data(database_table)
+    return get_pauses_data(gc_event_dataframe), get_concurrent_data(gc_event_dataframe)
 
 
 #   seperate_by_event_name
 #
-#   Given a database_table with some number of rows, return a list
+#   Given a gc_event_dataframe with some number of rows, return a list
 #   of tables sorted based on alphanetical order by EventName. Each index in
 #   the returned list is a table, all of whose rows share the same EventName
 #
-def seperate_by_event_name(database_table):
-    assert isinstance(database_table, pd.DataFrame)
-    if database_table.empty:
+def seperate_by_event_name(gc_event_dataframe):
+    assert isinstance(gc_event_dataframe, pd.DataFrame)
+    if gc_event_dataframe.empty:
         print("Warning: Empty database table in seperate_by_event_name")
         return None
     # Step 1: Sort based on column names in alphabetical order
     # Step 2: Traverse throuhgh the "EventName" column and find indicies where the event name switches
-    # Step 3: transform each range into its own database_table
-    # Step 4: Return a list of database_tables.
-    sorted_data = database_table.sort_values(["EventName"])
+    # Step 3: transform each range into its own gc_event_dataframe
+    # Step 4: Return a list of gc_event_dataframes.
+    sorted_data = gc_event_dataframe.sort_values(["EventName"])
     sorted_data = sorted_data.reset_index(drop=True)
     previousname = ""
     change_indicies = []
@@ -193,17 +193,17 @@ def seperate_by_event_name(database_table):
 #   events change heap occupancy (free/used memory), this also returns
 #   a lists of floats corresponding to the times where the memory did change
 #
-def get_heap_occupancy(database_table):
-    assert isinstance(database_table, pd.DataFrame)
-    if database_table.empty:
-        print("Warning: Empty database_table in get_heap_occupancy")
+def get_heap_occupancy(gc_event_dataframe):
+    assert isinstance(gc_event_dataframe, pd.DataFrame)
+    if gc_event_dataframe.empty:
+        print("Warning: Empty gc_event_dataframe in get_heap_occupancy")
         return None
-    memory_change = list(database_table["MemoryChange_MB"])
+    memory_change = list(gc_event_dataframe["MemoryChange_MB"])
     before_gc = []
     after_gc = []
     max_heap = []
     parsed_timestamps = []
-    times = get_time_in_seconds(database_table)
+    times = get_time_in_seconds(gc_event_dataframe)
     regex_pattern_memory = "(\d+)\w+->(\d+)\w+\((\d+)\w+\)"
     # String parses things in this pattern: 1234M->123M(9999M)
     # Capture pattern 1: Before
@@ -230,12 +230,12 @@ def get_heap_occupancy(database_table):
 #   to find the total reclaimed bytes. Because not all events reclaim bytes, report the times
 #   where they do change. Both lists returned contain floats.
 #
-def get_reclaimed_mb_over_time(database_table):
-    assert isinstance(database_table, pd.DataFrame)
-    if database_table.empty:
-        print("Warning: Empty database_table in get_reclaimed_mb_over_time")
+def get_reclaimed_mb_over_time(gc_event_dataframe):
+    assert isinstance(gc_event_dataframe, pd.DataFrame)
+    if gc_event_dataframe.empty:
+        print("Warning: Empty gc_event_dataframe in get_reclaimed_mb_over_time")
         return [], []
-    before_gc, after_gc, max_heap, parsed_timestamps = get_heap_occupancy(database_table)
+    before_gc, after_gc, max_heap, parsed_timestamps = get_heap_occupancy(gc_event_dataframe)
     relcaimed_bytes = [before - after for before, after in zip(before_gc, after_gc)]
     return relcaimed_bytes, parsed_timestamps
 
@@ -257,12 +257,12 @@ def group_into_pause_buckets(stw_table, bucket_size_ms):
 
     pauses = get_event_durations_in_miliseconds(stw_table)
     max_pause = max(pauses)
-    interval_bucket_count = max_pause / bucket_size_ms + 1
+    interval_bucket_count = (max_pause / bucket_size_ms) + 1
     frequencies = [0 for i in range(int(interval_bucket_count))]
     for pause in pauses:
         idx = int(pause / bucket_size_ms)
         if idx >= interval_bucket_count:
-            print("Error: idx is >= interval_bucket_count, transform.py line 336")
+            print("Error: idx is >= interval_bucket_count, transform.py/group_into_pause_buckets")
         frequencies[idx] += 1
     return frequencies
 
@@ -272,7 +272,7 @@ def group_into_pause_buckets(stw_table, bucket_size_ms):
 #   Create a 2d numpy array, and dimensions list associated with a event_table, such that
 #   the 2d array represents the frequencies of latency events, based on the specified dimensions.
 def get_heatmap_data(
-    event_table,  # database_table of events. Typically only pause events
+    event_table,  # gc_event_dataframe of events. Typically only pause events
     x_bucket_count=20,  # Number of time intervals to group gc events into. INT ONLY
     y_bucket_count=20,  # Number of latency time intervals to group events into. INT ONLY
     x_bucket_duration=100,  # Duration in seconds that each time interval bucket has for gc event timestamps

@@ -6,7 +6,7 @@ from io import StringIO
 from unittest.mock import patch
 import sys
 
-# How to test file: python3 -m unittest -v test_graphing.py
+# How to test file: python3 -m unittest -v test_transform.py
 
 sys.path.append("/Users/ellisbrown/Desktop/Project/updated/src/")
 import transform

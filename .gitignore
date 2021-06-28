@@ -9,4 +9,5 @@ final
 /workloads/META-INF
 /workloads/*.jfr
 /workloads/*.log
-
+/updated/datasets
+/updated/datasets/*
