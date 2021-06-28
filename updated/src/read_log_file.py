@@ -31,8 +31,8 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None):
         print("Unable to parse file " + str(logfile))
         return None
     # Convert the paused and time from start from string datatypes to floats
-    table[1] = list(map(float, table[1]))
-    table[6] = list(map(float, table[6]))
+    table[1] = list(map(__number_to_float, table[1]))
+    table[6] = list(map(__number_to_float, table[6]))
     parsed_data_table = pd.DataFrame(table).transpose()  # transpose to orient correctly
     parsed_data_table.columns = __columnNames()  # add column titles, allow for clear references
     if time_range_seconds:
@@ -54,6 +54,12 @@ def __get_time_range(time_range):
         min_time = time_range[0]
         max_time = time_range[1]
     return min_time, max_time
+
+
+def __number_to_float(number):
+    if number:
+        return float(number)
+    return None
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

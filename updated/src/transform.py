@@ -3,6 +3,7 @@
     Remove extra characters or add them. Does not change any values"""
 # Ellis Brown
 # 6/15/2021
+from os import times
 import numpy as np
 import pandas as pd  # implicit. TODO: check if this is needed
 import math
@@ -26,7 +27,11 @@ def get_event_durations_in_miliseconds(gc_event_dataframe):
     if gc_event_dataframe.empty:
         return []
     else:
-        return list(map(float, gc_event_dataframe["Duration_miliseconds"]))
+        durations_miliseconds = []
+        for duration in gc_event_dataframe["Duration_miliseconds"]:
+            if duration:
+                durations_miliseconds.append(float(duration))
+        return durations_miliseconds
 
 
 #       get_time_in_seconds
@@ -39,7 +44,11 @@ def get_time_in_seconds(gc_event_dataframe):
     if gc_event_dataframe.empty:
         return []
     else:
-        return list(map(float, gc_event_dataframe["TimeFromStart_seconds"]))
+        timestamps_seconds = []
+        for time in gc_event_dataframe["TimeFromStart_seconds"]:
+            if time:
+                timestamps_seconds.append(float(time))
+        return timestamps_seconds
 
 
 #    get_times_and_durations_from_event_lists
@@ -204,24 +213,37 @@ def get_heap_occupancy(gc_event_dataframe):
     max_heap = []
     parsed_timestamps = []
     times = get_time_in_seconds(gc_event_dataframe)
-    regex_pattern_memory = "(\d+)\w+->(\d+)\w+\((\d+)\w+\)"
+    regex_pattern_memory_1 = "(\d+)\w+->(\d+)\w+\((\d+)\w+\)"
+    regex_pattern_memory_2 = "(\d+)M\((\d+)%\)->(\d+)M\(\d+%\)"
     # String parses things in this pattern: 1234M->123M(9999M)
     # Capture pattern 1: Before
     # Capture pattern 2: After
     # Capture pattern 3: Current maximum heap size (can change... lol)
     for idx in range(len(memory_change)):
         if memory_change[idx]:
-            match = re.search(regex_pattern_memory, memory_change[idx])
+            match = re.search(regex_pattern_memory_1, memory_change[idx])
+            match2 = re.search(regex_pattern_memory_2, memory_change[idx])
             if match:
                 before_gc.append(int(match.group(1)))
                 after_gc.append(int(match.group(2)))
                 max_heap.append(int(match.group(3)))
+                parsed_timestamps.append(times[idx])
+            elif match2:
+                before_gc.append(int(match2.group(1)))
+                max_heap.append(__get_max_heapsize(match2.group(1), match2.group(2)))
+                after_gc.append(int(match2.group(3)))
                 parsed_timestamps.append(times[idx])
 
             else:
                 print("Warning: Unable to parse this memory_change[idx]: " + memory_change[idx])
                 # final return value is the unit as a string
     return before_gc, after_gc, max_heap, parsed_timestamps
+
+
+def __get_max_heapsize(size, percent):
+    size = int(size)
+    proportion = int(percent) / 100
+    return size * (1 / proportion)
 
 
 #       get_reclaimed_mb_over_time
