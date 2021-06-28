@@ -46,23 +46,32 @@ def seperate_pauses_concurrent_lists(database_tables):
 
 #       compare_stw_concurrent_durations
 #
+#   From a list of tables, compare the total sum of the concurrent
+#   and STW durations in miliseconds against each other in a bar chart.
+#   Return the chart axes.
 #
-#
-def compare_stw_concurrent_durations(database_tables):
-    N = len(database_tables)
-    ind = np.arange(N)  # the x locations for the groups
-    fig, axs = plt.sublpots()
-    colors = ["r", "g", "b", "k", "o"]
+def compare_stw_concurrent_durations(database_tables, labels):
+    assert isinstance(database_tables, list)
+    assert isinstance(labels, list)
+    if not labels:
+        print("No labels provided to compare_stw_concurrent_durations.")
+        return None
+    if not len(labels) == len(database_tables):
+        print("Duration of database_tables list and labels list do not match.")
+        return None
+    fig, axs = plt.subplots()
+    colors = ["r", "g", "b", "k", "c", "y", "m"]
+    # colors = colors + colors + colors
+
     width = 0.9 / len(database_tables)
-    for i, database_table in enumerate(database_tables):
+    for idx, database_table in enumerate(database_tables):
         stw_sum, concurrent_sum = transform.compare_eventtype_time_sums(database_table)
-        axs.bar([0, 1], [stw_sum, concurrent_sum], width, color=colors[i])
-
-    fig, ax = plt.sublpots()
-
-    stw_sums = [4, 9, 2]
-    rects1 = ax.bar(ind, stw_sums, width, color="r")
-    zvals = [1, 2, 3]
-    rects2 = ax.bar(ind + width, zvals, width, color="g")
-    kvals = [11, 12, 13]
-    rects3 = ax.bar(ind + width * 2, kvals, width, color="b")
+        x_coordinates = [i + width * idx for i in range(2)]
+        axs.bar(x_coordinates, [stw_sum, concurrent_sum], width, color=colors[idx], label=labels[idx])
+    axs.legend()
+    # the median x tick along the axis
+    axs.set_xticks([i + (width * (len(database_tables) - 1) / 2) for i in range(2)])
+    axs.set_xticklabels(["STW Pauses", "Concurrent"])
+    axs.set_ylabel("Total duration in seconds")
+    axs.set_xlabel("Type of event")
+    return axs

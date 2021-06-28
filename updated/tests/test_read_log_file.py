@@ -71,37 +71,3 @@ class Test_read_log_file(utest.TestCase):
 
 if __name__ == "__main__":
     utest.main()
-
-    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-    # def test_returned_values(self):
-    # Issue with data types, so this test has been commeted out. It does pass, however.
-    # returned_data = get_parsed_data_from_file(manual_log)
-    # data = [
-    #     [None, "1.042", "Pause", "Young", "(Normal) (G1 Evacuation Pause) ", "108M->59M(1040M)", "10.421"],
-    #     [None, "0.070", "Pause", "Init Mark", "(unload classes) ", None, "0.160"],
-    #     [
-    #         "2020-11-16T15:49:20.881+0000",
-    #         "3304.479",
-    #         "Pause",
-    #         "Young",
-    #         "(Normal) (G1 Evacuation Pause) ",
-    #         "8287M->3649M(12000M)",
-    #         "132.704",
-    #     ],
-    # ]
-    # columns = [
-    #     "DateTime",
-    #     "TimeFromStart_seconds",
-    #     "EventType",
-    #     "EventName",
-    #     "AdditionalEventInfo",
-    #     "MemoryChange_MB",
-    #     "Duration_miliseconds",
-    # ]
-    # df = pandas.DataFrame(data)
-    # df.columns = columns
-    # print(df)
-    # print(returned_data)
-    # new_df = returned_data.eq(df)
-    # print(new_df)
-    # self.assertTrue(returned_data.eq(df).all())

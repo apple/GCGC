@@ -22,7 +22,7 @@ import re
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def get_parsed_data_from_file(logfile, time_range_seconds=None):
     assert isinstance(logfile, str)  # input must be a string
-    min_time, max_time = __get_time_range(time_range_seconds)
+
     if not logfile:
         print("No logfile provided")
         return
@@ -36,11 +36,12 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None):
     parsed_data_table = pd.DataFrame(table).transpose()  # transpose to orient correctly
     parsed_data_table.columns = __columnNames()  # add column titles, allow for clear references
     if time_range_seconds:
+        min_time, max_time = __get_time_range(time_range_seconds)
         # Get the maximum and minimums and enforce the time range
         in_minimum = parsed_data_table["TimeFromStart_seconds"] >= min_time
         in_maximum = parsed_data_table["TimeFromStart_seconds"] <= max_time
         # Create the combined time table
-    parsed_data_table = parsed_data_table[in_minimum & in_maximum]
+        parsed_data_table = parsed_data_table[in_minimum & in_maximum]
     return parsed_data_table
 
 
