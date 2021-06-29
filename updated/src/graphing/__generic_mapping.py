@@ -1,15 +1,27 @@
+#       __generic_mapping.py
+#
+#   Helper functions to help plotting with parameter checking more easily, and printing ASCII table format.
+#
+#   Ellis Brown
+#   June 2021
+
 import matplotlib.pyplot as plt
+import matplotlib
 
-
+#       __generic_plotting
+#
+#   Given a plotting function, and the parameters to that plotting function, carefully comapres the parameters for that
+#   function, and prints descriptive error messages when parameters are incorrect.
+#
 def __generic_plotting(xdata_list, ydata_list, axs=None, colors=[], labels=[], plotting_function=None, optional=None):
     if not xdata_list:
-        print("No timedata list in function plot_bar_compare()")
+        print("No xdata_list list in function __generic_plotting()")
         return
     if not ydata_list:
-        print("No heightdata list in plot_bar_compare()")
+        print("No ydata_list list in __generic_plotting()")
         return
     if not labels:
-        print("No label list in plot_bar_compare()")
+        print("No labels list in __generic_plotting()")
     if len(xdata_list) != len(ydata_list):
         print("Length of xdata_lists and ydata_lists do not match.", end="")
         print("xdata_lists: " + str(len(xdata_list)) + ", ydata_list: " + str(len(ydata_list)))
@@ -25,17 +37,24 @@ def __generic_plotting(xdata_list, ydata_list, axs=None, colors=[], labels=[], p
         colors.append(None)
     if not axs:
         fig, axs = plt.subplots()
-
+    # Confirm datatypes
+    assert isinstance(xdata_list, list)
+    assert isinstance(ydata_list, list)
+    assert isinstance(colors, list)
+    assert isinstance(labels, list)
     # Apply the specific plotting
     for i in range(len(xdata_list)):
         plotting_function(xdata_list[i], ydata_list[i], axs, colors[i], labels[i], optional)
     return axs
 
 
-# Creates a string in exactly the specified numchars.
-# If len(string) > numchars, some of the string is not displayed.
-# if len(string) < numchars, spaces are appended to the back of the string.
-# returns a string containing the update string with len = numchars.
+#       __string_const_chars
+#
+#   Creates a string in exactly the specified numchars.
+#   If len(string) > numchars, some of the string is not displayed.
+#   if len(string) < numchars, spaces are appended to the back of the string.
+#   returns a string containing the update string with len = numchars.
+#
 def __string_const_chars(string, numchars):
     string = str(string)
     char_list = ""
