@@ -91,7 +91,6 @@ def get_event_table_labels(gc_event_dataframes, eventtype=True):
     for table in gc_event_dataframes:
         assert isinstance(table, pd.DataFrame)
         if table.empty:
-            print("Error: Empty table in event_table, unable to assign it a label")
             return []
     # return the labels
     if eventtype:

@@ -17,10 +17,13 @@ import numpy as np
 #   print_title(optional) : bool, True => print recorded values
 def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime_seconds=0, timestamps=None):
     # Analyze trends. ALL PAUSES ARE IN MILISECONDS.
-    max_pause = round(max(pauses_miliseconds, key=lambda i: float(i)), 4)
-    sum_pauses = round(sum(float(i) for i in pauses_miliseconds), 4)
-    average_wait = round(sum_pauses / len(pauses_miliseconds), 4)
-    std_deviation = round(np.std(pauses_miliseconds), 4)
+    if pauses_miliseconds:
+        max_pause = round(max(pauses_miliseconds, key=lambda i: float(i)), 4)
+        sum_pauses = round(sum(float(i) for i in pauses_miliseconds), 4)
+        average_wait = round(sum_pauses / len(pauses_miliseconds), 4)
+        std_deviation = round(np.std(pauses_miliseconds), 4)
+    else:
+        max_pause, sum_pauses, average_wait, std_deviation = 0, 0, 0, 0
     throughput = None
     if total_runtime_seconds:
         print(total_runtime_seconds)
@@ -30,7 +33,7 @@ def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime
 
     # Print title with formatting
     if print_title:
-        title = " Trends (ms)      | "  # 17 + 3 characters
+        title = " Trends (ms)            | "  # 17 + 3 characters
         title += "Event Count  | "
         title += "Max Duration | "
         title += "Sum Duration | "
@@ -44,7 +47,9 @@ def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime
     if not label:
         label = "Run:"
     # print with correct formatting the values
-    line = __string_const_chars(label, 17) + " | "
+    number_label_chars = 23
+    label = label[-number_label_chars:]
+    line = __string_const_chars(label, 23) + " | "
     line += __string_const_chars(str(len(pauses_miliseconds)), num_chars) + " | "
     line += __string_const_chars(str(max_pause), num_chars) + " | "
     line += __string_const_chars(str(sum_pauses), num_chars) + " | "
