@@ -59,7 +59,7 @@ def plot_paused_and_running_line(
             x_data.append(x + pt_uniform)
             y_data.append(0)
 
-    axs.plot(x_data, y_data, color=color, label=label)
+    axs.plot(x_data, y_data, color=color, label=label, alpha=0.6)
     axs.grid()
     axs.set_ylabel("Pause duration (miliseconds)")
     axs.set_xlabel("Time from program start (seconds)")

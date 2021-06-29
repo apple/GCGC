@@ -10,6 +10,7 @@
 # Ellis Brown, June 2021
 from src import transform
 from src.read_log_file import get_parsed_data_from_file
+from src.graphing.heapoccupancy import plot_heap_occupancy
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -111,6 +112,7 @@ def extract_events_by_name(list_of_gc_event_dataframes):
     return seperated_list_gc_event_dataframes
 
 
+# TODO: fix this documentation. I believe this approach itself is flawed :(
 def compare_events_bar_chart(two_dimensional_dataframe_list, legend_vals):
     assert isinstance(two_dimensional_dataframe_list, list)
     if not two_dimensional_dataframe_list:
@@ -138,7 +140,7 @@ def compare_events_bar_chart(two_dimensional_dataframe_list, legend_vals):
             found = False
             index_value = log_index * width + key_index
             for event in two_dimensional_dataframe_list[log_index]:
-                if str(key) == event["EventName"].iloc[0]:  # O(N^2) FIX LMAO ... :(
+                if str(key) == event["EventName"].iloc[0]:  # O(N^2) FIX plz ... :(
                     found = True
                     duration = transform.get_event_durations_in_miliseconds(event)
                     if duration:
@@ -186,3 +188,39 @@ def compare_events_bar_chart(two_dimensional_dataframe_list, legend_vals):
     axs.set_xlabel("Average time in MS")
     axs.set_title("Average event durations across all logs.")
     axs.legend()
+
+
+def compare_heap_occupancy(gc_event_dataframes, max_heapsize):
+    assert isinstance(gc_event_dataframes, list)
+    times_max = []
+    fig, g = plt.subplots()
+
+    for dataframe in gc_event_dataframes:
+        before_gc, after_gc, max_heap, times_selected = transform.get_heap_occupancy(dataframe)
+        times_max.append(max(times_selected))
+        # g = plot_heap_occupancy(
+        #     times_selected, before_gc, "M", max_heapsize, "G", axs=g, label="Usage before gc", plot_max=False
+        # )
+        g = plot_heap_occupancy(
+            times_selected, after_gc, "M", max_heapsize, "G", axs=g, label="Usage after gc", plot_max=False
+        )
+    g.plot([0, max(times_max)], [max_heapsize * 1000, max_heapsize * 1000], label="Max heapsize")
+    g.legend()
+
+
+def compare_heap_occupancy2(gc_event_dataframes, max_heapsize):
+    assert isinstance(gc_event_dataframes, list)
+    times_max = []
+    fig, g = plt.subplots()
+
+    for dataframe in gc_event_dataframes:
+        before_gc, after_gc, max_heap, times_selected = transform.get_heap_occupancy(dataframe)
+        times_max.append(max(times_selected))
+        # g = plot_heap_occupancy(
+        #     times_selected, before_gc, "M", max_heapsize, "G", axs=g, label="Usage before gc", plot_max=False
+        # )
+        g = plot_heap_occupancy(
+            times_selected, before_gc, "M", max_heapsize, "G", axs=g, label="Usage before_gc", plot_max=False
+        )
+    g.plot([0, max(times_max)], [max_heapsize * 1000, max_heapsize * 1000], label="Max heapsize")
+    g.legend()
