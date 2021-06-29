@@ -57,7 +57,7 @@ def __get_time_range(time_range):
 
 
 def __number_to_float(number):
-    if number:
+    if number != None:
         return float(number)
     return None
 
