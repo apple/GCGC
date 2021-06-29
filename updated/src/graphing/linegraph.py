@@ -1,3 +1,13 @@
+#       linegraph.py
+#
+#   Plot a line graph, which depicts pauses versus no pauses.
+#   Because data collected is only on paused times, not running times,
+#   Adds points at (time, 0) to depict running time, before and after each pause
+#
+#   Ellis Brown, 6/29/2021
+
+#  TODO: plot with rectangles rather than just lines, use opacity as well to make sure that the colors can be seen through each other.
+
 import random
 from src.graphing.__generic_mapping import __generic_plotting
 

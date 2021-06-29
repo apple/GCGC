@@ -1,3 +1,9 @@
+#       heapoccupancy.py
+#
+#   Using parsed data in a gc_event_dataframe, plots information on the heap during runtime
+#
+#   Ellis Brown, 6/29/2021
+
 import random
 import matplotlib.pyplot as plt
 

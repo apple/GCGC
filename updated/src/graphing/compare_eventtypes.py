@@ -1,3 +1,9 @@
+#       compare_eventtypes
+#
+#   Plot differences from gc_event_dataframes trends. 
+#   Plots comparisons between sum or average of events of certain types
+#
+#   Ellis Brown, 6/29/2021
 import matplotlib.pyplot as plt
 import sys
 import pandas as pd

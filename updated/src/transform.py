@@ -1,8 +1,10 @@
-# transform_data.py
-""" Take data and selectively return or parse sections of the data.
-    Remove extra characters or add them. Does not change any values"""
-# Ellis Brown
-# 6/15/2021
+#       transform.py
+#
+#   Take data and selectively return or parse sections of the data.
+#    Remove extra characters or add them. Does not change any values
+#
+#   Ellis Brown, 6/29/2021
+
 from os import times
 import numpy as np
 import pandas as pd  # implicit. TODO: check if this is needed

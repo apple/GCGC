@@ -1,7 +1,10 @@
-# read_log_file.py
+#       read_log_file.py
+#
+#   Given a log file, parse through that file and return a gc_events_dataframe containing all
+#   relevant information from the log during runtime
+#
+#   Ellis Brown, 6/29/2021
 
-# defines functions to parse and extract information from a specified log file
-# Ellis Brown, June 2021
 import pandas as pd
 import re
 
@@ -150,6 +153,7 @@ def event_parsing_string():
     #     + memory_change
     #     + event_duration_ms
     # )
+    # TODO:  Fix the docuemnation of this string right here... even I dont know whats going on a little bit
     return "^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\]\[\w+ *\]\[gc(?:,\w+)?\s*\] GC\(\d+\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) (?:((?:\w+ ?){1,3}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})((?:(?:\d+\w->\d+\w(?:\(\d+\w\)?)?)?(?= ?(\d+\.\d+)ms))|(?:\d+\w\(\d+%\)->\d+\w\(\d+%\)))"
     # For reference, here is the final string returned
     # ^(?:\[(\d{4}-\d\\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\]\[\w+ ?\]\[gc\s*\] GC\(\d+\) ((?:Pause)|(?:Concurrent)) ((?:\w+ ?){1,3}) ((?:\((?:\w+ ?){1,3}\) ){0,3})(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?(\d+\.\d+)ms

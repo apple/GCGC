@@ -1,3 +1,9 @@
+#       filename
+#
+#   somedescriptiongoeshere
+#
+#   Ellis Brown, 6/29/2021
+
 import matplotlib
 from matplotlib import pyplot as plt
 import numpy as np

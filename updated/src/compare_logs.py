@@ -1,3 +1,10 @@
+#       compare_logs.py
+#
+#   Compares multiple logs, by calling functions for each file in a list, or each
+#   gc_event_dataframe in a list. Handles the complex mapping for different datatypes and labels
+#
+#   Ellis Brown, 6/29/2021
+
 # Compare multiple logs, using the API calls designed for a singular log
 # Handle graphing & colors & labels & data transformations.
 # Ellis Brown, June 2021

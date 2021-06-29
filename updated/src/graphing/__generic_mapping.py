@@ -2,8 +2,7 @@
 #
 #   Helper functions to help plotting with parameter checking more easily, and printing ASCII table format.
 #
-#   Ellis Brown
-#   June 2021
+#   Ellis Brown, 6/29/2021
 
 import matplotlib.pyplot as plt
 import matplotlib

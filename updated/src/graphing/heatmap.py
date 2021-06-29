@@ -1,7 +1,16 @@
+#       filename
+#
+#   Using parsed data in a gc_event_dataframe, creates heatmaps to visually
+#   show latency during runtime.
+#
+#   Ellis Brown, 6/29/2021
+
 import matplotlib
 from matplotlib import pyplot as plt
 import numpy as np
 
+# TODO: Most of this code is borrowed. Read and update documentation
+# to be consistent to my personal style.
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                     plot_heatmap()                            #

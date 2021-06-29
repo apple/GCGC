@@ -1,3 +1,10 @@
+#       trends.py
+#
+#   Given a list of floats, analyze macro trends within the data such as
+#   the sum, count, and max/min. Print using an ASCII table.
+#
+#   Ellis Brown, 6/29/2021
+
 from src.graphing.__generic_mapping import __string_const_chars
 import pandas as pd
 import numpy as np

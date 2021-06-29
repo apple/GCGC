@@ -1,3 +1,10 @@
+#       scatterplot.pt
+#
+#   Plots scatterplot based on input parameters. Used to simplify labels and plotting on
+#   the same graph, as needed.
+#
+#   Ellis Brown, 6/29/2021
+
 from src.graphing.__generic_mapping import __generic_plotting
 import matplotlib.pyplot as plt
 import random
