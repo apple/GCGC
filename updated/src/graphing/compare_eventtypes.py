@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import sys
+import pandas as pd
+import numpy as np
 
 sys.path.append("/Users/ellisbrown/Desktop/Project/updated/src/")
 import transform
@@ -33,3 +35,29 @@ def compare_eventtypes_bar(database_table):  # TODO FIX
     axs.set_title("Comparison of event types")
     axs.set_xlabel("Types of events")
     return axs
+
+
+#       compare_averages_bar
+#
+#   Compare the mean of each list in the durations_lists, plotting them
+#   horizontally in a bar chart, using labels and titles to display the plot.
+#
+def compare_averages_bar(durations_lists, labels, title=None):
+    assert isinstance(durations_lists, list)
+    assert isinstance(labels, list)
+    if title:
+        assert isinstance(title, str)
+    else:
+        title = "Mean durations in miliseconds"
+
+    fig, ax = plt.subplots()
+    duration_averages = []
+    for i in range(len(durations_lists)):
+        duration_averages.append(sum(durations_lists[i]) / len(durations_lists[i]))
+    ax.barh(np.arange(len(labels)), duration_averages, align="center")
+    ax.set_yticks(np.arange(len(labels)))
+    ax.set_yticklabels(labels)
+    ax.set_xlabel("Miliseconds average")
+    ax.set_title(title)
+    ax.grid()
+    return ax

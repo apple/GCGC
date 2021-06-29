@@ -1,5 +1,5 @@
 import random
-from __generic_mapping import __generic_plotting
+from src.graphing.__generic_mapping import __generic_plotting
 
 
 def plot_paused_and_running_line(

@@ -1,4 +1,6 @@
-from __generic_mapping import __string_const_chars
+from src.graphing.__generic_mapping import __string_const_chars
+import pandas as pd
+import numpy as np
 
 # Print the trends within the data (total number of pauses, max wait, total wait mean wait)
 # returns total wait

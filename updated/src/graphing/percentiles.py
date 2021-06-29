@@ -1,4 +1,5 @@
-from __generic_mapping import __string_const_chars
+from src.graphing.__generic_mapping import __string_const_chars
+import numpy as np
 
 # Display what percent of pauses meet a certain percentile threshold
 # Parameters:
