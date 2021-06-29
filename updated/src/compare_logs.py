@@ -204,6 +204,7 @@ def compare_heap_occupancy(gc_event_dataframes, max_heapsize):
         g = plot_heap_occupancy(
             times_selected, after_gc, "M", max_heapsize, "G", axs=g, label="Usage after gc", plot_max=False
         )
+
     g.plot([0, max(times_max)], [max_heapsize * 1000, max_heapsize * 1000], label="Max heapsize")
     g.legend()
 
@@ -222,5 +223,5 @@ def compare_heap_occupancy2(gc_event_dataframes, max_heapsize):
         g = plot_heap_occupancy(
             times_selected, before_gc, "M", max_heapsize, "G", axs=g, label="Usage before_gc", plot_max=False
         )
-    g.plot([0, max(times_max)], [max_heapsize * 1000, max_heapsize * 1000], label="Max heapsize")
+    g = plot_heap_occupancy(times_selected, before_gc, "M", max_heapsize, "G", axs=g, label="Usage before_gc")
     g.legend()
