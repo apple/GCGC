@@ -69,11 +69,13 @@ def compare_stw_concurrent_durations(database_tables, labels):
     fig, axs = plt.subplots()
     colors = ["r", "g", "b", "k", "c", "y", "m"]
     # colors = colors + colors + colors
-
+    bar_labels = []
     width = 0.9 / len(database_tables)
     for idx, database_table in enumerate(database_tables):
         stw_sum, concurrent_sum = transform.compare_eventtype_time_sums(database_table)
-        x_coordinates = [i + width * idx for i in range(2)]
+        bar_labels.append(round(stw_sum, 4))
+        bar_labels.append(round(concurrent_sum, 4))
+        x_coordinates = [i + (width * idx) for i in range(2)]
         axs.bar(x_coordinates, [stw_sum, concurrent_sum], width, color=colors[idx], label=labels[idx])
     axs.legend()
     # the median x tick along the axis
@@ -81,4 +83,9 @@ def compare_stw_concurrent_durations(database_tables, labels):
     axs.set_xticklabels(["STW Pauses", "Concurrent"])
     axs.set_ylabel("Total duration in seconds")
     axs.set_xlabel("Type of event")
+    rect = axs.patches
+    for rect, label in zip(rect, bar_labels):
+        height = rect.get_height()
+        axs.text(rect.get_x() + rect.get_width() / 2, height + 5, label, ha="center", va="bottom")
+
     return axs
