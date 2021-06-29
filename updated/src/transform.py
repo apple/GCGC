@@ -29,7 +29,7 @@ def get_event_durations_in_miliseconds(gc_event_dataframe):
     else:
         durations_miliseconds = []
         for duration in gc_event_dataframe["Duration_miliseconds"]:
-            if duration:
+            if duration != None:
                 durations_miliseconds.append(float(duration))
         return durations_miliseconds
 
@@ -46,7 +46,7 @@ def get_time_in_seconds(gc_event_dataframe):
     else:
         timestamps_seconds = []
         for time in gc_event_dataframe["TimeFromStart_seconds"]:
-            if time:
+            if time != None:
                 timestamps_seconds.append(float(time))
         return timestamps_seconds
 
