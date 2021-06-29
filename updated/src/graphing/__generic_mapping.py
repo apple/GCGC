@@ -1,3 +1,6 @@
+import matplotlib.pyplot as plt
+
+
 def __generic_plotting(xdata_list, ydata_list, axs=None, colors=[], labels=[], plotting_function=None, optional=None):
     if not xdata_list:
         print("No timedata list in function plot_bar_compare()")

@@ -1,4 +1,5 @@
-from __generic_mapping import __generic_plotting
+from src.graphing.__generic_mapping import __generic_plotting
+import matplotlib.pyplot as plt
 import random
 
 
