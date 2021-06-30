@@ -18,7 +18,8 @@ def compare_frequencies_bar(buckets, bucket_size_ms, legend):
 
     # create plot form data
     fig, ax = plt.subplots()
-    colors = ["cyan", "green", "blue", "purple", "pink", "k"]
+    # colors = ["cyan", "green", "blue", "purple", "pink", "k"]
+    colors = np.random.rand(len(buckets), 3)
     xlabels = [str(i * bucket_size_ms) for i in range(1, len(buckets) + 1)]
     width = 0.8 / len(buckets)
     max_x_coordinate = 0

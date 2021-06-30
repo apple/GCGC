@@ -68,7 +68,9 @@ def compare_stw_concurrent_durations(database_tables, labels):
         print("Duration of database_tables list and labels list do not match.")
         return None
     fig, axs = plt.subplots()
-    colors = ["r", "g", "b", "k", "c", "y", "m"]
+    colors = np.random.rand(len(database_tables), 3)
+    colors = ["r", "orange", "gold", "lawngreen", "indigo", "violet"]
+    colors = colors + colors
     # colors = colors + colors + colors
     bar_labels = []
     width = 0.9 / len(database_tables)
@@ -113,7 +115,7 @@ def extract_events_by_name(list_of_gc_event_dataframes):
 
 
 # TODO: fix this documentation. I believe this approach itself is flawed :(
-def compare_events_bar_chart(two_dimensional_dataframe_list, legend_vals):
+def compare_events_bar_chart(two_dimensional_dataframe_list, legend_vals, display_barvals=False):
     assert isinstance(two_dimensional_dataframe_list, list)
     if not two_dimensional_dataframe_list:
         print("Warning: src.compare_logs compare_events_bar_chart parameter empty.")
@@ -131,7 +133,10 @@ def compare_events_bar_chart(two_dimensional_dataframe_list, legend_vals):
             if event["EventName"].iloc[0] not in event_names:
                 event_names[event["EventName"].iloc[0]] = None
     keys = list(event_names.keys())
-    colors = ["r", "k", "b", "cyan", "green", "purple"]
+    # colors = ["r", "k", "b", "cyan", "green", "purple"]
+    # colors = np.random.rand(len(two_dimensional_dataframe_list), 3)
+    colors = ["r", "orange", "gold", "lawngreen", "indigo", "violet"]
+    colors = colors + colors
     labels = []
     ticks_gathered = []
     for log_index in range(len(two_dimensional_dataframe_list)):
@@ -169,26 +174,25 @@ def compare_events_bar_chart(two_dimensional_dataframe_list, legend_vals):
                     axs.barh([index_value], 0, color=colors[log_index], alpha=0.5)
                 label_added = True
                 axs.barh([index_value], 0, color=colors[log_index])
-                labels.append(0)
-
+                labels.append("")
     rect = axs.patches
     # axs.grid()
-    for rect, label in zip(rect, labels):
-        rect_width = rect.get_width()
-        axs.text(rect_width, rect.get_y() + rect.get_height() / 2, label, ha="center", va="bottom")
+    if display_barvals:
+        for rect, label in zip(rect, labels):
+            rect_width = rect.get_width()
+            axs.text(rect_width, rect.get_y() + rect.get_height() / 2, label, ha="center", va="bottom")
     ticks = [i + (width * (len(two_dimensional_dataframe_list) - 1) / 2) for i in range(len(keys))]
-    print(ticks)
+
     axs.set_yticks(ticks)
     axs.set_yticklabels(keys)
     new_ticks = []
-
     for inner in range(len(keys)):
         for outer in range(len(two_dimensional_dataframe_list)):
             new_ticks.append(inner + outer * width - width / 2)
             new_ticks.append(inner + outer * width)
 
             new_ticks.append(inner + outer * width + width / 2)
-    print(new_ticks)
+
     axs.set_yticks(new_ticks)
     axs.set_ylabel("Event type")
     axs.set_xlabel("Average time in MS")
