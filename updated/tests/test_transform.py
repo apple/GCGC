@@ -104,43 +104,36 @@ class Test_get_times_and_durations_from_event_lists(utest.TestCase):
     def test_empty_case(self):
         with patch("sys.stdout", new=StringIO()) as fake_out:
             a, b = transform.get_times_and_durations_from_event_lists([])
-            self.assertEqual(fake_out.getvalue(), "Error: event_tables empty\n")
+            self.assertEqual(fake_out.getvalue(), "Error: gc_event_dataframes empty\n")
             self.assertEqual(a, [])
             self.assertEqual(b, [])
 
 
-class Test_get_event_table_labels(utest.TestCase):
-    def test_correct_parameters(self):
-        self.assertRaises(AssertionError, transform.get_event_table_labels, 0)
-        self.assertRaises(AssertionError, transform.get_event_table_labels, 100)
-        self.assertRaises(AssertionError, transform.get_event_table_labels, {})
-        self.assertRaises(AssertionError, transform.get_event_table_labels, {"Hello": "World"})
-        self.assertRaises(AssertionError, transform.get_event_table_labels, [200, "Yes!"])
-        self.assertRaises(AssertionError, transform.get_event_table_labels, "String")
-        self.assertRaises(AssertionError, transform.get_event_table_labels, [[], []])
-
+class Test_get_gc_event_dataframe_labels(utest.TestCase):
     def test_empty_case(self):
         with patch("sys.stdout", new=StringIO()) as fake_out:
-            result = transform.get_event_table_labels([], True)
+            result = transform.get_gc_event_dataframe_labels([], True)
             self.assertEqual(None, result)
-            self.assertEqual(fake_out.getvalue(), "Error: event_tables empty\n")
+            self.assertEqual(fake_out.getvalue(), "Error: gc_event_dataframes empty\n")
 
     def test_non_empty_case(self):
         data = get_parsed_data_from_file(small_log)
         stw, con = transform.seperate_pauses_concurrent(data)
-        result = transform.get_event_table_labels([stw])
+        result = transform.get_gc_event_dataframe_labels([stw])
         self.assertNotEqual(result, [])
         self.assertEqual(result[0], "Pause Young")
-        result = transform.get_event_table_labels([stw], False)
+        result = transform.get_gc_event_dataframe_labels([stw], False)
         self.assertNotEqual(result, [])
         self.assertEqual(result[0], "Young")
 
         with patch("sys.stdout", new=StringIO()) as fake_out:
             data = get_parsed_data_from_file(small_log)
             stw, con = transform.seperate_pauses_concurrent(data)
-            result = transform.get_event_table_labels([stw, con])
+            result = transform.get_gc_event_dataframe_labels([stw, con])
             self.assertEqual(result, [])
-            self.assertEqual(fake_out.getvalue(), "Error: Empty table in event_table, unable to assign it a label\n")
+            self.assertEqual(
+                fake_out.getvalue(), "Error: Empty table in gc_event_dataframes, unable to assign it a label\n"
+            )
 
 
 class Test_compare_eventtype_time_sums(utest.TestCase):
@@ -157,7 +150,7 @@ class Test_compare_eventtype_time_sums(utest.TestCase):
         with patch("sys.stdout", new=StringIO()) as fake_out:
             result = transform.compare_eventtype_time_sums(pandas.DataFrame())
             self.assertEqual(result, (0, 0))
-            self.assertEqual(fake_out.getvalue(), "Error: Database_table is empty\n")
+            self.assertEqual(fake_out.getvalue(), "Error: gc_event_dataframe is empty\n")
 
     def test_non_empty_case(self):
         data = get_parsed_data_from_file(small_log)

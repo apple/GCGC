@@ -1,0 +1,113 @@
+########################################################################################
+#                                                                                      #
+#       Test suite for updated/src. Describes and details testing & How to run         #
+#                                                                                      #
+########################################################################################
+
+
+@---------------------------------------@
+|       Transform : COMPLETE            |
+@---------------------------------------@
+% test_empty_case     -> Tests when the inputs to the function, such as lists or dataframes, are empty data structures
+% test_zero_case      -> When a size constraint is required for a function, tests when size is zero
+% test_negative_case  -> When a size constraint is required for a function, tests when it is negative
+% test_non_empty_case -> When the input data to the function is not an empty data structure
+% test_correct_parameters -> Tests that the correct data type of parameters has been passed, including nested data types.
+Run using: python3 -m unittest -v test_transform.py
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+State   | Test name 
+ OK     | src.transform.get_time_and_event_durations
+ OK     | src.transform.get_event_durations_in_miliseconds
+ OK     | src.transform.get_time_in_seconds
+ FAIL   | src.transform.get_times_and_durations_from_event_lists
+ FAIL   | src.transform.get_gc_event_dataframe_labels
+ OK     | src.transform.compare_eventtype_time_sums
+ FAIL   | src.transform.get_concurrent_data
+ OK     | src.transform.get_pauses_data
+ OK     | src.transform.seperate_pauses_concurrent
+ OK     | src.transform.seperate_by_event_name
+ OK     | src.transform.get_heap_occupancy
+ OK     | src.transform.__get_max_heapsize
+ FAIL   | src.transform.get_reclaimed_mb_over_time
+ OK     | src.transform.group_into_pause_buckets
+ OK     | src.transform.get_heatmap_data
+
+
+
+# Compare logs : TODO
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+src.compare_logs.get_parsed_comparions_from_files
+src.compare_logs.seperate_pauses_concurrent_lists
+src.compare_logs.compare_stw_concurrent_durations
+src.compare_logs.get_time_and_event_durations_from_lists
+src.compare_logs.extract_events_by_name
+src.compare_logs.compare_events_bar_chart
+src.compare_logs.compare_heap_occupancy
+
+# Read log file :  TODO
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+src.read_log_file.get_parsed_data_from_file
+src.read_log_file.__get_time_range
+src.read_log_file.__number_to_float
+src.read_log_file.__manyMatch_LineSearch
+src.read_log_file.__columnNames
+src.read_log_file.event_parsing_string
+
+
+# Heatmap :  TODO
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+src.graphing.heatmap.plot_heatmap
+src.graphing.heatmap.__get_heatmap
+src.graphing.heatmap.heatmap_make
+src.graphing.heatmap.__annotate_heatmap
+
+
+# heapoccupancy :  TODO
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+src.graphing.heapoccupancy.plot_heap_occupancy
+src.graphing.heapoccupancy.plot_heap_occupancy_percentage
+src.graphing.heapoccupancy.__get_standardized_unit_size
+
+
+# Scatterplot :  TODO
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+src.graphing.scatterplot.plot_pauses_scatter
+src.graphing.scatterplot.comparrison_scatter
+
+
+# linegraph :  TODO
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+src.graphing.linegraph.plot_paused_and_running_line
+src.graphing.linegraph.compare_paused_running_line
+
+
+# compare_eventtypes :  TODO
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+src.graphing.compare_eventtypes.compare_eventtypes_pie
+src.graphing.compare_eventtypes.compare_eventtypes_bar
+src.graphing.compare_eventtypes.compare_averages_bar
+
+
+
+# __generic_mapping :  TODO
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+src.graphing.__generic_mapping.__generic_plotting
+src.graphing.__generic_mapping.__string_const_chars
+
+
+# duration frequency :  TODO
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+src.graphing.graph_bar_freq.compare_frequencies_bar
+
+
+# Trends :  TODO
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+src.graphing.trends.print_trends
+src.graphing.trends.compare_trends
+
+
+
+# Percentiles:  TODO
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+src.graphing.percentiles.print_percentiles
+src.graphing.percentiles.compare_pauses_percentiles
