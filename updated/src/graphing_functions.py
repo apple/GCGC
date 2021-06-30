@@ -351,7 +351,7 @@ def __generic_plotting(xdata_list, ydata_list, axs=None, colors=[], labels=[], p
     return axs
 
 
-from src import make_heatmap_temporary as mh
+import make_heatmap_temporary as mh
 
 
 def plot_heatmap(heatmap, dimensions, labels=True):

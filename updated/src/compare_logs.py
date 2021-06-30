@@ -8,9 +8,9 @@
 # Compare multiple logs, using the API calls designed for a singular log
 # Handle graphing & colors & labels & data transformations.
 # Ellis Brown, June 2021
-from src import transform
-from src.read_log_file import get_parsed_data_from_file
-from src.graphing.heapoccupancy import plot_heap_occupancy
+import transform
+from read_log_file import get_parsed_data_from_file
+from graphing.heapoccupancy import plot_heap_occupancy
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -134,7 +134,7 @@ def extract_events_by_name(list_of_gc_event_dataframes):
 def compare_events_bar_chart(two_dimensional_dataframe_list, legend_vals, display_barvals=False):
     assert isinstance(two_dimensional_dataframe_list, list)
     if not two_dimensional_dataframe_list:
-        print("Warning: src.compare_logs compare_events_bar_chart parameter empty.")
+        print("Warning: compare_logs compare_events_bar_chart parameter empty.")
         return None
     fig, axs = plt.subplots()
 

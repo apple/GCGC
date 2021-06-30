@@ -1,4 +1,4 @@
-from updated.src.transform import compare_eventtype_time_sums
+from updated.transform import compare_eventtype_time_sums
 import pandas
 import unittest as utest
 from io import StringIO

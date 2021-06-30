@@ -9,7 +9,7 @@
 #  TODO: plot with rectangles rather than just lines, use opacity as well to make sure that the colors can be seen through each other.
 
 import random
-from src.graphing.__generic_mapping import __generic_plotting
+from graphing.__generic_mapping import __generic_plotting
 
 #       plot_paused_and_running_line
 #

@@ -5,7 +5,7 @@
 #
 #   Ellis Brown, 6/29/2021
 
-from src.graphing.__generic_mapping import __generic_plotting
+from graphing.__generic_mapping import __generic_plotting
 import matplotlib.pyplot as plt
 import random
 
