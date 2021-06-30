@@ -214,9 +214,10 @@ def get_heap_occupancy(gc_event_dataframe):
     max_heap = []
     parsed_timestamps = []
     times = get_time_in_seconds(gc_event_dataframe)
-    regex_pattern_memory_1 = "(\d+)\w+->(\d+)\w+\((\d+)\w+\)"
-    regex_pattern_memory_2 = "(\d+)M\((\d+)%\)->(\d+)M\(\d+%\)"
-    # String parses things in this pattern: 1234M->123M(9999M)
+    regex_pattern_memory_1 = "(\d+)\w+->(\d+)\w+\((\d+)\w+\)"  # 1234M->123M(9999M)
+    regex_pattern_memory_2 = "(\d+)M\((\d+)%\)->(\d+)M\(\d+%\)"  # 5678M(69%)->194M(2%)
+
+    # 5678M(69%)->194M(2%)
     # Capture pattern 1: Before
     # Capture pattern 2: After
     # Capture pattern 3: Current maximum heap size (can change... lol)
