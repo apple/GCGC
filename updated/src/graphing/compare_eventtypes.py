@@ -1,6 +1,6 @@
 #       compare_eventtypes
 #
-#   Plot differences from gc_event_dataframes trends. 
+#   Plot differences from gc_event_dataframes trends.
 #   Plots comparisons between sum or average of events of certain types
 #
 #   Ellis Brown, 6/29/2021
@@ -13,28 +13,41 @@ sys.path.append("/Users/ellisbrown/Desktop/Project/updated/src/")
 import transform
 
 
-def compare_eventtypes_pie(database_table):
-    assert isinstance(database_table, pd.DataFrame)
-    if database_table.empty:
-        print("Error: Empty database_table in compare_eventtypes_pie")
+#       compare_eventtypes_pie
+#
+#   Creates a pie chart to compare the Stop the world pauses vs concurrent times sums
+#   for information in a gc_event_dataframe
+#
+#
+def compare_eventtypes_pie(gc_event_dataframe):
+    assert isinstance(gc_event_dataframe, pd.DataFrame)
+    if gc_event_dataframe.empty:
+        print("Error: Empty gc_event_dataframe in compare_eventtypes_pie")
         return None
     fig, axs = plt.subplots()
-    pauses_time, concurr_time = transform.compare_eventtype_time_sums(database_table)  # get the ratios of pause time
-    axs.axis("equal")  # center axis
+    # get the sums for each
+    pauses_time, concurr_time = transform.compare_eventtype_time_sums(gc_event_dataframe)
     axs.set_title("Comparison of Event Types")  # set the title
     axs = axs.pie([pauses_time, concurr_time], labels=["STW Pauses", "Concurrent Time"])
     return axs
 
 
-def compare_eventtypes_bar(database_table):  # TODO FIX
+#       compare_eventtypes_bar
+#
+#   Calculates the total time spent in concurrent events and stop the world events,
+#   and plots them against each other on a figure
+#
+def compare_eventtypes_bar(gc_event_dataframe):
     fig1, axs = plt.subplots()
-    pauses_time, concurr_time = transform.compare_eventtype_time_sums(database_table)  # get the ratios of pause time
+    pauses_time, concurr_time = transform.compare_eventtype_time_sums(
+        gc_event_dataframe
+    )  # get the ratios of pause time
     pauses_time = pauses_time / 1000
     concurr_time = concurr_time / 1000
     #  Plot using a bar graph.
     bars = ["STW Pauses", "Concurrent Time"]
-    bars = ["A", "B"]
     heights = [pauses_time, concurr_time]
+
     axs.bar(bars, heights)
     axs.grid()
     axs.set_ylabel("Total pause time in seconds")

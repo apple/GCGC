@@ -7,7 +7,11 @@
 import random
 import matplotlib.pyplot as plt
 
-
+#       plot_heap_occupancy
+#
+#   Creates 2 figures: One with data before, and one with data after the gc event ran.
+#   Plots them against time.
+#
 def plot_heap_occupancy(
     timedata_seconds=[],
     memorydata=[],
@@ -43,13 +47,16 @@ def plot_heap_occupancy(
     return axs
 
 
-# Plots how much of the heap is used, as a percentage of the maximum heap size
+#       plot_heap_occypancy_percentage
+#
+#   Plots how much of the heap is used, as a percentage of the maximum heap size
+#
 def plot_heap_occupancy_percentage(
     timedata_seconds=[],
     memorydata=[],
-    memorydata_unit="MB",
+    memorydata_unit="MB",  # TODO: Consider removinng this parameter.
     heapsize=1,
-    heapsize_unit="GB",
+    heapsize_unit="GB",  # TODO: Consider removinng this parameter.
     axs=None,
     color=None,
     label=None,
@@ -80,6 +87,11 @@ def plot_heap_occupancy_percentage(
     return axs
 
 
+#       __get_standardized_unit_size
+#
+#   From a given string unit, determine the float value scaled into the megabyte
+#   data storage size.
+#
 def __get_standardized_unit_size(value, unit):
     # We will convert everything to MB
 

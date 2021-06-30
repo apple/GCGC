@@ -1,4 +1,5 @@
-# graphing.py
+# graphing_functions.py
+# NOTE: this file is no longer used. it has been replaced by the graphing/ subiles
 from os import times
 import matplotlib.pyplot as plt
 import random
@@ -12,26 +13,7 @@ import transform
 # Set the size of the figures that appear in the Jupyter notebook
 plt.rcParams["figure.figsize"] = [12, 7]
 
-# axs is an array of plt.Axes objects.
-# think about them as all data associated with a plot
-# TODO: Consider axis :: what should be done along the x and y axis for units?
-# def plot_pauses_bar(xdata=[], ydata=[], axs=None, color="", label="", optional=None):
-#     if not axs:
-#         print("No axes supplied. Create one using\nf, axs = matplotlib.pyplot.subplots()")
-#         return
-#     if not label:
-#         label = "No label provided"
-#     if not color:
-#         r = random.random()
-#         b = random.random()
-#         g = random.random()
-#         color = (r, g, b)
 
-#     axs.bar(x=xdata, height=ydata, color=color, label=label, width=9.0)
-#     axs.set_ylabel("Pause duration (miliseconds)")
-#     axs.set_xlabel("Time from program start (seconds)")
-#     axs.set_title("Pauses during runtime in miliseconds, bar graph")
-#     axs.legend()
 def compare_eventtypes_pie(database_table):
     assert isinstance(database_table, pd.DataFrame)
     if database_table.empty:

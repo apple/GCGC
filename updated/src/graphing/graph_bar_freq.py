@@ -1,13 +1,8 @@
-# fig, ax = plt.subplots()
-# labels = [str(i * bucket_size_ms) for i in range(1, len(buckets) + 1)]
-# print(labels)
-# ax.bar(labels, height=buckets, align="center")
-# ax.set_xlabel("Miliseconds groupings")
-# ax.set_ylabel("Pause count")
-# _ = ax.set_title("Frequencies of STW pauses in miliseconds")
-
-# # fig.autofmt_xdate() #
-# # Turn on if labels are crossing over each other
+#       graph_bar_freq.py
+#
+#   Defines a function to graph the frequencies of pause types on a bar graph
+#
+#   Ellis Brown, 6/30/2021
 import matplotlib.pyplot as plt
 import numpy as np
 from decimal import Decimal

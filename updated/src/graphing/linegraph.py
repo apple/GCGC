@@ -11,10 +11,21 @@
 import random
 from src.graphing.__generic_mapping import __generic_plotting
 
-
+#       plot_paused_and_running_line
+#
+#   Create a 2d line plot, with highs for programming running, and lows for the programming waiting.
+#   higher bars and thicker bar widths both mean longer pause time.
+#
 def plot_paused_and_running_line(
     time_seconds=[], pauses_miliseconds=[], axs=None, color="", label="", const_bar_width=False
 ):
+    # Parameters:
+    # time_seconds: list of floats representing timestamps of events
+    # pauses_miliseconds: list of floats representing event duration
+    # axs: plot to draw on
+    # color: string color. Must be included in matplotlib colors
+    # label: string used to describe the dataset. Typically filename
+    # const_bar_width: If true, all bars have the same width. Recommended only for specially formatted data.
     if not axs:
         print("No axes supplied. Create one using\nf, axs = matplotlib.pyplot.subplots()")
         return
@@ -28,7 +39,7 @@ def plot_paused_and_running_line(
     x_data = []
     y_data = []
     ###### Create X-Y Data. bumps for height based on pause duration #####
-    if not const_bar_width:
+    if not const_bar_width:  # outside loop for runtime purposes
 
         for x, y in zip(time_seconds, pauses_miliseconds):
             # convert y from ms to seconds
@@ -67,7 +78,13 @@ def plot_paused_and_running_line(
     axs.legend()
 
 
-# Applys a mapping for each list entry to the needed plotting function
+#       compare_paused_running_line
+#
+#   Given a set of data to turn into running_line plots, creates a plot and puts them all on the
+#   same figure.
+#
+#   Implementation note: __generic_plotting checks parameter correctness. then calls plot_paused_and_running_line
+#
 def compare_paused_running_line(xdata_list, ydata_list, axs=None, colors=[], labels=[], const_bar_width=False):
     return __generic_plotting(
         xdata_list, ydata_list, axs, colors, labels, plot_paused_and_running_line, const_bar_width

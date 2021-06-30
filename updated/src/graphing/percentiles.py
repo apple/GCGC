@@ -8,13 +8,16 @@
 from src.graphing.__generic_mapping import __string_const_chars
 import numpy as np
 
-# Display what percent of pauses meet a certain percentile threshold
-# Parameters:
-#   pauses_miliseconds  : a list of pauses to be analyzed (in any order)
-#   print_title         : True if you would like column headers
-#   percentiles         : a list of percentiles to be plotted, in float list form.
-#   label               : a label to be printed. Should be 0-10 characters
+#       print_percentiles
+#
+#   Display what percent of pauses meet a certain percentile threshold
+#
 def print_percentiles(pauses_miliseconds=[], print_title=True, percentiles=None, label=None):
+    # Parameters:
+    #   pauses_miliseconds  : a list of pauses to be analyzed (in any order)
+    #   print_title         : True if you would like column headers
+    #   percentiles         : a list of percentiles to be plotted, in float list form.
+    #   label               : a label to be printed. Should be 0-10 characters
     if not pauses_miliseconds:
         print("pauses_miliseconds not provided to print_percentiles")
         return
@@ -37,10 +40,13 @@ def print_percentiles(pauses_miliseconds=[], print_title=True, percentiles=None,
     print("")
 
 
-# Plot the percentiles for pause time in miliseconds for all lists provided, on the same table
-# Parameters:
-#   pauses_miliseconds    : list of [list of pauses as floats in ms]
-#   percentiles(optional) : list of float value percentiles to be viewed.
+#       compare_pauses_percentiles
+#
+#   Plot the percentiles for pause time in miliseconds for all lists provided, on the same table
+#   Parameters:
+#       pauses_miliseconds    : list of [list of pauses as floats in ms]
+#       percentiles(optional) : list of float value percentiles to be viewed.
+#
 def compare_pauses_percentiles(list_of_list_pauses_ms=[], percentiles=None, labels=None):
     if not list_of_list_pauses_ms:
         print("No list_of_list_pauses_ms provided to plot_compare_percentiles")

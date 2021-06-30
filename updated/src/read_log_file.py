@@ -157,9 +157,3 @@ def event_parsing_string():
     return "^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\]\[\w+ *\]\[gc(?:,\w+)?\s*\] GC\(\d+\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) (?:((?:\w+ ?){1,3}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})((?:(?:\d+\w->\d+\w(?:\(\d+\w\)?)?)?(?= ?(\d+\.\d+)ms))|(?:\d+\w\(\d+%\)->\d+\w\(\d+%\)))"
     # For reference, here is the final string returned
     # ^(?:\[(\d{4}-\d\\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\]\[\w+ ?\]\[gc\s*\] GC\(\d+\) ((?:Pause)|(?:Concurrent)) ((?:\w+ ?){1,3}) ((?:\((?:\w+ ?){1,3}\) ){0,3})(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?(\d+\.\d+)ms
-
-
-# Included to support ZGC parsing (which has a SOMEWHAT DIFFERENT FORMAT) >:(
-# ^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\]\[\w+ *\]\[gc(:?,\w+)?\s*\] GC\(\d+\) ((?:Pause)|(?:Concurrent)|(?:Garbage Collection)) (?:((?:\w+ ?){1,3}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})((?:\d+\w->\d+\w(?:\(\d+\w\)?)?)? ?(\d+\.\d+)ms|(?:\d+\w\(\d+%\)->\d+\w\(\d+%\))?)
-# Update string with lookaheads to assert the ms pauses!
-# ^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\]\[\w+ *\]\[gc(?:,\w+)?\s*\] GC\(\d+\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) (?:((?:\w+ ?){1,3}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})((?:(?:\d+\w->\d+\w(?:\(\d+\w\)?)?)?(?= ?(\d+\.\d+)ms))|(?:\d+\w\(\d+%\)->\d+\w\(\d+%\)))#

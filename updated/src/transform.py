@@ -68,21 +68,21 @@ def get_times_and_durations_from_event_lists(gc_event_dataframes):
         assert isinstance(table, pd.DataFrame)
     xdatas_list = []
     ydatas_list = []
-    for event_table in gc_event_dataframes:
-        xdata, ydata = get_time_and_event_durations(event_table)
+    for gc_event_dataframe in gc_event_dataframes:
+        xdata, ydata = get_time_and_event_durations(gc_event_dataframe)
         xdatas_list.append(xdata)
         ydatas_list.append(ydata)
     return xdatas_list, ydatas_list
 
 
-#       get_event_table_labels
+#       get_gc_event_dataframe_labels
 #
 #   From a list of gc_event_dataframes, gather the name of the
 #   event type and event name and return that as a label,
-#   one label corresponding to each event_table. If eventtype
+#   one label corresponding to each gc_event_dataframe. If eventtype
 #   is true, then the eventtype is part of the returned label.
 #
-def get_event_table_labels(gc_event_dataframes, eventtype=True):
+def get_gc_event_dataframe_labels(gc_event_dataframes, eventtype=True):
     # assert the correct parameter types
     assert isinstance(gc_event_dataframes, list)
     if not gc_event_dataframes:
@@ -293,18 +293,18 @@ def group_into_pause_buckets(stw_table, bucket_size_ms):
 
 #       get_heatmap_data
 #
-#   Create a 2d numpy array, and dimensions list associated with a event_table, such that
+#   Create a 2d numpy array, and dimensions list associated with a gc_event_dataframe, such that
 #   the 2d array represents the frequencies of latency events, based on the specified dimensions.
 def get_heatmap_data(
-    event_table,  # gc_event_dataframe of events. Typically only pause events
+    gc_event_dataframe,  # gc_event_dataframe of events. Typically only pause events
     x_bucket_count=20,  # Number of time intervals to group gc events into. INT ONLY
     y_bucket_count=20,  # Number of latency time intervals to group events into. INT ONLY
     x_bucket_duration=100,  # Duration in seconds that each time interval bucket has for gc event timestamps
     y_bucket_duration=10,  # Duration in miliseconds for the length of each latency interval bucket
     suppress_warnings=False,  # If True, warnings about values lying outside of dimension range will not be printed.
 ):
-    assert isinstance(event_table, pd.DataFrame)
-    if event_table.empty:
+    assert isinstance(gc_event_dataframe, pd.DataFrame)
+    if gc_event_dataframe.empty:
         print("Warning: Empty table in get_heatmap_data.")
         return None, None
     for x in [x_bucket_count, y_bucket_count]:
@@ -319,10 +319,10 @@ def get_heatmap_data(
             print("Warning: All dimensions must be greater than zero.")
             return None, None
 
-    if event_table.empty:
-        print("Empty event_table in get_heatmap_data")
+    if gc_event_dataframe.empty:
+        print("Empty gc_event_dataframe in get_heatmap_data")
         return None, None
-    times_seconds, pauses_ms = get_time_and_event_durations(event_table)
+    times_seconds, pauses_ms = get_time_and_event_durations(gc_event_dataframe)
 
     # create buckets to store the time information.
     # first, compress into num_b buckets along the time X-axis.

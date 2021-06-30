@@ -9,14 +9,17 @@ from src.graphing.__generic_mapping import __string_const_chars
 import pandas as pd
 import numpy as np
 
+#       print_trends
+#
 # Print the trends within the data (total number of pauses, max wait, total wait mean wait)
 # returns total wait
-# Parameters:
-#   pauses_miliseconds    : list of pauses (floats)
-#   label                 : label for this row in the table
-#   print_title(optional) : bool, True => print recorded values
+#
 def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime_seconds=0, timestamps=None):
-    # Analyze trends. ALL PAUSES ARE IN MILISECONDS.
+    # Parameters:
+    #   pauses_miliseconds    : list of pauses (floats)
+    #   label                 : label for this row in the table
+    #   print_title(optional) : bool, True => print recorded values
+    assert isinstance(pauses_miliseconds, list)
     if pauses_miliseconds:
         max_pause = round(max(pauses_miliseconds, key=lambda i: float(i)), 4)
         sum_pauses = round(sum(float(i) for i in pauses_miliseconds), 4)
@@ -43,7 +46,7 @@ def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime
             title += " Throughput   |"
         print(title)
         print("-" * len(title))
-    num_chars = 16 - 4  # 16 = line length, 3 for ending char sequence " | "
+    num_chars = 12
     if not label:
         label = "Run:"
     # print with correct formatting the values
@@ -60,8 +63,12 @@ def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime
     print(line)
 
 
-# Compares trends from a list of pauses lists
+#       compare_trends
+#
+#   Compares trends from a list of pauses lists
+#
 def compare_trends(pauses_ms_lists, labels=None, lists_of_total_program_runtime=[], lists_of_timestamps=[]):
+    assert isinstance(pauses_ms_lists, list)
     if not pauses_ms_lists:
         print("No pauses_ms_lists in compare_trends.")
         return

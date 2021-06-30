@@ -94,17 +94,28 @@ def compare_stw_concurrent_durations(database_tables, labels):
     return axs
 
 
+#       get_time_and_event_durations_from_lists
+#
+#   From multiple gc_event_dataframes, gather their timestamp and event_durations,
+#   and return a list of each, in the same order as the dataframes
+#
 def get_time_and_event_durations_from_lists(gc_events_dataframes):
     assert isinstance(gc_events_dataframes, list)
-    xxx = []
-    yyy = []
+    timestamps_2d = []  # 2d: list of list of floats
+    durations_2d = []  # 2d: list of list of floats
     for dataframe in gc_events_dataframes:
         stw_times, stw_durations = transform.get_time_and_event_durations(dataframe)
-        xxx.append(stw_times)
-        yyy.append(stw_durations)
-    return xxx, yyy
+        timestamps_2d.append(stw_times)
+        durations_2d.append(stw_durations)
+    return timestamps_2d, durations_2d
 
 
+#       extract_events_by_name
+#
+#   Takes a list of gc_event_dataframes, and accesses each dataframe. From there,
+#   it seperates the events by name into smaller dataframes. Returns a list of these groupings of
+#   dataframes, such that the order of the returned grouping reflects the order of the passed gc_event_dataframes
+#
 def extract_events_by_name(list_of_gc_event_dataframes):
     seperated_list_gc_event_dataframes = []
     for dataframe in list_of_gc_event_dataframes:
@@ -114,6 +125,11 @@ def extract_events_by_name(list_of_gc_event_dataframes):
     return seperated_list_gc_event_dataframes
 
 
+#       compare_events_bar_chart
+#
+# Takes in a list of dataframes, and cmopares the mean duration of the events
+# If one log has event that another does not, the duration = 0.
+#
 # TODO: fix this documentation. I believe this approach itself is flawed :(
 def compare_events_bar_chart(two_dimensional_dataframe_list, legend_vals, display_barvals=False):
     assert isinstance(two_dimensional_dataframe_list, list)
