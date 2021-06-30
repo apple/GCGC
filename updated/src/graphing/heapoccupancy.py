@@ -28,12 +28,14 @@ def plot_heap_occupancy(
         color = (random.random(), random.random(), random.random())
     if not label:
         label = "Current heap usage"
-    axs.plot(timedata_seconds, memorydata, color=color, label=label)
-    # Plot the maximum heap size during runtime.
+    # Plot the maximum first, because it looks better on the legend
     if plot_max:
         x = [0, timedata_seconds[-1]]
         y = [max_heap_size, max_heap_size]
         axs.plot(x, y, color="k", label="Maximum heap size")
+    # Do the actual plotting
+    axs.plot(timedata_seconds, memorydata, color=color, label=label)
+
     axs.set_ylabel("Heap space in Megabytes (MB)")
     axs.set_xlabel("Time in seconds during program runtime")
     axs.set_title("Heap space used during runtime")
@@ -68,7 +70,7 @@ def plot_heap_occupancy_percentage(
     axs.plot(timedata_seconds, memorydata, color=color, label=label)
     # Plot the maximum heap size during runtime.
     if plot_max:
-        x = [0, timedata_seconds[-1]]
+        x = [timedata_seconds[0], timedata_seconds[-1]]
         y = [100, 100]
         axs.plot(x, y, color="k", label=("100% : " + str(heapsize) + heapsize_unit))
     axs.set_ylabel("Percentage of heap filled")
