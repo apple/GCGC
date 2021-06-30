@@ -29,6 +29,7 @@ def plot_pauses_scatter(xdata=[], ydata=[], axs=None, color="", label="", option
     axs.set_title("Pauses during runtime in miliseconds over time (scatter)")
     axs.grid()
     axs.legend()
+    return axs
 
 
 def comparrison_scatter(xdata_list, ydata_list, axs=None, colors=[], labels=[]):
