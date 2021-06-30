@@ -152,16 +152,21 @@ def compare_events_bar_chart(two_dimensional_dataframe_list, legend_vals):
                     ticks_gathered.append(index_value)
                     if not label_added:
                         axs.barh(
-                            [index_value], [average], width, color=colors[log_index], label=legend_vals[log_index]
+                            [index_value],
+                            [average],
+                            width,
+                            color=colors[log_index],
+                            label=legend_vals[log_index],
+                            alpha=0.5,
                         )
                     else:
-                        axs.barh([index_value], [average], width, color=colors[log_index])
+                        axs.barh([index_value], [average], width, color=colors[log_index], alpha=0.5)
                     label_added = True
             if not found:
                 if not label_added:
-                    axs.barh([index_value], 0, color=colors[log_index], label=legend_vals[log_index])
+                    axs.barh([index_value], 0, color=colors[log_index], label=legend_vals[log_index], alpha=0.5)
                 else:
-                    axs.barh([index_value], 0, color=colors[log_index])
+                    axs.barh([index_value], 0, color=colors[log_index], alpha=0.5)
                 label_added = True
                 axs.barh([index_value], 0, color=colors[log_index])
                 labels.append(0)
@@ -170,8 +175,9 @@ def compare_events_bar_chart(two_dimensional_dataframe_list, legend_vals):
     # axs.grid()
     for rect, label in zip(rect, labels):
         rect_width = rect.get_width()
-        axs.text(rect_width + 0.45, rect.get_y() + rect.get_height() / 2, label, ha="center", va="bottom")
+        axs.text(rect_width, rect.get_y() + rect.get_height() / 2, label, ha="center", va="bottom")
     ticks = [i + (width * (len(two_dimensional_dataframe_list) - 1) / 2) for i in range(len(keys))]
+    print(ticks)
     axs.set_yticks(ticks)
     axs.set_yticklabels(keys)
     new_ticks = []
@@ -190,38 +196,48 @@ def compare_events_bar_chart(two_dimensional_dataframe_list, legend_vals):
     axs.legend()
 
 
-def compare_heap_occupancy(gc_event_dataframes, max_heapsize):
+#       compare_heap_occupancy
+#
+#   From a list of dc_event_dataframes, plot the heap allocation before GC and after GC
+#   on two charts. Plots the maximum heapsize as a constant line, to show how full the heap is.
+#   Note: If different plots of have different maximum heaps, this may not make sense.
+#
+def compare_heap_occupancy(gc_event_dataframes, max_heapsize, labels):
+    # Parameters:
+    #   gc_event_dataframes: list, each elemt being of type pd.DataFrame
+    #   max_heapsize: contains the size of the heap in GB
+    #   labels: list of all names for the dataframes. typically filenames
     assert isinstance(gc_event_dataframes, list)
-    times_max = []
-    fig, g = plt.subplots()
-
+    assert isinstance(labels, list)
+    assert type(max_heapsize) == float or type(max_heapsize) == int
+    if not gc_event_dataframes:
+        print("Error: No gc_event_dataframes in compare_heap_occupancy.")
+        return None
+    if not labels:
+        print("Error: No labels in compare_heap_occupancy.")
+    if not len(labels) == len(gc_event_dataframes):
+        print("Length of labels does not match lengh of gc_event_dataframes in compare_heap_occupancy")
     for dataframe in gc_event_dataframes:
-        before_gc, after_gc, max_heap, times_selected = transform.get_heap_occupancy(dataframe)
-        times_max.append(max(times_selected))
-        # g = plot_heap_occupancy(
-        #     times_selected, before_gc, "M", max_heapsize, "G", axs=g, label="Usage before gc", plot_max=False
-        # )
-        g = plot_heap_occupancy(
-            times_selected, after_gc, "M", max_heapsize, "G", axs=g, label="Usage after gc", plot_max=False
+        assert isinstance(dataframe, pd.DataFrame)
+    # After parameters are correct, create two plots, one for before gc events, one for after gc events
+    fig, before = plt.subplots()
+    fig, after = plt.subplots()
+    # Get the heap occupancy over time for the first dataframe, and plot with the max
+    before_gc, after_gc, _, times_selected = transform.get_heap_occupancy(gc_event_dataframes[0])
+    before = plot_heap_occupancy(times_selected, before_gc, "M", max_heapsize, "G", before, label=labels[0])
+    after = plot_heap_occupancy(times_selected, after_gc, "M", max_heapsize, "G", after, label=labels[0])
+
+    # for every other item in the list, plot before & after heap allocation over time.
+    for idx, dataframe in enumerate(gc_event_dataframes[1:]):
+        before_gc, after_gc, _, times_selected = transform.get_heap_occupancy(dataframe)
+        before = plot_heap_occupancy(
+            times_selected, before_gc, "M", max_heapsize, "G", axs=before, label=labels[idx + 1], plot_max=False
         )
-
-    g.plot([0, max(times_max)], [max_heapsize * 1000, max_heapsize * 1000], label="Max heapsize")
-    g.legend()
-
-
-def compare_heap_occupancy2(gc_event_dataframes, max_heapsize):
-    assert isinstance(gc_event_dataframes, list)
-    times_max = []
-    fig, g = plt.subplots()
-
-    for dataframe in gc_event_dataframes:
-        before_gc, after_gc, max_heap, times_selected = transform.get_heap_occupancy(dataframe)
-        times_max.append(max(times_selected))
-        # g = plot_heap_occupancy(
-        #     times_selected, before_gc, "M", max_heapsize, "G", axs=g, label="Usage before gc", plot_max=False
-        # )
-        g = plot_heap_occupancy(
-            times_selected, before_gc, "M", max_heapsize, "G", axs=g, label="Usage before_gc", plot_max=False
+        after = plot_heap_occupancy(
+            times_selected, after_gc, "M", max_heapsize, "G", axs=after, label=labels[idx + 1], plot_max=False
         )
-    g = plot_heap_occupancy(times_selected, before_gc, "M", max_heapsize, "G", axs=g, label="Usage before_gc")
-    g.legend()
+    before.set_ylim(0)  # Make sure axis are not misleading (especially between the two charts)
+    after.set_ylim(0)  # Make sure axis are not misleading (especially between the two charts)
+    before.set_title("Memory used BEFORE  gc")
+    after.set_title("Memory used AFTER gc")
+    return (before, after)  # Return plots
