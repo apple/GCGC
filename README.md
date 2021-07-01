@@ -33,9 +33,8 @@ Setup for these explained in [setup.md](./setup.md)
 
 > src
 > > - `graphing/` - contains plotting and graphing python scripts
+> > - `notebooks/` - contains notebooks to analyze log files with.
 > > - `*.py` - contains python scripts for Jupyter notebooks
-> > - `DEMO_*` - Jupyter notebooks, for reference. Recommended READ ONLY
-> > - `notebook_*` - Jupyter notebooks to be modieified and parse log files.
 
 > tests
 > > - testing infrastructure and datasets
