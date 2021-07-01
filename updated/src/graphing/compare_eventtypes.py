@@ -60,6 +60,7 @@ def compare_eventtypes_bar(gc_event_dataframe):
 #
 #   Compare the mean of each list in the durations_lists, plotting them
 #   horizontally in a bar chart, using labels and titles to display the plot.
+#   a durations_lists contains lists of floats, representing the duration of events
 #
 def compare_averages_bar(durations_lists, labels, title=None):
     assert isinstance(durations_lists, list)
