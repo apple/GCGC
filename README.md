@@ -28,11 +28,11 @@ Setup for these explained in [setup.md](./setup.md)
 ## File Structure
 
 > datasets
-> > - ` long` - contains example log files
-> > - `short`- contains example log files
+> > - ` long/` - contains example log files
+> > - `short/`- contains example log files
 
 > src
-> > - `graphing` - contains plotting and graphing python scripts
+> > - `graphing/` - contains plotting and graphing python scripts
 > > - `*.py` - contains python scripts for Jupyter notebooks
 > > - `DEMO_*` - Jupyter notebooks, for reference. Recommended READ ONLY
 > > - `notebook_*` - Jupyter notebooks to be modieified and parse log files.
