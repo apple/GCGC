@@ -11,11 +11,10 @@ Jupyter notebooks designed for easy and useful parsing of log files created from
 - The following Python3 packages
     - numpy
     - matplotlib
-    - matplotlib.pyplot
     - re
     - Jupyter notebook 
 
-Setup for both explained in [setup.md](./setup.md)
+Setup for these explained in [setup.md](./setup.md)
 
 ## How to run analysis
 
@@ -34,4 +33,9 @@ Setup for both explained in [setup.md](./setup.md)
 
 > src
 > > - `graphing` - contains plotting and graphing python scripts
-> > - `transform.py` - contains plotting and graphing python scripts
+> > - `*.py` - contains python scripts for Jupyter notebooks
+> > - `DEMO_*` - Jupyter notebooks, for reference. Recommended READ ONLY
+> > - `notebook_*` - Jupyter notebooks to be modieified and parse log files.
+
+> tests
+> > - testing infrastructure and datasets
