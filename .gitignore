@@ -2,7 +2,6 @@
 # The gc log is too large, not needed.
 src/__pycache__
 src/graphing/__pycache__
-src/graphing/__pycache__/*
 *.pdf
 .vscode
 .ipynb_checkpoints
