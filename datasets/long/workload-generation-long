@@ -1,0 +1,17 @@
+All workloads generated here were made using 
+https://github.com/corretto/heapothesys/tree/master/HyperAlloc 
+
+
+To generate the short workloads, they were run using the following parameters:
+
+    heapsize = 8G
+    duration = 1000 seconds
+    gc-algorithm = 
+        -XX:+UseParallelGC
+        -XX:+UseG1GC
+        -XX:+UseShenandoahGC
+        -XX:+UseZGC
+        -XX:+UseSerialGC
+
+
+java < gc-algorithm >  -Xmx8G -Xms8G -Xlog:gc*:./filename_log -jar HyperAlloc.jar -d 1000

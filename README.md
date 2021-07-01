@@ -1,8 +1,8 @@
 # Gc log analysis
-#### Ellis Brown (6/7/2021)
+#### Ellis Brown (7/1/2021)
 
 
-### Parse log files created from Java gc, and create helpful plots and aggregations of data 
+### Parse log files created from Java gc
 
 > ## How to run analysis
 (requirements)
