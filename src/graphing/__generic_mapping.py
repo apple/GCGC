@@ -9,8 +9,8 @@ import matplotlib
 
 #       __generic_plotting
 #
-#   Given a plotting function, and the parameters to that plotting function, carefully comapres the parameters for that
-#   function, and prints descriptive error messages when parameters are incorrect.
+#   Given a plotting function, and the parameters to that plotting function, maps the list of function parameters to the function,
+#   and generates multiple data plots on the same figure. Verifies the correctness of parameters.
 #
 def __generic_plotting(xdata_list, ydata_list, axs=None, colors=[], labels=[], plotting_function=None, optional=None):
     # xdata_list: an n length list of float lists, containing data to be plotted in the x axis direction
@@ -22,6 +22,7 @@ def __generic_plotting(xdata_list, ydata_list, axs=None, colors=[], labels=[], p
     # labels:   a list of length n containing the label for each entry in the before lists
     # plotting_function: a function to apply each item of the before lists to, on the same figure.
     # optional : Parameter used in special cases where the plotting_function requires it. Not needed typically.
+    # Note: all n length lists must be the same n lenght.
     if not xdata_list:
         print("No xdata_list list in function __generic_plotting()")
         return
