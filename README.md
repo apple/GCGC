@@ -8,10 +8,10 @@
 (requirements)
 - python3 and used packages (numpy, matplotlib, matplotlib.pyplot, re)
 - Jupyter notebook
-Setup for both explained in [Jupyter-everything/setup](https://github.pie.apple.com/ellis-brown/gc-analysis/tree/main/Jupyter-everything/setup)
+Setup for both explained in [setup.md](./setup.md)
 
 (begin analysis)           
-1. Navigate to /Jupyter-everything/
+1. Navigate to /src
 2. type  `jupyter notebook`
 3. open ``log analysis`` or ``compare_multiple``
 4. Use the in-notebook instructions to run analysis
