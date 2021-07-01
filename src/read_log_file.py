@@ -134,7 +134,7 @@ def event_parsing_string():
     gc_info_level = "\[\w+ *\]"  # [info ]
     type_gc_log_line = "\[gc(?:,\w+)?\s*\] "  # [gc, trace]
     gc_event_number = "GC\(\d+\) "  # GC(25)
-    type_gc_event = "((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) "  # Concurrent    *
+    gc_event_type = "((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) "  # Concurrent    *
     gc_event_name = "(?:((?:\w+ ?){1,3}) )?"  # Young    *
     gc_additional_info = "((?:\((?:\w+ ?){1,3}\) ){0,3})"  # (Evacuation Pause)    *
     heap_memory_change = "((?:(?:\d+\w->\d+\w(?:\(\d+\w\)?)?)?(?= ?"  # 254M->12M(1200M)    *
@@ -146,7 +146,7 @@ def event_parsing_string():
         + gc_info_level
         + type_gc_log_line
         + gc_event_number
-        + type_gc_event
+        + gc_event_type
         + gc_event_name
         + gc_additional_info
         + heap_memory_change
@@ -154,3 +154,21 @@ def event_parsing_string():
         + zgc_style_heap_memory_change
     )
     return event_regex_string
+
+
+# Examples:::
+# The following is a match.
+# [2020-11-16T14:54:23.414+0000][7.012s][info ][gc] GC(7) Pause Young (Normal) (GCLocker Initiated GC) 1024M->560M(12000M) 69.175ms
+# It ends up with the following group information (group numbers shown below, followed by a colon and a space, then the captured info)
+"""
+1: 2020-11-16T14:54:23.414+0000
+2: 7.012
+3: Pause
+4: Young
+5: (Normal) (GCLocker Initiated GC)
+6: 1024M->560M(12000M)
+7: 69.175
+"""
+
+# The following fails, as it does not meet the gc_event_type regex requirement
+# [2020-11-16T16:26:00.650+0000][5504.248s][trace][gc,tlab  ] ThreadLocalAllocBuffer::compute_size(7) returns 19023
