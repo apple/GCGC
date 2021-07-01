@@ -128,32 +128,29 @@ def __columnNames():
 #  Return: string
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def event_parsing_string():
-    # Implementation note: Be aware that spaces within the strings are intentional.
-    datetime = "^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?"  # [2020-11-16T14:54:16.414+0000]
-    timefromstart = "\[(\d+\.\d+)s\]"  #                                 [123.321s]
-    outputlevel = "\[\w+ *\]"  #                                         [info]
-    phase = "\[gc\s*\]"  # NOTE: this does NOT accept anything but 'gc' level outputs
-    log_number = " GC\(\d+\) "  #                                        GC(123)
-    event_type = (
-        "((?:Pause)|(?:Concurrent)|(?:Garbage Collection)) "  # Pause   or   Concurrent    or   Garbage Collection
+    # note: Not all lines contain a regex-group. Group lines are commented with a *
+    date_time = "^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?"  # [2021-07-01T23:23:22.001+0000]    *
+    time_from_start_seconds = "\[(\d+\.\d+)s\]"  # [243.45s]     *
+    gc_info_level = "\[\w+ *\]"  # [info ]
+    type_gc_log_line = "\[gc(?:,\w+)?\s*\] "  # [gc, trace]
+    gc_event_number = "GC\(\d+\) "  # GC(25)
+    type_gc_event = "((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) "  # Concurrent    *
+    gc_event_name = "(?:((?:\w+ ?){1,3}) )?"  # Young    *
+    gc_additional_info = "((?:\((?:\w+ ?){1,3}\) ){0,3})"  # (Evacuation Pause)    *
+    heap_memory_change = "((?:(?:\d+\w->\d+\w(?:\(\d+\w\)?)?)?(?= ?"  # 254M->12M(1200M)    *
+    time_spent_miliseconds = "(\d+\.\d+)ms))"  # 24.321ms    *
+    zgc_style_heap_memory_change = "|(?:\d+\w\(\d+%\)->\d+\w\(\d+%\)))"  # 25M(4%)->12M(3%)    *
+    event_regex_string = (
+        date_time
+        + time_from_start_seconds
+        + gc_info_level
+        + type_gc_log_line
+        + gc_event_number
+        + type_gc_event
+        + gc_event_name
+        + gc_additional_info
+        + heap_memory_change
+        + time_spent_miliseconds
+        + zgc_style_heap_memory_change
     )
-    event_name = "((?:\w+ ?){1,3}) "  #                                  Young
-    additional_event_info = "((?:\((?:\w+ ?){1,3}\) ){0,3})"  #             (Evacuation Pause) (Normal)
-    memory_change = "(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?"  #              500M->212M(1200M)
-    event_duration_ms = "(\d+\.\d+)ms"  #                                200.31ms
-    # return (
-    #     datetime
-    #     + timefromstart
-    #     + outputlevel
-    #     + phase
-    #     + log_number
-    #     + event_type
-    #     + event_name
-    #     + additional_event_info
-    #     + memory_change
-    #     + event_duration_ms
-    # )
-    # TODO:  Fix the docuemnation of this string right here... even I dont know whats going on a little bit
-    return "^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\]\[\w+ *\]\[gc(?:,\w+)?\s*\] GC\(\d+\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) (?:((?:\w+ ?){1,3}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})((?:(?:\d+\w->\d+\w(?:\(\d+\w\)?)?)?(?= ?(\d+\.\d+)ms))|(?:\d+\w\(\d+%\)->\d+\w\(\d+%\)))"
-    # For reference, here is the final string returned
-    # ^(?:\[(\d{4}-\d\\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\]\[\w+ ?\]\[gc\s*\] GC\(\d+\) ((?:Pause)|(?:Concurrent)) ((?:\w+ ?){1,3}) ((?:\((?:\w+ ?){1,3}\) ){0,3})(\d+\w->\d+\w\(?\d+?\w?\)?){0,1} ?(\d+\.\d+)ms
+    return event_regex_string
