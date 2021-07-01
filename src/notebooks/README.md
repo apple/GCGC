@@ -29,16 +29,20 @@ jupyter-notebooks
 
 --- 
 
-Where the number `x` after  `In[x]` means the cell's most recent run number (based on all cells ever run)
+Note: the number `x` after  `In[x]` means the cell's most recent run number (based on all cells ever run)
 
+One example of an online tutorial that covers the basics is [here](https://www.dataquest.io/blog/jupyter-notebook-tutorial/)
 
+The offical documentation can be found [here](https://jupyter-notebook.readthedocs.io/en/stable/)  
+
+<br />
 
 > # How to use notebooks for log analysis
-In this particular project, all cells are associated with a certain type of `graph`, `chart`, or `comparison`. The typical workflow is as follows:
+In this project, all cells are associated with a certain type of `graph`, `chart`, or `comparison`. The typical workflow is as follows:
 
 
 
-1. Set the file name / file path to the log to analyze. 
+1. Set the file name / file path of the log in cell 2.
 2. Select the top cell with the cursor
 3. Run all cells, starting with the top cell
     - On web based Jupyter, select `Cell`-> `Run all`
