@@ -27,12 +27,12 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None):
     assert isinstance(logfile, str)  # input must be a string
 
     if not logfile:
-        print("No logfile provided")
+        print("No logfile provided in get_parsed_data_from_file")
         return
     table = __manyMatch_LineSearch(event_parsing_string(), logfile)
     if not any(table):
         print("Unable to parse file " + str(logfile))
-        return None
+        return pd.DataFrame()
     # Convert the paused and time from start from string datatypes to floats
     table[1] = list(map(__number_to_float, table[1]))
     table[6] = list(map(__number_to_float, table[6]))

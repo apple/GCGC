@@ -24,14 +24,16 @@ class Test_read_log_file(utest.TestCase):
         # Catch output being directed to standard out
         with patch("sys.stdout", new=StringIO()) as fake_out:
             return_value = get_parsed_data_from_file(empty_file)
-            self.assertEqual(fake_out.getvalue(), "Unable to parse file ./testdata/empty_file\n")
+            self.assertEqual(
+                fake_out.getvalue(), "Unable to parse file ./testdata/empty_file\n"
+            )  # TODO: remove dependency on hard-coded string
             self.assertEqual(return_value, None)
 
     def test_empty_input(self):
         with patch("sys.stdout", new=StringIO()) as fake_out:
             return_value = get_parsed_data_from_file("")
-            self.assertEqual(fake_out.getvalue(), "No logfile provided\n")
-            self.assertEqual(return_value, None)
+            self.assertEqual(fake_out.getvalue(), "No logfile provided in get_parsed_data_from_file\n")
+            self.assertEqual(return_value, pandas.DataFrame())
 
     # Test to make sure that the only parameter input type can be a string
     def test_incorrect_parameter_datatype(self):
