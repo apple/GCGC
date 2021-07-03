@@ -8,7 +8,7 @@ import sys
 
 # How to test file: python3 -m unittest -v test_transform.py
 
-sys.path.append("/Users/ellisbrown/Desktop/Project/updated/src/")
+sys.path.append("../src")
 import transform
 from read_log_file import get_parsed_data_from_file
 

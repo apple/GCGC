@@ -5,7 +5,7 @@ from unittest.mock import patch
 import sys
 
 # Test using: python3 -m unittest -v test_graphing.py
-sys.path.append("/Users/ellisbrown/Desktop/Project/updated/src/")
+sys.path.append("../src")
 import graphing as graph
 from transform import compare_eventtype_time_sums
 

@@ -8,7 +8,7 @@ from io import StringIO
 from unittest.mock import patch
 import sys
 
-sys.path.append("/Users/ellisbrown/Desktop/Project/updated/src/")
+sys.path.append("../src")
 from read_log_file import get_parsed_data_from_file
 
 
