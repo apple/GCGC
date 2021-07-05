@@ -1,0 +1,9 @@
+#######
+Im going to use the apply_restrictions functions within every function, so that the USER has no idea its happening,
+but otherwise use the same plotting plan as before. So I just need to update the graphing folder, and make sure
+i have a file called like "Apply graphing"
+
+Also, add logrithmic plots.
+
+I shall do this in a check mark. NOTE: THIS UPDATED PLAN ALLOWS FOR ONLY 1 FILE DEMO, no more need for a single
+log vs compare logs thing.... but some will make X charts .

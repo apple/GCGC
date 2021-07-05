@@ -60,7 +60,6 @@ def scatter(
                     if group in found_groups:
                         plt.scatter(time, datapoint, color=found_groups[group])
                     else:
-                        print(colors)
                         found_groups[group] = colors[group_count]
                         plt.scatter(time, datapoint, color=found_groups[group], label=(labels[idx] + " " + str(group)))
                         group_count += 1

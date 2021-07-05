@@ -3,7 +3,6 @@ def apply_restrictions(datasets, group_by=None, filter_by=None, labels=None, col
         datasets = apply_filter(datasets, filter_by)
     if not labels:
         labels = [str(num + 1) for num in range(len(datasets))]
-    print((len(datasets)))
     # Now, loop through all datasets.
     timestamp_groups = []
     datapoint_groups = []
