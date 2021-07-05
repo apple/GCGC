@@ -1,17 +1,7 @@
 # Files not needed.
 # The gc log is too large, not needed.
-*.log
-final
-/datasets/*
-/datasets
-/workloads/outputs
-/workloads/logs
-/workloads/META-INF
-/workloads/*.jfr
-/workloads/*.log
-/updated/datasets
-/updated/datasets/*
-/updated/src/__pycache__
-/updated/src/graphing/__pycache__
-/updated/src/graphing/__pycache__/*
+src/__pycache__
+src/graphing/__pycache__
 *.pdf
+.vscode
+.ipynb_checkpoints
