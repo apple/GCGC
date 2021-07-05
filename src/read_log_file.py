@@ -38,6 +38,8 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None):
     table[7] = list(map(__number_to_float, table[7]))
     table[5] = choose_non_zero(table[5], table[8])
     table[6] = choose_non_zero(table[6], table[9])
+    table[5] = list(map(__number_to_float, table[5]))
+    table[6] = list(map(__number_to_float, table[6]))
 
     table.pop()
     table.pop()
@@ -146,9 +148,9 @@ def event_parsing_string():
     gc_event_type = "((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) "  # Concurrent    *
     gc_event_name = "(?:((?:\w+ ?){1,3}) )?"  # Young    *
     gc_additional_info = "((?:\((?:\w+ ?){1,3}\) ){0,3})"  # (Evacuation Pause)    *
-    heap_memory_change = "(?:(?:(\d+)\w->(\d+)\w(?:\(\d+\w\)?)?)?(?= ?"  # 254M->12M(1200M)    *
+    heap_memory_change = "(?:(?:(?:(\d+)\w->(\d+)\w(?:\(\d+\w\)?)?)?(?= ?"  # 254M->12M(1200M)    *
     time_spent_miliseconds = "(\d+\.\d+)ms))"  # 24.321ms    *
-    zgc_style_heap_memory_change = "|(?:(\d+)\w\(\d+%\)->(\d+)\w\(\d+%\))"  # 25M(4%)->12M(3%)    *
+    zgc_style_heap_memory_change = "|(?:(\d+)\w\(\d+%\)->(\d+)\w\(\d+%\)))"  # 25M(4%)->12M(3%)    *
     event_regex_string = (
         date_time
         + time_from_start_seconds
