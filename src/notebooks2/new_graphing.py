@@ -45,8 +45,8 @@ def scatter(
                 if value:
                     dfs[idx] = dfs[idx][dfs[idx][col] == value]
                 else:
-                    print("Case")
                     dfs[idx] = dfs[idx][dfs[idx][col] != None]
+
     else:
         dfs = gc_event_dataframes
 
