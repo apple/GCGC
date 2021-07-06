@@ -161,7 +161,7 @@ def bar_sum(
 
     for idx, (datapoints, color, label) in enumerate(zip(datapoint_groups, colors, labels)):
         barheight = sum(datapoints)
-        axss.bar(idx, barheight, label=label + " : " + str(barheight), color=color)
+        axss.bar(idx, barheight, label=label + " : " + str(round(barheight, 4)), color=color)
     axss.set_xticks(range(len(datapoint_groups)))
     axss.set_xticklabels(labels)
     axss.legend()
