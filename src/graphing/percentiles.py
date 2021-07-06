@@ -18,9 +18,8 @@ def print_percentiles(pauses_miliseconds=[], print_title=True, percentiles=None,
     #   print_title         : True if you would like column headers
     #   percentiles         : a list of percentiles to be plotted, in float list form.
     #   label               : a label to be printed. Should be 0-10 characters
-    if not pauses_miliseconds:
-        print("pauses_miliseconds not provided to print_percentiles")
-        return
+    if type(pauses_miliseconds) != type(None):
+        pauses_miliseconds = list(pauses_miliseconds)
     pauses_miliseconds = sorted(pauses_miliseconds, reverse=True)
     percentile_table = {}
     if not percentiles:
