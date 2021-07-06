@@ -7,3 +7,26 @@ Also, add logrithmic plots.
 
 I shall do this in a check mark. NOTE: THIS UPDATED PLAN ALLOWS FOR ONLY 1 FILE DEMO, no more need for a single
 log vs compare logs thing.... but some will make X charts .
+
+
+The following tables exist:
+
+COMPLETE: Scatter plot : Pauses during runtime 
+COMPLETE: Scatter plot : Concurrent durations during runtime
+COMPLETE: Pie chart: Time spent in sTW Phases vs. Concurrent Phases
+COMPLETE: Bar chart: Time spent in sTW Phases vs. Concurrent Phases
+--------------------------------
+Trends: Concurrent Vs Pauses 
+Trends: Concurrent
+Trends: Pauses
+Percentiles: Concurrent Vs Pauses 
+Percentiles: Concurrent
+Percentiles: Pauses
+--------------------------------
+Mean durations in miliseconds: Pauses
+Line graph: Heap space used after gc
+Line graph: Heap space used before gc
+Scatter: Reclaimed bytes
+Frequencies of pauses (buckets)
+Total time spent in STW concurent events
+Average event duirations across all logs
