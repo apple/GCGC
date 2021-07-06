@@ -4,15 +4,15 @@ def apply_restrictions(
     if not colors:
         colors = [
             "red",
-            "orange",
-            "gold",
             "lime",
-            "darkgreen",
-            "lightsteelblue",
-            "darkblue",
             "rebeccapurple",
             "violet",
             "black",
+            "lightsteelblue",
+            "darkblue",
+            "orange",
+            "gold",
+            "darkgreen",
             "hotpink",
             "brown",
         ]

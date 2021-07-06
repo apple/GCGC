@@ -2,13 +2,13 @@ import matplotlib.pyplot as plt
 from apply_restrictions import apply_restrictions
 
 
-def scatter2(
+def plot_scatter2(
     gc_event_dataframes,
     group_by=None,
     filter_by=None,
     column="Duration_miliseconds",
     labels=None,
-    axs=None,
+    plot=None,
     colors=None,
 ):
     # Verify parameters are correct
@@ -17,8 +17,8 @@ def scatter2(
     assert isinstance(gc_event_dataframes, list)
     if not labels:
         labels = [str(idx) for idx in range(len(gc_event_dataframes))]
-    if not axs:
-        fig, axs = plt.subplots()
+    if not plot:
+        fig, plot = plt.subplots()
     if not colors:
         colors = [
             "red",
@@ -69,67 +69,67 @@ def scatter2(
         for idx, df in enumerate(dfs):
             plt.scatter(df["TimeFromStart_seconds"], df[column], color=colors[idx], label=labels[idx])
     # Missing: User must set y label.
-    axs.legend()
-    axs.set_xlabel("Time passed in seconds")
-    return axs
+    plot.legend()
+    plot.set_xlabel("Time passed in seconds")
+    return plot
 
 
-def scatter(
+def plot_scatter(
     gc_event_dataframes,
     group_by=None,
     filter_by=None,
     labels=None,
     colors=None,
-    axs=None,
+    plot=None,
     column="Duration_miliseconds",
 ):
     timestamp_groups, datapoint_groups, labels, colors = apply_restrictions(
         gc_event_dataframes, group_by, filter_by, labels, column, colors
     )
-    if not axs:
-        f, axs = plt.subplots()
+    if not plot:
+        f, plot = plt.subplots()
 
     for time, datapoints, color, label in zip(timestamp_groups, datapoint_groups, colors, labels):
-        axs.scatter(time, datapoints, label=label, color=color)
-    axs.legend()
-    return axs
+        plot.scatter(time, datapoints, label=label, color=color)
+    plot.legend()
+    return plot
 
 
-def line(
+def plot_line(
     gc_event_dataframes,
     group_by=None,
     filter_by=None,
     labels=None,
     colors=None,
-    axs=None,
+    plot=None,
     column="Duration_miliseconds",
 ):
     timestamp_groups, datapoint_groups, labels, colors = apply_restrictions(
         gc_event_dataframes, group_by, filter_by, labels, column, colors
     )
-    if not axs:
-        f, axs = plt.subplots()
+    if not plot:
+        f, plot = plt.subplots()
 
     for time, datapoints, color, label in zip(timestamp_groups, datapoint_groups, colors, labels):
-        axs.plot(time, datapoints, label=label, color=color)
-    axs.legend()
-    return axs
+        plot.plot(time, datapoints, label=label, color=color)
+    plot.legend()
+    return plot
 
 
-def pie_sum(
+def plot_pie_sum(
     gc_event_dataframes,
     group_by=None,
     filter_by=None,
     labels=None,
     colors=None,
-    ax=None,
+    plot=None,
     column="Duration_miliseconds",
 ):
     timestamp_groups, datapoint_groups, labels, colors = apply_restrictions(
         gc_event_dataframes, group_by, filter_by, labels, column, colors
     )
-    if not ax:
-        f, axs = plt.subplots()
+    if not plot:
+        f, plot = plt.subplots()
 
     pie_slices_sizes = []
     for thing in datapoint_groups:
@@ -138,69 +138,69 @@ def pie_sum(
         pslice = sum(datapoints)
         pie_slices_sizes.append(slice)
         labels[idx] = labels[idx] + " : " + str(pslice)
-    axs.pie(pie_slices_sizes, labels=labels, colors=colors, startangle=-40)
-    axs.legend()
-    return axs
+    plot.pie(pie_slices_sizes, labels=labels, colors=colors, startangle=-40)
+    plot.legend()
+    return plot
 
 
-def bar_sum(
+def plot_bar_sum(
     gc_event_dataframes,
     group_by=None,
     filter_by=None,
     labels=None,
     colors=None,
-    axs=None,
+    plot=None,
     column="Duration_miliseconds",
 ):
     timestamp_groups, datapoint_groups, labels, colors = apply_restrictions(
         gc_event_dataframes, group_by, filter_by, labels, column, colors
     )
-    if not axs:
-        fig, axss = plt.subplots()
+    if not plot:
+        fig, plots = plt.subplots()
 
     for idx, (datapoints, color, label) in enumerate(zip(datapoint_groups, colors, labels)):
         barheight = sum(datapoints)
-        axss.bar(idx, barheight, label=label + " : " + str(round(barheight, 4)), color=color)
-    axss.set_xticks(range(len(datapoint_groups)))
-    axss.set_xticklabels(labels)
-    axss.legend()
-    return axss
+        plots.bar(idx, barheight, label=label + " : " + str(round(barheight, 4)), color=color)
+    plots.set_xticks(range(len(datapoint_groups)))
+    plots.set_xticklabels(labels)
+    plots.legend()
+    return plots
 
 
-def bar_avg(
+def plot_bar_avg(
     gc_event_dataframes,
     group_by=None,
     filter_by=None,
     labels=None,
     colors=None,
-    axs=None,
+    plot=None,
     column="Duration_miliseconds",
 ):
 
     _, datapoint_groups, labels, colors = apply_restrictions(
         gc_event_dataframes, group_by, filter_by, labels, column, colors
     )
-    if not axs:
-        f, axss = plt.subplots()
+    if not plot:
+        f, plots = plt.subplots()
 
     for idx, (datapoints, color, label) in enumerate(zip(datapoint_groups, colors, labels)):
         barheight = sum(datapoints) / len(datapoints)
-        axss.bar(idx, barheight, label=label + " : " + str(round(barheight, 4)), color=color)
-    axss.set_xticks(range(len(datapoint_groups)))
-    axss.set_xticklabels(labels)
-    axss.legend()
-    return axss
+        plots.bar(idx, barheight, label=label + " : " + str(round(barheight, 4)), color=color)
+    plots.set_xticks(range(len(datapoint_groups)))
+    plots.set_xticklabels(labels)
+    plots.legend()
+    return plots
 
 
 from src.graphing.trends import compare_trends
 
 
-def trends(
+def plot_trends(
     gc_event_dataframes,
     group_by=None,
     filter_by=None,
     labels=None,
-    axs=None,
+    plot=None,
     column="Duration_miliseconds",
     throughput=False,
 ):
@@ -216,12 +216,12 @@ def trends(
 from src.graphing.percentiles import compare_pauses_percentiles
 
 
-def percentiles(
+def plot_percentiles(
     gc_event_dataframes,
     group_by=None,
     filter_by=None,
     labels=None,
-    axs=None,
+    plot=None,
     column="Duration_miliseconds",
 ):
     timestamp_groups, datapoint_groups, labels, _ = apply_restrictions(
@@ -230,16 +230,16 @@ def percentiles(
     compare_pauses_percentiles(datapoint_groups, labels=labels)
 
 
-def reclaimed_bytes(
+def plot_reclaimed_bytes(
     gc_event_dataframes,
     group_by=None,
     filter_by=None,
     labels=None,
-    axs=None,
+    plot=None,
     column="Duration_miliseconds",
 ):
-    if not axs:
-        fig, axs = plt.subplots()
+    if not plot:
+        fig, plot = plt.subplots()
 
     # Access the beforeGC data
 
@@ -256,6 +256,6 @@ def reclaimed_bytes(
         reclaimed_bytes_groups.append([before - after for before, after in zip(before_gc, after_gc)])
 
     for time, datapoints, color, label in zip(timestamp_groups, reclaimed_bytes_groups, colors, labels):
-        axs.scatter(time, datapoints, label=label, color=color)
-    axs.legend()
-    return axs
+        plot.scatter(time, datapoints, label=label, color=color)
+    plot.legend()
+    return plot
