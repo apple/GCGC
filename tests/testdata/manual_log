@@ -1,7 +1,0 @@
-[1.042s][info ][gc          ] GC(3) Pause Young (Normal) (G1 Evacuation Pause) 108M->59M(1040M) 10.421ms
-[0.070s][info][gc] GC(1) Pause Init Mark (unload classes) 0.160ms
-[2020-11-16T15:49:20.881+0000][3304.479s][info ][gc                          ] GC(54) Pause Young (Normal) (G1 Evacuation Pause) 8287M->3649M(12000M) 132.704ms
-
-data = [[None, 1.042, "info", "Pause", "Young", "(Normal) (G1 Evacuation Pause) ", "108M->59M(1040M)", 10.421],
-        [None, 0.070, "info", "Pause"m "Init Mark", "(unload classes) ", None, 0.160],
-        ["2020-11-16T15:49:20.881+0000", 3304.479, "info", "Pause", "Young", "(Normal) (G1 Evacuation Pause)", "8287M->3649M(12000M)", 132.704]]

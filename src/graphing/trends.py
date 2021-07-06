@@ -5,6 +5,7 @@
 #
 #   Ellis Brown, 6/29/2021
 
+from os import times
 from graphing.__generic_mapping import __string_const_chars
 import pandas as pd
 import numpy as np
@@ -19,7 +20,9 @@ def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime
     #   pauses_miliseconds    : list of pauses (floats)
     #   label                 : label for this row in the table
     #   print_title(optional) : bool, True => print recorded values
-    assert isinstance(pauses_miliseconds, list)
+    pauses_miliseconds = list(pauses_miliseconds)
+    if type(timestamps) != type(None):
+        timestamps = list(timestamps)
     if pauses_miliseconds:
         max_pause = round(max(pauses_miliseconds, key=lambda i: float(i)), 4)
         sum_pauses = round(sum(float(i) for i in pauses_miliseconds), 4)

@@ -35,7 +35,14 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None):
         return pd.DataFrame()
     # Convert the paused and time from start from string datatypes to floats
     table[1] = list(map(__number_to_float, table[1]))
+    table[7] = list(map(__number_to_float, table[7]))
+    table[5] = choose_non_zero(table[5], table[8])
+    table[6] = choose_non_zero(table[6], table[9])
+    table[5] = list(map(__number_to_float, table[5]))
     table[6] = list(map(__number_to_float, table[6]))
+
+    table.pop()
+    table.pop()
     parsed_data_table = pd.DataFrame(table).transpose()  # transpose to orient correctly
     parsed_data_table.columns = __columnNames()  # add column titles, allow for clear references
     if time_range_seconds:
@@ -106,7 +113,8 @@ def __columnNames():
         "EventType",
         "EventName",
         "AdditionalEventInfo",
-        "MemoryChange_MB",
+        "HeapBeforeGC",
+        "HeapAfterGC",
         "Duration_miliseconds",
     ]
 
@@ -123,7 +131,10 @@ def __columnNames():
 # GROUP 4: "EventName" -> Specific action from the event. Example : "(pause) Young"
 # GROUP 5: "AdditionalEventInfo" -> Information about the event
 # GROUP 6: "MemoryChange_MB" -> Memory changed, following this patten: before->after(max_heapsize)
-# GROUP 7: "Duration_miliseconds" -> How long it took for the event to occur in miliseconds
+# 7, 11: before
+# 8, 12: after
+# 9, 13: max
+# GROUP 10: "Duration_miliseconds" -> How long it took for the event to occur in miliseconds
 #
 #  Return: string
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -137,9 +148,9 @@ def event_parsing_string():
     gc_event_type = "((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) "  # Concurrent    *
     gc_event_name = "(?:((?:\w+ ?){1,3}) )?"  # Young    *
     gc_additional_info = "((?:\((?:\w+ ?){1,3}\) ){0,3})"  # (Evacuation Pause)    *
-    heap_memory_change = "((?:(?:\d+\w->\d+\w(?:\(\d+\w\)?)?)?(?= ?"  # 254M->12M(1200M)    *
+    heap_memory_change = "(?:(?:(?:(\d+)\w->(\d+)\w(?:\(\d+\w\)?)?)?(?= ?"  # 254M->12M(1200M)    *
     time_spent_miliseconds = "(\d+\.\d+)ms))"  # 24.321ms    *
-    zgc_style_heap_memory_change = "|(?:\d+\w\(\d+%\)->\d+\w\(\d+%\)))"  # 25M(4%)->12M(3%)    *
+    zgc_style_heap_memory_change = "|(?:(\d+)\w\(\d+%\)->(\d+)\w\(\d+%\)))"  # 25M(4%)->12M(3%)    *
     event_regex_string = (
         date_time
         + time_from_start_seconds
@@ -172,3 +183,15 @@ def event_parsing_string():
 
 # The following fails, as it does not meet the gc_event_type regex requirement
 # [2020-11-16T16:26:00.650+0000][5504.248s][trace][gc,tlab  ] ThreadLocalAllocBuffer::compute_size(7) returns 19023
+
+
+def choose_non_zero(list1, list2):
+    list_non_zero = []
+    for item1, item2 in zip(list1, list2):
+        if item1:
+            list_non_zero.append(item1)
+        elif list2:
+            list_non_zero.append(item2)
+        else:
+            list_non_zero.append(None)
+    return list_non_zero
