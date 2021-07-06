@@ -28,16 +28,17 @@ def apply_restrictions(
         for idx, df in enumerate(datasets):
             groups = {}
             for group, time, datapoint in zip(df[group_by], df["TimeFromStart_seconds"], df[column]):
-                if group not in groups:
-                    groups[group] = [[], [], str(labels[idx]) + ": " + str(group)]
-
-                groups[group][0].append(time)
-                groups[group][1].append(datapoint)
+                if group:
+                    if group not in groups:
+                        groups[group] = [[], [], str(labels[idx]) + ": " + str(group)]
+                    groups[group][0].append(time)
+                    groups[group][1].append(datapoint)
 
             for key in groups.keys():
                 timestamp_groups.append(groups[key][0])
                 datapoint_groups.append(groups[key][1])
                 group_labels.append(groups[key][2])
+
     else:
         for idx, df in enumerate(datasets):
             timestamp_groups.append(df["TimeFromStart_seconds"])
@@ -56,11 +57,13 @@ def apply_filter(datasets, filter_by=None):
 
         for idx in range(len(dfs)):
             for col, value in filter_by:
+
                 if value:
                     dfs[idx] = dfs[idx][dfs[idx][col] == value]
                 else:
-                    dfs[idx] = dfs[idx][dfs[idx][col] != None]
+                    import pandas as pd
 
+                    dfs[idx] = dfs[idx][pd.notnull(dfs[idx][col])]
     else:
         dfs = datasets
     return dfs
