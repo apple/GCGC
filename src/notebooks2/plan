@@ -11,22 +11,22 @@ log vs compare logs thing.... but some will make X charts .
 
 The following tables exist:
 
-COMPLETE: Scatter plot : Pauses during runtime 
-COMPLETE: Scatter plot : Concurrent durations during runtime
-COMPLETE: Pie chart: Time spent in sTW Phases vs. Concurrent Phases
-COMPLETE: Bar chart: Time spent in sTW Phases vs. Concurrent Phases
+OK: Scatter plot : Pauses during runtime 
+OK: Scatter plot : Concurrent durations during runtime
+Ok: Bar chart: Time spent in sTW Phases vs. Concurrent Phases
 --------------------------------
-COMLPETE: Trends: Concurrent Vs Pauses 
-COMLPETE: Trends: Concurrent
-COMLPETE: Trends: Pauses
-COMLPETE: Percentiles: Concurrent Vs Pauses 
-COMLPETE: Percentiles: Concurrent
-COMLPETE: Percentiles: Pauses
+Ok: Trends: Concurrent Vs Pauses 
+Ok: Trends: Concurrent
+Ok: Trends: Pauses
+
+Ok: Percentiles: Concurrent Vs Pauses 
+Ok: Percentiles: Concurrent
+Ok: Percentiles: Pauses
 --------------------------------
-COMPLETE: Mean durations in miliseconds: Pauses
-COMPLETE: Line graph: Heap space used after gc
-COMPLETE: Line graph: Heap space used before gc
-COMPLETE: Scatter: Reclaimed bytes
-COMPLETE: Total time spent in STW concurent events
+Ok: Mean durations in miliseconds: Pauses
+Ok: Line graph: Heap space used after gc
+Ok: Line graph: Heap space used before gc
+Ok: Scatter: Reclaimed bytes
+-> Total time spent in STW concurent events
 Frequencies of pauses (buckets)
 Average event durations across all logs
