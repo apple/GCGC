@@ -133,8 +133,10 @@ def pie_sum(
 
     pie_slices_sizes = []
 
-    for datapoints in datapoint_groups:
-        pie_slices_sizes.append(sum(datapoints))
+    for idx, datapoints in enumerate(datapoint_groups):
+        slice = sum(datapoints)
+        pie_slices_sizes.append(slice)
+        labels[idx] = labels[idx] + " : " + str(slice)
     axs.pie(pie_slices_sizes, labels=labels, colors=colors, startangle=-40)
     axs.legend()
     return axs
@@ -155,7 +157,8 @@ def bar_sum(
     if not ax:
         f, axs = plt.subplots()
     for idx, (datapoints, color, label) in enumerate(zip(datapoint_groups, colors, labels)):
-        axs.bar(idx, sum(datapoints), label=label, color=color)
+        barheight = sum(datapoints)
+        axs.bar(idx, barheight, label=label + " : " + str(barheight), color=color)
     axs.set_xticks(range(len(datapoint_groups)))
     axs.set_xticklabels(labels)
     axs.legend()
@@ -179,7 +182,8 @@ def bar_avg(
         f, axs = plt.subplots()
     for log in range(num_gc_logs):
         for idx, (datapoints, color, label) in enumerate(zip(datapoint_groups, colors, labels)):
-            axs.bar(idx, sum(datapoints) / len(datapoints), label=label, color=color)
+            barheight = sum(datapoints) / len(datapoints)
+            axs.bar(idx, barheight, label=label + " : " + str(barheight), color=color)
     axs.set_xticks(range(len(datapoint_groups)))
     axs.set_xticklabels(labels)
     axs.legend()

@@ -16,17 +16,17 @@ COMPLETE: Scatter plot : Concurrent durations during runtime
 COMPLETE: Pie chart: Time spent in sTW Phases vs. Concurrent Phases
 COMPLETE: Bar chart: Time spent in sTW Phases vs. Concurrent Phases
 --------------------------------
-Trends: Concurrent Vs Pauses 
-Trends: Concurrent
-Trends: Pauses
-Percentiles: Concurrent Vs Pauses 
-Percentiles: Concurrent
-Percentiles: Pauses
+COMLPETE: Trends: Concurrent Vs Pauses 
+COMLPETE: Trends: Concurrent
+COMLPETE: Trends: Pauses
+COMLPETE: Percentiles: Concurrent Vs Pauses 
+COMLPETE: Percentiles: Concurrent
+COMLPETE: Percentiles: Pauses
 --------------------------------
-Mean durations in miliseconds: Pauses
-Line graph: Heap space used after gc
-Line graph: Heap space used before gc
-Scatter: Reclaimed bytes
+COMPLETE: Mean durations in miliseconds: Pauses
+COMPLETE: Line graph: Heap space used after gc
+COMPLETE: Line graph: Heap space used before gc
+COMPLETE: Scatter: Reclaimed bytes
+COMPLETE: Total time spent in STW concurent events
 Frequencies of pauses (buckets)
-Total time spent in STW concurent events
-Average event duirations across all logs
+Average event durations across all logs
