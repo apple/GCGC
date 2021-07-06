@@ -56,7 +56,7 @@ def plot_heatmap(heatmap, dimensions, labels=True):
     if labels:
         __annotate_heatmap(im, valfmt="{x}")
     fig.tight_layout()
-    plt.show()
+    return ax
     ## end new
     """
     fig, ax = plt.subplots()
