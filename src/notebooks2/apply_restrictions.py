@@ -1,4 +1,21 @@
-def apply_restrictions(datasets, group_by=None, filter_by=None, labels=None, column="Duration_miliseconds"):
+def apply_restrictions(
+    datasets, group_by=None, filter_by=None, labels=None, column="Duration_miliseconds", colors=None
+):
+    if not colors:
+        colors = [
+            "red",
+            "orange",
+            "gold",
+            "lime",
+            "darkgreen",
+            "lightsteelblue",
+            "darkblue",
+            "rebeccapurple",
+            "violet",
+            "black",
+            "hotpink",
+            "brown",
+        ]
     if filter_by:
         datasets = apply_filter(datasets, filter_by)
     if not labels:
@@ -7,21 +24,27 @@ def apply_restrictions(datasets, group_by=None, filter_by=None, labels=None, col
     timestamp_groups = []
     datapoint_groups = []
     group_labels = []
-    for idx, df in enumerate(datasets):
-        groups = {}
-        for group, time, datapoint in zip(df[group_by], df["TimeFromStart_seconds"], df[column]):
-            if group not in groups:
-                groups[group] = [[], [], str(labels[idx]) + " " + str(group)]
+    if group_by:
+        for idx, df in enumerate(datasets):
+            groups = {}
+            for group, time, datapoint in zip(df[group_by], df["TimeFromStart_seconds"], df[column]):
+                if group not in groups:
+                    groups[group] = [[], [], str(labels[idx]) + ": " + str(group)]
 
-            groups[group][0].append(time)
-            groups[group][1].append(datapoint)
+                groups[group][0].append(time)
+                groups[group][1].append(datapoint)
 
-        for key in groups.keys():
-            timestamp_groups.append(groups[key][0])
-            datapoint_groups.append(groups[key][1])
-            group_labels.append(groups[key][2])
+            for key in groups.keys():
+                timestamp_groups.append(groups[key][0])
+                datapoint_groups.append(groups[key][1])
+                group_labels.append(groups[key][2])
+    else:
+        for idx, df in enumerate(datasets):
+            timestamp_groups.append(df["TimeFromStart_seconds"])
+            datapoint_groups.append(df[column])
+            group_labels.append(labels[idx])
 
-    return timestamp_groups, datapoint_groups, group_labels
+    return timestamp_groups, datapoint_groups, group_labels, colors
 
 
 def apply_filter(datasets, filter_by=None):

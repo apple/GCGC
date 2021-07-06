@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
+from apply_restrictions import apply_restrictions
 
 
-def scatter(
+def scatter2(
     gc_event_dataframes,
     group_by=None,
     filter_by=None,
@@ -71,3 +72,149 @@ def scatter(
     ax.legend()
     ax.set_xlabel("Time passed in seconds")
     return ax
+
+
+def scatter(
+    gc_event_dataframes,
+    group_by=None,
+    filter_by=None,
+    labels=None,
+    colors=None,
+    ax=None,
+    column="Duration_miliseconds",
+):
+    timestamp_groups, datapoint_groups, labels, colors = apply_restrictions(
+        gc_event_dataframes, group_by, filter_by, labels, column, colors
+    )
+    if not ax:
+        f, axs = plt.subplots()
+
+    for time, datapoints, color, label in zip(timestamp_groups, datapoint_groups, colors, labels):
+        axs.scatter(time, datapoints, label=label, color=color)
+    axs.legend()
+    return axs
+
+
+def line(
+    gc_event_dataframes,
+    group_by=None,
+    filter_by=None,
+    labels=None,
+    colors=None,
+    ax=None,
+    column="Duration_miliseconds",
+):
+    timestamp_groups, datapoint_groups, labels, colors = apply_restrictions(
+        gc_event_dataframes, group_by, filter_by, labels, column, colors
+    )
+    if not ax:
+        f, axs = plt.subplots()
+
+    for time, datapoints, color, label in zip(timestamp_groups, datapoint_groups, colors, labels):
+        axs.plot(time, datapoints, label=label, color=color)
+    axs.legend()
+    return axs
+
+
+def pie_sum(
+    gc_event_dataframes,
+    group_by=None,
+    filter_by=None,
+    labels=None,
+    colors=None,
+    ax=None,
+    column="Duration_miliseconds",
+):
+    timestamp_groups, datapoint_groups, labels, colors = apply_restrictions(
+        gc_event_dataframes, group_by, filter_by, labels, column, colors
+    )
+    if not ax:
+        f, axs = plt.subplots()
+
+    pie_slices_sizes = []
+
+    for datapoints in datapoint_groups:
+        pie_slices_sizes.append(sum(datapoints))
+    axs.pie(pie_slices_sizes, labels=labels, colors=colors, startangle=-40)
+    axs.legend()
+    return axs
+
+
+def bar_sum(
+    gc_event_dataframes,
+    group_by=None,
+    filter_by=None,
+    labels=None,
+    colors=None,
+    ax=None,
+    column="Duration_miliseconds",
+):
+    timestamp_groups, datapoint_groups, labels, colors = apply_restrictions(
+        gc_event_dataframes, group_by, filter_by, labels, column, colors
+    )
+    if not ax:
+        f, axs = plt.subplots()
+    for idx, (datapoints, color, label) in enumerate(zip(datapoint_groups, colors, labels)):
+        axs.bar(idx, sum(datapoints), label=label, color=color)
+    axs.set_xticks(range(len(datapoint_groups)))
+    axs.set_xticklabels(labels)
+    axs.legend()
+    return axs
+
+
+def bar_avg(
+    gc_event_dataframes,
+    group_by=None,
+    filter_by=None,
+    labels=None,
+    colors=None,
+    ax=None,
+    column="Duration_miliseconds",
+):
+    num_gc_logs = len(gc_event_dataframes)
+    _, datapoint_groups, labels, colors = apply_restrictions(
+        gc_event_dataframes, group_by, filter_by, labels, column, colors
+    )
+    if not ax:
+        f, axs = plt.subplots()
+    for log in range(num_gc_logs):
+        for idx, (datapoints, color, label) in enumerate(zip(datapoint_groups, colors, labels)):
+            axs.bar(idx, sum(datapoints) / len(datapoints), label=label, color=color)
+    axs.set_xticks(range(len(datapoint_groups)))
+    axs.set_xticklabels(labels)
+    axs.legend()
+    return axs
+
+
+from src.graphing.trends import compare_trends
+
+
+def trends(
+    gc_event_dataframes,
+    group_by=None,
+    filter_by=None,
+    labels=None,
+    ax=None,
+    column="Duration_miliseconds",
+):
+    timestamp_groups, datapoint_groups, labels, _ = apply_restrictions(
+        gc_event_dataframes, group_by, filter_by, labels, column
+    )
+    compare_trends(datapoint_groups, labels=labels, lists_of_timestamps=timestamp_groups)
+
+
+from src.graphing.percentiles import compare_pauses_percentiles
+
+
+def percentiles(
+    gc_event_dataframes,
+    group_by=None,
+    filter_by=None,
+    labels=None,
+    ax=None,
+    column="Duration_miliseconds",
+):
+    timestamp_groups, datapoint_groups, labels, _ = apply_restrictions(
+        gc_event_dataframes, group_by, filter_by, labels, column
+    )
+    compare_pauses_percentiles(datapoint_groups, labels=labels)
