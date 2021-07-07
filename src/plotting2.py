@@ -181,8 +181,90 @@ def plot_percentile_intervals(
 
             plot.plot(x_data, single_line, color = colors [INDEX], alpha = 1 - 0.15 * idx )
     plot.legend()
-    print(len(colors))
-    print(len(timestamp_groups))
+    plot.set_xticks(x_data)
+    plot.set_xticklabels([(val + 1) *interval_duration for val in x_data ])    
     return plot
             
         
+def plot_frequency_of_gc_intervals(
+    gc_event_dataframes,
+    group_by=None,
+    filter_by=None,
+    labels=None,
+    colors=None,
+    plot=None,
+    column="Duration_miliseconds",
+    interval_duration = 0,
+    ):
+    if not interval_duration:
+        print("No interval length provided. Abort.")
+        return
+
+    timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
+        gc_event_dataframes, group_by, filter_by, labels, column, colors
+    )
+    
+    # # if no plot is passed in, create a new plot
+    if not plot:
+        f, plot = plt.subplots()
+    max_pause_duration = 0 #
+
+    for timestamp in timestamp_groups:
+        max_pause_duration = max(timestamp.max(), max_pause_duration)
+    
+
+    number_of_buckets = int((max_pause_duration) / interval_duration) + 1
+    x_data = list(range(number_of_buckets))
+    
+    for INDEX, (timestamps, dataset) in enumerate(zip(timestamp_groups, datapoint_groups)):
+        # First, group into buckets based on time interverals.
+        buckets = group_into_buckets(timestamps, dataset, number_of_buckets, interval_duration)
+        frequency = [len(bucket) for bucket in buckets]
+        plot.plot(x_data, frequency, label = labels[INDEX], color = colors [INDEX])
+        
+    plot.legend()
+    plot.set_xticks(x_data)
+    plot.set_xticklabels([(val + 1) *interval_duration for val in x_data ])    
+    return plot
+
+def plot_max_pause_intervals(
+    gc_event_dataframes,
+    group_by=None,
+    filter_by=None,
+    labels=None,
+    colors=None,
+    plot=None,
+    column="Duration_miliseconds",
+    interval_duration = 0,
+    ):
+    if not interval_duration:
+        print("No interval length provided. Abort.")
+        return
+
+    timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
+        gc_event_dataframes, group_by, filter_by, labels, column, colors
+    )
+    
+    # # if no plot is passed in, create a new plot
+    if not plot:
+        f, plot = plt.subplots()
+    max_pause_duration = 0 #
+
+    for timestamp in timestamp_groups:
+        max_pause_duration = max(timestamp.max(), max_pause_duration)
+    
+
+    number_of_buckets = int((max_pause_duration) / interval_duration) + 1
+    x_data = list(range(number_of_buckets))
+    
+    for INDEX, (timestamps, dataset) in enumerate(zip(timestamp_groups, datapoint_groups)):
+        # First, group into buckets based on time interverals.
+        buckets = group_into_buckets(timestamps, dataset, number_of_buckets, interval_duration)
+        maximums = [max(bucket) for bucket in buckets]
+        plot.plot(x_data, maximums, label = labels[INDEX], color = colors [INDEX])
+        
+    plot.legend()
+    plot.set_xticks(x_data)
+    plot.set_xticklabels([(val + 1) *interval_duration for val in x_data ])
+    return plot
+
