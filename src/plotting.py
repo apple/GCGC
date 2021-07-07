@@ -6,7 +6,7 @@
 #   Ellis Brown, 7/7/2021
 
 import matplotlib.pyplot as plt
-from apply_restrictions import apply_restrictions
+from filter_and_group import filter_and_group
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #       plot_scatter
@@ -24,7 +24,7 @@ def plot_scatter(
     column="Duration_miliseconds",
 ):  
     # Filter and group data. Update colors and labels to reflect to-be-plotted data
-    timestamp_groups, datapoint_groups, labels, colors, _ = apply_restrictions(
+    timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column, colors
     )
     # if no plot is passed in, create a new plot
@@ -54,7 +54,7 @@ def plot_line(
     plot=None,
     column="Duration_miliseconds",
 ):
-    timestamp_groups, datapoint_groups, labels, colors, _ = apply_restrictions(
+    timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column, colors
     )
     # if no plot is passed in, create a new plot
@@ -84,7 +84,7 @@ def plot_pie_sum(
     plot=None,
     column="Duration_miliseconds",
 ):
-    timestamp_groups, datapoint_groups, labels, colors = apply_restrictions(
+    timestamp_groups, datapoint_groups, labels, colors = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column, colors
     )
     # if no plot is passed in, create a new plot
@@ -119,7 +119,7 @@ def plot_bar_sum(
     column="Duration_miliseconds",
 ):
     # Group and filter 
-    timestamp_groups, datapoint_groups, labels, colors, alphas = apply_restrictions(
+    timestamp_groups, datapoint_groups, labels, colors, alphas = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column, colors
     )
     # if no plot is passed in, create a new plot
@@ -153,7 +153,7 @@ def plot_bar_avg(
     column="Duration_miliseconds", # The column to find the averages of
 ):
     # Filter and group
-    _, datapoint_groups, labels, colors, _ = apply_restrictions(
+    _, datapoint_groups, labels, colors, _ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column, colors
     )
     # if no plot is passed in, create a new plot
@@ -189,7 +189,7 @@ def plot_trends(
     throughput=False, # If true, then the throughput will be calculated from the gc_event_dataframe log info
 ):
     # Filter and group
-    timestamp_groups, datapoint_groups, labels, _, __ = apply_restrictions(
+    timestamp_groups, datapoint_groups, labels, _, __ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column
     )
     # Create ASCII table
@@ -216,7 +216,7 @@ def plot_percentiles(
     plot=None,          # unusued
     column="Duration_miliseconds", # Describes the column to find the percentiles of.
 ):
-    timestamp_groups, datapoint_groups, labels, _, __ = apply_restrictions(
+    timestamp_groups, datapoint_groups, labels, _, __ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column
     )
     compare_pauses_percentiles(datapoint_groups, labels=labels)
@@ -243,11 +243,11 @@ def plot_reclaimed_bytes(
         fig, plot = plt.subplots()
 
     # Access the beforeGC data
-    timestamp_groups, datapoint_groups_before, _, colors, __ = apply_restrictions(
+    timestamp_groups, datapoint_groups_before, _, colors, __ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, "HeapBeforeGC"
     )
     # Access the afterGC data
-    timestamp_groups, datapoint_groups_after, _, _, _ = apply_restrictions(
+    timestamp_groups, datapoint_groups_after, _, _, _ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, "HeapAfterGC"
     )
     # Construct a table of "memory reclaimed" for each log, subtracting the before from after GC Heap allocation.

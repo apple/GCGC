@@ -1,7 +1,7 @@
 import math
 
 
-def apply_restrictions(
+def filter_and_group(
     datasets, group_by=None, filter_by=None, labels=None, column="Duration_miliseconds", colors=None
 ):
     if not colors:

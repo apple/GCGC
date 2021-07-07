@@ -1,5 +1,5 @@
 #######
-Im going to use the apply_restrictions functions within every function, so that the USER has no idea its happening,
+Im going to use the filter_and_group functions within every function, so that the USER has no idea its happening,
 but otherwise use the same plotting plan as before. So I just need to update the graphing folder, and make sure
 i have a file called like "Apply graphing"
 
