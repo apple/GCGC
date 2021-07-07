@@ -143,9 +143,6 @@ def plot_pie_sum(
     return plot
 
 
-import math
-
-
 def plot_bar_sum(
     gc_event_dataframes,
     group_by=None,
@@ -155,37 +152,15 @@ def plot_bar_sum(
     plot=None,
     column="Duration_miliseconds",
 ):
-    timestamp_groups, datapoint_groups, labels, colors, log_number_list = apply_restrictions(
+    timestamp_groups, datapoint_groups, labels, colors, alphas = apply_restrictions(
         gc_event_dataframes, group_by, filter_by, labels, column, colors
     )
     if not plot:
         fig, plots = plt.subplots()
 
-    # alphas = []
-    # colors = []
-    # prev_log_no = 0
-    # shift = 0
-    # for index in range(1, len(datasets) + 1):
-    #     alpha = 1
-    #     shift = 0
-    #     while log_number_list[index + shift] == prev_log_no:
-    #         color = (
-    #             abs(math.cos(index * math.pi * 2 / 3)),
-    #             abs(math.cos(index * 25 * 4 / 3)),
-    #             abs(math.cos(index * 11)),
-    #         )
-    #         prev_log_no = log_number_list[index + shift]
-    #         shift += 1
-    #         alpha -= 0.15
-    #         colors.append(color)
-    #         alphas.append(alpha)
-
-    # This function chooses a color based on what index in the loop they are at....
-    # plt.bar(x, y, color=(abs(math.cos(index * math.pi *  2 / 3 )), abs(math.cos(index * 25 *  4 / 3 )), abs(math.cos(index * 11))), alpha = 1 - alpha * 0.15)
-
-    for idx, (datapoints, color, label) in enumerate(zip(datapoint_groups, colors, labels)):
+    for idx, (datapoints, color, label, alpha) in enumerate(zip(datapoint_groups, colors, labels, alphas)):
         barheight = sum(datapoints)
-        plots.bar(idx, barheight, label=label + " : " + str(round(barheight, 4)), color=color)
+        plots.bar(idx, barheight, label=label + " : " + str(round(barheight, 4)), color=color, alpha=alpha)
     plots.set_xticks(range(len(datapoint_groups)))
     plots.set_xticklabels(labels)
     plots.legend()
