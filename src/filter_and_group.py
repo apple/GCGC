@@ -59,9 +59,9 @@ def apply_filter(datasets, filter_by=None):
         for df in datasets:
             dfs.append(df.copy())
 
-        for df in dfs:
+        for i in range(len(dfs)): # the reason to use index is to update the actual value
             for lamdafunction in filter_by:
-                df = df[df.apply(lamdafunction, axis=1)] # https://towardsdatascience.com/apply-and-lambda-usage-in-pandas-b13a1ea037f7 
+                dfs[i] = dfs[i][dfs[i].apply(lamdafunction, axis=1)] # https://towardsdatascience.com/apply-and-lambda-usage-in-pandas-b13a1ea037f7 
             
     else:
         dfs = datasets
