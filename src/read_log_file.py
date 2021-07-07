@@ -9,6 +9,27 @@ import pandas as pd
 import re
 
 
+#       get_parsed_comparions_from_files
+#
+#   Take a list of log file paths/names, and construct a list of tables, one for
+#   each log in the list.
+#
+def get_parsed_comparions_from_files(files, time_range_seconds=None):
+    # Files must be a list of strings
+    # Time range in seconds is either a list with 2 values,
+    # or a single integer max time.
+    assert isinstance(files, list)
+    if not files:
+        print("Warning: Files list empty in get_parsed_comparions_from_files")
+        return []
+    database_tables = []
+    for file in files:
+        database_table = get_parsed_data_from_file(file, time_range_seconds)
+        if not database_table.empty:
+            database_tables.append(database_table)
+    return database_tables
+
+
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                               get_parsed_data_from_file
 #

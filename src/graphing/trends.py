@@ -6,7 +6,6 @@
 #   Ellis Brown, 6/29/2021
 
 from os import times
-from graphing.__generic_mapping import __string_const_chars
 import pandas as pd
 import numpy as np
 
@@ -91,3 +90,23 @@ def compare_trends(pauses_ms_lists, labels=None, lists_of_total_program_runtime=
         print_trends(pauses_ms_lists[0], labels[0], True)
         for i in range(1, len(pauses_ms_lists)):
             print_trends(pauses_ms_lists[i], labels[i], False)
+
+
+#       __string_const_chars
+#
+#   Creates a string in exactly the specified numchars.
+#   If len(string) > numchars, some of the string is not displayed.
+#   if len(string) < numchars, spaces are appended to the back of the string.
+#   returns a string containing the update string with len = numchars.
+#
+def __string_const_chars(string, numchars):
+    string = str(string)
+    char_list = ""
+    for i in range(len(string)):
+        char_list += string[i]
+        numchars -= 1
+        if numchars == 0:
+            return char_list
+    for i in range(numchars):
+        char_list += " "
+    return char_list

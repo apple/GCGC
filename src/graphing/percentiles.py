@@ -5,7 +5,8 @@
 #
 #   Ellis Brown, 6/29/2021
 
-from graphing.__generic_mapping import __string_const_chars
+
+
 import numpy as np
 
 #       print_percentiles
@@ -56,3 +57,24 @@ def compare_pauses_percentiles(list_of_list_pauses_ms=[], percentiles=None, labe
 
     for i in range(1, len(list_of_list_pauses_ms)):
         print_percentiles(list_of_list_pauses_ms[i], False, percentiles, labels[i])
+
+
+
+#       __string_const_chars
+#
+#   Creates a string in exactly the specified numchars.
+#   If len(string) > numchars, some of the string is not displayed.
+#   if len(string) < numchars, spaces are appended to the back of the string.
+#   returns a string containing the update string with len = numchars.
+#
+def __string_const_chars(string, numchars):
+    string = str(string)
+    char_list = ""
+    for i in range(len(string)):
+        char_list += string[i]
+        numchars -= 1
+        if numchars == 0:
+            return char_list
+    for i in range(numchars):
+        char_list += " "
+    return char_list
