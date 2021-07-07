@@ -223,7 +223,7 @@ def plot_percentiles(
     compare_pauses_percentiles(datapoint_groups, labels=labels)
     # Since it is common for labels to get cut off, temporarily print them.
     # TODO: remove this, improve printing
-    print("Labels: ", labels)
+    print("\nLabels: ", labels)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #
