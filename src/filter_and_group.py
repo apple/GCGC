@@ -51,7 +51,7 @@ def filter_and_group(
 
     return timestamp_groups, datapoint_groups, group_labels, colors, alphas
 
-
+import pandas as pd
 def apply_filter(datasets, filter_by=None):
     dfs = []
     if filter_by:
@@ -59,15 +59,10 @@ def apply_filter(datasets, filter_by=None):
         for df in datasets:
             dfs.append(df.copy())
 
-        for idx in range(len(dfs)):
-            for col, value in filter_by:
-
-                if value:
-                    dfs[idx] = dfs[idx][dfs[idx][col] == value]
-                else:
-                    import pandas as pd
-
-                    dfs[idx] = dfs[idx][pd.notnull(dfs[idx][col])]
+        for df in dfs:
+            for lamdafunction in filter_by:
+                df = df[df.apply(lamdafunction, axis=1)] # https://towardsdatascience.com/apply-and-lambda-usage-in-pandas-b13a1ea037f7 
+            
     else:
         dfs = datasets
     return dfs
