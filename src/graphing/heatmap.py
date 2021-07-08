@@ -310,6 +310,7 @@ def get_heatmap_data(
     # first, compress into num_b buckets along the time X-axis.
     x_b = [[] for i in range(x_bucket_count)]
 
+    out_of_range_time = False
     # populate buckets along the x axis.
     for pause, time in zip(pauses_ms, times_seconds):
         bucket_no = int(time / x_bucket_duration)
@@ -318,17 +319,20 @@ def get_heatmap_data(
 
                 print(
                     "Warning: Time recorded lies outside of specified time range: "
-                    + str(time)
-                    + " > "
-                    + str(x_bucket_count * x_bucket_duration)
-                )
-        if bucket_no >= x_bucket_count:
+                    + str(time) + " > " + str(x_bucket_count * x_bucket_duration))
+        if bucket_no == x_bucket_count:
             bucket_no = x_bucket_count - 1
-        x_b[bucket_no].append(pause)
+            x_b[bucket_no].append(pause)
+        
+        elif bucket_no < x_bucket_count:
+            x_b[bucket_no].append(pause)
+        else:
+            out_of_range_time = True
 
     # create heatmap, which will be a 2d-array
     heatmap = []
 
+    out_of_range_latency = False
     # go through each time interval, and sort the pauses there into frequency lists
     for bucket in x_b:
         yb = [0 for i in range(y_bucket_count)]  # construct a 0 frequency list
@@ -336,7 +340,7 @@ def get_heatmap_data(
             # determine which ms pause bucket
             y_bucket_no = int(time / y_bucket_duration)
             if not suppress_warnings:
-                if y_bucket_no >= y_bucket_count + 1:
+                if y_bucket_no > y_bucket_count :
                     print(
                         "Warning: Value for latency lies outside of range: "
                         + str(time)
@@ -345,15 +349,28 @@ def get_heatmap_data(
                         + " ms"
                     )
 
-            if y_bucket_no >= y_bucket_count:
+            out_of_range_latency
+            
+            if y_bucket_no < y_bucket_count:
+                # increase the frequency of that pause in this time interval
+                yb[y_bucket_no] += 1
+            elif y_bucket_no == y_bucket_count:
                 y_bucket_no = y_bucket_count - 1
+                yb[y_bucket_no] += 1
+            else:
+                out_of_range_latency = True
 
-            # increase the frequency of that pause in this time interval
-            yb[y_bucket_no] += 1
+
 
         # Add the data to the 2d array
         heatmap.append(yb)
     heatmap = np.rot90(heatmap)  # fix orientation
+    
+    if out_of_range_time:
+        print("Warning: At least one value lies outside of the provided time range.")
+    if out_of_range_latency:
+        print("Warning: At least one value lies outside the provided range for latency")
+    
     return np.array(heatmap), [
         x_bucket_count,
         y_bucket_count,
