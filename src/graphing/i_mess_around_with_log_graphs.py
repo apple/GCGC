@@ -8,7 +8,7 @@
 import matplotlib
 from matplotlib import pyplot as plt
 import numpy as np
-
+from src.binary_search_closest import binary_search
 # TODO: Most of this code is borrowed. Read and update documentation
 # to be consistent to my personal style.
 
@@ -46,8 +46,14 @@ def plot_heatmap(heatmap, dimensions, labels=True):
     # size of the buckets for ms pause
     multipler = (max_pause_ms - min_pause_ms) / height
     # y labels are ms pause time labels
-    latency_labels = [round((num * multipler) + min_pause_ms, 2) for num in reversed(range(1, height + 1))]
-    latency_labels = [str(label) + " ms" for label in latency_labels]
+    base = dimensions[3]
+    latency_labels = [str(round(math.pow(base, idx), 4)) for idx in range(height)]
+    latency_labels.reverse()
+    latency_labels = list(dimensions[4])
+    latency_labels.reverse()
+    latency_labels = [str(round(label, 4)) for label in latency_labels]
+    # latency_labels = [round((num * multipler) + min_pause_ms, 2) for num in reversed(range(1, height + 1))]
+    # latency_labels = [str(label) + " ms" for label in latency_labels]
 
     ## Create a figure, and add data to heatmap. Plot then show heatmap.
     fig, ax = plt.subplots()
@@ -277,12 +283,12 @@ import pandas as pd
 #
 #   Create a 2d numpy array, and dimensions list associated with a gc_event_dataframe, such that
 #   the 2d array represents the frequencies of latency events, based on the specified dimensions.
-def get_heatmap_data(
+def get_heatmap_data_2(
     gc_event_dataframe,  # gc_event_dataframe of events. Typically only pause events
     x_bucket_count=20,  # Number of time intervals to group gc events into. INT ONLY
     y_bucket_count=20,  # Number of latency time intervals to group events into. INT ONLY
     x_bucket_duration=100,  # Duration in seconds that each time interval bucket has for gc event timestamps
-    y_bucket_duration=10,  # Duration in miliseconds for the length of each latency interval bucket
+    base= 2,  # Duration in miliseconds for the length of each latency interval bucket
     suppress_warnings=False,  # If True, warnings about values lying outside of dimension range will not be printed.
 ):
     assert isinstance(gc_event_dataframe, pd.DataFrame)
@@ -292,14 +298,14 @@ def get_heatmap_data(
     for x in [x_bucket_count, y_bucket_count]:
         assert type(x) == int, "Warning: x_bucket_count and y_bucket_count must be integers"
 
-    for x in [x_bucket_duration, y_bucket_duration]:
-        assert (
-            type(x) == int or type(x) == float
-        ), "Warning: x_bucket_duration and y_bucket_duration must be floats or integers"
-    for x in [x_bucket_count, y_bucket_count, x_bucket_duration, y_bucket_duration]:
+    
+    for x in [x_bucket_count, y_bucket_count, x_bucket_duration, base]:
         if x <= 0:
             print("Warning: All dimensions must be greater than zero.")
             return None, None
+    if base <= 1:
+        print("Warning: Base must be greater than 1.")
+        return None, None
 
     if gc_event_dataframe.empty:
         print("Empty gc_event_dataframe in get_heatmap_data")
@@ -331,34 +337,32 @@ def get_heatmap_data(
 
     # create heatmap, which will be a 2d-array
     heatmap = []
-
+    max_number = max(pauses_ms)
+    y_range_buckets = get_bucket_upper_ranges(base, y_bucket_count, max_number)
+    print(y_range_buckets)
     out_of_range_latency = False
     # go through each time interval, and sort the pauses there into frequency lists
     for bucket in x_b:
         yb = [0 for i in range(y_bucket_count)]  # construct a 0 frequency list
-        for time in bucket:
+        for pause in bucket:
             # determine which ms pause bucket
-            y_bucket_no = int(time / y_bucket_duration)
+            y_bucket_no = get_y_bucket_number(pause, base)
             if not suppress_warnings:
                 if y_bucket_no > y_bucket_count :
                     print(
                         "Warning: Value for latency lies outside of range: "
-                        + str(time)
+                        + str(pause)
                         + " > "
-                        + str(y_bucket_count * y_bucket_duration)
+                        + str(y_bucket_count * base)
                         + " ms"
                     )
 
-            out_of_range_latency
-            
-            if y_bucket_no < y_bucket_count:
-                # increase the frequency of that pause in this time interval
-                yb[y_bucket_no] += 1
-            elif y_bucket_no == y_bucket_count:
-                y_bucket_no = y_bucket_count - 1
-                yb[y_bucket_no] += 1
-            else:
+            y_bucket_no = binary_search(y_range_buckets, pause)
+            if y_bucket_no == -1:
                 out_of_range_latency = True
+            else:
+                yb[y_bucket_no] += 1
+
 
 
 
@@ -375,11 +379,15 @@ def get_heatmap_data(
         x_bucket_count,
         y_bucket_count,
         x_bucket_duration,
-        y_bucket_duration,
+        base,
+        y_range_buckets
     ]
 
-
-
+import math
+def get_y_bucket_number(time, base):
+    if time < base:
+        return 0
+    return int(math.log(time, base))
 # Access a Pandas gc_event_dataframe constructed through parse_data.py with labeled columns.
 # Return the timestamps and pauses as a list
 def get_time_and_event_durations(gc_event_dataframe):
@@ -421,3 +429,12 @@ def get_time_in_seconds(gc_event_dataframe):
                 timestamps_seconds.append(float(time))
         return timestamps_seconds
 
+
+
+import math
+def get_bucket_upper_ranges(base, num_buckets, max_number):
+    y_ranges = [max_number]
+    for idx in range(num_buckets - 1):
+        y_ranges.append(y_ranges[-1] / base )
+    y_ranges.reverse()
+    return y_ranges

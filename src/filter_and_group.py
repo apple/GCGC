@@ -1,7 +1,7 @@
 import math
 
 
-def apply_restrictions(
+def filter_and_group(
     datasets, group_by=None, filter_by=None, labels=None, column="Duration_miliseconds", colors=None
 ):
     if not colors:
@@ -51,7 +51,7 @@ def apply_restrictions(
 
     return timestamp_groups, datapoint_groups, group_labels, colors, alphas
 
-
+import pandas as pd
 def apply_filter(datasets, filter_by=None):
     dfs = []
     if filter_by:
@@ -59,15 +59,10 @@ def apply_filter(datasets, filter_by=None):
         for df in datasets:
             dfs.append(df.copy())
 
-        for idx in range(len(dfs)):
-            for col, value in filter_by:
-
-                if value:
-                    dfs[idx] = dfs[idx][dfs[idx][col] == value]
-                else:
-                    import pandas as pd
-
-                    dfs[idx] = dfs[idx][pd.notnull(dfs[idx][col])]
+        for i in range(len(dfs)): # the reason to use index is to update the actual value
+            for lamdafunction in filter_by:
+                dfs[i] = dfs[i][dfs[i].apply(lamdafunction, axis=1)] # https://towardsdatascience.com/apply-and-lambda-usage-in-pandas-b13a1ea037f7 
+            
     else:
         dfs = datasets
     return dfs
