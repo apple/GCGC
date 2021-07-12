@@ -34,7 +34,7 @@ You can use pip package manager to install additional packages.
 You can find the official documentation on how to install [here](https://jupyter.org/install)
 
 1. Install using `pip3 install notebook`
-2. Navigate to the [correct folder](https://github.pie.apple.com/ellis-brown/gc-analysis/tree/main/Jupyter-everything), that holds your `.ipynb` files. 
+2. Navigate to the correct folder that holds your `.ipynb` files. 
 3. run `jupyter notebook` in terminal to launch a local notebook server
 4. Use the web based notebook to interact with the notebook
 > Note: You can use some IDEs to edit and run your Jupyter-notebook, if desired. One example is VS-Code, which lets you modifiy and run the notebook in the IDE if the server is being hosted.
