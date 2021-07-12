@@ -1,8 +1,9 @@
-# Gc log analysis
+# GC log analysis
 #### Ellis Brown (7/1/2021)
 
 #
-Jupyter notebooks designed for easy and useful parsing of log files created from java workloads. Currently supports Shenandoah, G1, Parallel, Serial, and Z garbage collectors in JDK11.
+Jupyter notebooks designed for easy and useful parsing of log files created from java workloads. 
+Currently supports Shenandoah, G1, Parallel, Serial, and Z garbage collectors in JDK11.
 
 
 > ## Requirements to run
@@ -36,5 +37,4 @@ Setup for these explained in [setup.md](./setup.md)
 > > - `notebooks/` - contains notebooks to analyze log files with.
 > > - `*.py` - contains python scripts for Jupyter notebooks
 
-> tests
-> > - testing infrastructure and datasets
+> [setup.md](setup.md) - contains instructions on how to setup the required parts of this project
