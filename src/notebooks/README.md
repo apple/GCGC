@@ -1,6 +1,6 @@
 # Notebooks
 
-> If this is your first time using a Jupyter notebook for python3, use the following two tutorials. 
+> If this is your first time using a Jupyter notebook for python3, use the following two [tutorials](../../tutorials)
 > 1. introduction_to_notebooks.ipynb
 > 2. python3_pandas_plotting.ipynb
 
