@@ -1,8 +1,8 @@
 # Notebooks
 
-> If this is your first time using a Jupyter notebook for python3, use the following two [tutorials](../../tutorials)
-> 1. introduction_to_notebooks.ipynb
-> 2. python3_pandas_plotting.ipynb
+
+> If this is your first time using a Jupyter notebook for python3, and you would like to modifiy and understand the source code, use the following [tutorials](../../tutorials)
+
 
 The notebook compare_any.ipynb is a complete analysis notebook, and only requires a user to edit the first cell. Locally create a copy of this file to do any work, and use the original as a reference.
 
