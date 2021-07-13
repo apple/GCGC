@@ -2,8 +2,8 @@
 #### Ellis Brown (7/1/2021)
 
 #
-Jupyter notebooks designed for easy and useful parsing of log files created from java workloads. 
-Currently supports Shenandoah, G1, Parallel, Serial, and Z garbage collectors in JDK11.
+This GC log analysis tool using a Juputer notebooks interface is useful for parsing gc log files created from java workloads. 
+Currently supports Shenandoah, G1, Parallel GC, Serial GC, and Z garbage collectors in JDK11.
 
 
 > ## Requirements to run
@@ -12,29 +12,28 @@ Currently supports Shenandoah, G1, Parallel, Serial, and Z garbage collectors in
 - The following Python3 packages
     - numpy
     - matplotlib
-    - re
     - Jupyter notebook 
 
 Setup for these explained in [setup.md](./setup.md)
 
 ## How to run analysis
 
-1. Navigate to `src/`
-2. Run the terminal command `jupyter notebook` under `src/` or open a notebook using a compatible IDE. This will begin a python3 kernel to execute commands.
-3. Open ``notebook_compare_logs.ipynb`` or ``notebook_single_log.ipynb``
+1. Navigate to `src/notebooks`
+2. Run the terminal command `jupyter notebook` under `src/notebooks` or open a notebook using a compatible IDE. This will begin a python3 kernel to execute commands.
+3. Open ``compare_any.ipynb``
 4. Set the path to your log file in the second cell
-4. Use the in-notebook instructions to run analysis, or run all cells.
+4. Use the in-notebook instructions to run analysis, or run all cells at the top. For help running cells, view the notebooks in `/tutorials`.
 
 
 ## File Structure
 
 > datasets
-> > - ` long/` - contains example log files
+> > - ` long/` - contains example log files. 
 > > - `short/`- contains example log files
 
 > src
 > > - `graphing/` - contains plotting and graphing python scripts
 > > - `notebooks/` - contains notebooks to analyze log files with.
-> > - `*.py` - contains python scripts for Jupyter notebooks
+> > - `*.py` - contains python scripts to aid in simplicity of the Jupyter notebook interface
 
 > [setup.md](setup.md) - contains instructions on how to setup the required parts of this project
