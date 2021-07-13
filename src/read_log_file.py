@@ -22,12 +22,14 @@ def get_parsed_comparions_from_files(files, time_range_seconds=None):
     if not files:
         print("Warning: Files list empty in get_parsed_comparions_from_files")
         return []
-    database_tables = []
+    gc_event_dataframes = []
     for file in files:
-        database_table = get_parsed_data_from_file(file, time_range_seconds)
-        if not database_table.empty:
-            database_tables.append(database_table)
-    return database_tables
+        # Create each log gc_event_dataframe
+        gc_event_dataframe = get_parsed_data_from_file(file, time_range_seconds)
+        if not gc_event_dataframe.empty:
+            gc_event_dataframes.append(gc_event_dataframe)
+
+    return gc_event_dataframes
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -54,17 +56,23 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None):
     if not any(table):
         print("Unable to parse file " + str(logfile))
         return pd.DataFrame()
-    # Convert the paused and time from start from string datatypes to floats
+    # Some data collected is read in as a string, but needs to be interpreted as a float. Fix.
     table[1] = list(map(__number_to_float, table[1]))
     table[7] = list(map(__number_to_float, table[7]))
-    table[5] = choose_non_zero(table[5], table[8])
-    table[6] = choose_non_zero(table[6], table[9])
-    table[5] = list(map(__number_to_float, table[5]))
+    table[5] = list(map(__number_to_float, table[5])) 
     table[6] = list(map(__number_to_float, table[6]))
+    table[5] = choose_non_zero(table[5], table[8]) # Before GC collection mem_size
+    table[6] = choose_non_zero(table[6], table[9]) # After GC collection mem_size
 
-    table.pop()
-    table.pop()
-    parsed_data_table = pd.DataFrame(table).transpose()  # transpose to orient correctly
+
+    table.pop() # Used due to 2 types of memory change regex groups & before/after for each
+    table.pop() # Therefore, we gather before & after into 2 distinct columns, and remove other set
+
+    parsed_data_table = pd.DataFrame(table).transpose() 
+    # The data collected is in a 2d array, where table indicies represent a column. However,
+    # a pandas dataframe expects each entry of the 2d array to be a row, not a column. Transpose
+    # to fix this orientation error.
+
     parsed_data_table.columns = __columnNames()  # add column titles, allow for clear references
     if time_range_seconds:
         min_time, max_time = __get_time_range(time_range_seconds)
@@ -72,10 +80,11 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None):
         in_minimum = parsed_data_table["TimeFromStart_seconds"] >= min_time
         in_maximum = parsed_data_table["TimeFromStart_seconds"] <= max_time
         # Create the combined time table
-        parsed_data_table = parsed_data_table[in_minimum & in_maximum]
+        parsed_data_table = parsed_data_table[in_minimum & in_maximum] # Uses true from both other sections
     return parsed_data_table
 
-
+# Confirms the passed time range, which is either a maximum or a 
+# range. Returns the minimum & maximum times, as a float.
 def __get_time_range(time_range):
     if type(time_range) == int or type(time_range) == float:
         min_time = 0
@@ -86,7 +95,7 @@ def __get_time_range(time_range):
         max_time = time_range[1]
     return min_time, max_time
 
-
+#   Confirm that the parameter is numeric
 def __number_to_float(number):
     if number != None:
         return float(number)
@@ -115,6 +124,7 @@ def __manyMatch_LineSearch(
     # If there has been listed groups of interest within the regex search
     file = open(filepath, "r")
     for line in file:
+        # Apply the regex search term to every line. 
         match = re.search(match_term, line)
         if match:
             # Find all matches of interest
@@ -123,6 +133,7 @@ def __manyMatch_LineSearch(
             # add the match group number hit, so able to tell what match
     file.close()
     return table
+
 
 
 # Access the column names for a parsed file. Note that these are dependent
