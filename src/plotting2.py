@@ -195,7 +195,7 @@ def plot_percentile_intervals(
 
 
 #       plot_frequency_of_gc_intervals
-#
+# 
 #   Given a list of gc_event_dataframes, and a filter and grouping, determine
 #   the frequency of gc for each group, and plot a line for that group
 #
@@ -297,4 +297,3 @@ def plot_sum_pause_intervals(
     plot.set_xticks(x_alignment)
     plot.set_xticklabels([(val + 1) *interval_duration for val in x_alignment ])
     return plot
-
