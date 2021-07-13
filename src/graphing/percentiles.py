@@ -33,10 +33,13 @@ def print_percentiles(pauses_miliseconds=[], print_title=True, percentiles=None,
         title = ""
         for p in percentiles:
             title += __string_const_chars(str(p) + "%", 9) + " | "
-        print("Percentiles| " + title + "\n" + "-" * (len(title) + 12))
-    print(__string_const_chars(label, 10) + " | ", end="")
+        print("    | " + title + "\n" + "-" * (len(title) + 12))
+    print(__string_const_chars(label, 3) + " | ", end="")
+    
     for p in percentiles:
-        print(__string_const_chars(str(round(percentile_table[p], 2)) + " ms", 9) + " | ", end="")
+        print(__float_const_chars(str(round(percentile_table[p], 4)), 9) + " | ", end="")
+        
+        #print(__string_const_chars(str(round(percentile_table[p], 2)) + " ms", 9) + " | ", end="")
     print("")
 
 
@@ -78,3 +81,8 @@ def __string_const_chars(string, numchars):
     for i in range(numchars):
         char_list += " "
     return char_list
+
+def __float_const_chars(value, length):
+    value = float(value)
+    output = "%9.4f" % (value) + ((length - 9) * " ")     
+    return output

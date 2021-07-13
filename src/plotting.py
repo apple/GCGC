@@ -228,10 +228,18 @@ def plot_percentiles(
     timestamp_groups, datapoint_groups, labels, _, __ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column
     )
-    compare_pauses_percentiles(datapoint_groups, labels=labels)
+    #### New ####
+    temporary_labels = []
+    char_start = ord('A')
+    print("Legend (All timing in miliseconds) : ")
+    for index, label in enumerate(labels):
+        print(chr(char_start + index) + " | " + label)
+        temporary_labels.append(chr(char_start + index))
+    print("-" * 97)
+    #### New ####
+
+    compare_pauses_percentiles(datapoint_groups, labels=temporary_labels)
     # Since it is common for labels to get cut off, temporarily print them.
-    # TODO: remove this, improve printing
-    print("\nLabels: ", labels)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #
