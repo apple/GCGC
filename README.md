@@ -1,5 +1,5 @@
 # GC log analysis
-#### Ellis Brown (7/1/2021)
+#### Ellis Brown (7/13/2021)
 
 #
 This GC log analysis tool using a Juputer notebooks interface is useful for parsing gc log files created from java workloads. 
