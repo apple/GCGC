@@ -28,8 +28,8 @@ Each `gc_event_dataframe` is a [pandas](https://pandas.pydata.org) dataframe, co
 The program holds a list of these gc_event_dataframes in state, which is then never modified again. The log files will not be read again.
 
 To do analysis on the data, a user specifies a printing function, and a grouping & filter.
-a grouping will group all unique values for a column into one place. A filter selects rows from the dataframe, based on conditions. Then, the remaining data is processed and plotted.
+a grouping will group all matching values for a column into one place. A filter selects rows from the dataframe, based on conditions. Then, the remaining data is processed and plotted.
 
-The runtime for all operations are linear at best, with the exception of the logrithmic heatmap functions, which run in O(nlogn). The plotting functions are not analyzed or optimized for runtime, but do not provide significant enough overhead to currently be the bottleneck. The space used during the program is typically `2n`, where `n` is all data in all log files. This is because a copy of the data is created when filterings are applied to select the collect rows. However, because the lines are parsed from the logfile, the `n` data is typically much smaller than the size of the provided log file.
+The runtime for all operations are linear at best, with the exception of the logrithmic heatmap functions, whose runtime is O(nlogn). The plotting functions are not analyzed or optimized for runtime, but do not provide significant enough overhead to currently be the bottleneck. The space used during the program is typically `2n`, where `n` is all data in all log files. This is because a copy of the data is created when filters are applied to select the collect rows. However, because the lines are parsed from the logfile, the `n` data is typically much smaller than the size of the provided log file.
 
 Next steps for the project include easier use for analysis, more summaries of data created for analysis, easier input of external data for analysis, and gc specific metrics, such as heap region allocation in g1.
