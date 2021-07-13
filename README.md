@@ -20,8 +20,11 @@ Setup for these explained in [setup.md](./setup.md)
 
 1. Navigate to `src/notebooks`
 2. Run the terminal command `jupyter notebook` under `src/notebooks` or open a notebook using a compatible IDE. This will begin a python3 kernel to execute commands.
-3. Open ``compare_any.ipynb``
-4. Set the path to your log file in the second cell
+3. Open ``compare_any.ipynb`` in the web page that opened as a result of running the above command. If using an IDE, open the file from `src/notebooks`
+4. Set the second code cell's state information
+   - `files` : a list of log files to be analyzed
+   - `labels`: describe the log files listed above. 
+   - `time_range_seconds` : Minimum and maximum time, or None for the whole file
 4. Use the in-notebook instructions to run analysis, or run all cells at the top. For help running cells, view the notebooks in `/tutorials`.
 
 
