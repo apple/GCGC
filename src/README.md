@@ -14,9 +14,9 @@ The purpose of this project is to provide an easy, and modifyable tool for analy
 
 
 > ## How to interact with the project
-- If you would like to compare any number of logs against each other, then running this tool would work for you. Navigate to [/src/notebooks](/src/notebooks) and run the comapre_logs file.
+- If you would like to compare any number of logs against each other, then running this tool would work for you. Navigate to [/src/notebooks](/src/notebooks) and run the `analyze_logs_simple.ipynb` file.
 
-- If you would like to expand off of this tool to create more analysis, or compare the GC data against other program-related events, then creating a copy of the analysis notebook is required: [/src/notebooks](/src/notebooks). You are encouraged to use the [tutorials](../tutorials/) to familarize yourself with the Notebook soruce code.
+- If you would like to expand off of this tool to create more analysis, or compare the GC data against other program-related events, then creating a copy of the analysis notebook is required: [/src/notebooks](/src/notebooks). You are encouraged to use the [tutorials](../tutorials/) to familarize yourself with the Notebook soruce code. Use `analyze_logs_dev.ipynb` as a model, which has more documentation to what & how analysis is being run.
 
 > ## Implementation
 
