@@ -59,10 +59,10 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None):
     # Some data collected is read in as a string, but needs to be interpreted as a float. Fix.
     table[1] = list(map(__number_to_float, table[1]))
     table[7] = list(map(__number_to_float, table[7]))
-    table[5] = list(map(__number_to_float, table[5])) 
-    table[6] = list(map(__number_to_float, table[6]))
     table[5] = choose_non_zero(table[5], table[8]) # Before GC collection mem_size
     table[6] = choose_non_zero(table[6], table[9]) # After GC collection mem_size
+    table[5] = list(map(__number_to_float, table[5])) 
+    table[6] = list(map(__number_to_float, table[6]))
 
 
     table.pop() # Used due to 2 types of memory change regex groups & before/after for each
