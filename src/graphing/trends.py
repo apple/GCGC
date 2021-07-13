@@ -38,31 +38,36 @@ def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime
 
     # Print title with formatting
     if print_title:
-        title = " Trends (ms)            | "  # 17 + 3 characters
-        title += "Event Count  | "
-        title += "Max Duration | "
-        title += "Sum Duration | "
-        title += "Mean Duration| "
-        title += "Std Dev.     |"
+        title = "  Trends (ms)   | "  # 17 + 3 characters
+        title += "Event Count   | "
+        title += "Max Duration  | "
+        title += "Sum Duration  | "
+        title += "Mean Duration | "
+        title += "Std Dev.      |"
         if throughput:
-            title += " Throughput   |"
+            title += " Throughput    |"
         print(title)
         print("-" * len(title))
-    num_chars = 12
+    num_chars = 13
     if not label:
         label = "Run:"
     # print with correct formatting the values
-    number_label_chars = 23
+    number_label_chars = 15
     label = label[-number_label_chars:]
-    line = __string_const_chars(label, 23) + " | "
-    line += __string_const_chars(str(len(pauses_miliseconds)), num_chars) + " | "
-    line += __string_const_chars(str(max_pause), num_chars) + " | "
-    line += __string_const_chars(str(sum_pauses), num_chars) + " | "
-    line += __string_const_chars(str(average_wait), num_chars) + " | "
-    line += __string_const_chars(str(std_deviation), num_chars) + " | "
+    line = __string_const_chars(label, number_label_chars) + " | "
+    line += __float_const_chars(str(len(pauses_miliseconds)), num_chars) + " | "
+    line += __float_const_chars(str(max_pause), num_chars) + " | "
+    line += __float_const_chars(str(sum_pauses), num_chars) + " | "
+    line += __float_const_chars(str(average_wait), num_chars) + " | "
+    line += __float_const_chars(str(std_deviation), num_chars) + " | "
     if throughput:
-        line += __string_const_chars(str(round(throughput, 4)) + "%", num_chars) + " | "
+        line += __float_const_chars(str(round(throughput, 7)), num_chars) + " % "
     print(line)
+
+def __float_const_chars(value, length):
+    value = float(value)
+    output = "%9.4f" % (value) + ((length - 9) * " ")     
+    return output
 
 
 #       compare_trends

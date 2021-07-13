@@ -193,12 +193,20 @@ def plot_trends(
     timestamp_groups, datapoint_groups, labels, _, __ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column
     )
-    # Create ASCII table
-    if throughput:
-        compare_trends(datapoint_groups, labels=labels, lists_of_timestamps=timestamp_groups)
-    else:
-        compare_trends(datapoint_groups, labels=labels)
+    # Create ASCII spreadsheet
+    temporary_labels = []
+    char_start = ord('A')
+    print("Legend: ")
+    for index, label in enumerate(labels):
+        print(chr(char_start + index) + " | " + label)
+        temporary_labels.append(chr(char_start + index))
+    print("-" * 97)
 
+    if throughput:
+        compare_trends(datapoint_groups, labels=temporary_labels, lists_of_timestamps=timestamp_groups)
+    else:
+        compare_trends(datapoint_groups, labels=temporary_labels)
+    
 
 from src.graphing.percentiles import compare_pauses_percentiles
 
