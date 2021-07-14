@@ -81,7 +81,28 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None):
         in_maximum = parsed_data_table["TimeFromStart_seconds"] <= max_time
         # Create the combined time table
         parsed_data_table = parsed_data_table[in_minimum & in_maximum] # Uses true from both other sections
-    return parsed_data_table
+    if check_no_time_errors(parsed_data_table):
+        return parsed_data_table
+    else:
+        print("Warning: Time error noticed in gc log. This is typically due to a crash during runtime. Please locate the reset, split the logs into two sections, and run again.")
+        return pd.DataFrame() 
+
+#       check_no_time_errors
+#
+#   Looks through all rows of a gc_event_dataframe timing, and confirms
+#   that there are no timing errors, meaning the time line never decreases.
+#   For all lines x, time(x) <= time(x + n), n > 0. Otherwise, return false.
+#
+def check_no_time_errors(gc_event_dataframe):
+    maximum_time = -1
+    for time in gc_event_dataframe["TimeFromStart_seconds"]:
+        if time < maximum_time:
+            return False
+        else:
+            maximum_time = time
+    return True
+
+
 
 # Confirms the passed time range, which is either a maximum or a 
 # range. Returns the minimum & maximum times, as a float.
