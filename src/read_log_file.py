@@ -73,7 +73,7 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None):
     # a pandas dataframe expects each entry of the 2d array to be a row, not a column. Transpose
     # to fix this orientation error.
 
-    parsed_data_table.columns = __columnNames()  # add column titles, allow for clear references
+    parsed_data_table.columns = columnNames()  # add column titles, allow for clear references
     if time_range_seconds:
         min_time, max_time = __get_time_range(time_range_seconds)
         # Get the maximum and minimums and enforce the time range
@@ -138,7 +138,7 @@ def __manyMatch_LineSearch(
 
 # Access the column names for a parsed file. Note that these are dependent
 # on the groups defined in event_string_parsing
-def __columnNames():
+def columnNames():
     return [
         "DateTime",
         "TimeFromStart_seconds",
