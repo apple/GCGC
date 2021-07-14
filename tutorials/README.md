@@ -1,9 +1,9 @@
-## These tutorials are only recommended if you would like to modify the provided demo tutorials. If you only would like to run analysis with the provided notebooks, you can skip these.
+## These tutorials are only recommended if you would like to modify the provided demo tutorials. If you only would like to run analysis with the provided analysis. 
 
 
 If this is your first time using a Jupyter notebook for python3, use the following tutorials
-1. introduction_to_notebooks.ipynb
-2. python3_pandas_plotting.ipynb
+1. introduction_to_notebooks.ipynb : Explains what a Jupuyter notebook is, how to use it.
+2. python3_pandas_plotting.ipynb : Introduces the most used packages in the log analysis tool
 
 
 
