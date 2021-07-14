@@ -29,6 +29,8 @@ def get_parsed_comparions_from_files(files, time_range_seconds=None):
         if not gc_event_dataframe.empty:
             gc_event_dataframes.append(gc_event_dataframe)
 
+    if not gc_event_dataframes:
+        print("Warning: No collected data for gc_event_dataframes")
     return gc_event_dataframes
 
 
@@ -84,7 +86,7 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None):
     if check_no_time_errors(parsed_data_table):
         return parsed_data_table
     else:
-        print("Warning: Time error noticed in gc log. This is typically due to a crash during runtime. Please locate the reset, split the logs into two sections, and run again.")
+        print("Warning: Time error noticed in " + logfile+ ". This is typically due to a crash during runtime. Please locate the reset, split the logs into two sections, and run again.")
         return pd.DataFrame() 
 
 #       check_no_time_errors
