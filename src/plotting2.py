@@ -4,6 +4,7 @@
 #   extension of plotting.py, dividied off into its own file for development purposes.
 #
 #   7/8/2021
+from os import times
 from src.filter_and_group import filter_and_group
 from matplotlib import pyplot as plt
 import numpy as np # Used in percentile calculation
@@ -108,7 +109,6 @@ def simplify_xtickslabels(ticks, labels, max_ticks):
 #   bucket with datapoints information for that interval. Return the list of buckets.
 #
 def group_into_buckets(timestamps, datapoints, num_time_intervals, interval_duration):
-    
     buckets = [[] for idx in range(num_time_intervals)]
 
     # put the data into buckets z
@@ -304,9 +304,12 @@ def plot_sum_pause_intervals(
     
     # Determine the longest pause to calculate the number of intervals
     max_pause_duration = 0 
+    min_time_duration = timestamp_groups[0].iloc[0] # get the initial time as the lowest.
     for timestamp in timestamp_groups:
         max_pause_duration = max(timestamp.max(), max_pause_duration)
-    number_of_buckets = int((max_pause_duration) / interval_duration) + 1
+        min_time_duration = min(timestamp.min(), min_time_duration)
+        
+    number_of_buckets = int((max_pause_duration - min_time_duration) / interval_duration) + 1
     
     # Determine the spacing along the X axis for the data
     x_alignment = list(range(number_of_buckets))
@@ -314,14 +317,20 @@ def plot_sum_pause_intervals(
     # Loop through all lists, and plot the line graphs 
     for index, (timestamps, dataset) in enumerate(zip(timestamp_groups, datapoint_groups)):
         # First, group into buckets based on time interverals.
-        buckets = group_into_buckets(timestamps, dataset, number_of_buckets, interval_duration)
+        print(dataset)
+
+        # NOTE: here, we are subtracting the minimum time from everything to easily group them
+        buckets = group_into_buckets([time - min_time_duration for time in timestamps], 
+                                    dataset,
+                                    number_of_buckets, 
+                                    interval_duration)
         # Calculate the sum in each bucket, to then plot
         sums = [sum(bucket) for bucket in buckets]
         plot.plot(x_alignment, sums, label = labels[index], color = colors[index])
 
     # Set the labels for the buckets, starting with a non-zero bucket    
     plot.legend()
-    xticks, xlabels = simplify_xtickslabels(x_alignment, [(val + 1) *interval_duration for val in x_alignment ], 20)
+    xticks, xlabels = simplify_xtickslabels(x_alignment, [(val + 1) *interval_duration + min_time_duration for val in x_alignment ], 20)
     plot.set_xticks(xticks)
     plot.set_xticklabels(xlabels)
     return plot
