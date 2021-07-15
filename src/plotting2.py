@@ -213,8 +213,9 @@ def plot_percentile_intervals(
     
     # Add styling to the plot. Add legend, and x axis correct titles
     plot.legend()
-    plot.set_xticks(x_alignment)
-    plot.set_xticklabels([(val + 1) *interval_duration for val in x_alignment ])    
+    xticks, xlabels = simplify_xtickslabels(x_alignment, [(val + 1) *interval_duration for val in x_alignment ], 20)
+    plot.set_xticks(xticks)
+    plot.set_xticklabels(xlabels)
     return plot
             
 
@@ -263,8 +264,9 @@ def plot_frequency_of_gc_intervals(
     
     # Add styling to the plot. Add legend, and correct x-axis labels
     plot.legend()
-    plot.set_xticks(x_alignment)
-    plot.set_xticklabels([(val + 1) *interval_duration for val in x_alignment ])    
+    xticks, xlabels = simplify_xtickslabels(x_alignment, [(val + 1) *interval_duration for val in x_alignment ], 20)
+    plot.set_xticks(xticks)
+    plot.set_xticklabels(xlabels)
     return plot
 
 
@@ -301,7 +303,7 @@ def plot_sum_pause_intervals(
         f, plot = plt.subplots()
     
     # Determine the longest pause to calculate the number of intervals
-    max_pause_duration = 0 #
+    max_pause_duration = 0 
     for timestamp in timestamp_groups:
         max_pause_duration = max(timestamp.max(), max_pause_duration)
     number_of_buckets = int((max_pause_duration) / interval_duration) + 1
@@ -319,6 +321,7 @@ def plot_sum_pause_intervals(
 
     # Set the labels for the buckets, starting with a non-zero bucket    
     plot.legend()
-    plot.set_xticks(x_alignment)
-    plot.set_xticklabels([(val + 1) *interval_duration for val in x_alignment ])
+    xticks, xlabels = simplify_xtickslabels(x_alignment, [(val + 1) *interval_duration for val in x_alignment ], 20)
+    plot.set_xticks(xticks)
+    plot.set_xticklabels(xlabels)
     return plot

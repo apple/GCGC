@@ -18,6 +18,8 @@ def get_parsed_comparions_from_files(files, time_range_seconds, ignore_crashes =
     # Files must be a list of strings
     # Time range in seconds is either a list with 2 values,
     # or a single integer max time.
+    if ignore_crashes:
+        print("Warning: ignore_crashes takes log files and ignores all crashes.")
     assert isinstance(files, list)
     if not files:
         print("Warning: Files list empty in get_parsed_comparions_from_files")
@@ -115,18 +117,21 @@ def check_no_time_errors(gc_event_dataframe):
 #   the time they WOULD have been had there been no crash.
 #
 def fix_timing_errors(gc_event_dataframe):
-    maximum_time = -1 
+    maximum_time = 0 
     add_maximum_time = 0
 
     # Loop through all data
     for index in range(len(gc_event_dataframe["TimeFromStart_seconds"])):
         time = gc_event_dataframe["TimeFromStart_seconds"][index]
         # If we reach a crash reset, keep the maximum time we had before
-        if time < maximum_time:
+        
+        if time + add_maximum_time < maximum_time:
             add_maximum_time = maximum_time
+        
 
         # Every row keeps their inital value, added to the shift value from any timing errors
         gc_event_dataframe["TimeFromStart_seconds"][index] = time + add_maximum_time
+        maximum_time = time + add_maximum_time
     
     
     return gc_event_dataframe
