@@ -39,8 +39,10 @@ def plot_frequency_intervals(
 
     # Determine the number of buckets from max_time and interval duration
     max_pause_duration = 0
+    min_pause_duration = datapoint_groups[0].iloc[0]
     for dataset in datapoint_groups:
         max_pause_duration = max(dataset.max(), max_pause_duration)
+        min_pause_duration = min(dataset.min(), min_pause_duration)
     number_of_buckets = int((max_pause_duration) / interval_duration) + 1
     
     # Create the time intervals 
@@ -68,12 +70,35 @@ def plot_frequency_intervals(
             labels_printed = True
 
     # Add styling to plot. Correctly set x-axis labels, and show the legend
+    # Set the ACTUAL x tick values
     plot.set_xticks([num + width / 2 * len(datapoint_groups) - width / 2 for num in range(number_of_buckets)])
     plot.set_xticklabels([round(interval_duration * (b + 1),4 ) for b in range(number_of_buckets)])
+    
+    # Choose a reasonable number of x ticks to display.
+    xticks, xlabels = simplify_xtickslabels(plot.get_xticks(), plot.get_xticklabels(), 20)
+    plot.set_xticks(xticks)
+    plot.set_xticklabels(xlabels)
     plot.legend()
     return plot
 
-                
+
+def simplify_xtickslabels(ticks, labels, max_ticks):
+    original_tick_length = len(ticks)
+    if original_tick_length < max_ticks:
+        return ticks, labels
+    # We need to trim the ticks. Choose the correct scaling factor to eliminate
+    # to get the number optimally in the range.
+    import math 
+    divisor = math.ceil(original_tick_length / max_ticks)
+    index = 0
+    new_ticks = []
+    new_tick_labels = []
+    while index < original_tick_length:
+        new_ticks.append(ticks[index])
+        new_tick_labels.append(labels[index])
+        index += divisor
+    return new_ticks, new_tick_labels
+
 #   (private function)
 #
 #       group_into_buckets
