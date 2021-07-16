@@ -196,6 +196,7 @@ def __manyMatch_LineSearch(
 
 # Access the column names for a parsed file. Note that these are dependent
 # on the groups defined in event_string_parsing
+# Full descriptions of the columns can be found in the README under /src/
 def columnNames():
     return [
         "DateTime",

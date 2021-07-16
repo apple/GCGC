@@ -23,7 +23,22 @@ The purpose of this project is to provide an easy, and modifyable tool for analy
 A notebook kernel holds all state information about the program. Upon executing the cell to read the logs, some number of log files is read line by line. Each line is parsed for information according to a regular expression defined in [read_log_file.py](read_log_file.py). Then, a `gc_event_dataframe` is created for each log file, holding in state memory the information associated with each gc log run.
 
 Each `gc_event_dataframe` is a [pandas](https://pandas.pydata.org) dataframe, containing the following columns.
-> DateTime, TimeFromStart_seconds , EventType , EventName , AdditionalEventInfo , MemoryChange_MB , Duration_miliseconds
+> DateTime, TimeFromStart_seconds , EventType , EventName , AdditionalEventInfo , HeapBeforeGC , HeapAfterGC , Duration_miliseconds
+The columns used during the program, that MUST be present in the data set are:
+    - TimeFromStart_seconds
+    - Duration_miliseconds
+
+Without these two columns, the notebook will faill to gather either X or Y information. An update in the near futurue will allow for overriding of these columns, but currently they are necessary.
+
+The columns, patterns for them, and the actual regex capture groups are defined in [./read_log_file.py](read_log_file.py).
+1. `DateTime` : Collected real world Clock Date & Time. Currently unusued in analysis, but collected for manual checking
+2. `TimeFromStart_seconds` : Time since program begins. Used for all plots x-axis values. Make sure to enable this metric when creating a log file.
+3. `EventType` : Describes a row (event) in the gc_event_dataframe. Any value is acceptable, used by a user to search/filter.
+4. `EventName` : Describes percisely the event in the gc_event_dataframe. Any value is acceptable, used by a user to search/filter.
+5. `AdditionalEventInfo` : Additional information collected automatically on an invent. Currently unusued in any cases, may be used for a specific search.
+6. `HeapBeforeGC` : MB count of the heap size used before the gc run. Often left as 'None' if no value present.
+7. `HeapAfterGC` : MB count of the heap size used after the gc run. Often left as 'None' if no value present.
+8. `Duration_miliseconds` : Time duration of the event in that row. If missing, most analysis fails, or must have another column value manually selected. 
 
 The program holds a list of these gc_event_dataframes in state, which is then never modified again. The log files will not be read again.
 
