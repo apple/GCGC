@@ -35,7 +35,7 @@ def plot_scatter(
     # Create a scatter plot with all data
     for time, datapoints, color, label in zip(timestamp_groups, datapoint_groups, colors, labels):
         # plot.scatter(time, datapoints, label=label, color=color)
-        plot.plot(time, datapoints, marker='o', linestyle='',markersize=0.75, label=label, color=color)
+        plot.plot(time, datapoints, marker='o', linestyle='',markersize=1.5, label=label, color=color)
     plot.legend()
     # return a plot object to be displayed or modified
     return plot
@@ -194,6 +194,13 @@ def plot_trends(
     timestamp_groups, datapoint_groups, labels, _, __ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column
     )
+    PRINTING_SPACE_COUNT = 15
+    if max([len(label) for label in labels]) <= PRINTING_SPACE_COUNT:
+        if throughput:
+            compare_trends(datapoint_groups, labels=labels, lists_of_timestamps=timestamp_groups)
+        else:
+            compare_trends(datapoint_groups, labels=labels)
+        return
     # Create ASCII spreadsheet
     temporary_labels = []
     char_start = ord('A')
@@ -229,15 +236,20 @@ def plot_percentiles(
     timestamp_groups, datapoint_groups, labels, _, __ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column
     )
-    #### New ####
+    PRINTING_SPACE_COUNT = 3
+    if max([len(label) for label in labels]) <= PRINTING_SPACE_COUNT:
+        compare_pauses_percentiles(datapoint_groups, labels=labels)
+        return
+
+
     temporary_labels = []
     char_start = ord('A')
     print("Legend (All timing in miliseconds) : ")
     for index, label in enumerate(labels):
         print(chr(char_start + index) + " | " + label)
         temporary_labels.append(chr(char_start + index))
+
     print("-" * 97)
-    #### New ####
 
     compare_pauses_percentiles(datapoint_groups, labels=temporary_labels)
     # Since it is common for labels to get cut off, temporarily print them.

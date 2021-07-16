@@ -283,6 +283,7 @@ def get_heatmap_data(
     y_bucket_count=20,  # Number of latency time intervals to group events into. INT ONLY
     x_bucket_duration=100,  # Duration in seconds that each time interval bucket has for gc event timestamps
     y_bucket_duration=10,  # Duration in miliseconds for the length of each latency interval bucket
+    label = None, 
     suppress_warnings=False,  # If True, warnings about values lying outside of dimension range will not be printed.
 ):
     assert isinstance(gc_event_dataframe, pd.DataFrame)
@@ -367,9 +368,9 @@ def get_heatmap_data(
     heatmap = np.rot90(heatmap)  # fix orientation
     
     if out_of_range_time:
-        print("Warning: At least one value lies outside of the provided time range.")
+        print(label + " Warning: At least one value lies outside of the provided time range. Max value outside range: " + str (max(times_seconds)))
     if out_of_range_latency:
-        print("Warning: At least one value lies outside the provided range for latency")
+        print(label + " Warning: At least one value lies outside the provided range for latency. Max value outside range: " + str(max(pauses_ms) ))
     
     return np.array(heatmap), [
         x_bucket_count,
