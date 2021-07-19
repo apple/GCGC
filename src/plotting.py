@@ -204,11 +204,22 @@ def plot_trends(
     # Create ASCII spreadsheet
     temporary_labels = []
     char_start = ord('A')
-    print("Legend: ")
-    for index, label in enumerate(labels):
-        print(chr(char_start + index) + " | " + label)
-        temporary_labels.append(chr(char_start + index))
-    print("-" * 97)
+    found = False # Used to make sure passed DFs have correct data
+    
+    index = 0
+    while index < len(datapoint_groups):
+        if list(datapoint_groups[index]):
+            if not found:
+                print("Legend: ")
+            found = True
+            print(chr(char_start + index) + " | " + labels[index])
+            temporary_labels.append(chr(char_start + index))
+            index += 1 
+        else:
+            datapoint_groups.pop(index)
+
+    if found:
+        print("-" * 97)
 
     if throughput:
         compare_trends(datapoint_groups, labels=temporary_labels, lists_of_timestamps=timestamp_groups)
