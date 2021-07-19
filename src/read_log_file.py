@@ -233,8 +233,7 @@ def event_parsing_string():
     # note: Not all lines contain a regex-group. Group lines are commented with a *
     date_time = "^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?"  # [2021-07-01T23:23:22.001+0000]    *
     time_from_start_seconds = "\[(\d+\.\d+)s\]"  # [243.45s]     *
-    gc_info_level = "\[\w+ *\]"  # [info ]
-    type_gc_log_line = "\[gc(?:,\w+)?\s*\] "  # [gc, trace]
+    other_info_fields = "(?:\[.*?\])+ "
     gc_event_number = "GC\(\d+\) "  # GC(25)
     gc_event_type = "((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) "  # Concurrent    *
     gc_event_name = "(?:((?:\w+ ?){1,3}) )?"  # Young    *
@@ -245,8 +244,7 @@ def event_parsing_string():
     event_regex_string = (
         date_time
         + time_from_start_seconds
-        + gc_info_level
-        + type_gc_log_line
+        + other_info_fields
         + gc_event_number
         + gc_event_type
         + gc_event_name
@@ -255,6 +253,7 @@ def event_parsing_string():
         + time_spent_miliseconds
         + zgc_style_heap_memory_change
     )
+    # return "^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\](?:\[.*?\])+ GC\(\d+\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) (?:((?:\w+ ?){1,3}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})(?:(?:(?:(\d+)\w->(\d+)\w(?:\(\d+\w\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)\w\(\d+%\)->(\d+)\w\(\d+%\)))"
     return event_regex_string
 
 
