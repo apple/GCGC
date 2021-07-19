@@ -4,6 +4,7 @@
 #   extension of plotting.py, dividied off into its own file for development purposes.
 #
 #   7/8/2021
+from os import times
 from src.filter_and_group import filter_and_group
 from matplotlib import pyplot as plt
 import numpy as np # Used in percentile calculation
@@ -39,8 +40,10 @@ def plot_frequency_intervals(
 
     # Determine the number of buckets from max_time and interval duration
     max_pause_duration = 0
+    min_pause_duration = datapoint_groups[0].iloc[0]
     for dataset in datapoint_groups:
         max_pause_duration = max(dataset.max(), max_pause_duration)
+        min_pause_duration = min(dataset.min(), min_pause_duration)
     number_of_buckets = int((max_pause_duration) / interval_duration) + 1
     
     # Create the time intervals 
@@ -68,12 +71,35 @@ def plot_frequency_intervals(
             labels_printed = True
 
     # Add styling to plot. Correctly set x-axis labels, and show the legend
+    # Set the ACTUAL x tick values
     plot.set_xticks([num + width / 2 * len(datapoint_groups) - width / 2 for num in range(number_of_buckets)])
     plot.set_xticklabels([round(interval_duration * (b + 1),4 ) for b in range(number_of_buckets)])
+    
+    # Choose a reasonable number of x ticks to display.
+    xticks, xlabels = simplify_xtickslabels(plot.get_xticks(), plot.get_xticklabels(), 20)
+    plot.set_xticks(xticks)
+    plot.set_xticklabels(xlabels)
     plot.legend()
     return plot
 
-                
+
+def simplify_xtickslabels(ticks, labels, max_ticks):
+    original_tick_length = len(ticks)
+    if original_tick_length < max_ticks:
+        return ticks, labels
+    # We need to trim the ticks. Choose the correct scaling factor to eliminate
+    # to get the number optimally in the range.
+    import math 
+    divisor = math.ceil(original_tick_length / max_ticks)
+    index = 0
+    new_ticks = []
+    new_tick_labels = []
+    while index < original_tick_length:
+        new_ticks.append(ticks[index])
+        new_tick_labels.append(labels[index])
+        index += divisor
+    return new_ticks, new_tick_labels
+
 #   (private function)
 #
 #       group_into_buckets
@@ -83,7 +109,6 @@ def plot_frequency_intervals(
 #   bucket with datapoints information for that interval. Return the list of buckets.
 #
 def group_into_buckets(timestamps, datapoints, num_time_intervals, interval_duration):
-    
     buckets = [[] for idx in range(num_time_intervals)]
 
     # put the data into buckets z
@@ -188,8 +213,9 @@ def plot_percentile_intervals(
     
     # Add styling to the plot. Add legend, and x axis correct titles
     plot.legend()
-    plot.set_xticks(x_alignment)
-    plot.set_xticklabels([(val + 1) *interval_duration for val in x_alignment ])    
+    xticks, xlabels = simplify_xtickslabels(x_alignment, [(val + 1) *interval_duration for val in x_alignment ], 20)
+    plot.set_xticks(xticks)
+    plot.set_xticklabels(xlabels)
     return plot
             
 
@@ -220,10 +246,14 @@ def plot_frequency_of_gc_intervals(
         f, plot = plt.subplots()
 
     # Determine the longest pause to calculate the number of intervals
-    max_pause_duration = 0 #
+    # Determine the longest pause to calculate the number of intervals
+    max_pause_duration = 0 
+    min_time_duration = int(timestamp_groups[0].iloc[0]) # get the initial time as the lowest.
     for timestamp in timestamp_groups:
         max_pause_duration = max(timestamp.max(), max_pause_duration)
-    number_of_buckets = int((max_pause_duration) / interval_duration) + 1
+        min_time_duration = min(timestamp.min(), min_time_duration)
+        
+    number_of_buckets = int((max_pause_duration - min_time_duration) / interval_duration) + 1
     
     # Determine the spacing along the X axis for the data
     x_alignment = list(range(number_of_buckets))
@@ -231,15 +261,16 @@ def plot_frequency_of_gc_intervals(
     # Create a list of frequencies, one for each group, and plot that line
     for index, (timestamps, dataset) in enumerate(zip(timestamp_groups, datapoint_groups)):
         # First, group into buckets based on time interverals.
-        buckets = group_into_buckets(timestamps, dataset, number_of_buckets, interval_duration)
+        buckets = group_into_buckets([time - min_time_duration for time in timestamps], dataset, number_of_buckets, interval_duration)
         # Calculate the frequency of gc events per bucket time interval. Then plot
         frequency = [len(bucket) for bucket in buckets]
         plot.plot(x_alignment, frequency, label = labels[index], color = colors[index])
     
     # Add styling to the plot. Add legend, and correct x-axis labels
     plot.legend()
-    plot.set_xticks(x_alignment)
-    plot.set_xticklabels([(val + 1) *interval_duration for val in x_alignment ])    
+    xticks, xlabels = simplify_xtickslabels(x_alignment, [((val + 1) *interval_duration + min_time_duration) for val in x_alignment ], 20)
+    plot.set_xticks(xticks)
+    plot.set_xticklabels(xlabels)
     return plot
 
 
@@ -276,10 +307,13 @@ def plot_sum_pause_intervals(
         f, plot = plt.subplots()
     
     # Determine the longest pause to calculate the number of intervals
-    max_pause_duration = 0 #
+    max_pause_duration = 0 
+    min_time_duration = int(timestamp_groups[0].iloc[0]) # get the initial time as the lowest.
     for timestamp in timestamp_groups:
         max_pause_duration = max(timestamp.max(), max_pause_duration)
-    number_of_buckets = int((max_pause_duration) / interval_duration) + 1
+        min_time_duration = min(timestamp.min(), min_time_duration)
+        
+    number_of_buckets = int((max_pause_duration - min_time_duration) / interval_duration) + 1
     
     # Determine the spacing along the X axis for the data
     x_alignment = list(range(number_of_buckets))
@@ -287,13 +321,20 @@ def plot_sum_pause_intervals(
     # Loop through all lists, and plot the line graphs 
     for index, (timestamps, dataset) in enumerate(zip(timestamp_groups, datapoint_groups)):
         # First, group into buckets based on time interverals.
-        buckets = group_into_buckets(timestamps, dataset, number_of_buckets, interval_duration)
+        print(dataset)
+
+        # NOTE: here, we are subtracting the minimum time from everything to easily group them
+        buckets = group_into_buckets([time - min_time_duration for time in timestamps], 
+                                    dataset,
+                                    number_of_buckets, 
+                                    interval_duration)
         # Calculate the sum in each bucket, to then plot
         sums = [sum(bucket) for bucket in buckets]
         plot.plot(x_alignment, sums, label = labels[index], color = colors[index])
 
     # Set the labels for the buckets, starting with a non-zero bucket    
     plot.legend()
-    plot.set_xticks(x_alignment)
-    plot.set_xticklabels([(val + 1) *interval_duration for val in x_alignment ])
+    xticks, xlabels = simplify_xtickslabels(x_alignment, [((val + 1) *interval_duration + min_time_duration) for val in x_alignment ], 20)
+    plot.set_xticks(xticks)
+    plot.set_xticklabels(xlabels)
     return plot

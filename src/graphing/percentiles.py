@@ -21,7 +21,10 @@ def print_percentiles(pauses_miliseconds=[], print_title=True, percentiles=None,
     #   label               : a label to be printed. Should be 0-10 characters
     if type(pauses_miliseconds) != type(None):
         pauses_miliseconds = list(pauses_miliseconds)
+    if not pauses_miliseconds:
+        return
     pauses_miliseconds = sorted(pauses_miliseconds, reverse=True)
+
     percentile_table = {}
     if not percentiles:
         percentiles = [50, 75, 90, 95, 99, 99.9, 99.99]

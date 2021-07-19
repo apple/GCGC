@@ -14,21 +14,26 @@ import re
 #   Take a list of log file paths/names, and construct a list of tables, one for
 #   each log in the list.
 #
-def get_parsed_comparions_from_files(files, time_range_seconds=None):
+def get_parsed_comparions_from_files(files, time_range_seconds, ignore_crashes = False):
     # Files must be a list of strings
     # Time range in seconds is either a list with 2 values,
     # or a single integer max time.
+    if ignore_crashes:
+        print("Warning: ignore_crashes takes log files and ignores all crashes.")
     assert isinstance(files, list)
     if not files:
         print("Warning: Files list empty in get_parsed_comparions_from_files")
         return []
     gc_event_dataframes = []
+    
     for file in files:
         # Create each log gc_event_dataframe
-        gc_event_dataframe = get_parsed_data_from_file(file, time_range_seconds)
+        gc_event_dataframe = get_parsed_data_from_file(file, time_range_seconds, ignore_crashes)
         if not gc_event_dataframe.empty:
             gc_event_dataframes.append(gc_event_dataframe)
 
+    if not gc_event_dataframes:
+        print("Warning: No collected data for gc_event_dataframes")
     return gc_event_dataframes
 
 
@@ -46,7 +51,7 @@ def get_parsed_comparions_from_files(files, time_range_seconds=None):
 #   a pandas dataframe, where rows are each an individual event. Columns are labeled, and
 #   collect information on each event, such as when it occured, how long it lasted, and the name
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def get_parsed_data_from_file(logfile, time_range_seconds=None):
+def get_parsed_data_from_file(logfile, time_range_seconds=None, ignore_crashes = False):
     assert isinstance(logfile, str)  # input must be a string
 
     if not logfile:
@@ -81,7 +86,60 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None):
         in_maximum = parsed_data_table["TimeFromStart_seconds"] <= max_time
         # Create the combined time table
         parsed_data_table = parsed_data_table[in_minimum & in_maximum] # Uses true from both other sections
-    return parsed_data_table
+    if ignore_crashes:
+        return fix_timing_errors(parsed_data_table)
+    else:
+        if check_no_time_errors(parsed_data_table):
+            return parsed_data_table
+        else:
+            print("Warning: Time error noticed in " + logfile+ ". This is typically due to a crash during runtime. Please locate the reset, split the logs into two sections, and run again.")
+            return pd.DataFrame() 
+
+#       check_no_time_errors
+#
+#   Looks through all rows of a gc_event_dataframe timing, and confirms
+#   that there are no timing errors, meaning the time line never decreases.
+#   For all lines x, time(x) <= time(x + n), n > 0. Otherwise, return false.
+#
+def check_no_time_errors(gc_event_dataframe):
+    maximum_time = -1
+    for time in gc_event_dataframe["TimeFromStart_seconds"]:
+        if time < maximum_time:
+            return False
+        else:
+            maximum_time = time
+    return True
+
+#       fix_timing_errors
+#
+#   Given a log file that has a timing error due to a crash,
+#   replace all timing "from start" values after the crash with
+#   the time they WOULD have been had there been no crash.
+#
+def fix_timing_errors(gc_event_dataframe):
+    maximum_time = 0 
+    add_maximum_time = 0
+
+    # Loop through all data
+    for index in range(len(gc_event_dataframe["TimeFromStart_seconds"])):
+        time = gc_event_dataframe["TimeFromStart_seconds"][index]
+        # If we reach a crash reset, keep the maximum time we had before
+        
+        if time + add_maximum_time < maximum_time:
+            add_maximum_time = maximum_time
+        
+
+        # Every row keeps their inital value, added to the shift value from any timing errors
+        gc_event_dataframe["TimeFromStart_seconds"][index] = time + add_maximum_time
+        maximum_time = time + add_maximum_time
+    
+    
+    return gc_event_dataframe
+        
+    
+
+
+
 
 # Confirms the passed time range, which is either a maximum or a 
 # range. Returns the minimum & maximum times, as a float.
@@ -138,6 +196,7 @@ def __manyMatch_LineSearch(
 
 # Access the column names for a parsed file. Note that these are dependent
 # on the groups defined in event_string_parsing
+# Full descriptions of the columns can be found in the README under /src/
 def columnNames():
     return [
         "DateTime",

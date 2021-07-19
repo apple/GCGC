@@ -38,7 +38,7 @@ def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime
 
     # Print title with formatting
     if print_title:
-        title = "  Trends (ms)   | "  # 17 + 3 characters
+        title = "  Trends (ms)   | "  # 15 + 3 characters
         title += "Event Count   | "
         title += "Max Duration  | "
         title += "Sum Duration  | "
