@@ -200,6 +200,8 @@ def plot_trends(
         gc_event_dataframes, group_by, filter_by, labels, column
     )
     PRINTING_SPACE_COUNT = 15
+    if not labels:
+        return
     if max([len(label) for label in labels]) <= PRINTING_SPACE_COUNT:
         if throughput:
             compare_trends(datapoint_groups, labels=labels, lists_of_timestamps=timestamp_groups)
@@ -254,6 +256,8 @@ def plot_percentiles(
         gc_event_dataframes, group_by, filter_by, labels, column
     )
     PRINTING_SPACE_COUNT = 3
+    if not labels:
+        return
     if max([len(label) for label in labels]) <= PRINTING_SPACE_COUNT:
         compare_pauses_percentiles(datapoint_groups, labels=labels)
         return
