@@ -189,7 +189,8 @@ def plot_percentile_intervals(
     # Determine the longest pause to calculate the number of intervalsm
     max_pause_duration = 0 
     for timestamp in timestamp_groups:
-        max_pause_duration = max(timestamp.max(), max_pause_duration)
+        if (list(timestamp)):
+            max_pause_duration = max(timestamp.max(), max_pause_duration)
     number_of_buckets = int((max_pause_duration) / interval_duration) + 1
     
     # Determine the spacing along the X axis for the data
@@ -251,9 +252,10 @@ def plot_frequency_of_gc_intervals(
     # Determine the longest pause to calculate the number of intervals
     max_pause_duration = 0 
     min_time_duration = int(timestamp_groups[0].iloc[0]) # get the initial time as the lowest.
-    for timestamp in timestamp_groups:
-        max_pause_duration = max(timestamp.max(), max_pause_duration)
-        min_time_duration = min(timestamp.min(), min_time_duration)
+    for timestamps in timestamp_groups:
+        if list(timestamps):
+            max_pause_duration = max(timestamps.max(), max_pause_duration)
+            min_time_duration = min(timestamps.min(), min_time_duration)
         
     number_of_buckets = int((max_pause_duration - min_time_duration) / interval_duration) + 1
     
@@ -312,8 +314,9 @@ def plot_sum_pause_intervals(
     max_pause_duration = 0 
     min_time_duration = int(timestamp_groups[0].iloc[0]) # get the initial time as the lowest.
     for timestamp in timestamp_groups:
-        max_pause_duration = max(timestamp.max(), max_pause_duration)
-        min_time_duration = min(timestamp.min(), min_time_duration)
+        if list(timestamp):
+            max_pause_duration = max(timestamp.max(), max_pause_duration)
+            min_time_duration = min(timestamp.min(), min_time_duration)
         
     number_of_buckets = int((max_pause_duration - min_time_duration) / interval_duration) + 1
     
