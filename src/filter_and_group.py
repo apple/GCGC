@@ -73,13 +73,14 @@ def filter_and_group(
         
         for idx, df in enumerate(datasets):
             if column_timing in df:
-                if column_timing == "DateTime":
-                    timestamp_groups.append(matplotlib.dates.date2num(df[column_timing]))
-                else:
-                    timestamp_groups.append(df[column_timing])
-                datapoint_groups.append(df[column])
-                group_labels.append(labels[idx])
-                log_number_list.append(idx)
+                if column in df:
+                    if column_timing == "DateTime":
+                        timestamp_groups.append(matplotlib.dates.date2num(df[column_timing]))
+                    else:
+                        timestamp_groups.append(df[column_timing])
+                    datapoint_groups.append(df[column])
+                    group_labels.append(labels[idx])
+                    log_number_list.append(idx)
             
         
             
