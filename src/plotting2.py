@@ -24,14 +24,15 @@ def plot_frequency_intervals(
     colors=None,
     plot=None,
     column="Duration_miliseconds",
-    interval_duration = 0
+    interval_duration = 0,
+    column_timing = None
 ):
     if not interval_duration:
         print("No interval length provided. Abort.")
         return
 
     _, datapoint_groups, labels, colors, _ = filter_and_group(
-        gc_event_dataframes, group_by, filter_by, labels, column, colors
+        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing
     )
     
     # if no plot is passed in, create a new plot
@@ -168,7 +169,8 @@ def plot_percentile_intervals(
     plot=None,
     column="Duration_miliseconds",
     interval_duration = 0,
-    percentiles = [99.99, 90, 50]
+    percentiles = [99.99, 90, 50],
+    column_timing = None
     ):
     if not interval_duration:
         print("No interval length provided. Abort.")
@@ -180,7 +182,8 @@ def plot_percentile_intervals(
                                                                              filter_by, 
                                                                              labels, 
                                                                              column, 
-                                                                             colors)
+                                                                             colors,
+                                                                             column_timing)
     
     # # if no plot is passed in, create a new plot
     if not plot:
@@ -237,12 +240,13 @@ def plot_frequency_of_gc_intervals(
     plot=None,
     column="Duration_miliseconds",
     interval_duration = 0,
+    column_timing = None
     ):
     if not interval_duration:
         print("No interval length provided. Abort.")
         return
     timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
-        gc_event_dataframes, group_by, filter_by, labels, column, colors)
+        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing)
     
     # # if no plot is passed in, create a new plot
     if not plot:
@@ -296,6 +300,7 @@ def plot_sum_pause_intervals(
     plot=None,
     column="Duration_miliseconds",
     interval_duration = 0, # miliseconds
+    column_timing = None
     ):
     if not interval_duration:
         print("No interval length provided. Abort.")
@@ -303,7 +308,7 @@ def plot_sum_pause_intervals(
 
     # Filter and group data
     timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
-        gc_event_dataframes, group_by, filter_by, labels, column, colors
+        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing
     )
     
     # if no plot is passed in, create a new plot
