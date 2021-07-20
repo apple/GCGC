@@ -32,7 +32,6 @@ def plot_scatter(
     # if no plot is passed in, create a new plot
     if not plot:
         f, plot = plt.subplots()
-
     # Create a scatter plot with all data
     for time, datapoints, color, label in zip(timestamp_groups, datapoint_groups, colors, labels):
         # plot.scatter(time, datapoints, label=label, color=color)
@@ -286,6 +285,7 @@ def plot_reclaimed_bytes(
     plot=None,      # used if you would like to add this data to another plot
     column=None,    # overwritten manually 
     column_timing = None,
+    colors = None,
 ):
     # if no plot is passed in, create a new plot
     if not plot:
@@ -293,11 +293,11 @@ def plot_reclaimed_bytes(
 
     # Access the beforeGC data
     timestamp_groups, datapoint_groups_before, _, colors, __ = filter_and_group(
-        gc_event_dataframes, group_by, filter_by, labels, "HeapBeforeGC"
+        gc_event_dataframes, group_by, filter_by, labels, "HeapBeforeGC", colors, column_timing
     )
     # Access the afterGC data
     timestamp_groups, datapoint_groups_after, _, _, _ = filter_and_group(
-        gc_event_dataframes, group_by, filter_by, labels, "HeapAfterGC"
+        gc_event_dataframes, group_by, filter_by, labels, "HeapAfterGC", colors, column_timing
     )
     # Construct a table of "memory reclaimed" for each log, subtracting the before from after GC Heap allocation.
     reclaimed_bytes_groups = []
