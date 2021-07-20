@@ -34,34 +34,43 @@ def filter_and_group(
         column_timing = "TimeFromStart_seconds"
     
     if group_by: # We need to create groups within each dataset
+        
         for idx, df in enumerate(datasets):
-            if column_timing in df:
-                groups = {}
-                if column_timing == "DateTime":
-                    timing = matplotlib.dates.date2num(df[column_timing])
+            if group_by not in df:
+                print("Warning: group_by group " + str(group_by) + " column not in dataset with columns " + str(df.columns))
+            elif column not in df:
+                print("Warning: column \"" + str(column) + "\" not in dataset with columns " + str(df.columns))
+            else:
+                if column_timing in df:
+                    groups = {}
+                    if column_timing == "DateTime":
+                        timing = matplotlib.dates.date2num(df[column_timing])
+                    else:
+                        timing = df[column_timing]
+                    for group, time, datapoint in zip(df[group_by], timing, df[column]):
+                        if group:
+                            if group not in groups:
+                                # Create a new group for each unique item
+                                groups[group] = [[], [], str(labels[idx]) + ": " + str(group)]
+                            # add the datapoints and time, based on the grouping
+                            
+                            groups[group][0].append(time)
+                            groups[group][1].append(datapoint)
+
+                    # Sort keys so groups print in the same order between files
+                    keys = list(groups.keys())
+                    keys.sort()
+
+                    for key in keys:
+                        timestamp_groups.append(groups[key][0])
+                        datapoint_groups.append(groups[key][1])
+                        group_labels.append(groups[key][2])
+                        log_number_list.append(idx)
                 else:
-                    timing = df[column_timing]
-                for group, time, datapoint in zip(df[group_by], timing, df[column]):
-                    if group:
-                        if group not in groups:
-                            # Create a new group for each unique item
-                            groups[group] = [[], [], str(labels[idx]) + ": " + str(group)]
-                        # add the datapoints and time, based on the grouping
-                        
-                        groups[group][0].append(time)
-                        groups[group][1].append(datapoint)
-
-                # Sort keys so groups print in the same order between files
-                keys = list(groups.keys())
-                keys.sort()
-
-                for key in keys:
-                    timestamp_groups.append(groups[key][0])
-                    datapoint_groups.append(groups[key][1])
-                    group_labels.append(groups[key][2])
-                    log_number_list.append(idx)
+                    print("Warning: column_timing \"" + str(column_timing) + "\" not in dataset with columns " + str(df.columns))
             
-    else: # no groups are required, just use the entire filtered dataset as a group        
+    else: # no groups are required, just use the entire filtered dataset as a group 
+        
         for idx, df in enumerate(datasets):
             if column_timing in df:
                 if column_timing == "DateTime":
@@ -71,6 +80,9 @@ def filter_and_group(
                 datapoint_groups.append(df[column])
                 group_labels.append(labels[idx])
                 log_number_list.append(idx)
+            
+        
+            
             
             
     # Determine the colors from the dataset. If colors were passed, use those instead.  
@@ -130,6 +142,11 @@ def get_colors_and_alphas(log_no_list, group_by):
                     abs(math.cos(num_individual * 5 / 3)),
                     abs(math.cos(num_individual * 4)),
                 )
+                r,g,b = color
+                if r > 0.9 and g > 0.9 and b > 0.9:
+                    r -= 0.2
+                    g -= 0.4
+                    color = (r, g, b)
                 colors.append(color)
 
             else:
@@ -143,6 +160,12 @@ def get_colors_and_alphas(log_no_list, group_by):
                 )
                 # Because this is the first time we are seeing this color/dataset,
                 # set the alpha back to 1.
+                
+                r,g,b = color
+                if r > 0.9 and g > 0.9 and b > 0.9:
+                    r -= 0.2
+                    g -= 0.4
+                    color = (r, g, b)
                 colors.append(color)
                 alpha = 1
                 alphas.append(alpha)
@@ -157,6 +180,11 @@ def get_colors_and_alphas(log_no_list, group_by):
                 abs(math.cos(index * 5 / 3)),
                 abs(math.cos(index * 3.9)),
             )
+            r,g,b = color
+            if r > 0.9 and g > 0.9 and b > 0.9:
+                    r -= 0.2
+                    g -= 0.4
+                    color = (r , g, b)
             colors.append(color)
             alphas.append(1)
         
