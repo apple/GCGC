@@ -37,13 +37,15 @@ def plot_frequency_intervals(
     # if no plot is passed in, create a new plot
     if not plot:
         f, plot = plt.subplots()
-
     # Determine the number of buckets from max_time and interval duration
     max_pause_duration = 0
     min_pause_duration = datapoint_groups[0].iloc[0]
+    
     for dataset in datapoint_groups:
-        max_pause_duration = max(dataset.max(), max_pause_duration)
-        min_pause_duration = min(dataset.min(), min_pause_duration)
+        if list(dataset): # read as list to check for list legnth, rather than rely on pd.DataFrame.empty
+            max_pause_duration = max(dataset.max(), max_pause_duration)
+            min_pause_duration = min(dataset.min(), min_pause_duration)
+
     number_of_buckets = int((max_pause_duration) / interval_duration) + 1
     
     # Create the time intervals 
@@ -321,7 +323,7 @@ def plot_sum_pause_intervals(
     # Loop through all lists, and plot the line graphs 
     for index, (timestamps, dataset) in enumerate(zip(timestamp_groups, datapoint_groups)):
         # First, group into buckets based on time interverals.
-        print(dataset)
+        # print(dataset)
 
         # NOTE: here, we are subtracting the minimum time from everything to easily group them
         buckets = group_into_buckets([time - min_time_duration for time in timestamps], 
