@@ -285,11 +285,13 @@ def get_heatmap_data(
     y_bucket_duration=10,  # Duration in miliseconds for the length of each latency interval bucket
     label = None, 
     suppress_warnings=False,  # If True, warnings about values lying outside of dimension range will not be printed.
+    column = "Duration_miliseconds",
+    column_timing = "TimeFromStart_seconds" 
 ):
     assert isinstance(gc_event_dataframe, pd.DataFrame)
     if gc_event_dataframe.empty:
         print("Warning: Empty table in get_heatmap_data.")
-        return None, None
+        return np.array([]), []
     for x in [x_bucket_count, y_bucket_count]:
         assert type(x) == int, "Warning: x_bucket_count and y_bucket_count must be integers"
 
@@ -300,12 +302,17 @@ def get_heatmap_data(
     for x in [x_bucket_count, y_bucket_count, x_bucket_duration, y_bucket_duration]:
         if x <= 0:
             print("Warning: All dimensions must be greater than zero.")
-            return None, None
+            return np.array([]), []
 
     if gc_event_dataframe.empty:
         print("Empty gc_event_dataframe in get_heatmap_data")
-        return None, None
-    times_seconds, pauses_ms = get_time_and_event_durations(gc_event_dataframe)
+        return np.array([]), []
+    
+    if column in gc_event_dataframe and column_timing in gc_event_dataframe:
+        times_seconds, pauses_ms = gc_event_dataframe[column_timing], gc_event_dataframe[column]
+    else:
+        print("Warning: column or column_timing not included in dataframe " + str(label))
+        return np.array([]), []
 
     # create buckets to store the time information.
     # first, compress into num_b buckets along the time X-axis.
@@ -417,8 +424,9 @@ def get_time_in_seconds(gc_event_dataframe):
         return []
     else:
         timestamps_seconds = []
-        for time in gc_event_dataframe["TimeFromStart_seconds"]:
-            if time != None:
-                timestamps_seconds.append(float(time))
+        if "TimeFromStart_seconds" in gc_event_dataframe:
+            for time in gc_event_dataframe["TimeFromStart_seconds"]:
+                if time != None:
+                    timestamps_seconds.append(float(time))
         return timestamps_seconds
 
