@@ -23,10 +23,11 @@ def plot_scatter(
     colors=None,    # colors to override 
     plot=None,
     column="Duration_miliseconds",
+    column_timing = None,
 ):  
     # Filter and group data. Update colors and labels to reflect to-be-plotted data
     timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
-        gc_event_dataframes, group_by, filter_by, labels, column, colors
+        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing
     )
     # if no plot is passed in, create a new plot
     if not plot:
@@ -55,9 +56,10 @@ def plot_line(
     colors=None,
     plot=None,
     column="Duration_miliseconds",
+    column_timing = None
 ):
     timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
-        gc_event_dataframes, group_by, filter_by, labels, column, colors
+        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing
     )
     # if no plot is passed in, create a new plot
     if not plot:
@@ -85,9 +87,10 @@ def plot_pie_sum(
     colors=None,
     plot=None,
     column="Duration_miliseconds",
+    column_timing = None,
 ):
     timestamp_groups, datapoint_groups, labels, colors = filter_and_group(
-        gc_event_dataframes, group_by, filter_by, labels, column, colors
+        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing
     )
     # if no plot is passed in, create a new plot
     if not plot:
@@ -119,10 +122,11 @@ def plot_bar_sum(
     colors=None,
     plot=None,
     column="Duration_miliseconds",
+    column_timing = None,
 ):
     # Group and filter 
     timestamp_groups, datapoint_groups, labels, colors, alphas = filter_and_group(
-        gc_event_dataframes, group_by, filter_by, labels, column, colors
+        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing
     )
     # if no plot is passed in, create a new plot
     if not plot:
@@ -153,10 +157,11 @@ def plot_bar_avg(
     colors=None,        # A list of colors for the bars to be plotted as. 
     plot=None,          # A plot to add new plotted information to.
     column="Duration_miliseconds", # The column to find the averages of
+    column_timing = None,
 ):
     # Filter and group
     _, datapoint_groups, labels, colors, _ = filter_and_group(
-        gc_event_dataframes, group_by, filter_by, labels, column, colors
+        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing
     )
     # if no plot is passed in, create a new plot
     if not plot:
@@ -189,6 +194,7 @@ def plot_trends(
     plot=None,          # unsued
     column="Duration_miliseconds", # Describes the column to find the percentiles of.
     throughput=False, # If true, then the throughput will be calculated from the gc_event_dataframe log info
+    column_timing = None,
 ):
     # Filter and group
     timestamp_groups, datapoint_groups, labels, _, __ = filter_and_group(
@@ -243,6 +249,7 @@ def plot_percentiles(
     labels=None,        # list of str labels to describe each entry of gc_event_dataframes
     plot=None,          # unusued
     column="Duration_miliseconds", # Describes the column to find the percentiles of.
+    column_timing = None,
 ):
     timestamp_groups, datapoint_groups, labels, _, __ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column
@@ -278,6 +285,7 @@ def plot_reclaimed_bytes(
     labels=None,    # list of str labels to describe each entry of gc_event_dataframes
     plot=None,      # used if you would like to add this data to another plot
     column=None,    # overwritten manually 
+    column_timing = None,
 ):
     # if no plot is passed in, create a new plot
     if not plot:
