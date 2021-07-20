@@ -20,7 +20,7 @@ def filter_and_group(
     column_timing = None # Overrides the timing column to collect, if provided. All values in the column must be ints/floats
 ):
     if filter_by:
-        datasets = apply_filter(datasets, filter_by)
+        datasets = apply_filter(datasets, filter_by, column_timing)
     if not labels:
         labels = [str(num + 1) for num in range(len(datasets))]
 
@@ -31,35 +31,39 @@ def filter_and_group(
     log_number_list = [] # used to specify which dataset in original list
     if not column_timing:
         column_timing = "TimeFromStart_seconds"
+    
     if group_by: # We need to create groups within each dataset
         for idx, df in enumerate(datasets):
-            groups = {}
-            for group, time, datapoint in zip(df[group_by], df[column_timing], df[column]):
-                if group:
-                    if group not in groups:
-                        # Create a new group for each unique item
-                        groups[group] = [[], [], str(labels[idx]) + ": " + str(group)]
-                    # add the datapoints and time, based on the grouping
-                    groups[group][0].append(time)
-                    groups[group][1].append(datapoint)
+            if column_timing in df:
+                groups = {}
+                for group, time, datapoint in zip(df[group_by], df[column_timing], df[column]):
+                    if group:
+                        if group not in groups:
+                            # Create a new group for each unique item
+                            groups[group] = [[], [], str(labels[idx]) + ": " + str(group)]
+                        # add the datapoints and time, based on the grouping
+                        groups[group][0].append(time)
+                        groups[group][1].append(datapoint)
 
-            # Sort keys so groups print in the same order between files
-            keys = list(groups.keys())
-            keys.sort()
+                # Sort keys so groups print in the same order between files
+                keys = list(groups.keys())
+                keys.sort()
 
-            for key in keys:
-                timestamp_groups.append(groups[key][0])
-                datapoint_groups.append(groups[key][1])
-                group_labels.append(groups[key][2])
-                log_number_list.append(idx)
-
-    else: # no groups are required, just use the entire filtered dataset as a group
+                for key in keys:
+                    timestamp_groups.append(groups[key][0])
+                    datapoint_groups.append(groups[key][1])
+                    group_labels.append(groups[key][2])
+                    log_number_list.append(idx)
+            
+    else: # no groups are required, just use the entire filtered dataset as a group        
         for idx, df in enumerate(datasets):
-            timestamp_groups.append(df[column_timing])
-            datapoint_groups.append(df[column])
-            group_labels.append(labels[idx])
-            log_number_list.append(idx)
-
+            if column_timing in df:
+                timestamp_groups.append(df[column_timing])
+                datapoint_groups.append(df[column])
+                group_labels.append(labels[idx])
+                log_number_list.append(idx)
+            
+            
     # Determine the colors from the dataset. If colors were passed, use those instead.  
     if not colors:
         colors, alphas = get_colors_and_alphas(log_number_list, group_by)
@@ -74,7 +78,7 @@ import pandas as pd
 #   For each dataset, apply each filter. Create a copy of the data to be fitered,
 #   so the original data is not modified or lost. Return the list of copied & filetered datasets
 #
-def apply_filter(datasets, filter_by=None):
+def apply_filter(datasets, filter_by=None, column_timing = None):
     dfs = []
     if filter_by:
         # create a copy, to be modified
