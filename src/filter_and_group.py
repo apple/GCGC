@@ -4,6 +4,7 @@
 # 7-12-2021
 #
 import math
+import matplotlib
 
 #       filter_and_group
 #
@@ -20,7 +21,7 @@ def filter_and_group(
     column_timing = None # Overrides the timing column to collect, if provided. All values in the column must be ints/floats
 ):
     if filter_by:
-        datasets = apply_filter(datasets, filter_by, column_timing)
+        datasets = apply_filter(datasets, filter_by)
     if not labels:
         labels = [str(num + 1) for num in range(len(datasets))]
 
@@ -36,12 +37,17 @@ def filter_and_group(
         for idx, df in enumerate(datasets):
             if column_timing in df:
                 groups = {}
-                for group, time, datapoint in zip(df[group_by], df[column_timing], df[column]):
+                if column_timing == "DateTime":
+                    timing = matplotlib.dates.date2num(df[column_timing])
+                else:
+                    timing = df[column_timing]
+                for group, time, datapoint in zip(df[group_by], timing, df[column]):
                     if group:
                         if group not in groups:
                             # Create a new group for each unique item
                             groups[group] = [[], [], str(labels[idx]) + ": " + str(group)]
                         # add the datapoints and time, based on the grouping
+                        
                         groups[group][0].append(time)
                         groups[group][1].append(datapoint)
 
@@ -58,7 +64,10 @@ def filter_and_group(
     else: # no groups are required, just use the entire filtered dataset as a group        
         for idx, df in enumerate(datasets):
             if column_timing in df:
-                timestamp_groups.append(df[column_timing])
+                if column_timing == "DateTime":
+                    timestamp_groups.append(matplotlib.dates.date2num(df[column_timing]))
+                else:
+                    timestamp_groups.append(df[column_timing])
                 datapoint_groups.append(df[column])
                 group_labels.append(labels[idx])
                 log_number_list.append(idx)
@@ -78,7 +87,7 @@ import pandas as pd
 #   For each dataset, apply each filter. Create a copy of the data to be fitered,
 #   so the original data is not modified or lost. Return the list of copied & filetered datasets
 #
-def apply_filter(datasets, filter_by=None, column_timing = None):
+def apply_filter(datasets, filter_by=None):
     dfs = []
     if filter_by:
         # create a copy, to be modified
