@@ -17,7 +17,7 @@ def filter_and_group(
     labels=None, # a list of strings to describe the datasets passed in 
     column="Duration_miliseconds",  # the column name that we are analyzing from our dataset
     colors=None, # a list colors. If none are provided, determinsitic colors returned for dataset
-    column_timing = None # Overrides the timing column to collect, if provided
+    column_timing = None # Overrides the timing column to collect, if provided. All values in the column must be ints/floats
 ):
     if filter_by:
         datasets = apply_filter(datasets, filter_by)
