@@ -16,7 +16,8 @@ def filter_and_group(
     filter_by=None, # a function to be applied to the row of the table. Should return a boolean
     labels=None, # a list of strings to describe the datasets passed in 
     column="Duration_miliseconds",  # the column name that we are analyzing from our dataset
-    colors=None # a list colors. If none are provided, determinsitic colors returned for datasets
+    colors=None, # a list colors. If none are provided, determinsitic colors returned for dataset
+    column_timing = None # Overrides the timing column to collect, if provided
 ):
     if filter_by:
         datasets = apply_filter(datasets, filter_by)
@@ -28,11 +29,12 @@ def filter_and_group(
     datapoint_groups = [] # For data in 'column'
     group_labels = []
     log_number_list = [] # used to specify which dataset in original list
-    
+    if not column_timing:
+        column_timing = "TimeFromStart_seconds"
     if group_by: # We need to create groups within each dataset
         for idx, df in enumerate(datasets):
             groups = {}
-            for group, time, datapoint in zip(df[group_by], df["TimeFromStart_seconds"], df[column]):
+            for group, time, datapoint in zip(df[group_by], df[column_timing], df[column]):
                 if group:
                     if group not in groups:
                         # Create a new group for each unique item
@@ -53,7 +55,7 @@ def filter_and_group(
 
     else: # no groups are required, just use the entire filtered dataset as a group
         for idx, df in enumerate(datasets):
-            timestamp_groups.append(df["TimeFromStart_seconds"])
+            timestamp_groups.append(df[column_timing])
             datapoint_groups.append(df[column])
             group_labels.append(labels[idx])
             log_number_list.append(idx)
