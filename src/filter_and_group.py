@@ -60,7 +60,7 @@ def filter_and_group(
 
     # Determine the colors from the dataset. If colors were passed, use those instead.  
     if not colors:
-        colors, alphas = get_colors_and_alphas(log_number_list)
+        colors, alphas = get_colors_and_alphas(log_number_list, group_by)
     else:
         alphas = [1 for i in range(len(colors))]
 
@@ -94,43 +94,55 @@ def apply_filter(datasets, filter_by=None):
 #   dataset will be the same, but with a different alpha value if multiple groups,
 #   to show the variation between colors 
 #
-def get_colors_and_alphas(log_no_list):
+def get_colors_and_alphas(log_no_list, group_by):
     num_individual = 0
     alphas = []
     colors = []
     prev_log_no = 1
 
     index = 0
-    while index < len(log_no_list):
-        if prev_log_no == log_no_list[index]:
-            # Get the alpha value and subtract from it for this same group
-            alpha = round(alpha - 0.2, 5)
-            alphas.append(alpha)
+    if group_by!= "EventName":
+        while index < len(log_no_list):
+            if prev_log_no == log_no_list[index]:
+                # Get the alpha value and subtract from it for this same group
+                alpha = round(alpha - 0.2, 5)
+                alphas.append(alpha)
 
-            # Use this transformation math equation to get a determinstic
-            # sudo random color based on the num_individual.
+                # Use this transformation math equation to get a determinstic
+                # sudo random color based on the num_individual.
+                color = (
+                    abs(math.cos(num_individual * math.pi * 2 / 3)),
+                    abs(math.cos(num_individual * 5 / 3)),
+                    abs(math.cos(num_individual * 4)),
+                )
+                colors.append(color)
+
+            else:
+                num_individual += 1
+                # Use this transformation math equation to get a determinstic
+                # sudo random color based on the num_individual.
+                color = (
+                    abs(math.cos(num_individual * math.pi * 2 / 3)),
+                    abs(math.cos(num_individual * 5 / 3)),
+                    abs(math.cos(num_individual * 4)),
+                )
+                # Because this is the first time we are seeing this color/dataset,
+                # set the alpha back to 1.
+                colors.append(color)
+                alpha = 1
+                alphas.append(alpha)
+
+            prev_log_no = log_no_list[index]
+            index += 1
+    else:
+        # Else case, we are using "EventName" to group, and we NEED these to be distinct. ALPHA = 1
+        for index in range(len(log_no_list)):
             color = (
-                abs(math.cos(num_individual * math.pi * 2 / 3)),
-                abs(math.cos(num_individual * 5 / 3)),
-                abs(math.cos(num_individual * 4)),
+                abs(math.cos(index * math.pi * 2 / 3)),
+                abs(math.cos(index * 5 / 3)),
+                abs(math.cos(index * 3.9)),
             )
             colors.append(color)
-
-        else:
-            num_individual += 1
-            # Use this transformation math equation to get a determinstic
-            # sudo random color based on the num_individual.
-            color = (
-                abs(math.cos(num_individual * math.pi * 2 / 3)),
-                abs(math.cos(num_individual * 5 / 3)),
-                abs(math.cos(num_individual * 4)),
-            )
-            # Because this is the first time we are seeing this color/dataset,
-            # set the alpha back to 1.
-            colors.append(color)
-            alpha = 1
-            alphas.append(alpha)
-
-        prev_log_no = log_no_list[index]
-        index += 1
+            alphas.append(1)
+        
     return colors, alphas
