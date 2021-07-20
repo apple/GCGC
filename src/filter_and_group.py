@@ -121,71 +121,100 @@ def apply_filter(datasets, filter_by=None):
 #   dataset will be the same, but with a different alpha value if multiple groups,
 #   to show the variation between colors 
 #
-def get_colors_and_alphas(log_no_list, group_by):
-    num_individual = 0
-    alphas = []
-    colors = []
-    prev_log_no = 1
+# def get_colors_and_alphas(log_no_list, group_by):
+#     num_individual = 0
+#     alphas = []
+#     colors = []
+#     prev_log_no = 1
 
-    index = 0
-    if group_by!= "EventName":
-        while index < len(log_no_list):
-            if prev_log_no == log_no_list[index]:
-                # Get the alpha value and subtract from it for this same group
-                alpha = round(alpha - 0.2, 5)
-                alphas.append(alpha)
+#     index = 0
+#     if group_by!= "EventName":
+#         while index < len(log_no_list):
+#             if prev_log_no == log_no_list[index]:
+#                 # Get the alpha value and subtract from it for this same group
+#                 alpha = round(alpha - 0.2, 5)
+#                 alphas.append(alpha)
 
-                # Use this transformation math equation to get a determinstic
-                # sudo random color based on the num_individual.
-                color = (
-                    abs(math.cos(num_individual * math.pi * 2 / 3)),
-                    abs(math.cos(num_individual * 5 / 3)),
-                    abs(math.cos(num_individual * 4)),
-                )
-                r,g,b = color
-                if r > 0.9 and g > 0.9 and b > 0.9:
-                    r -= 0.2
-                    g -= 0.4
-                    color = (r, g, b)
-                colors.append(color)
+#                 # Use this transformation math equation to get a determinstic
+#                 # sudo random color based on the num_individual.
+#                 color = (
+#                     abs(math.cos(num_individual * math.pi * 2 / 3)),
+#                     abs(math.cos(num_individual * 5 / 3)),
+#                     abs(math.cos(num_individual * 4)),
+#                 )
+#                 r,g,b = color
+#                 if r > 0.95 and g > 0.95 and b > 0.95:
+#                     g -= 0.4
+#                     color = (r, g, b)
+#                 colors.append(color)
 
-            else:
-                num_individual += 1
-                # Use this transformation math equation to get a determinstic
-                # sudo random color based on the num_individual.
-                color = (
-                    abs(math.cos(num_individual * math.pi * 2 / 3)),
-                    abs(math.cos(num_individual * 5 / 3)),
-                    abs(math.cos(num_individual * 4)),
-                )
-                # Because this is the first time we are seeing this color/dataset,
-                # set the alpha back to 1.
+#             else:
+#                 num_individual += 1
+#                 # Use this transformation math equation to get a determinstic
+#                 # sudo random color based on the num_individual.
+#                 color = (
+#                     abs(math.cos(num_individual * math.pi * 2 / 3)),
+#                     abs(math.cos(num_individual * 5 / 3)),
+#                     abs(math.cos(num_individual * 4)),
+#                 )
+#                 # Because this is the first time we are seeing this color/dataset,
+#                 # set the alpha back to 1.
                 
-                r,g,b = color
-                if r > 0.9 and g > 0.9 and b > 0.9:
-                    r -= 0.2
-                    g -= 0.4
-                    color = (r, g, b)
-                colors.append(color)
-                alpha = 1
-                alphas.append(alpha)
+#                 r,g,b = color
+#                 if r > 0.95 and g > 0.95 and b > 0.95:
+#                     g -= 0.4
+#                     color = (r, g, b)
+#                 colors.append(color)
+#                 alpha = 1
+#                 alphas.append(alpha)
 
-            prev_log_no = log_no_list[index]
-            index += 1
-    else:
-        # Else case, we are using "EventName" to group, and we NEED these to be distinct. ALPHA = 1
-        for index in range(len(log_no_list)):
-            color = (
-                abs(math.cos(index * math.pi * 2 / 3)),
-                abs(math.cos(index * 5 / 3)),
-                abs(math.cos(index * 3.9)),
-            )
-            r,g,b = color
-            if r > 0.9 and g > 0.9 and b > 0.9:
-                    r -= 0.2
-                    g -= 0.4
-                    color = (r , g, b)
-            colors.append(color)
-            alphas.append(1)
+#             prev_log_no = log_no_list[index]
+#             index += 1
+#     else:
+#         # Else case, we are using "EventName" to group, and we NEED these to be distinct. ALPHA = 1
+#         for index in range(len(log_no_list)):
+#             color = (
+#                 abs(math.cos(index * math.pi * 2 / 3)),
+#                 abs(math.cos(index * 5 / 3)),
+#                 abs(math.cos(index * 3.9)),
+#             )
+#             r,g,b = color
+#             if r > 0.95 and g > 0.95 and b > 0.95:
+#                 print("oop")
+#                 g -= 0.4
+#                 color = (r , g, b)
+#             colors.append(color)
+#             alphas.append(1)
         
+#     return colors, alphas
+
+def get_colors_and_alphas(log_no_list, group_by):
+    prev_log_no = 0
+    preset_colors = [(230/255, 25/255, 75/255),
+                    (60/255, 180/255, 75/255),
+                    (255/255, 225/255, 25/255),
+                    (0/255, 130/255, 200/255),
+                    (245/255, 130/255, 48/255),
+                    (145/255, 30/255, 180/255),
+                    (70/255, 240/255, 240/255),
+                    (240/255, 50/255, 230/255),
+                    (210/255, 245/255, 60/255),
+                    (250/255, 190/255, 212/255),
+                    (0/255, 128/255, 128/255),
+                    (220/255, 190/255, 255/255),
+                    (170/255, 110/255, 40/255),
+                    (255/255, 250/255, 200/255),
+                    (128/255, 0/255, 0/255),
+                    (170/255, 255/255, 195/255),
+                    (128/255, 128/255, 0/255),
+                    (255/255, 215/255, 180/255),
+                    (0/255, 0/255, 128/255),
+                    (128/255, 128/255, 128/255),
+                    (0, 0, 0)] # https://sashamaps.net/docs/resources/20-colors/
+    colors = []
+    alphas = []
+    for idx in range(len(log_no_list)):
+        colors.append(preset_colors[idx])
+        alphas.append(1)
     return colors, alphas
+ 
