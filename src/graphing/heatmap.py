@@ -341,32 +341,35 @@ def get_heatmap_data(
     heatmap = []
 
     out_of_range_latency = False
+    max_value = 0
+    for t in pauses_ms:
+        if t:
+            max_value = max(max_value, t)
     # go through each time interval, and sort the pauses there into frequency lists
     for bucket in x_b:
         yb = [0 for i in range(y_bucket_count)]  # construct a 0 frequency list
         for time in bucket:
             # determine which ms pause bucket
-            y_bucket_no = int(time / y_bucket_duration)
-            if not suppress_warnings:
-                if y_bucket_no > y_bucket_count :
-                    print(
-                        "Warning: Value for latency lies outside of range: "
-                        + str(time)
-                        + " > "
-                        + str(y_bucket_count * y_bucket_duration)
-                        + " ms"
-                    )
-
-            out_of_range_latency
-            
-            if y_bucket_no < y_bucket_count:
-                # increase the frequency of that pause in this time interval
-                yb[y_bucket_no] += 1
-            elif y_bucket_no == y_bucket_count:
-                y_bucket_no = y_bucket_count - 1
-                yb[y_bucket_no] += 1
-            else:
-                out_of_range_latency = True
+            if time:
+                y_bucket_no = int(time / y_bucket_duration)
+                if not suppress_warnings:
+                    if y_bucket_no > y_bucket_count :
+                        print(
+                            "Warning: Value for latency lies outside of range: "
+                            + str(time)
+                            + " > "
+                            + str(y_bucket_count * y_bucket_duration)
+                            + " ms"
+                        )
+                
+                if y_bucket_no < y_bucket_count:
+                    # increase the frequency of that pause in this time interval
+                    yb[y_bucket_no] += 1
+                elif y_bucket_no == y_bucket_count:
+                    y_bucket_no = y_bucket_count - 1
+                    yb[y_bucket_no] += 1
+                else:
+                    out_of_range_latency = True
 
 
 
@@ -377,7 +380,7 @@ def get_heatmap_data(
     if out_of_range_time:
         print(label + " Warning: At least one value lies outside of the provided time range. Max value outside range: " + str (max(times_seconds)))
     if out_of_range_latency:
-        print(label + " Warning: At least one value lies outside the provided range for latency. Max value outside range: " + str(max(pauses_ms) ))
+        print(label + " Warning: At least one value lies outside the provided range for latency. Max value outside range: " + str(max_value))
     
     return np.array(heatmap), [
         x_bucket_count,

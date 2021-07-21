@@ -77,16 +77,43 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None, ignore_crashes =
         print("Unable to parse file " + str(logfile))
         return pd.DataFrame()
     # Some data collected is read in as a string, but needs to be interpreted as a float. Fix.
+    
     table[1] = list(map(__number_to_float, table[1]))
     table[7] = list(map(__number_to_float, table[7]))
     table[5] = choose_non_zero(table[5], table[8]) # Before GC collection mem_size
     table[6] = choose_non_zero(table[6], table[9]) # After GC collection mem_size
     table[5] = list(map(__number_to_float, table[5])) 
     table[6] = list(map(__number_to_float, table[6]))
+    
+    
+
+    # Schema 1 (JDK 16)
+    temp = []
+    for eventtype, safepoint1, safepoint2 in zip(table[2], table[10], table[16]):
+        if safepoint1 or safepoint2:
+            temp.append("Safepoint")
+        else:
+            temp.append(eventtype)
+    table[2] = temp
+    safepoint_name = table[10]
+    time_since_last_safepoint = table[11]
+    reaching_safepoint_time = table[12]
+    at_safepoint_time = table[13]
+    total_time_safepoint = table[14]
+    # Schema 2 (JDK 11)
+    total_application_thread_stopped_time_seconds = table[15]
+    total_time_to_stop_seconds = table[16]
+  
 
 
-    table.pop() # Used due to 2 types of memory change regex groups & before/after for each
-    table.pop() # Therefore, we gather before & after into 2 distinct columns, and remove other set
+
+# Scema 2 for safepoints:: Appears in JDK11
+    # (?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$) 
+ # 16 Total time application threads stopped in seconds
+ # 17 Total time to stop in seconds
+
+    table.pop(9) # Used due to 2 types of memory change regex groups & before/after for each
+    table.pop(8) # Therefore, we gather before & after into 2 distinct columns, and remove other set
 
     parsed_data_table = pd.DataFrame(table).transpose() 
     # The data collected is in a 2d array, where table indicies represent a column. However,
@@ -222,6 +249,13 @@ def columnNames():
         "HeapBeforeGC",
         "HeapAfterGC",
         "Duration_miliseconds",
+        "SafepointName",
+        "TimeFromLastSafepoint_ns",
+        "TimeToReachSafepoint_ns",
+        "AtSafepoint_ns",
+        "TotalTimeAtSafepoint_ns",
+        "TotalApplicationThreadPauseTime_seconds",
+        "TimeToStopApplication_seconds"
     ]
 
 
@@ -268,7 +302,7 @@ def event_parsing_string():
         + time_spent_miliseconds
         + zgc_style_heap_memory_change
     )
-    # return "^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\](?:\[.*?\])+ GC\(\d+\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) (?:((?:\w+ ?){1,3}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})(?:(?:(?:(\d+)\w->(\d+)\w(?:\(\d+\w\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)\w\(\d+%\)->(\d+)\w\(\d+%\)))"
+    return "^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\](?:\[.*?\])+(?:(?: GC\(\d+\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) (?:((?:\w+ ?){1,3}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})(?:(?:(?:(\d+)\w->(\d+)\w(?:\(\d+\w\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)\w\(\d+%\)->(\d+)\w\(\d+%\))))|(?: Safepoint \"(\w+)\", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)|(?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$))"
     return event_regex_string
 
 
@@ -300,3 +334,22 @@ def choose_non_zero(list1, list2):
         else:
             list_non_zero.append(None)
     return list_non_zero
+
+# ^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\](?:\[.*?\])+(?: GC\(\d+\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) (?:((?:\w+ ?){1,3}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})(?:(?:(?:(\d+)\w->(\d+)\w(?:\(\d+\w\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)\w\(\d+%\)->(\d+)\w\(\d+%\))))|(?: Safepoint \"(\w+)\", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)|(?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$)
+
+#
+# Schema 1 for safepoints : Appears in JDK16
+    # (?: Safepoint \"(\w+)\", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)
+
+# Capture groups:
+# 11 - Safepoint Name (EventName)
+# 12 - Time since last  in nanoseocnds
+# 13 - Reaching Safepoint in nanoseconds
+# 14 - At safepoint in nanosecnods
+# 15 - Total time in nanoseconds
+
+
+# Scema 2 for safepoints:: Appears in JDK11
+    # (?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$) 
+ # 16 Total time application threads stopped in seconds
+ # 17 Total time to stop in seconds
