@@ -7,11 +7,20 @@
 
 import pandas as pd
 import re
+import glob
 
-
+#
+#
+#
+#
+def get_file_names_wildcard(path):
+    files = []
+    for file in glob.glob(path):
+        files.append(file)
+    return files
 #       get_parsed_comparions_from_files
 #
-#   Take a list of log file paths/names, and construct a list of tables, one for
+#   Take a list of list of log file paths/names, and construct a list of tables, one for
 #   each log in the list.
 #
 def get_parsed_comparions_from_files(files, time_range_seconds, ignore_crashes = False):
@@ -20,21 +29,27 @@ def get_parsed_comparions_from_files(files, time_range_seconds, ignore_crashes =
     # or a single integer max time.
     if ignore_crashes:
         print("Warning: ignore_crashes takes log files and ignores all crashes.")
-    assert isinstance(files, list)
     if not files:
         print("Warning: Files list empty in get_parsed_comparions_from_files")
         return []
     gc_event_dataframes = []
+    super_list = []
+    for filelist in files:
     
-    for file in files:
-        # Create each log gc_event_dataframe
-        gc_event_dataframe = get_parsed_data_from_file(file, time_range_seconds, ignore_crashes)
-        if not gc_event_dataframe.empty:
-            gc_event_dataframes.append(gc_event_dataframe)
+        gc_event_dataframes = []
+        for file in filelist:
+            # Create each log gc_event_dataframe
+            gc_event_dataframe = get_parsed_data_from_file(file, time_range_seconds, ignore_crashes)
+            if not gc_event_dataframe.empty:
+                gc_event_dataframes.append(gc_event_dataframe)
+            if gc_event_dataframes:
+                df = pd.concat(gc_event_dataframes)
+        super_list.append(df)
 
     if not gc_event_dataframes:
         print("Warning: No collected data for gc_event_dataframes")
-    return gc_event_dataframes
+    return super_list
+
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
