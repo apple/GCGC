@@ -140,6 +140,8 @@ def get_colors_and_alphas(log_no_list, group_by):
                     (0, 0, 0)] # https://sashamaps.net/docs/resources/20-colors/
     colors = []
     alphas = []
+    while len(log_no_list) > len(preset_colors):
+        preset_colors = preset_colors + preset_colors
     for idx in range(len(log_no_list)):
         colors.append(preset_colors[idx])
         alphas.append(1)
