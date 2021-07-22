@@ -1,0 +1,905 @@
+athenap@ma1-athena1p-lapp459:~/logs$ cat gc.log
+[0.005s][info][gc] Heuristics ergonomically sets -XX:+ExplicitGCInvokesConcurrent
+[0.005s][info][gc] Heuristics ergonomically sets -XX:+ShenandoahImplicitGCInvokesConcurrent
+[0.006s][info][gc] Using Shenandoah
+[2.401s][info][gc] Trigger: Metadata GC Threshold
+[2.402s][info][gc] GC(0) Concurrent reset 0.981ms
+[2.404s][info][gc] GC(0) Pause Init Mark (process weakrefs) (unload classes) 1.526ms
+[2.408s][info][gc] GC(0) Concurrent marking (process weakrefs) (unload classes) 4.349ms
+[2.409s][info][gc] GC(0) Concurrent precleaning 0.461ms
+[2.413s][info][gc] GC(0) Pause Final Mark (process weakrefs) (unload classes) 4.096ms
+[2.413s][info][gc] GC(0) Concurrent cleanup 217M->225M(2024M) 0.041ms
+[2.419s][info][gc] GC(0) Concurrent evacuation 6.030ms
+[2.421s][info][gc] GC(0) Pause Init Update Refs 0.013ms
+[2.427s][info][gc] GC(0) Concurrent update references 6.338ms
+[2.427s][info][gc] GC(0) Pause Final Update Refs 0.192ms
+[2.427s][info][gc] GC(0) Concurrent cleanup 236M->52M(2032M) 0.042ms
+[4.026s][info][gc] Trigger: Learning 2 of 5. Free (14331M) is below initial threshold (14335M)
+[4.030s][info][gc] GC(1) Concurrent reset 3.761ms
+[4.035s][info][gc] GC(1) Pause Init Mark 3.301ms
+[4.042s][info][gc] GC(1) Concurrent marking 7.574ms
+[4.045s][info][gc] GC(1) Pause Final Mark 1.951ms
+[4.045s][info][gc] GC(1) Concurrent cleanup 5290M->5294M(5304M) 0.041ms
+[4.069s][info][gc] GC(1) Concurrent evacuation 23.475ms
+[4.071s][info][gc] GC(1) Pause Init Update Refs 0.258ms
+[4.081s][info][gc] GC(1) Concurrent update references 10.154ms
+[4.084s][info][gc] GC(1) Pause Final Update Refs 0.576ms
+[4.084s][info][gc] GC(1) Concurrent cleanup 5413M->205M(5424M) 0.102ms
+[4.195s][info][gc] Trigger: Metadata GC Threshold
+[4.303s][info][gc] GC(2) Concurrent reset 107.678ms
+[4.319s][info][gc] GC(2) Pause Init Mark (unload classes) 3.704ms
+[4.340s][info][gc] GC(2) Concurrent marking (unload classes) 20.559ms
+[4.346s][info][gc] GC(2) Pause Final Mark (unload classes) 5.724ms
+[4.347s][info][gc] GC(2) Concurrent cleanup 320M->320M(5424M) 0.040ms
+[4.349s][info][gc] GC(2) Concurrent evacuation 2.155ms
+[4.359s][info][gc] GC(2) Pause Init Update Refs 0.165ms
+[4.365s][info][gc] GC(2) Concurrent update references 6.281ms
+[4.379s][info][gc] GC(2) Pause Final Update Refs 0.630ms
+[4.379s][info][gc] GC(2) Concurrent cleanup 336M->82M(5424M) 0.049ms
+[20.427s][info][gc] Trigger: Metadata GC Threshold
+[20.429s][info][gc] GC(3) Concurrent reset 2.549ms
+[20.436s][info][gc] GC(3) Pause Init Mark (unload classes) 3.411ms
+[20.464s][info][gc] GC(3) Concurrent marking (unload classes) 27.643ms
+[20.477s][info][gc] GC(3) Pause Final Mark (unload classes) 11.253ms
+[20.477s][info][gc] GC(3) Concurrent cleanup 1514M->1170M(5432M) 0.048ms
+[20.511s][info][gc] GC(3) Concurrent evacuation 33.852ms
+[20.515s][info][gc] GC(3) Pause Init Update Refs 0.349ms
+[20.536s][info][gc] GC(3) Concurrent update references 21.415ms
+[20.540s][info][gc] GC(3) Pause Final Update Refs 0.731ms
+[20.541s][info][gc] GC(3) Concurrent cleanup 1353M->265M(5592M) 0.056ms
+[35.792s][info][gc] Trigger: Metadata GC Threshold
+[35.792s][info][gc] GC(4) Concurrent reset 0.820ms
+[35.801s][info][gc] GC(4) Pause Init Mark (unload classes) 3.656ms
+[35.835s][info][gc] GC(4) Concurrent marking (unload classes) 33.861ms
+[35.854s][info][gc] GC(4) Pause Final Mark (unload classes) 17.011ms
+[35.854s][info][gc] GC(4) Concurrent cleanup 4035M->2284M(5592M) 0.076ms
+[35.875s][info][gc] GC(4) Concurrent evacuation 20.225ms
+[35.880s][info][gc] GC(4) Pause Init Update Refs 0.495ms
+[35.904s][info][gc] GC(4) Concurrent update references 24.083ms
+[35.909s][info][gc] GC(4) Pause Final Update Refs 1.083ms
+[35.910s][info][gc] GC(4) Concurrent cleanup 2405M->301M(5680M) 0.071ms
+[48.748s][info][gc] Trigger: Metadata GC Threshold
+[48.750s][info][gc] GC(5) Concurrent reset 2.179ms
+[48.764s][info][gc] GC(5) Pause Init Mark (process weakrefs) (unload classes) 9.404ms
+[48.819s][info][gc] GC(5) Concurrent marking (process weakrefs) (unload classes) 54.219ms
+[48.820s][info][gc] GC(5) Concurrent precleaning 1.802ms
+[48.861s][info][gc] GC(5) Pause Final Mark (process weakrefs) (unload classes) 37.795ms
+[48.861s][info][gc] GC(5) Concurrent cleanup 4303M->3103M(5680M) 0.091ms
+[48.877s][info][gc] GC(5) Concurrent evacuation 16.206ms
+[48.882s][info][gc] GC(5) Pause Init Update Refs 0.506ms
+[48.916s][info][gc] GC(5) Concurrent update references 32.860ms
+[48.921s][info][gc] GC(5) Pause Final Update Refs 1.115ms
+[48.921s][info][gc] GC(5) Concurrent cleanup 3198M->350M(5696M) 0.107ms
+[122.743s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[122.746s][info][gc] GC(6) Concurrent reset 2.160ms
+[125.465s][info][gc] GC(6) Pause Init Mark 213.719ms
+[125.673s][info][gc] GC(6) Concurrent marking 207.600ms
+[125.691s][info][gc] GC(6) Pause Final Mark 15.375ms
+[125.691s][info][gc] GC(6) Concurrent cleanup 17677M->8164M(17792M) 0.173ms
+[126.696s][info][gc] GC(6) Concurrent evacuation 1004.504ms
+[126.710s][info][gc] GC(6) Pause Init Update Refs 0.605ms
+[126.754s][info][gc] GC(6) Concurrent update references 43.242ms
+[126.764s][info][gc] GC(6) Pause Final Update Refs 1.346ms
+[126.764s][info][gc] GC(6) Concurrent cleanup 8347M->491M(17888M) 0.155ms
+[143.017s][info][gc] Trigger: Metadata GC Threshold
+[143.075s][info][gc] GC(7) Concurrent reset 57.874ms
+[143.083s][info][gc] GC(7) Pause Init Mark (unload classes) 3.820ms
+[143.148s][info][gc] GC(7) Concurrent marking (unload classes) 64.355ms
+[143.186s][info][gc] GC(7) Pause Final Mark (unload classes) 36.333ms
+[143.187s][info][gc] GC(7) Concurrent cleanup 3604M->716M(17888M) 0.100ms
+[143.199s][info][gc] GC(7) Concurrent evacuation 12.310ms
+[143.204s][info][gc] GC(7) Pause Init Update Refs 0.503ms
+[143.237s][info][gc] GC(7) Concurrent update references 33.102ms
+[143.243s][info][gc] GC(7) Pause Final Update Refs 1.155ms
+[143.244s][info][gc] GC(7) Concurrent cleanup 785M->449M(17904M) 0.053ms
+[182.077s][info][gc] Trigger: Metadata GC Threshold
+[182.079s][info][gc] GC(8) Concurrent reset 1.552ms
+[182.098s][info][gc] GC(8) Pause Init Mark (unload classes) 12.569ms
+[182.200s][info][gc] GC(8) Concurrent marking (unload classes) 101.440ms
+[182.266s][info][gc] GC(8) Pause Final Mark (unload classes) 63.847ms
+[182.266s][info][gc] GC(8) Concurrent cleanup 13299M->5435M(17904M) 0.199ms
+[182.295s][info][gc] GC(8) Concurrent evacuation 28.637ms
+[182.300s][info][gc] GC(8) Pause Init Update Refs 0.501ms
+[182.347s][info][gc] GC(8) Concurrent update references 47.526ms
+[182.353s][info][gc] GC(8) Pause Final Update Refs 1.260ms
+[182.354s][info][gc] GC(8) Concurrent cleanup 5588M->584M(17976M) 0.109ms
+[215.805s][info][gc] Trigger: Free (2043M) is below minimum threshold (2047M)
+[215.811s][info][gc] GC(9) Concurrent reset 6.816ms
+[215.835s][info][gc] GC(9) Pause Init Mark 16.069ms
+[215.998s][info][gc] GC(9) Concurrent marking 163.100ms
+[216.011s][info][gc] GC(9) Pause Final Mark 9.089ms
+[216.011s][info][gc] GC(9) Concurrent cleanup 17643M->12559M(17976M) 0.183ms
+[216.112s][info][gc] GC(9) Concurrent evacuation 100.061ms
+[216.124s][info][gc] GC(9) Pause Init Update Refs 1.046ms
+[216.234s][info][gc] GC(9) Concurrent update references 109.764ms
+[216.242s][info][gc] GC(9) Pause Final Update Refs 2.105ms
+[216.243s][info][gc] GC(9) Concurrent cleanup 13328M->1571M(18232M) 0.209ms
+[248.646s][info][gc] Trigger: Free (2046M) is below minimum threshold (2047M)
+[248.703s][info][gc] GC(10) Concurrent reset 56.096ms
+[248.734s][info][gc] GC(10) Pause Init Mark (process weakrefs) 15.109ms
+[248.936s][info][gc] GC(10) Concurrent marking (process weakrefs) 201.615ms
+[248.943s][info][gc] GC(10) Concurrent precleaning 6.580ms
+[248.972s][info][gc] GC(10) Pause Final Mark (process weakrefs) 13.932ms
+[248.973s][info][gc] GC(10) Concurrent cleanup 17696M->16165M(18232M) 0.133ms
+[249.030s][info][gc] GC(10) Concurrent evacuation 57.350ms
+[249.048s][info][gc] GC(10) Pause Init Update Refs 1.356ms
+[249.167s][info][gc] GC(10) Concurrent update references 119.394ms
+[249.186s][info][gc] GC(10) Pause Final Update Refs 2.593ms
+[249.187s][info][gc] GC(10) Concurrent cleanup 16537M->1287M(18384M) 0.271ms
+[269.584s][info][gc] Trigger: Free (2046M) is below minimum threshold (2047M)
+[269.604s][info][gc] GC(11) Concurrent reset 19.287ms
+[269.621s][info][gc] GC(11) Pause Init Mark 9.125ms
+[269.788s][info][gc] GC(11) Concurrent marking 166.834ms
+[269.804s][info][gc] GC(11) Pause Final Mark 12.143ms
+[269.805s][info][gc] GC(11) Concurrent cleanup 17543M->16703M(18384M) 0.124ms
+[269.841s][info][gc] GC(11) Concurrent evacuation 36.423ms
+[269.851s][info][gc] GC(11) Pause Init Update Refs 1.158ms
+[269.958s][info][gc] GC(11) Concurrent update references 107.289ms
+[269.968s][info][gc] GC(11) Pause Final Update Refs 2.491ms
+[269.969s][info][gc] GC(11) Concurrent cleanup 16864M->1067M(18504M) 0.275ms
+[303.650s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[303.659s][info][gc] GC(12) Concurrent reset 8.769ms
+[303.675s][info][gc] GC(12) Pause Init Mark 8.752ms
+[303.885s][info][gc] GC(12) Concurrent marking 208.935ms
+[303.898s][info][gc] GC(12) Pause Final Mark 8.682ms
+[303.899s][info][gc] GC(12) Concurrent cleanup 17497M->16260M(18504M) 0.124ms
+[303.931s][info][gc] GC(12) Concurrent evacuation 31.930ms
+[303.940s][info][gc] GC(12) Pause Init Update Refs 1.095ms
+[304.047s][info][gc] GC(12) Concurrent update references 106.993ms
+[304.058s][info][gc] GC(12) Pause Final Update Refs 2.653ms
+[304.058s][info][gc] GC(12) Concurrent cleanup 16495M->1195M(18544M) 0.244ms
+[360.873s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[360.881s][info][gc] GC(13) Concurrent reset 8.713ms
+[360.898s][info][gc] GC(13) Pause Init Mark 8.355ms
+[361.134s][info][gc] GC(13) Concurrent marking 235.106ms
+[361.147s][info][gc] GC(13) Pause Final Mark 9.064ms
+[361.148s][info][gc] GC(13) Concurrent cleanup 17629M->16418M(18544M) 0.133ms
+[361.190s][info][gc] GC(13) Concurrent evacuation 42.141ms
+[361.199s][info][gc] GC(13) Pause Init Update Refs 1.144ms
+[361.320s][info][gc] GC(13) Concurrent update references 120.311ms
+[361.334s][info][gc] GC(13) Pause Final Update Refs 2.761ms
+[361.335s][info][gc] GC(13) Concurrent cleanup 16680M->1386M(18624M) 0.254ms
+[398.926s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[398.934s][info][gc] GC(14) Concurrent reset 7.877ms
+[398.951s][info][gc] GC(14) Pause Init Mark 8.832ms
+[399.189s][info][gc] GC(14) Concurrent marking 238.422ms
+[399.202s][info][gc] GC(14) Pause Final Mark 8.333ms
+[399.202s][info][gc] GC(14) Concurrent cleanup 17515M->16062M(18624M) 0.111ms
+[399.234s][info][gc] GC(14) Concurrent evacuation 31.921ms
+[399.243s][info][gc] GC(14) Pause Init Update Refs 1.100ms
+[399.382s][info][gc] GC(14) Concurrent update references 138.279ms
+[399.392s][info][gc] GC(14) Pause Final Update Refs 2.771ms
+[399.393s][info][gc] GC(14) Concurrent cleanup 16373M->1399M(18648M) 0.226ms
+[442.200s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[442.209s][info][gc] GC(15) Concurrent reset 8.831ms
+[442.235s][info][gc] GC(15) Pause Init Mark (process weakrefs) 18.350ms
+[442.513s][info][gc] GC(15) Concurrent marking (process weakrefs) 278.272ms
+[442.522s][info][gc] GC(15) Concurrent precleaning 8.140ms
+[442.537s][info][gc] GC(15) Pause Final Mark (process weakrefs) 10.173ms
+[442.538s][info][gc] GC(15) Concurrent cleanup 17479M->16024M(18648M) 0.128ms
+[442.567s][info][gc] GC(15) Concurrent evacuation 28.885ms
+[442.576s][info][gc] GC(15) Pause Init Update Refs 1.015ms
+[442.703s][info][gc] GC(15) Concurrent update references 127.248ms
+[442.714s][info][gc] GC(15) Pause Final Update Refs 2.649ms
+[442.715s][info][gc] GC(15) Concurrent cleanup 16213M->1311M(18672M) 0.548ms
+[450.067s][info][gc] Concurrent uncommit 4700M->4700M(18544M) 15.536ms
+[484.856s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[484.864s][info][gc] GC(16) Concurrent reset 8.028ms
+[484.880s][info][gc] GC(16) Pause Init Mark 8.552ms
+[485.154s][info][gc] GC(16) Concurrent marking 273.586ms
+[485.166s][info][gc] GC(16) Pause Final Mark 8.202ms
+[485.167s][info][gc] GC(16) Concurrent cleanup 17632M->16243M(18544M) 0.098ms
+[485.204s][info][gc] GC(16) Concurrent evacuation 36.711ms
+[485.212s][info][gc] GC(16) Pause Init Update Refs 1.053ms
+[485.346s][info][gc] GC(16) Concurrent update references 133.542ms
+[485.356s][info][gc] GC(16) Pause Final Update Refs 2.565ms
+[485.357s][info][gc] GC(16) Concurrent cleanup 16498M->1525M(18656M) 0.230ms
+[529.629s][info][gc] Trigger: Free (2046M) is below minimum threshold (2047M)
+[529.637s][info][gc] GC(17) Concurrent reset 7.884ms
+[529.655s][info][gc] GC(17) Pause Init Mark 8.622ms
+[529.946s][info][gc] GC(17) Concurrent marking 290.720ms
+[529.961s][info][gc] GC(17) Pause Final Mark 9.743ms
+[529.962s][info][gc] GC(17) Concurrent cleanup 17604M->16162M(18656M) 0.140ms
+[530.022s][info][gc] GC(17) Concurrent evacuation 59.858ms
+[530.033s][info][gc] GC(17) Pause Init Update Refs 1.119ms
+[530.202s][info][gc] GC(17) Concurrent update references 168.857ms
+[530.218s][info][gc] GC(17) Pause Final Update Refs 2.447ms
+[530.218s][info][gc] GC(17) Concurrent cleanup 16652M->1659M(18768M) 0.421ms
+[540.102s][info][gc] Concurrent uncommit 4747M->4747M(18472M) 49.239ms
+[568.236s][info][gc] Trigger: Free (2046M) is below minimum threshold (2047M)
+[568.244s][info][gc] GC(18) Concurrent reset 8.430ms
+[568.261s][info][gc] GC(18) Pause Init Mark 7.314ms
+[568.524s][info][gc] GC(18) Concurrent marking 263.365ms
+[568.539s][info][gc] GC(18) Pause Final Mark 9.900ms
+[568.540s][info][gc] GC(18) Concurrent cleanup 17544M->16059M(18472M) 0.103ms
+[568.570s][info][gc] GC(18) Concurrent evacuation 29.976ms
+[568.581s][info][gc] GC(18) Pause Init Update Refs 1.394ms
+[568.715s][info][gc] GC(18) Concurrent update references 134.165ms
+[568.727s][info][gc] GC(18) Pause Final Update Refs 2.815ms
+[568.728s][info][gc] GC(18) Concurrent cleanup 16330M->1445M(18472M) 0.224ms
+[570.109s][info][gc] Concurrent uncommit 1817M->1821M(18096M) 55.784ms
+[613.238s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[613.247s][info][gc] GC(19) Concurrent reset 8.998ms
+[613.283s][info][gc] GC(19) Pause Init Mark 27.339ms
+[613.576s][info][gc] GC(19) Concurrent marking 291.948ms
+[613.590s][info][gc] GC(19) Pause Final Mark 9.461ms
+[613.590s][info][gc] GC(19) Concurrent cleanup 17653M->16277M(18096M) 0.106ms
+[613.629s][info][gc] GC(19) Concurrent evacuation 38.131ms
+[613.639s][info][gc] GC(19) Pause Init Update Refs 1.325ms
+[613.780s][info][gc] GC(19) Concurrent update references 141.204ms
+[613.791s][info][gc] GC(19) Pause Final Update Refs 2.509ms
+[613.792s][info][gc] GC(19) Concurrent cleanup 16507M->1453M(18096M) 0.216ms
+[630.056s][info][gc] Concurrent uncommit 8753M->8753M(18088M) 1.326ms
+[657.054s][info][gc] Trigger: Free (2044M) is below minimum threshold (2047M)
+[657.062s][info][gc] GC(20) Concurrent reset 7.794ms
+[657.078s][info][gc] GC(20) Pause Init Mark (process weakrefs) 8.312ms
+[657.353s][info][gc] GC(20) Concurrent marking (process weakrefs) 274.803ms
+[657.361s][info][gc] GC(20) Concurrent precleaning 7.863ms
+[657.375s][info][gc] GC(20) Pause Final Mark (process weakrefs) 9.888ms
+[657.376s][info][gc] GC(20) Concurrent cleanup 17565M->15941M(18088M) 0.137ms
+[657.410s][info][gc] GC(20) Concurrent evacuation 33.592ms
+[657.418s][info][gc] GC(20) Pause Init Update Refs 0.995ms
+[657.562s][info][gc] GC(20) Concurrent update references 143.143ms
+[657.572s][info][gc] GC(20) Pause Final Update Refs 2.488ms
+[657.573s][info][gc] GC(20) Concurrent cleanup 16113M->1363M(18088M) 0.244ms
+[690.067s][info][gc] Concurrent uncommit 14093M->14093M(18024M) 12.048ms
+[699.059s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[699.066s][info][gc] GC(21) Concurrent reset 7.577ms
+[699.082s][info][gc] GC(21) Pause Init Mark 8.429ms
+[699.341s][info][gc] GC(21) Concurrent marking 258.398ms
+[699.353s][info][gc] GC(21) Pause Final Mark 8.052ms
+[699.354s][info][gc] GC(21) Concurrent cleanup 17594M->16146M(18024M) 0.113ms
+[699.400s][info][gc] GC(21) Concurrent evacuation 45.842ms
+[699.409s][info][gc] GC(21) Pause Init Update Refs 1.006ms
+[699.562s][info][gc] GC(21) Concurrent update references 153.335ms
+[699.573s][info][gc] GC(21) Pause Final Update Refs 2.587ms
+[699.573s][info][gc] GC(21) Concurrent cleanup 16518M->1520M(18040M) 0.258ms
+[720.067s][info][gc] Concurrent uncommit 9781M->9781M(17960M) 12.130ms
+[736.062s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[736.069s][info][gc] GC(22) Concurrent reset 7.676ms
+[736.095s][info][gc] GC(22) Pause Init Mark 17.620ms
+[736.395s][info][gc] GC(22) Concurrent marking 299.782ms
+[736.410s][info][gc] GC(22) Pause Final Mark 10.232ms
+[736.410s][info][gc] GC(22) Concurrent cleanup 17660M->16125M(17960M) 0.125ms
+[736.452s][info][gc] GC(22) Concurrent evacuation 41.331ms
+[736.461s][info][gc] GC(22) Pause Init Update Refs 1.025ms
+[736.617s][info][gc] GC(22) Concurrent update references 155.586ms
+[736.627s][info][gc] GC(22) Pause Final Update Refs 2.517ms
+[736.628s][info][gc] GC(22) Concurrent cleanup 16390M->1519M(17960M) 0.231ms
+[779.846s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[779.853s][info][gc] GC(23) Concurrent reset 7.615ms
+[779.869s][info][gc] GC(23) Pause Init Mark 7.695ms
+[780.139s][info][gc] GC(23) Concurrent marking 269.199ms
+[780.153s][info][gc] GC(23) Pause Final Mark 9.650ms
+[780.154s][info][gc] GC(23) Concurrent cleanup 17409M->15842M(17960M) 0.168ms
+[780.201s][info][gc] GC(23) Concurrent evacuation 47.008ms
+[780.211s][info][gc] GC(23) Pause Init Update Refs 1.412ms
+[780.366s][info][gc] GC(23) Concurrent update references 155.163ms
+[780.375s][info][gc] GC(23) Pause Final Update Refs 2.591ms
+[780.375s][info][gc] GC(23) Concurrent cleanup 16045M->1209M(17960M) 0.239ms
+[819.936s][info][gc] Trigger: Free (2045M) is below minimum threshold (2047M)
+[819.944s][info][gc] GC(24) Concurrent reset 8.566ms
+[819.961s][info][gc] GC(24) Pause Init Mark 7.979ms
+[820.236s][info][gc] GC(24) Concurrent marking 274.241ms
+[820.249s][info][gc] GC(24) Pause Final Mark 9.165ms
+[820.250s][info][gc] GC(24) Concurrent cleanup 17545M->16185M(17960M) 0.138ms
+[820.285s][info][gc] GC(24) Concurrent evacuation 34.085ms
+[820.295s][info][gc] GC(24) Pause Init Update Refs 1.411ms
+[820.434s][info][gc] GC(24) Concurrent update references 139.263ms
+[820.445s][info][gc] GC(24) Pause Final Update Refs 2.455ms
+[820.445s][info][gc] GC(24) Concurrent cleanup 16492M->1477M(17960M) 0.253ms
+[840.379s][info][gc] Concurrent uncommit 8857M->8857M(17944M) 2.055ms
+[859.055s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[859.062s][info][gc] GC(25) Concurrent reset 7.550ms
+[859.078s][info][gc] GC(25) Pause Init Mark (process weakrefs) 7.544ms
+[859.367s][info][gc] GC(25) Concurrent marking (process weakrefs) 288.690ms
+[859.375s][info][gc] GC(25) Concurrent precleaning 8.005ms
+[859.391s][info][gc] GC(25) Pause Final Mark (process weakrefs) 9.762ms
+[859.392s][info][gc] GC(25) Concurrent cleanup 17653M->16237M(17944M) 0.146ms
+[859.438s][info][gc] GC(25) Concurrent evacuation 45.700ms
+[859.447s][info][gc] GC(25) Pause Init Update Refs 1.419ms
+[859.627s][info][gc] GC(25) Concurrent update references 179.292ms
+[859.638s][info][gc] GC(25) Pause Final Update Refs 2.539ms
+[859.638s][info][gc] GC(25) Concurrent cleanup 16710M->1737M(17944M) 0.281ms
+[897.486s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[897.495s][info][gc] GC(26) Concurrent reset 8.357ms
+[897.522s][info][gc] GC(26) Pause Init Mark 18.850ms
+[897.815s][info][gc] GC(26) Concurrent marking 292.788ms
+[897.830s][info][gc] GC(26) Pause Final Mark 9.900ms
+[897.831s][info][gc] GC(26) Concurrent cleanup 17468M->16077M(17944M) 0.131ms
+[897.872s][info][gc] GC(26) Concurrent evacuation 41.418ms
+[897.883s][info][gc] GC(26) Pause Init Update Refs 1.400ms
+[898.034s][info][gc] GC(26) Concurrent update references 150.576ms
+[898.045s][info][gc] GC(26) Pause Final Update Refs 2.715ms
+[898.045s][info][gc] GC(26) Concurrent cleanup 16266M->1270M(17944M) 0.271ms
+[934.674s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[934.682s][info][gc] GC(27) Concurrent reset 8.280ms
+[934.698s][info][gc] GC(27) Pause Init Mark 7.197ms
+[934.993s][info][gc] GC(27) Concurrent marking 294.669ms
+[935.006s][info][gc] GC(27) Pause Final Mark 8.583ms
+[935.007s][info][gc] GC(27) Concurrent cleanup 17807M->16489M(18104M) 0.178ms
+[935.045s][info][gc] GC(27) Concurrent evacuation 38.272ms
+[935.055s][info][gc] GC(27) Pause Init Update Refs 1.012ms
+[935.229s][info][gc] GC(27) Concurrent update references 173.715ms
+[935.240s][info][gc] GC(27) Pause Final Update Refs 2.276ms
+[935.241s][info][gc] GC(27) Concurrent cleanup 17128M->2080M(18104M) 0.220ms
+[977.049s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[977.057s][info][gc] GC(28) Concurrent reset 8.127ms
+[977.074s][info][gc] GC(28) Pause Init Mark 7.748ms
+[977.365s][info][gc] GC(28) Concurrent marking 290.371ms
+[977.378s][info][gc] GC(28) Pause Final Mark 8.873ms
+[977.379s][info][gc] GC(28) Concurrent cleanup 17747M->16564M(18104M) 0.096ms
+[977.417s][info][gc] GC(28) Concurrent evacuation 38.069ms
+[977.428s][info][gc] GC(28) Pause Init Update Refs 1.417ms
+[977.583s][info][gc] GC(28) Concurrent update references 155.438ms
+[977.595s][info][gc] GC(28) Pause Final Update Refs 2.505ms
+[977.595s][info][gc] GC(28) Concurrent cleanup 16906M->1716M(18104M) 0.270ms
+[1014.569s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[1014.579s][info][gc] GC(29) Concurrent reset 9.784ms
+[1014.597s][info][gc] GC(29) Pause Init Mark 8.957ms
+[1014.911s][info][gc] GC(29) Concurrent marking 314.053ms
+[1014.925s][info][gc] GC(29) Pause Final Mark 8.669ms
+[1014.925s][info][gc] GC(29) Concurrent cleanup 17747M->16123M(18104M) 0.078ms
+[1014.957s][info][gc] GC(29) Concurrent evacuation 32.169ms
+[1014.968s][info][gc] GC(29) Pause Init Update Refs 1.393ms
+[1015.136s][info][gc] GC(29) Concurrent update references 168.600ms
+[1015.148s][info][gc] GC(29) Pause Final Update Refs 2.436ms
+[1015.148s][info][gc] GC(29) Concurrent cleanup 16454M->1728M(18104M) 0.232ms
+[1050.383s][info][gc] Concurrent uncommit 17147M->17147M(18072M) 1.008ms
+[1050.793s][info][gc] Trigger: Free (2046M) is below minimum threshold (2047M)
+[1050.800s][info][gc] GC(30) Concurrent reset 7.446ms
+[1050.816s][info][gc] GC(30) Pause Init Mark (process weakrefs) 8.038ms
+[1051.114s][info][gc] GC(30) Concurrent marking (process weakrefs) 297.295ms
+[1051.125s][info][gc] GC(30) Concurrent precleaning 10.770ms
+[1051.140s][info][gc] GC(30) Pause Final Mark (process weakrefs) 9.693ms
+[1051.141s][info][gc] GC(30) Concurrent cleanup 17622M->16001M(18072M) 0.132ms
+[1051.183s][info][gc] GC(30) Concurrent evacuation 41.580ms
+[1051.192s][info][gc] GC(30) Pause Init Update Refs 1.063ms
+[1051.362s][info][gc] GC(30) Concurrent update references 170.147ms
+[1051.372s][info][gc] GC(30) Pause Final Update Refs 2.534ms
+[1051.373s][info][gc] GC(30) Concurrent cleanup 16343M->1580M(18080M) 0.233ms
+[1094.602s][info][gc] Trigger: Free (2045M) is below minimum threshold (2047M)
+[1094.610s][info][gc] GC(31) Concurrent reset 7.995ms
+[1094.638s][info][gc] GC(31) Pause Init Mark 18.099ms
+[1094.997s][info][gc] GC(31) Concurrent marking 358.891ms
+[1095.011s][info][gc] GC(31) Pause Final Mark 9.686ms
+[1095.012s][info][gc] GC(31) Concurrent cleanup 17680M->16370M(18080M) 0.132ms
+[1095.051s][info][gc] GC(31) Concurrent evacuation 38.364ms
+[1095.062s][info][gc] GC(31) Pause Init Update Refs 1.314ms
+[1095.236s][info][gc] GC(31) Concurrent update references 173.288ms
+[1095.247s][info][gc] GC(31) Pause Final Update Refs 2.866ms
+[1095.248s][info][gc] GC(31) Concurrent cleanup 16645M->1599M(18080M) 0.257ms
+[1140.015s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[1140.023s][info][gc] GC(32) Concurrent reset 8.021ms
+[1140.040s][info][gc] GC(32) Pause Init Mark 8.259ms
+[1140.304s][info][gc] GC(32) Concurrent marking 264.401ms
+[1140.319s][info][gc] GC(32) Pause Final Mark 9.112ms
+[1140.320s][info][gc] GC(32) Concurrent cleanup 17574M->15974M(18080M) 0.135ms
+[1140.362s][info][gc] GC(32) Concurrent evacuation 42.193ms
+[1140.372s][info][gc] GC(32) Pause Init Update Refs 1.374ms
+[1140.523s][info][gc] GC(32) Concurrent update references 151.120ms
+[1140.533s][info][gc] GC(32) Pause Final Update Refs 2.382ms
+[1140.534s][info][gc] GC(32) Concurrent cleanup 16235M->1486M(18080M) 0.244ms
+[1182.150s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[1182.159s][info][gc] GC(33) Concurrent reset 8.535ms
+[1182.173s][info][gc] GC(33) Pause Init Mark 7.653ms
+[1182.476s][info][gc] GC(33) Concurrent marking 301.682ms
+[1182.489s][info][gc] GC(33) Pause Final Mark 9.205ms
+[1182.490s][info][gc] GC(33) Concurrent cleanup 17445M->15901M(18080M) 0.145ms
+[1182.540s][info][gc] GC(33) Concurrent evacuation 50.255ms
+[1182.550s][info][gc] GC(33) Pause Init Update Refs 1.384ms
+[1182.711s][info][gc] GC(33) Concurrent update references 160.632ms
+[1182.722s][info][gc] GC(33) Pause Final Update Refs 2.442ms
+[1182.722s][info][gc] GC(33) Concurrent cleanup 16186M->1324M(18128M) 0.250ms
+[1222.508s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[1222.517s][info][gc] GC(34) Concurrent reset 8.446ms
+[1222.542s][info][gc] GC(34) Pause Init Mark 16.224ms
+[1222.803s][info][gc] GC(34) Concurrent marking 260.428ms
+[1222.816s][info][gc] GC(34) Pause Final Mark 8.262ms
+[1222.817s][info][gc] GC(34) Concurrent cleanup 17429M->16158M(18128M) 0.128ms
+[1222.855s][info][gc] GC(34) Concurrent evacuation 37.883ms
+[1222.864s][info][gc] GC(34) Pause Init Update Refs 1.399ms
+[1223.003s][info][gc] GC(34) Concurrent update references 138.033ms
+[1223.013s][info][gc] GC(34) Pause Final Update Refs 2.425ms
+[1223.014s][info][gc] GC(34) Concurrent cleanup 16360M->1274M(18128M) 0.212ms
+[1278.937s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[1278.946s][info][gc] GC(35) Concurrent reset 8.334ms
+[1278.962s][info][gc] GC(35) Pause Init Mark (process weakrefs) 8.419ms
+[1279.289s][info][gc] GC(35) Concurrent marking (process weakrefs) 326.952ms
+[1279.299s][info][gc] GC(35) Concurrent precleaning 9.766ms
+[1279.314s][info][gc] GC(35) Pause Final Mark (process weakrefs) 9.871ms
+[1279.315s][info][gc] GC(35) Concurrent cleanup 17496M->16034M(18128M) 0.133ms
+[1279.355s][info][gc] GC(35) Concurrent evacuation 40.384ms
+[1279.363s][info][gc] GC(35) Pause Init Update Refs 0.920ms
+[1279.523s][info][gc] GC(35) Concurrent update references 159.343ms
+[1279.534s][info][gc] GC(35) Pause Final Update Refs 2.680ms
+[1279.535s][info][gc] GC(35) Concurrent cleanup 16286M->1400M(18128M) 0.286ms
+[1290.539s][info][gc] Concurrent uncommit 6209M->6209M(18048M) 1.932ms
+[1323.983s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[1323.990s][info][gc] GC(36) Concurrent reset 7.541ms
+[1324.006s][info][gc] GC(36) Pause Init Mark 7.943ms
+[1324.303s][info][gc] GC(36) Concurrent marking 295.852ms
+[1324.315s][info][gc] GC(36) Pause Final Mark 8.202ms
+[1324.316s][info][gc] GC(36) Concurrent cleanup 17592M->16146M(18048M) 0.116ms
+[1324.352s][info][gc] GC(36) Concurrent evacuation 35.947ms
+[1324.361s][info][gc] GC(36) Pause Init Update Refs 1.117ms
+[1324.506s][info][gc] GC(36) Concurrent update references 144.530ms
+[1324.517s][info][gc] GC(36) Pause Final Update Refs 2.620ms
+[1324.517s][info][gc] GC(36) Concurrent cleanup 16458M->1580M(18048M) 0.328ms
+[1363.636s][info][gc] Trigger: Free (2046M) is below minimum threshold (2047M)
+[1363.644s][info][gc] GC(37) Concurrent reset 7.438ms
+[1363.660s][info][gc] GC(37) Pause Init Mark 8.377ms
+[1363.943s][info][gc] GC(37) Concurrent marking 282.725ms
+[1363.956s][info][gc] GC(37) Pause Final Mark 8.426ms
+[1363.956s][info][gc] GC(37) Concurrent cleanup 17508M->16206M(18048M) 0.122ms
+[1364.011s][info][gc] GC(37) Concurrent evacuation 55.036ms
+[1364.021s][info][gc] GC(37) Pause Init Update Refs 1.070ms
+[1364.192s][info][gc] GC(37) Concurrent update references 171.459ms
+[1364.203s][info][gc] GC(37) Pause Final Update Refs 2.511ms
+[1364.203s][info][gc] GC(37) Concurrent cleanup 16600M->1530M(18048M) 0.245ms
+[1380.547s][info][gc] Concurrent uncommit 8350M->8350M(17984M) 7.852ms
+[1404.540s][info][gc] Trigger: Free (2046M) is below minimum threshold (2047M)
+[1404.548s][info][gc] GC(38) Concurrent reset 7.624ms
+[1404.572s][info][gc] GC(38) Pause Init Mark 16.448ms
+[1404.905s][info][gc] GC(38) Concurrent marking 332.428ms
+[1404.918s][info][gc] GC(38) Pause Final Mark 9.147ms
+[1404.919s][info][gc] GC(38) Concurrent cleanup 17712M->16245M(17984M) 0.144ms
+[1404.965s][info][gc] GC(38) Concurrent evacuation 45.704ms
+[1404.982s][info][gc] GC(38) Pause Init Update Refs 1.278ms
+[1405.164s][info][gc] GC(38) Concurrent update references 182.385ms
+[1405.183s][info][gc] GC(38) Pause Final Update Refs 2.710ms
+[1405.183s][info][gc] GC(38) Concurrent cleanup 16716M->1872M(17984M) 0.261ms
+[1410.539s][info][gc] Concurrent uncommit 3696M->3696M(17976M) 0.111ms
+[1449.952s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[1449.961s][info][gc] GC(39) Concurrent reset 8.087ms
+[1449.977s][info][gc] GC(39) Pause Init Mark 8.551ms
+[1450.280s][info][gc] GC(39) Concurrent marking 302.441ms
+[1450.293s][info][gc] GC(39) Pause Final Mark 8.471ms
+[1450.294s][info][gc] GC(39) Concurrent cleanup 17657M->16346M(17976M) 0.102ms
+[1450.336s][info][gc] GC(39) Concurrent evacuation 41.797ms
+[1450.345s][info][gc] GC(39) Pause Init Update Refs 1.041ms
+[1450.507s][info][gc] GC(39) Concurrent update references 161.370ms
+[1450.519s][info][gc] GC(39) Pause Final Update Refs 2.524ms
+[1450.520s][info][gc] GC(39) Concurrent cleanup 16640M->1610M(17976M) 0.230ms
+[1487.131s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[1487.139s][info][gc] GC(40) Concurrent reset 8.061ms
+[1487.156s][info][gc] GC(40) Pause Init Mark (process weakrefs) 8.268ms
+[1487.442s][info][gc] GC(40) Concurrent marking (process weakrefs) 286.035ms
+[1487.451s][info][gc] GC(40) Concurrent precleaning 8.891ms
+[1487.467s][info][gc] GC(40) Pause Final Mark (process weakrefs) 9.980ms
+[1487.468s][info][gc] GC(40) Concurrent cleanup 17624M->16197M(17976M) 0.216ms
+[1487.507s][info][gc] GC(40) Concurrent evacuation 38.575ms
+[1487.516s][info][gc] GC(40) Pause Init Update Refs 1.101ms
+[1487.673s][info][gc] GC(40) Concurrent update references 156.030ms
+[1487.683s][info][gc] GC(40) Pause Final Update Refs 2.659ms
+[1487.684s][info][gc] GC(40) Concurrent cleanup 16499M->1597M(17976M) 0.216ms
+[1527.102s][info][gc] Trigger: Free (2046M) is below minimum threshold (2047M)
+[1527.110s][info][gc] GC(41) Concurrent reset 7.455ms
+[1527.125s][info][gc] GC(41) Pause Init Mark 7.134ms
+[1527.414s][info][gc] GC(41) Concurrent marking 288.530ms
+[1527.428s][info][gc] GC(41) Pause Final Mark 9.862ms
+[1527.429s][info][gc] GC(41) Concurrent cleanup 17586M->16074M(17976M) 0.110ms
+[1527.470s][info][gc] GC(41) Concurrent evacuation 40.795ms
+[1527.480s][info][gc] GC(41) Pause Init Update Refs 1.390ms
+[1527.626s][info][gc] GC(41) Concurrent update references 146.647ms
+[1527.637s][info][gc] GC(41) Pause Final Update Refs 2.775ms
+[1527.638s][info][gc] GC(41) Concurrent cleanup 16334M->1496M(17976M) 0.248ms
+[1569.384s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[1569.391s][info][gc] GC(42) Concurrent reset 7.830ms
+[1569.417s][info][gc] GC(42) Pause Init Mark 17.322ms
+[1569.741s][info][gc] GC(42) Concurrent marking 323.096ms
+[1569.755s][info][gc] GC(42) Pause Final Mark 9.529ms
+[1569.755s][info][gc] GC(42) Concurrent cleanup 17710M->16320M(17976M) 0.123ms
+[1569.792s][info][gc] GC(42) Concurrent evacuation 36.891ms
+[1569.802s][info][gc] GC(42) Pause Init Update Refs 1.379ms
+[1569.954s][info][gc] GC(42) Concurrent update references 151.292ms
+[1569.964s][info][gc] GC(42) Pause Final Update Refs 2.522ms
+[1569.965s][info][gc] GC(42) Concurrent cleanup 16500M->1574M(17976M) 0.253ms
+[1612.287s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[1612.295s][info][gc] GC(43) Concurrent reset 8.186ms
+[1612.312s][info][gc] GC(43) Pause Init Mark 8.237ms
+[1612.630s][info][gc] GC(43) Concurrent marking 317.506ms
+[1612.644s][info][gc] GC(43) Pause Final Mark 10.174ms
+[1612.645s][info][gc] GC(43) Concurrent cleanup 17603M->16068M(17976M) 0.134ms
+[1612.687s][info][gc] GC(43) Concurrent evacuation 41.868ms
+[1612.695s][info][gc] GC(43) Pause Init Update Refs 1.065ms
+[1612.849s][info][gc] GC(43) Concurrent update references 153.391ms
+[1612.860s][info][gc] GC(43) Pause Final Update Refs 2.767ms
+[1612.860s][info][gc] GC(43) Concurrent cleanup 16247M->1456M(17976M) 0.226ms
+[1656.579s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[1656.587s][info][gc] GC(44) Concurrent reset 7.932ms
+[1656.602s][info][gc] GC(44) Pause Init Mark 7.199ms
+[1656.877s][info][gc] GC(44) Concurrent marking 274.323ms
+[1656.889s][info][gc] GC(44) Pause Final Mark 8.319ms
+[1656.890s][info][gc] GC(44) Concurrent cleanup 17464M->15874M(17976M) 0.092ms
+[1656.928s][info][gc] GC(44) Concurrent evacuation 38.847ms
+[1656.938s][info][gc] GC(44) Pause Init Update Refs 1.051ms
+[1657.076s][info][gc] GC(44) Concurrent update references 137.640ms
+[1657.086s][info][gc] GC(44) Pause Final Update Refs 2.404ms
+[1657.086s][info][gc] GC(44) Concurrent cleanup 16083M->1337M(17976M) 0.243ms
+[1700.343s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[1700.351s][info][gc] GC(45) Concurrent reset 8.000ms
+[1700.368s][info][gc] GC(45) Pause Init Mark (process weakrefs) 8.465ms
+[1700.685s][info][gc] GC(45) Concurrent marking (process weakrefs) 316.716ms
+[1700.694s][info][gc] GC(45) Concurrent precleaning 9.045ms
+[1700.709s][info][gc] GC(45) Pause Final Mark (process weakrefs) 9.570ms
+[1700.710s][info][gc] GC(45) Concurrent cleanup 17598M->16158M(17976M) 0.127ms
+[1700.747s][info][gc] GC(45) Concurrent evacuation 37.450ms
+[1700.757s][info][gc] GC(45) Pause Init Update Refs 1.101ms
+[1700.907s][info][gc] GC(45) Concurrent update references 150.312ms
+[1700.918s][info][gc] GC(45) Pause Final Update Refs 2.631ms
+[1700.919s][info][gc] GC(45) Concurrent cleanup 16358M->1472M(17976M) 0.287ms
+[1710.547s][info][gc] Concurrent uncommit 5257M->5257M(17960M) 0.720ms
+[1745.691s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[1745.699s][info][gc] GC(46) Concurrent reset 7.828ms
+[1745.723s][info][gc] GC(46) Pause Init Mark 15.926ms
+[1746.042s][info][gc] GC(46) Concurrent marking 318.897ms
+[1746.055s][info][gc] GC(46) Pause Final Mark 8.608ms
+[1746.055s][info][gc] GC(46) Concurrent cleanup 17671M->16239M(17960M) 0.128ms
+[1746.091s][info][gc] GC(46) Concurrent evacuation 35.743ms
+[1746.101s][info][gc] GC(46) Pause Init Update Refs 1.095ms
+[1746.259s][info][gc] GC(46) Concurrent update references 157.938ms
+[1746.269s][info][gc] GC(46) Pause Final Update Refs 2.546ms
+[1746.270s][info][gc] GC(46) Concurrent cleanup 16494M->1602M(17960M) 0.246ms
+[1779.362s][info][gc] Trigger: Free (2046M) is below minimum threshold (2047M)
+[1779.370s][info][gc] GC(47) Concurrent reset 7.674ms
+[1779.387s][info][gc] GC(47) Pause Init Mark 8.554ms
+[1779.673s][info][gc] GC(47) Concurrent marking 285.454ms
+[1779.687s][info][gc] GC(47) Pause Final Mark 9.364ms
+[1779.688s][info][gc] GC(47) Concurrent cleanup 17449M->15967M(17960M) 0.139ms
+[1779.736s][info][gc] GC(47) Concurrent evacuation 47.778ms
+[1779.746s][info][gc] GC(47) Pause Init Update Refs 1.411ms
+[1779.896s][info][gc] GC(47) Concurrent update references 149.723ms
+[1779.907s][info][gc] GC(47) Pause Final Update Refs 3.027ms
+[1779.908s][info][gc] GC(47) Concurrent cleanup 16178M->1292M(17968M) 0.219ms
+[1822.222s][info][gc] Trigger: Free (2045M) is below minimum threshold (2047M)
+[1822.231s][info][gc] GC(48) Concurrent reset 8.258ms
+[1822.247s][info][gc] GC(48) Pause Init Mark 7.733ms
+[1822.539s][info][gc] GC(48) Concurrent marking 291.447ms
+[1822.553s][info][gc] GC(48) Pause Final Mark 9.267ms
+[1822.554s][info][gc] GC(48) Concurrent cleanup 17609M->15985M(17968M) 0.125ms
+[1822.588s][info][gc] GC(48) Concurrent evacuation 34.062ms
+[1822.598s][info][gc] GC(48) Pause Init Update Refs 1.397ms
+[1822.739s][info][gc] GC(48) Concurrent update references 141.516ms
+[1822.750s][info][gc] GC(48) Pause Final Update Refs 2.504ms
+[1822.750s][info][gc] GC(48) Concurrent cleanup 16156M->1446M(17968M) 0.210ms
+[1867.021s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[1867.029s][info][gc] GC(49) Concurrent reset 7.683ms
+[1867.049s][info][gc] GC(49) Pause Init Mark 7.726ms
+[1867.343s][info][gc] GC(49) Concurrent marking 293.184ms
+[1867.360s][info][gc] GC(49) Pause Final Mark 9.928ms
+[1867.361s][info][gc] GC(49) Concurrent cleanup 17510M->16128M(17968M) 0.165ms
+[1867.408s][info][gc] GC(49) Concurrent evacuation 46.528ms
+[1867.421s][info][gc] GC(49) Pause Init Update Refs 1.376ms
+[1867.595s][info][gc] GC(49) Concurrent update references 173.883ms
+[1867.610s][info][gc] GC(49) Pause Final Update Refs 2.514ms
+[1867.610s][info][gc] GC(49) Concurrent cleanup 16546M->1580M(17968M) 0.211ms
+[1906.073s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[1906.081s][info][gc] GC(50) Concurrent reset 8.027ms
+[1906.105s][info][gc] GC(50) Pause Init Mark (process weakrefs) 16.302ms
+[1906.437s][info][gc] GC(50) Concurrent marking (process weakrefs) 331.858ms
+[1906.445s][info][gc] GC(50) Concurrent precleaning 7.782ms
+[1906.460s][info][gc] GC(50) Pause Final Mark (process weakrefs) 9.783ms
+[1906.460s][info][gc] GC(50) Concurrent cleanup 17687M->16264M(17968M) 0.094ms
+[1906.497s][info][gc] GC(50) Concurrent evacuation 36.246ms
+[1906.506s][info][gc] GC(50) Pause Init Update Refs 1.039ms
+[1906.656s][info][gc] GC(50) Concurrent update references 150.300ms
+[1906.667s][info][gc] GC(50) Pause Final Update Refs 2.802ms
+[1906.667s][info][gc] GC(50) Concurrent cleanup 16461M->1566M(17968M) 0.231ms
+[1920.550s][info][gc] Concurrent uncommit 7102M->7102M(17960M) 0.896ms
+[1939.052s][info][gc] Trigger: Free (2046M) is below minimum threshold (2047M)
+[1939.060s][info][gc] GC(51) Concurrent reset 7.598ms
+[1939.076s][info][gc] GC(51) Pause Init Mark 8.707ms
+[1939.401s][info][gc] GC(51) Concurrent marking 323.953ms
+[1939.414s][info][gc] GC(51) Pause Final Mark 8.627ms
+[1939.414s][info][gc] GC(51) Concurrent cleanup 17753M->16367M(18000M) 0.130ms
+[1939.449s][info][gc] GC(51) Concurrent evacuation 34.645ms
+[1939.459s][info][gc] GC(51) Pause Init Update Refs 1.112ms
+[1939.623s][info][gc] GC(51) Concurrent update references 164.636ms
+[1939.635s][info][gc] GC(51) Pause Final Update Refs 2.540ms
+[1939.635s][info][gc] GC(51) Concurrent cleanup 16695M->1777M(18000M) 0.229ms
+[1978.198s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[1978.206s][info][gc] GC(52) Concurrent reset 8.090ms
+[1978.224s][info][gc] GC(52) Pause Init Mark 8.461ms
+[1978.545s][info][gc] GC(52) Concurrent marking 319.984ms
+[1978.560s][info][gc] GC(52) Pause Final Mark 10.428ms
+[1978.560s][info][gc] GC(52) Concurrent cleanup 17583M->15992M(18000M) 0.139ms
+[1978.608s][info][gc] GC(52) Concurrent evacuation 47.599ms
+[1978.616s][info][gc] GC(52) Pause Init Update Refs 1.380ms
+[1978.782s][info][gc] GC(52) Concurrent update references 165.338ms
+[1978.794s][info][gc] GC(52) Pause Final Update Refs 2.922ms
+[1978.794s][info][gc] GC(52) Concurrent cleanup 16224M->1474M(18040M) 0.212ms
+[2016.779s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[2016.787s][info][gc] GC(53) Concurrent reset 8.416ms
+[2016.803s][info][gc] GC(53) Pause Init Mark 7.450ms
+[2017.105s][info][gc] GC(53) Concurrent marking 302.059ms
+[2017.119s][info][gc] GC(53) Pause Final Mark 8.915ms
+[2017.120s][info][gc] GC(53) Concurrent cleanup 17583M->16199M(18040M) 0.178ms
+[2017.151s][info][gc] GC(53) Concurrent evacuation 31.207ms
+[2017.161s][info][gc] GC(53) Pause Init Update Refs 1.380ms
+[2017.324s][info][gc] GC(53) Concurrent update references 162.672ms
+[2017.334s][info][gc] GC(53) Pause Final Update Refs 2.388ms
+[2017.334s][info][gc] GC(53) Concurrent cleanup 16513M->1615M(18040M) 0.226ms
+[2059.842s][info][gc] Trigger: Free (2046M) is below minimum threshold (2047M)
+[2059.850s][info][gc] GC(54) Concurrent reset 8.096ms
+[2059.875s][info][gc] GC(54) Pause Init Mark 16.636ms
+[2060.199s][info][gc] GC(54) Concurrent marking 323.319ms
+[2060.212s][info][gc] GC(54) Pause Final Mark 8.912ms
+[2060.213s][info][gc] GC(54) Concurrent cleanup 17610M->16170M(18040M) 0.150ms
+[2060.252s][info][gc] GC(54) Concurrent evacuation 39.240ms
+[2060.261s][info][gc] GC(54) Pause Init Update Refs 1.063ms
+[2060.422s][info][gc] GC(54) Concurrent update references 159.931ms
+[2060.432s][info][gc] GC(54) Pause Final Update Refs 2.466ms
+[2060.432s][info][gc] GC(54) Concurrent cleanup 16464M->1577M(18040M) 0.259ms
+[2104.631s][info][gc] Trigger: Free (2046M) is below minimum threshold (2047M)
+[2104.639s][info][gc] GC(55) Concurrent reset 7.615ms
+[2104.654s][info][gc] GC(55) Pause Init Mark (process weakrefs) 7.343ms
+[2104.951s][info][gc] GC(55) Concurrent marking (process weakrefs) 296.423ms
+[2104.961s][info][gc] GC(55) Concurrent precleaning 10.193ms
+[2104.977s][info][gc] GC(55) Pause Final Mark (process weakrefs) 10.124ms
+[2104.978s][info][gc] GC(55) Concurrent cleanup 17611M->16139M(18040M) 0.130ms
+[2105.019s][info][gc] GC(55) Concurrent evacuation 40.514ms
+[2105.029s][info][gc] GC(55) Pause Init Update Refs 1.407ms
+[2105.188s][info][gc] GC(55) Concurrent update references 158.929ms
+[2105.198s][info][gc] GC(55) Pause Final Update Refs 2.447ms
+[2105.199s][info][gc] GC(55) Concurrent cleanup 16455M->1602M(18040M) 0.223ms
+[2145.275s][info][gc] Trigger: Free (2045M) is below minimum threshold (2047M)
+[2145.283s][info][gc] GC(56) Concurrent reset 7.744ms
+[2145.299s][info][gc] GC(56) Pause Init Mark 7.887ms
+[2145.620s][info][gc] GC(56) Concurrent marking 320.356ms
+[2145.634s][info][gc] GC(56) Pause Final Mark 9.506ms
+[2145.635s][info][gc] GC(56) Concurrent cleanup 17497M->16034M(18040M) 0.140ms
+[2145.681s][info][gc] GC(56) Concurrent evacuation 46.182ms
+[2145.691s][info][gc] GC(56) Pause Init Update Refs 1.411ms
+[2145.852s][info][gc] GC(56) Concurrent update references 161.050ms
+[2145.863s][info][gc] GC(56) Pause Final Update Refs 2.496ms
+[2145.863s][info][gc] GC(56) Concurrent cleanup 16239M->1349M(18040M) 0.228ms
+[2182.815s][info][gc] Trigger: Free (2046M) is below minimum threshold (2047M)
+[2182.823s][info][gc] GC(57) Concurrent reset 8.112ms
+[2182.839s][info][gc] GC(57) Pause Init Mark 7.520ms
+[2183.161s][info][gc] GC(57) Concurrent marking 321.881ms
+[2183.175s][info][gc] GC(57) Pause Final Mark 9.496ms
+[2183.176s][info][gc] GC(57) Concurrent cleanup 17511M->15960M(18040M) 0.136ms
+[2183.212s][info][gc] GC(57) Concurrent evacuation 36.018ms
+[2183.222s][info][gc] GC(57) Pause Init Update Refs 1.391ms
+[2183.378s][info][gc] GC(57) Concurrent update references 155.807ms
+[2183.388s][info][gc] GC(57) Pause Final Update Refs 2.475ms
+[2183.389s][info][gc] GC(57) Concurrent cleanup 16310M->1560M(18040M) 0.219ms
+[2224.553s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[2224.562s][info][gc] GC(58) Concurrent reset 8.434ms
+[2224.577s][info][gc] GC(58) Pause Init Mark 7.446ms
+[2224.909s][info][gc] GC(58) Concurrent marking 332.036ms
+[2224.923s][info][gc] GC(58) Pause Final Mark 9.673ms
+[2224.924s][info][gc] GC(58) Concurrent cleanup 17747M->16269M(18040M) 0.135ms
+[2224.966s][info][gc] GC(58) Concurrent evacuation 41.302ms
+[2224.973s][info][gc] GC(58) Pause Init Update Refs 1.387ms
+[2225.134s][info][gc] GC(58) Concurrent update references 160.444ms
+[2225.144s][info][gc] GC(58) Pause Final Update Refs 2.376ms
+[2225.144s][info][gc] GC(58) Concurrent cleanup 16472M->1626M(18040M) 0.221ms
+[2264.370s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[2264.378s][info][gc] GC(59) Concurrent reset 7.689ms
+[2264.403s][info][gc] GC(59) Pause Init Mark 17.155ms
+[2264.729s][info][gc] GC(59) Concurrent marking 325.903ms
+[2264.742s][info][gc] GC(59) Pause Final Mark 8.489ms
+[2264.743s][info][gc] GC(59) Concurrent cleanup 17499M->15883M(18040M) 0.133ms
+[2264.783s][info][gc] GC(59) Concurrent evacuation 39.963ms
+[2264.789s][info][gc] GC(59) Pause Init Update Refs 0.884ms
+[2264.930s][info][gc] GC(59) Concurrent update references 140.039ms
+[2264.940s][info][gc] GC(59) Pause Final Update Refs 2.414ms
+[2264.940s][info][gc] GC(59) Concurrent cleanup 16064M->1382M(18040M) 0.236ms
+[2280.558s][info][gc] Concurrent uncommit 5892M->5892M(18016M) 2.630ms
+[2312.850s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[2312.858s][info][gc] GC(60) Concurrent reset 7.966ms
+[2312.874s][info][gc] GC(60) Pause Init Mark (process weakrefs) 8.540ms
+[2313.210s][info][gc] GC(60) Concurrent marking (process weakrefs) 334.956ms
+[2313.219s][info][gc] GC(60) Concurrent precleaning 9.523ms
+[2313.234s][info][gc] GC(60) Pause Final Mark (process weakrefs) 10.229ms
+[2313.235s][info][gc] GC(60) Concurrent cleanup 17639M->15895M(18016M) 0.137ms
+[2313.272s][info][gc] GC(60) Concurrent evacuation 36.925ms
+[2313.281s][info][gc] GC(60) Pause Init Update Refs 0.969ms
+[2313.450s][info][gc] GC(60) Concurrent update references 169.612ms
+[2313.460s][info][gc] GC(60) Pause Final Update Refs 2.453ms
+[2313.461s][info][gc] GC(60) Concurrent cleanup 16280M->1707M(18016M) 0.223ms
+[2357.145s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[2357.153s][info][gc] GC(61) Concurrent reset 7.774ms
+[2357.176s][info][gc] GC(61) Pause Init Mark 7.706ms
+[2357.519s][info][gc] GC(61) Concurrent marking 341.810ms
+[2357.539s][info][gc] GC(61) Pause Final Mark 9.542ms
+[2357.540s][info][gc] GC(61) Concurrent cleanup 17650M->16214M(18016M) 0.153ms
+[2357.585s][info][gc] GC(61) Concurrent evacuation 44.922ms
+[2357.603s][info][gc] GC(61) Pause Init Update Refs 1.531ms
+[2357.780s][info][gc] GC(61) Concurrent update references 177.315ms
+[2357.800s][info][gc] GC(61) Pause Final Update Refs 3.271ms
+[2357.801s][info][gc] GC(61) Concurrent cleanup 16448M->1585M(18016M) 0.243ms
+[2396.536s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[2396.543s][info][gc] GC(62) Concurrent reset 7.808ms
+[2396.560s][info][gc] GC(62) Pause Init Mark 7.476ms
+[2396.881s][info][gc] GC(62) Concurrent marking 321.367ms
+[2396.894s][info][gc] GC(62) Pause Final Mark 8.776ms
+[2396.895s][info][gc] GC(62) Concurrent cleanup 17419M->15927M(18016M) 0.142ms
+[2396.937s][info][gc] GC(62) Concurrent evacuation 41.563ms
+[2396.944s][info][gc] GC(62) Pause Init Update Refs 1.411ms
+[2397.087s][info][gc] GC(62) Concurrent update references 142.468ms
+[2397.097s][info][gc] GC(62) Pause Final Update Refs 2.290ms
+[2397.098s][info][gc] GC(62) Concurrent cleanup 16138M->1291M(18016M) 0.212ms
+[2434.955s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[2434.963s][info][gc] GC(63) Concurrent reset 7.828ms
+[2434.988s][info][gc] GC(63) Pause Init Mark 17.166ms
+[2435.307s][info][gc] GC(63) Concurrent marking 317.690ms
+[2435.321s][info][gc] GC(63) Pause Final Mark 9.950ms
+[2435.322s][info][gc] GC(63) Concurrent cleanup 17560M->16117M(18016M) 0.133ms
+[2435.357s][info][gc] GC(63) Concurrent evacuation 34.854ms
+[2435.365s][info][gc] GC(63) Pause Init Update Refs 1.438ms
+[2435.520s][info][gc] GC(63) Concurrent update references 154.281ms
+[2435.531s][info][gc] GC(63) Pause Final Update Refs 2.715ms
+[2435.531s][info][gc] GC(63) Concurrent cleanup 16461M->1632M(18016M) 0.241ms
+[2475.154s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[2475.163s][info][gc] GC(64) Concurrent reset 8.265ms
+[2475.179s][info][gc] GC(64) Pause Init Mark 8.173ms
+[2475.527s][info][gc] GC(64) Concurrent marking 347.246ms
+[2475.541s][info][gc] GC(64) Pause Final Mark 9.140ms
+[2475.541s][info][gc] GC(64) Concurrent cleanup 17889M->16338M(18128M) 0.151ms
+[2475.590s][info][gc] GC(64) Concurrent evacuation 48.641ms
+[2475.600s][info][gc] GC(64) Pause Init Update Refs 1.438ms
+[2475.788s][info][gc] GC(64) Concurrent update references 188.145ms
+[2475.799s][info][gc] GC(64) Pause Final Update Refs 2.334ms
+[2475.799s][info][gc] GC(64) Concurrent cleanup 16633M->1851M(18136M) 0.267ms
+[2520.808s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[2520.816s][info][gc] GC(65) Concurrent reset 7.775ms
+[2520.837s][info][gc] GC(65) Pause Init Mark (process weakrefs) 8.143ms
+[2521.180s][info][gc] GC(65) Concurrent marking (process weakrefs) 342.264ms
+[2521.189s][info][gc] GC(65) Concurrent precleaning 9.036ms
+[2521.207s][info][gc] GC(65) Pause Final Mark (process weakrefs) 11.873ms
+[2521.208s][info][gc] GC(65) Concurrent cleanup 17580M->15966M(18136M) 0.153ms
+[2521.254s][info][gc] GC(65) Concurrent evacuation 45.442ms
+[2521.263s][info][gc] GC(65) Pause Init Update Refs 1.437ms
+[2521.428s][info][gc] GC(65) Concurrent update references 164.606ms
+[2521.440s][info][gc] GC(65) Pause Final Update Refs 2.648ms
+[2521.441s][info][gc] GC(65) Concurrent cleanup 16203M->1521M(18136M) 0.265ms
+[2560.723s][info][gc] Trigger: Free (2045M) is below minimum threshold (2047M)
+[2560.733s][info][gc] GC(66) Concurrent reset 10.192ms
+[2560.749s][info][gc] GC(66) Pause Init Mark 7.689ms
+[2561.072s][info][gc] GC(66) Concurrent marking 322.971ms
+[2561.086s][info][gc] GC(66) Pause Final Mark 9.230ms
+[2561.087s][info][gc] GC(66) Concurrent cleanup 17741M->16248M(18136M) 0.133ms
+[2561.127s][info][gc] GC(66) Concurrent evacuation 39.960ms
+[2561.137s][info][gc] GC(66) Pause Init Update Refs 1.451ms
+[2561.295s][info][gc] GC(66) Concurrent update references 158.169ms
+[2561.306s][info][gc] GC(66) Pause Final Update Refs 2.431ms
+[2561.306s][info][gc] GC(66) Concurrent cleanup 16489M->1668M(18136M) 0.208ms
+[2599.991s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[2599.999s][info][gc] GC(67) Concurrent reset 7.803ms
+[2600.050s][info][gc] GC(67) Pause Init Mark 41.276ms
+[2600.369s][info][gc] GC(67) Concurrent marking 318.294ms
+[2600.383s][info][gc] GC(67) Pause Final Mark 8.739ms
+[2600.383s][info][gc] GC(67) Concurrent cleanup 17705M->16404M(18136M) 0.132ms
+[2600.422s][info][gc] GC(67) Concurrent evacuation 39.012ms
+[2600.432s][info][gc] GC(67) Pause Init Update Refs 1.407ms
+[2600.610s][info][gc] GC(67) Concurrent update references 177.046ms
+[2600.620s][info][gc] GC(67) Pause Final Update Refs 2.373ms
+[2600.621s][info][gc] GC(67) Concurrent cleanup 16661M->1663M(18136M) 0.280ms
+[2642.866s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[2642.874s][info][gc] GC(68) Concurrent reset 7.899ms
+[2642.891s][info][gc] GC(68) Pause Init Mark 9.428ms
+[2643.215s][info][gc] GC(68) Concurrent marking 322.691ms
+[2643.228s][info][gc] GC(68) Pause Final Mark 8.753ms
+[2643.229s][info][gc] GC(68) Concurrent cleanup 17703M->16073M(18136M) 0.115ms
+[2643.265s][info][gc] GC(68) Concurrent evacuation 36.781ms
+[2643.275s][info][gc] GC(68) Pause Init Update Refs 1.347ms
+[2643.428s][info][gc] GC(68) Concurrent update references 152.241ms
+[2643.438s][info][gc] GC(68) Pause Final Update Refs 2.717ms
+[2643.439s][info][gc] GC(68) Concurrent cleanup 16318M->1648M(18136M) 0.214ms
+[2679.161s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[2679.169s][info][gc] GC(69) Concurrent reset 7.652ms
+[2679.185s][info][gc] GC(69) Pause Init Mark 7.872ms
+[2679.513s][info][gc] GC(69) Concurrent marking 326.970ms
+[2679.526s][info][gc] GC(69) Pause Final Mark 8.583ms
+[2679.527s][info][gc] GC(69) Concurrent cleanup 17509M->15965M(18136M) 0.129ms
+[2679.559s][info][gc] GC(69) Concurrent evacuation 32.296ms
+[2679.569s][info][gc] GC(69) Pause Init Update Refs 1.021ms
+[2679.728s][info][gc] GC(69) Concurrent update references 158.493ms
+[2679.739s][info][gc] GC(69) Pause Final Update Refs 2.561ms
+[2679.739s][info][gc] GC(69) Concurrent cleanup 16139M->1397M(18136M) 0.245ms
+[2720.989s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[2720.997s][info][gc] GC(70) Concurrent reset 7.462ms
+[2721.012s][info][gc] GC(70) Pause Init Mark (process weakrefs) 6.749ms
+[2721.331s][info][gc] GC(70) Concurrent marking (process weakrefs) 318.153ms
+[2721.340s][info][gc] GC(70) Concurrent precleaning 8.811ms
+[2721.357s][info][gc] GC(70) Pause Final Mark (process weakrefs) 9.241ms
+[2721.358s][info][gc] GC(70) Concurrent cleanup 17679M->16194M(18136M) 0.153ms
+[2721.398s][info][gc] GC(70) Concurrent evacuation 39.381ms
+[2721.407s][info][gc] GC(70) Pause Init Update Refs 1.009ms
+[2721.587s][info][gc] GC(70) Concurrent update references 178.777ms
+[2721.597s][info][gc] GC(70) Pause Final Update Refs 2.184ms
+[2721.598s][info][gc] GC(70) Concurrent cleanup 16601M->1795M(18136M) 0.212ms
+[2764.551s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[2764.559s][info][gc] GC(71) Concurrent reset 8.041ms
+[2764.574s][info][gc] GC(71) Pause Init Mark 6.640ms
+[2764.878s][info][gc] GC(71) Concurrent marking 302.902ms
+[2764.892s][info][gc] GC(71) Pause Final Mark 9.779ms
+[2764.893s][info][gc] GC(71) Concurrent cleanup 17506M->16257M(18136M) 0.128ms
+[2764.939s][info][gc] GC(71) Concurrent evacuation 46.292ms
+[2764.949s][info][gc] GC(71) Pause Init Update Refs 1.071ms
+[2765.118s][info][gc] GC(71) Concurrent update references 167.861ms
+[2765.129s][info][gc] GC(71) Pause Final Update Refs 2.366ms
+[2765.130s][info][gc] GC(71) Concurrent cleanup 16688M->1634M(18144M) 0.291ms
+[2804.962s][info][gc] Trigger: Free (2045M) is below minimum threshold (2047M)
+[2804.971s][info][gc] GC(72) Concurrent reset 8.491ms
+[2804.993s][info][gc] GC(72) Pause Init Mark 14.026ms
+[2805.319s][info][gc] GC(72) Concurrent marking 325.698ms
+[2805.332s][info][gc] GC(72) Pause Final Mark 8.339ms
+[2805.333s][info][gc] GC(72) Concurrent cleanup 17667M->16044M(18144M) 0.141ms
+[2805.367s][info][gc] GC(72) Concurrent evacuation 33.800ms
+[2805.376s][info][gc] GC(72) Pause Init Update Refs 1.294ms
+[2805.553s][info][gc] GC(72) Concurrent update references 176.517ms
+[2805.564s][info][gc] GC(72) Pause Final Update Refs 2.601ms
+[2805.564s][info][gc] GC(72) Concurrent cleanup 16392M->1731M(18144M) 0.250ms
+[2839.018s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[2839.025s][info][gc] GC(73) Concurrent reset 7.285ms
+[2839.041s][info][gc] GC(73) Pause Init Mark 7.797ms
+[2839.342s][info][gc] GC(73) Concurrent marking 300.377ms
+[2839.355s][info][gc] GC(73) Pause Final Mark 8.761ms
+[2839.356s][info][gc] GC(73) Concurrent cleanup 17710M->16494M(18144M) 0.127ms
+[2839.392s][info][gc] GC(73) Concurrent evacuation 36.153ms
+[2839.401s][info][gc] GC(73) Pause Init Update Refs 1.308ms
+[2839.561s][info][gc] GC(73) Concurrent update references 159.677ms
+[2839.572s][info][gc] GC(73) Pause Final Update Refs 2.512ms
+[2839.572s][info][gc] GC(73) Concurrent cleanup 16775M->1737M(18144M) 0.261ms
+[2850.583s][info][gc] Concurrent uncommit 4783M->4783M(18024M) 15.907ms
+[2885.564s][info][gc] Trigger: Free (2045M) is below minimum threshold (2047M)
+[2885.573s][info][gc] GC(74) Concurrent reset 8.574ms
+[2885.589s][info][gc] GC(74) Pause Init Mark 7.192ms
+[2885.944s][info][gc] GC(74) Concurrent marking 354.757ms
+[2885.958s][info][gc] GC(74) Pause Final Mark 8.742ms
+[2885.958s][info][gc] GC(74) Concurrent cleanup 17771M->16162M(18024M) 0.138ms
+[2886.012s][info][gc] GC(74) Concurrent evacuation 53.288ms
+[2886.021s][info][gc] GC(74) Pause Init Update Refs 1.309ms
+[2886.185s][info][gc] GC(74) Concurrent update references 163.678ms
+[2886.196s][info][gc] GC(74) Pause Final Update Refs 2.493ms
+[2886.196s][info][gc] GC(74) Concurrent cleanup 16530M->1828M(18056M) 0.269ms
+[2910.570s][info][gc] Concurrent uncommit 11807M->11807M(18048M) 1.340ms
+[2923.348s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[2923.356s][info][gc] GC(75) Concurrent reset 8.052ms
+[2923.371s][info][gc] GC(75) Pause Init Mark (process weakrefs) 6.840ms
+[2923.677s][info][gc] GC(75) Concurrent marking (process weakrefs) 305.152ms
+[2923.685s][info][gc] GC(75) Concurrent precleaning 8.530ms
+[2923.699s][info][gc] GC(75) Pause Final Mark (process weakrefs) 9.302ms
+[2923.700s][info][gc] GC(75) Concurrent cleanup 17714M->16196M(18048M) 0.133ms
+[2923.737s][info][gc] GC(75) Concurrent evacuation 37.047ms
+[2923.746s][info][gc] GC(75) Pause Init Update Refs 1.286ms
+[2923.894s][info][gc] GC(75) Concurrent update references 147.420ms
+[2923.904s][info][gc] GC(75) Pause Final Update Refs 2.462ms
+[2923.905s][info][gc] GC(75) Concurrent cleanup 16359M->1628M(18048M) 0.210ms
+[2966.528s][info][gc] Trigger: Free (2046M) is below minimum threshold (2047M)
+[2966.536s][info][gc] GC(76) Concurrent reset 7.964ms
+[2966.559s][info][gc] GC(76) Pause Init Mark 14.480ms
+[2966.891s][info][gc] GC(76) Concurrent marking 331.084ms
+[2966.904s][info][gc] GC(76) Pause Final Mark 8.643ms
+[2966.904s][info][gc] GC(76) Concurrent cleanup 17650M->15882M(18048M) 0.142ms
+[2966.951s][info][gc] GC(76) Concurrent evacuation 46.772ms
+[2966.960s][info][gc] GC(76) Pause Init Update Refs 1.288ms
+[2967.135s][info][gc] GC(76) Concurrent update references 173.831ms
+[2967.145s][info][gc] GC(76) Pause Final Update Refs 2.383ms
+[2967.145s][info][gc] GC(76) Concurrent cleanup 16308M->1774M(18056M) 0.240ms
+[3010.206s][info][gc] Trigger: Free (2047M) is below minimum threshold (2047M)
+[3010.214s][info][gc] GC(77) Concurrent reset 8.031ms
+[3010.228s][info][gc] GC(77) Pause Init Mark 6.555ms
+[3010.531s][info][gc] GC(77) Concurrent marking 302.561ms
+[3010.544s][info][gc] GC(77) Pause Final Mark 8.501ms
+[3010.545s][info][gc] GC(77) Concurrent cleanup 17520M->16154M(18056M) 0.132ms
+[3010.587s][info][gc] GC(77) Concurrent evacuation 41.629ms
+[3010.596s][info][gc] GC(77) Pause Init Update Refs 1.273ms
+[3010.754s][info][gc] GC(77) Concurrent update references 157.885ms
+[3010.764s][info][gc] GC(77) Pause Final Update Refs 2.494ms
+[3010.765s][info][gc] GC(77) Concurrent cleanup 16401M->1458M(18056M) 0.244ms
+[3050.315s][info][gc] Trigger: Free (2046M) is below minimum threshold (2047M)
+[3050.323s][info][gc] GC(78) Concurrent reset 8.111ms
+[3050.339s][info][gc] GC(78) Pause Init Mark 7.327ms
+[3050.681s][info][gc] GC(78) Concurrent marking 341.451ms
+[3050.695s][info][gc] GC(78) Pause Final Mark 9.743ms
+[3050.696s][info][gc] GC(78) Concurrent cleanup 17735M->16236M(18056M) 0.139ms
+[3050.744s][info][gc] GC(78) Concurrent evacuation 48.439ms
+[3050.754s][info][gc] GC(78) Pause Init Update Refs 1.303ms
+[3050.925s][info][gc] GC(78) Concurrent update references 170.989ms
+[3050.936s][info][gc] GC(78) Pause Final Update Refs 3.077ms
+[3050.937s][info][gc] GC(78) Concurrent cleanup 16448M->1642M(18056M) 0.212ms
