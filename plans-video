@@ -1,0 +1,22 @@
+Introduce the gc log
+show the CMS analyzed by itself, showing the SIMPLICITY of the interface.
+
+
+-> We can analayze specific metrics of the gc during runtime. Collected is the pause time, concurrent time, and other metrics on the
+max event durations, sum of event durations, number of event durations, 
+
+The CMS log generated is from a Cassandra workload for a database.
+
+Phase 1: First, 3 million write  requests are written to the database.
+        Then,   3 million read   requests are written to the database. 
+
+Phase 2: 3 million read requests at 25k requests per second are made.
+
+A hypothetical user may be currently using CMS in JDK11, and would like to switch to JDK16 for their JVM.
+However, CMS gc is not supported in JDK16, so they will have to choose between one of the available collectors:
+
+ZGC, SHENANDOAH, G1, PARALLEL GC :
+
+(both ZGC & Shenandoah) are concurrent garbage collectors,
+while PARALLEL GC and G1 are mostl 
+
