@@ -34,7 +34,6 @@ def plot_scatter(
         f, plot = plt.subplots()
     # Create a scatter plot with all data
     for time, datapoints, color, label in zip(timestamp_groups, datapoint_groups, colors, labels):
-        # plot.scatter(time, datapoints, label=label, color=color)
         plot.plot(time, datapoints, marker='o', linestyle='',markersize=3, label=label, color=color)
     plot.legend()
     # return a plot object to be displayed or modified

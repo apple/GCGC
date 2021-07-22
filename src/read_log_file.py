@@ -95,15 +95,13 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None, ignore_crashes =
         else:
             temp.append(eventtype)
     table[2] = temp
-    safepoint_name = table[10]
-    time_since_last_safepoint = table[11]
-    reaching_safepoint_time = table[12]
-    at_safepoint_time = table[13]
-    total_time_safepoint = table[14]
-    # Schema 2 (JDK 11)
-    total_application_thread_stopped_time_seconds = table[15]
-    total_time_to_stop_seconds = table[16]
-  
+    # table [10]  safepoint_name
+    table[11] = list(map(__number_to_float, table[11])) # time_since_last_safepoint
+    table[12] = list(map(__number_to_float, table[12])) # reaching_safepoint_time
+    table[13] = list(map(__number_to_float, table[13])) # at_safepoint_time
+    table[14] = list(map(__number_to_float, table[14])) # total_time_safepoint
+    table[15] = list(map(__number_to_float, table[15])) # total_application_thread_stopped_time_seconds
+    table[16] = list(map(__number_to_float, table[16])) # total_time_to_stop_seconds
 
 
 
