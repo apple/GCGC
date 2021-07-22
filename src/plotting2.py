@@ -326,7 +326,7 @@ def plot_sum_pause_intervals(
     number_of_buckets = int((max_pause_duration - min_time_duration) / interval_duration) + 1
     
     # Determine the spacing along the X axis for the data
-    x_alignment = list(range(number_of_buckets))
+    x_alignment = [idx * interval_duration for idx in range(number_of_buckets)]
     
     # Loop through all lists, and plot the line graphs 
     for index, (timestamps, dataset) in enumerate(zip(timestamp_groups, datapoint_groups)):
@@ -345,6 +345,6 @@ def plot_sum_pause_intervals(
     # Set the labels for the buckets, starting with a non-zero bucket    
     plot.legend()
     xticks, xlabels = simplify_xtickslabels(x_alignment, [((val + 1) *interval_duration + min_time_duration) for val in x_alignment ], 20)
-    plot.set_xticks(xticks)
-    plot.set_xticklabels(xlabels)
+    # plot.set_xticks(xticks)
+    # plot.set_xticklabels(xlabels)
     return plot
