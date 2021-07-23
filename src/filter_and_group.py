@@ -86,7 +86,7 @@ def filter_and_group(
                         
     # Determine the colors from the dataset. If colors were passed, use those instead.  
     if not colors:
-        colors, alphas = get_colors_and_alphas(log_number_list, group_by)
+        colors, alphas = get_colors_and_alphas(log_number_list)
     else:
         alphas = [1 for i in range(len(colors))]
 
@@ -107,16 +107,13 @@ def apply_filter(datasets, filter_by=None):
 
         # the reason to use index is to update the actual value
         for i in range(len(dfs)): 
-            for boolean_function in filter_by:
-                #  The boolean function returns true/false, and only keeps rows that evaluate to true
-                dfs[i] = dfs[i][dfs[i].apply(boolean_function, axis=1)]
+            dfs[i] = dfs[i][dfs[i].apply(filter_by, axis=1)]
     else:
         dfs = datasets
     return dfs
 
 
-def get_colors_and_alphas(log_no_list, group_by):
-    prev_log_no = 0
+def get_colors_and_alphas(log_no_list):
     preset_colors = [(230/255, 25/255, 75/255),
                     (60/255, 180/255, 75/255),
                     (255/255, 225/255, 25/255),
@@ -146,4 +143,3 @@ def get_colors_and_alphas(log_no_list, group_by):
         colors.append(preset_colors[idx])
         alphas.append(1)
     return colors, alphas
- 
