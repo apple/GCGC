@@ -348,7 +348,31 @@ def plot_sum_pause_intervals(
 
     # Set the labels for the buckets, starting with a non-zero bucket    
     plot.legend()
-    xticks, xlabels = simplify_xtickslabels(x_alignment, [((val + 1) *interval_duration + min_time_duration) for val in x_alignment ], 20)
+    xticks, xlabels = simplify_xtickslabels(x_alignment, 
+    [((val + 1) *interval_duration + min_time_duration) for val in x_alignment ], 20)
     # plot.set_xticks(xticks)
     # plot.set_xticklabels(xlabels)
     return plot
+
+
+def plot_heatmap2(
+    gc_event_dataframes,
+    dimensions,
+    group_by=None,
+    filter_by=None,
+    labels=None,
+    colors=None,
+    column="Duration_miliseconds",
+    column_timing = None, 
+    frequency_ticks = None
+    ):
+    from graphing.heatmap import get_heatmap_data, plot_heatmap
+    timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
+        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing,
+    )
+
+    heatmap_list, dimensions = get_heatmap_data(timestamp_groups, datapoint_groups, labels, dimensions)
+    for heatmap, label in zip(heatmap_list, labels):
+        if heatmap.size != 0 and dimensions:
+            graph = plot_heatmap(heatmap, dimensions, frequency_ticks) # Set the last value to TRUE to see labels of frequency
+            graph.set_title("Latency during runtime: " +  label)
