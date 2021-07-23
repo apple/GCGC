@@ -23,8 +23,8 @@ ZGC and Shenandoah attempt to optimize for the minimum pauses.
 Here, we are going to plot the throughput for both phases of the cassandra workload, and then 
 
 TODO LIST:
-0) Explain tool, self introduction, explain use case. (30 seconds )
-
+0) Explain tool, self introduction, explain use case. (1 min)
+        -> Problems the team is facing trying to solve with the tool 
 1) Full Analysis with CMS collector (2 minutes)
 
 2) Explain the use of the cassandra workload, the throughput metrics, and what we are trying to optimize for. Use a T chart. (1 minute)
@@ -46,10 +46,4 @@ explain how to tell if gc PAUSE time is affecting throughput and latency
 == 8 minutes and 45 seconds. 
 
 we want to be 7 minutes.
-
-
-
-
-
-
 
