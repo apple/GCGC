@@ -189,39 +189,44 @@ def plot_percentile_intervals(
     if not plot:
         f, plot = plt.subplots()
     
-    # Determine the longest pause to calculate the number of intervalsm
+    # Determine the longest pause to calculate the number of intervals
+    min_time_duration = int(timestamp_groups[0].iloc[0]) # get the initial time as the lowest.
+
     max_pause_duration = 0 
     for timestamp in timestamp_groups:
-        if (list(timestamp)):
+        if list(timestamp):
             max_pause_duration = max(timestamp.max(), max_pause_duration)
-    number_of_buckets = int((max_pause_duration) / interval_duration) + 1
-    
+            min_time_duration = min(timestamp.min(), min_time_duration)
+        
+    number_of_buckets = int((max_pause_duration - min_time_duration) / interval_duration) + 1
+    print("Number of buckets", number_of_buckets)
     # Determine the spacing along the X axis for the data
-    x_alignment = list(range(number_of_buckets))
+    x_alignment = [idx * interval_duration + min_time_duration for idx in range(number_of_buckets)]
+
     
     # For each group, determine the percentile, and plot an independent line for that percentile
     for group, (timestamps, dataset) in enumerate(zip(timestamp_groups, datapoint_groups)):
         
         # First, group into buckets based on time interverals.
-        buckets = group_into_buckets(timestamps, dataset, number_of_buckets, interval_duration)
+        buckets = group_into_buckets([time - min_time_duration for time in timestamps], dataset, number_of_buckets, interval_duration)
         buckets_of_percentiles = map_get_percentiles(buckets, percentiles)
         
         # Collect the percentiles for the i-th group, percentile 0.
         single_line = [buckets_of_percentiles[i][0] for i in range(len(buckets_of_percentiles))] 
         
         # Plot the first line based on the first percentile, with a label
-        plot.plot(x_alignment, single_line, label = labels[group], color = colors[group])
+        plot.scatter(x_alignment, single_line, label = labels[group], color = colors[group]) # changed 
         
         # Plot the rest of the percentiles, with decreasing alpha (opacity) values per line
         for idx in range(1, len(percentiles)):
             single_line = [buckets_of_percentiles[i][idx] for i in range(len(buckets_of_percentiles))]
-            plot.plot(x_alignment, single_line, color = colors [group], alpha = 1 - 0.15 * idx )
+            plot.scatter(x_alignment, single_line, color = colors [group], alpha = 1 - 0.15 * idx ) # changed
     
     # Add styling to the plot. Add legend, and x axis correct titles
     plot.legend()
-    xticks, xlabels = simplify_xtickslabels(x_alignment, [(val + 1) *interval_duration for val in x_alignment ], 20)
-    plot.set_xticks(xticks)
-    plot.set_xticklabels(xlabels)
+    # xticks, xlabels = simplify_xtickslabels(x_alignment, [(val + 1) *interval_duration for val in x_alignment ], 20)
+    # plot.set_xticks(xticks)
+    # plot.set_xticklabels(xlabels)
     return plot
             
 
@@ -344,12 +349,12 @@ def plot_sum_pause_intervals(
                                     interval_duration)
         # Calculate the sum in each bucket, to then plot
         sums = [sum(bucket) for bucket in buckets]
-        plot.plot(x_alignment, sums, label = labels[index], color = colors[index])
+        plot.scatter(x_alignment, sums, label = labels[index], color = colors[index])
 
     # Set the labels for the buckets, starting with a non-zero bucket    
     plot.legend()
-    xticks, xlabels = simplify_xtickslabels(x_alignment, 
-    [((val + 1) *interval_duration + min_time_duration) for val in x_alignment ], 20)
+    # xticks, xlabels = simplify_xtickslabels(x_alignment, 
+    # [((val + 1) *interval_duration + min_time_duration) for val in x_alignment ], 20)
     # plot.set_xticks(xticks)
     # plot.set_xticklabels(xlabels)
     return plot
