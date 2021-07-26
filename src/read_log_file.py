@@ -34,6 +34,7 @@ def get_parsed_comparions_from_files(files, time_range_seconds, ignore_crashes =
         return []
     gc_event_dataframes = []
     super_list = []
+    df = pd.DataFrame() # empty dataframe, temporary
     for filelist in files:
     
         gc_event_dataframes = []
@@ -300,8 +301,9 @@ def event_parsing_string():
         + time_spent_miliseconds
         + zgc_style_heap_memory_change
     )
+    # TODO: Update documentation on capture group after new inclusion of "Safepoint" metrics
     return "^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\](?:\[.*?\])+(?:(?: GC\(\d+\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) (?:((?:\w+ ?){1,3}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})(?:(?:(?:(\d+)\w->(\d+)\w(?:\(\d+\w\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)\w\(\d+%\)->(\d+)\w\(\d+%\))))|(?: Safepoint \"(\w+)\", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)|(?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$))"
-    return event_regex_string
+    # return event_regex_string
 
 
 # Examples:::
