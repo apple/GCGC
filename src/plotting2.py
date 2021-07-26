@@ -232,6 +232,7 @@ def plot_percentile_intervals(
 
 
 #       plot_frequency_of_gc_intervals
+# KNOWN BUG: THIS DOES NOT CURRENTLY PRINT CORRECT INFORMATION.
 # 
 #   Given a list of gc_event_dataframes, and a filter and grouping, determine
 #   the frequency of gc for each group, and plot a line for that group
