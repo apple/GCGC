@@ -277,19 +277,20 @@ import pandas as pd
 #
 #   Create a 2d numpy array, and dimensions list associated with a gc_event_dataframe, such that
 #   the 2d array represents the frequencies of latency events, based on the specified dimensions.
-def get_heatmap_data(
-    gc_event_dataframe,  # gc_event_dataframe of events. Typically only pause events
-    x_bucket_count=20,  # Number of time intervals to group gc events into. INT ONLY
-    y_bucket_count=20,  # Number of latency time intervals to group events into. INT ONLY
-    x_bucket_duration=100,  # Duration in seconds that each time interval bucket has for gc event timestamps
-    y_bucket_duration=10,  # Duration in miliseconds for the length of each latency interval bucket
-    label = None, 
-    suppress_warnings=False,  # If True, warnings about values lying outside of dimension range will not be printed.
-):
-    assert isinstance(gc_event_dataframe, pd.DataFrame)
-    if gc_event_dataframe.empty:
-        print("Warning: Empty table in get_heatmap_data.")
-        return None, None
+def get_heatmap_data(timestamp_groups, datapoint_groups, labels, dimensions):
+    if len(dimensions) != 4:
+        print("""Dimensions incorrect.
+        Dimensions must be a list following the format:
+        dimensions[0] = number of x buckets
+        dimensions[1] = number of y buckets
+        dimensions[2] = duration of x bucket
+        dimensions[3] = duration of y bucket """)   
+        return np.array([]), []
+    x_bucket_count    = dimensions[0]  # Number of time intervals to group gc events into. INT ONLY
+    y_bucket_count    = dimensions[1]  # Number of latency time intervals to group events into. INT ONLY
+    x_bucket_duration = dimensions[2]  # Duration in seconds that each time interval bucket has for gc event timestamps
+    y_bucket_duration = dimensions[3]  # Duration in miliseconds for the length of each latency interval bucket
+    
     for x in [x_bucket_count, y_bucket_count]:
         assert type(x) == int, "Warning: x_bucket_count and y_bucket_count must be integers"
 
@@ -300,84 +301,76 @@ def get_heatmap_data(
     for x in [x_bucket_count, y_bucket_count, x_bucket_duration, y_bucket_duration]:
         if x <= 0:
             print("Warning: All dimensions must be greater than zero.")
-            return None, None
+            return np.array([]), []
 
-    if gc_event_dataframe.empty:
-        print("Empty gc_event_dataframe in get_heatmap_data")
-        return None, None
-    times_seconds, pauses_ms = get_time_and_event_durations(gc_event_dataframe)
+    heatmap_list = []
+    for times_seconds, pauses_ms, label in zip(timestamp_groups, datapoint_groups, labels):
+        if not list(times_seconds) or not list(pauses_ms):
+            continue # Skip this loop iteration
 
-    # create buckets to store the time information.
-    # first, compress into num_b buckets along the time X-axis.
-    x_b = [[] for i in range(x_bucket_count)]
 
-    out_of_range_time = False
-    # populate buckets along the x axis.
-    for pause, time in zip(pauses_ms, times_seconds):
-        bucket_no = int(time / x_bucket_duration)
-        if not suppress_warnings:
-            if bucket_no >= (x_bucket_count + 1):
+        # create buckets to store the time information.
+        # first, compress into num_b buckets along the time X-axis.
+        x_b = [[] for i in range(x_bucket_count)]
 
-                print(
-                    "Warning: Time recorded lies outside of specified time range: "
-                    + str(time) + " > " + str(x_bucket_count * x_bucket_duration))
-        if bucket_no == x_bucket_count:
-            bucket_no = x_bucket_count - 1
-            x_b[bucket_no].append(pause)
-        
-        elif bucket_no < x_bucket_count:
-            x_b[bucket_no].append(pause)
-        else:
-            out_of_range_time = True
-
-    # create heatmap, which will be a 2d-array
-    heatmap = []
-
-    out_of_range_latency = False
-    # go through each time interval, and sort the pauses there into frequency lists
-    for bucket in x_b:
-        yb = [0 for i in range(y_bucket_count)]  # construct a 0 frequency list
-        for time in bucket:
-            # determine which ms pause bucket
-            y_bucket_no = int(time / y_bucket_duration)
-            if not suppress_warnings:
-                if y_bucket_no > y_bucket_count :
-                    print(
-                        "Warning: Value for latency lies outside of range: "
-                        + str(time)
-                        + " > "
-                        + str(y_bucket_count * y_bucket_duration)
-                        + " ms"
-                    )
-
-            out_of_range_latency
+        out_of_range_time = False
+        # populate buckets along the x axis.
+        for pause, time in zip(pauses_ms, times_seconds):
+            bucket_no = int(time / x_bucket_duration)
             
-            if y_bucket_no < y_bucket_count:
-                # increase the frequency of that pause in this time interval
-                yb[y_bucket_no] += 1
-            elif y_bucket_no == y_bucket_count:
-                y_bucket_no = y_bucket_count - 1
-                yb[y_bucket_no] += 1
+           
+            if bucket_no == x_bucket_count:
+                bucket_no = x_bucket_count - 1
+                x_b[bucket_no].append(pause)
+            
+            elif bucket_no < x_bucket_count:
+                x_b[bucket_no].append(pause)
             else:
-                out_of_range_latency = True
+                out_of_range_time = True
+
+        # create heatmap, which will be a 2d-array
+        heatmap = []
+        out_of_range_latency = False
+        max_value = 0
+        
+        for pause in pauses_ms:
+            if pause:
+                max_value = max(pause, max_value)
+        
+        # go through each time interval, and sort the pauses there into frequency lists
+        for bucket in x_b:
+            yb = [0 for i in range(y_bucket_count)]  # construct a 0 frequency list
+            for time in bucket:
+                # determine which ms pause bucket
+                if time:
+                    y_bucket_no = int(time / y_bucket_duration)
+                
+                    
+                    
+                    if y_bucket_no < y_bucket_count:
+                        # increase the frequency of that pause in this time interval
+                        yb[y_bucket_no] += 1
+                    elif y_bucket_no == y_bucket_count:
+                        y_bucket_no = y_bucket_count - 1
+                        yb[y_bucket_no] += 1
+                    else:
+                        out_of_range_latency = True
 
 
 
-        # Add the data to the 2d array
-        heatmap.append(yb)
-    heatmap = np.rot90(heatmap)  # fix orientation
-    
-    if out_of_range_time:
-        print(label + " Warning: At least one value lies outside of the provided time range. Max value outside range: " + str (max(times_seconds)))
-    if out_of_range_latency:
-        print(label + " Warning: At least one value lies outside the provided range for latency. Max value outside range: " + str(max(pauses_ms) ))
-    
-    return np.array(heatmap), [
-        x_bucket_count,
-        y_bucket_count,
-        x_bucket_duration,
-        y_bucket_duration,
-    ]
+            # Add the data to the 2d array
+            heatmap.append(yb)
+        heatmap = np.rot90(heatmap)  # fix orientation
+        
+        if out_of_range_time:
+            print(label + " Warning: At least one value lies outside of the provided time range. Max value outside range: " + str (max(times_seconds)))
+        if out_of_range_latency:
+            print(label + " Warning: At least one value lies outside the provided range for latency. Max value outside range: " + str(max_value))
+        
+        heatmap_list.append(heatmap)
+        if not heatmap_list:
+            print("Warning! No heatmap list analyze_logs_dev 384")
+    return heatmap_list, dimensions
 
 
 
@@ -417,8 +410,9 @@ def get_time_in_seconds(gc_event_dataframe):
         return []
     else:
         timestamps_seconds = []
-        for time in gc_event_dataframe["TimeFromStart_seconds"]:
-            if time != None:
-                timestamps_seconds.append(float(time))
+        if "TimeFromStart_seconds" in gc_event_dataframe:
+            for time in gc_event_dataframe["TimeFromStart_seconds"]:
+                if time != None:
+                    timestamps_seconds.append(float(time))
         return timestamps_seconds
 

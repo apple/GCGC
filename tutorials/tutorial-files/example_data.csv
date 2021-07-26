@@ -1,4 +1,4 @@
-DateTime,TimeFromStart_seconds,EventType,EventName,AdditionalEventInfo,HeapBeforeGC,HeapAfterGC,Duration_miliseconds
+DateTime,ExampleName,EventType,EventName,AdditionalEventInfo,HeapBeforeGC,HeapAfterGC,Duration_miliseconds
 ,0.352, Sell,Transaction,,,,115.17253
 ,1.507, Sell,Transaction,,,,189.881817
 ,2.74, Sell,Transaction,,,,142.341934

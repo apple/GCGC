@@ -24,26 +24,29 @@ def plot_frequency_intervals(
     colors=None,
     plot=None,
     column="Duration_miliseconds",
-    interval_duration = 0
+    interval_duration = 0,
+    column_timing = None
 ):
     if not interval_duration:
         print("No interval length provided. Abort.")
         return
 
     _, datapoint_groups, labels, colors, _ = filter_and_group(
-        gc_event_dataframes, group_by, filter_by, labels, column, colors
+        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing
     )
     
     # if no plot is passed in, create a new plot
     if not plot:
         f, plot = plt.subplots()
-
     # Determine the number of buckets from max_time and interval duration
     max_pause_duration = 0
     min_pause_duration = datapoint_groups[0].iloc[0]
+    
     for dataset in datapoint_groups:
-        max_pause_duration = max(dataset.max(), max_pause_duration)
-        min_pause_duration = min(dataset.min(), min_pause_duration)
+        if list(dataset): # read as list to check for list legnth, rather than rely on pd.DataFrame.empty
+            max_pause_duration = max(dataset.max(), max_pause_duration)
+            min_pause_duration = min(dataset.min(), min_pause_duration)
+
     number_of_buckets = int((max_pause_duration) / interval_duration) + 1
     
     # Create the time intervals 
@@ -166,7 +169,8 @@ def plot_percentile_intervals(
     plot=None,
     column="Duration_miliseconds",
     interval_duration = 0,
-    percentiles = [99.99, 90, 50]
+    percentiles = [99.99, 90, 50],
+    column_timing = None
     ):
     if not interval_duration:
         print("No interval length provided. Abort.")
@@ -178,49 +182,57 @@ def plot_percentile_intervals(
                                                                              filter_by, 
                                                                              labels, 
                                                                              column, 
-                                                                             colors)
+                                                                             colors,
+                                                                             column_timing)
     
     # # if no plot is passed in, create a new plot
     if not plot:
         f, plot = plt.subplots()
     
-    # Determine the longest pause to calculate the number of intervalsm
+    # Determine the longest pause to calculate the number of intervals
+    min_time_duration = int(timestamp_groups[0].iloc[0]) # get the initial time as the lowest.
+
     max_pause_duration = 0 
     for timestamp in timestamp_groups:
-        max_pause_duration = max(timestamp.max(), max_pause_duration)
-    number_of_buckets = int((max_pause_duration) / interval_duration) + 1
-    
+        if list(timestamp):
+            max_pause_duration = max(timestamp.max(), max_pause_duration)
+            min_time_duration = min(timestamp.min(), min_time_duration)
+        
+    number_of_buckets = int((max_pause_duration - min_time_duration) / interval_duration) + 1
+    print("Number of buckets", number_of_buckets)
     # Determine the spacing along the X axis for the data
-    x_alignment = list(range(number_of_buckets))
+    x_alignment = [idx * interval_duration + min_time_duration for idx in range(number_of_buckets)]
+
     
     # For each group, determine the percentile, and plot an independent line for that percentile
     for group, (timestamps, dataset) in enumerate(zip(timestamp_groups, datapoint_groups)):
         
         # First, group into buckets based on time interverals.
-        buckets = group_into_buckets(timestamps, dataset, number_of_buckets, interval_duration)
+        buckets = group_into_buckets([time - min_time_duration for time in timestamps], dataset, number_of_buckets, interval_duration)
         buckets_of_percentiles = map_get_percentiles(buckets, percentiles)
         
         # Collect the percentiles for the i-th group, percentile 0.
         single_line = [buckets_of_percentiles[i][0] for i in range(len(buckets_of_percentiles))] 
         
         # Plot the first line based on the first percentile, with a label
-        plot.plot(x_alignment, single_line, label = labels[group], color = colors[group])
+        plot.scatter(x_alignment, single_line, label = labels[group], color = colors[group]) # changed 
         
         # Plot the rest of the percentiles, with decreasing alpha (opacity) values per line
         for idx in range(1, len(percentiles)):
             single_line = [buckets_of_percentiles[i][idx] for i in range(len(buckets_of_percentiles))]
-            plot.plot(x_alignment, single_line, color = colors [group], alpha = 1 - 0.15 * idx )
+            plot.scatter(x_alignment, single_line, color = colors [group], alpha = 1 - 0.15 * idx ) # changed
     
     # Add styling to the plot. Add legend, and x axis correct titles
     plot.legend()
-    xticks, xlabels = simplify_xtickslabels(x_alignment, [(val + 1) *interval_duration for val in x_alignment ], 20)
-    plot.set_xticks(xticks)
-    plot.set_xticklabels(xlabels)
+    # xticks, xlabels = simplify_xtickslabels(x_alignment, [(val + 1) *interval_duration for val in x_alignment ], 20)
+    # plot.set_xticks(xticks)
+    # plot.set_xticklabels(xlabels)
     return plot
             
 
 
 #       plot_frequency_of_gc_intervals
+# KNOWN BUG: THIS DOES NOT CURRENTLY PRINT CORRECT INFORMATION.
 # 
 #   Given a list of gc_event_dataframes, and a filter and grouping, determine
 #   the frequency of gc for each group, and plot a line for that group
@@ -234,12 +246,13 @@ def plot_frequency_of_gc_intervals(
     plot=None,
     column="Duration_miliseconds",
     interval_duration = 0,
+    column_timing = None
     ):
     if not interval_duration:
         print("No interval length provided. Abort.")
         return
     timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
-        gc_event_dataframes, group_by, filter_by, labels, column, colors)
+        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing)
     
     # # if no plot is passed in, create a new plot
     if not plot:
@@ -249,9 +262,10 @@ def plot_frequency_of_gc_intervals(
     # Determine the longest pause to calculate the number of intervals
     max_pause_duration = 0 
     min_time_duration = int(timestamp_groups[0].iloc[0]) # get the initial time as the lowest.
-    for timestamp in timestamp_groups:
-        max_pause_duration = max(timestamp.max(), max_pause_duration)
-        min_time_duration = min(timestamp.min(), min_time_duration)
+    for timestamps in timestamp_groups:
+        if list(timestamps):
+            max_pause_duration = max(timestamps.max(), max_pause_duration)
+            min_time_duration = min(timestamps.min(), min_time_duration)
         
     number_of_buckets = int((max_pause_duration - min_time_duration) / interval_duration) + 1
     
@@ -292,6 +306,7 @@ def plot_sum_pause_intervals(
     plot=None,
     column="Duration_miliseconds",
     interval_duration = 0, # miliseconds
+    column_timing = None
     ):
     if not interval_duration:
         print("No interval length provided. Abort.")
@@ -299,7 +314,7 @@ def plot_sum_pause_intervals(
 
     # Filter and group data
     timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
-        gc_event_dataframes, group_by, filter_by, labels, column, colors
+        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing
     )
     
     # if no plot is passed in, create a new plot
@@ -308,20 +323,25 @@ def plot_sum_pause_intervals(
     
     # Determine the longest pause to calculate the number of intervals
     max_pause_duration = 0 
+    if not (timestamp_groups):
+        return plot
+    if not list(timestamp_groups[0]):
+        return plot
     min_time_duration = int(timestamp_groups[0].iloc[0]) # get the initial time as the lowest.
     for timestamp in timestamp_groups:
-        max_pause_duration = max(timestamp.max(), max_pause_duration)
-        min_time_duration = min(timestamp.min(), min_time_duration)
+        if list(timestamp):
+            max_pause_duration = max(timestamp.max(), max_pause_duration)
+            min_time_duration = min(timestamp.min(), min_time_duration)
         
     number_of_buckets = int((max_pause_duration - min_time_duration) / interval_duration) + 1
     
     # Determine the spacing along the X axis for the data
-    x_alignment = list(range(number_of_buckets))
+    x_alignment = [idx * interval_duration + min_time_duration for idx in range(number_of_buckets)]
     
     # Loop through all lists, and plot the line graphs 
     for index, (timestamps, dataset) in enumerate(zip(timestamp_groups, datapoint_groups)):
         # First, group into buckets based on time interverals.
-        print(dataset)
+        # print(dataset)
 
         # NOTE: here, we are subtracting the minimum time from everything to easily group them
         buckets = group_into_buckets([time - min_time_duration for time in timestamps], 
@@ -330,11 +350,35 @@ def plot_sum_pause_intervals(
                                     interval_duration)
         # Calculate the sum in each bucket, to then plot
         sums = [sum(bucket) for bucket in buckets]
-        plot.plot(x_alignment, sums, label = labels[index], color = colors[index])
+        plot.scatter(x_alignment, sums, label = labels[index], color = colors[index])
 
     # Set the labels for the buckets, starting with a non-zero bucket    
     plot.legend()
-    xticks, xlabels = simplify_xtickslabels(x_alignment, [((val + 1) *interval_duration + min_time_duration) for val in x_alignment ], 20)
-    plot.set_xticks(xticks)
-    plot.set_xticklabels(xlabels)
+    # xticks, xlabels = simplify_xtickslabels(x_alignment, 
+    # [((val + 1) *interval_duration + min_time_duration) for val in x_alignment ], 20)
+    # plot.set_xticks(xticks)
+    # plot.set_xticklabels(xlabels)
     return plot
+
+
+def plot_heatmap2(
+    gc_event_dataframes,
+    dimensions,
+    group_by=None,
+    filter_by=None,
+    labels=None,
+    colors=None,
+    column="Duration_miliseconds",
+    column_timing = None, 
+    frequency_ticks = None
+    ):
+    from graphing.heatmap import get_heatmap_data, plot_heatmap
+    timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
+        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing,
+    )
+
+    heatmap_list, dimensions = get_heatmap_data(timestamp_groups, datapoint_groups, labels, dimensions)
+    for heatmap, label in zip(heatmap_list, labels):
+        if heatmap.size != 0 and dimensions:
+            graph = plot_heatmap(heatmap, dimensions, frequency_ticks) # Set the last value to TRUE to see labels of frequency
+            graph.set_title("Latency during runtime: " +  label)

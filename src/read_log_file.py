@@ -7,11 +7,20 @@
 
 import pandas as pd
 import re
+import glob
 
-
+#
+#
+#
+#
+def get_file_names_wildcard(path):
+    files = []
+    for file in glob.glob(path):
+        files.append(file)
+    return files
 #       get_parsed_comparions_from_files
 #
-#   Take a list of log file paths/names, and construct a list of tables, one for
+#   Take a list of list of log file paths/names, and construct a list of tables, one for
 #   each log in the list.
 #
 def get_parsed_comparions_from_files(files, time_range_seconds, ignore_crashes = False):
@@ -20,21 +29,28 @@ def get_parsed_comparions_from_files(files, time_range_seconds, ignore_crashes =
     # or a single integer max time.
     if ignore_crashes:
         print("Warning: ignore_crashes takes log files and ignores all crashes.")
-    assert isinstance(files, list)
     if not files:
         print("Warning: Files list empty in get_parsed_comparions_from_files")
         return []
     gc_event_dataframes = []
+    super_list = []
+    df = pd.DataFrame() # empty dataframe, temporary
+    for filelist in files:
     
-    for file in files:
-        # Create each log gc_event_dataframe
-        gc_event_dataframe = get_parsed_data_from_file(file, time_range_seconds, ignore_crashes)
-        if not gc_event_dataframe.empty:
-            gc_event_dataframes.append(gc_event_dataframe)
+        gc_event_dataframes = []
+        for file in filelist:
+            # Create each log gc_event_dataframe
+            gc_event_dataframe = get_parsed_data_from_file(file, time_range_seconds, ignore_crashes)
+            if not gc_event_dataframe.empty:
+                gc_event_dataframes.append(gc_event_dataframe)
+            if gc_event_dataframes:
+                df = pd.concat(gc_event_dataframes)
+        super_list.append(df)
 
     if not gc_event_dataframes:
         print("Warning: No collected data for gc_event_dataframes")
-    return gc_event_dataframes
+    return super_list
+
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -62,16 +78,41 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None, ignore_crashes =
         print("Unable to parse file " + str(logfile))
         return pd.DataFrame()
     # Some data collected is read in as a string, but needs to be interpreted as a float. Fix.
+    
     table[1] = list(map(__number_to_float, table[1]))
     table[7] = list(map(__number_to_float, table[7]))
     table[5] = choose_non_zero(table[5], table[8]) # Before GC collection mem_size
     table[6] = choose_non_zero(table[6], table[9]) # After GC collection mem_size
     table[5] = list(map(__number_to_float, table[5])) 
     table[6] = list(map(__number_to_float, table[6]))
+    
+    
+
+    # Schema 1 (JDK 16)
+    temp = []
+    for eventtype, safepoint1, safepoint2 in zip(table[2], table[10], table[16]):
+        if safepoint1 or safepoint2:
+            temp.append("Safepoint")
+        else:
+            temp.append(eventtype)
+    table[2] = temp
+    # table [10]  safepoint_name
+    table[11] = list(map(__number_to_float, table[11])) # time_since_last_safepoint
+    table[12] = list(map(__number_to_float, table[12])) # reaching_safepoint_time
+    table[13] = list(map(__number_to_float, table[13])) # at_safepoint_time
+    table[14] = list(map(__number_to_float, table[14])) # total_time_safepoint
+    table[15] = list(map(__number_to_float, table[15])) # total_application_thread_stopped_time_seconds
+    table[16] = list(map(__number_to_float, table[16])) # total_time_to_stop_seconds
 
 
-    table.pop() # Used due to 2 types of memory change regex groups & before/after for each
-    table.pop() # Therefore, we gather before & after into 2 distinct columns, and remove other set
+
+# Scema 2 for safepoints:: Appears in JDK11
+    # (?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$) 
+ # 16 Total time application threads stopped in seconds
+ # 17 Total time to stop in seconds
+
+    table.pop(9) # Used due to 2 types of memory change regex groups & before/after for each
+    table.pop(8) # Therefore, we gather before & after into 2 distinct columns, and remove other set
 
     parsed_data_table = pd.DataFrame(table).transpose() 
     # The data collected is in a 2d array, where table indicies represent a column. However,
@@ -207,6 +248,13 @@ def columnNames():
         "HeapBeforeGC",
         "HeapAfterGC",
         "Duration_miliseconds",
+        "SafepointName",
+        "TimeFromLastSafepoint_ns",
+        "TimeToReachSafepoint_ns",
+        "AtSafepoint_ns",
+        "TotalTimeAtSafepoint_ns",
+        "TotalApplicationThreadPauseTime_seconds",
+        "TimeToStopApplication_seconds"
     ]
 
 
@@ -233,8 +281,7 @@ def event_parsing_string():
     # note: Not all lines contain a regex-group. Group lines are commented with a *
     date_time = "^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?"  # [2021-07-01T23:23:22.001+0000]    *
     time_from_start_seconds = "\[(\d+\.\d+)s\]"  # [243.45s]     *
-    gc_info_level = "\[\w+ *\]"  # [info ]
-    type_gc_log_line = "\[gc(?:,\w+)?\s*\] "  # [gc, trace]
+    other_info_fields = "(?:\[.*?\])+ "
     gc_event_number = "GC\(\d+\) "  # GC(25)
     gc_event_type = "((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) "  # Concurrent    *
     gc_event_name = "(?:((?:\w+ ?){1,3}) )?"  # Young    *
@@ -245,8 +292,7 @@ def event_parsing_string():
     event_regex_string = (
         date_time
         + time_from_start_seconds
-        + gc_info_level
-        + type_gc_log_line
+        + other_info_fields
         + gc_event_number
         + gc_event_type
         + gc_event_name
@@ -255,7 +301,9 @@ def event_parsing_string():
         + time_spent_miliseconds
         + zgc_style_heap_memory_change
     )
-    return event_regex_string
+    # TODO: Update documentation on capture group after new inclusion of "Safepoint" metrics
+    return "^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\](?:\[.*?\])+(?:(?: GC\(\d+\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) (?:((?:\w+ ?){1,3}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})(?:(?:(?:(\d+)\w->(\d+)\w(?:\(\d+\w\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)\w\(\d+%\)->(\d+)\w\(\d+%\))))|(?: Safepoint \"(\w+)\", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)|(?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$))"
+    # return event_regex_string
 
 
 # Examples:::
@@ -286,3 +334,22 @@ def choose_non_zero(list1, list2):
         else:
             list_non_zero.append(None)
     return list_non_zero
+
+# ^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\](?:\[.*?\])+(?: GC\(\d+\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) (?:((?:\w+ ?){1,3}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})(?:(?:(?:(\d+)\w->(\d+)\w(?:\(\d+\w\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)\w\(\d+%\)->(\d+)\w\(\d+%\))))|(?: Safepoint \"(\w+)\", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)|(?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$)
+
+#
+# Schema 1 for safepoints : Appears in JDK16
+    # (?: Safepoint \"(\w+)\", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)
+
+# Capture groups:
+# 11 - Safepoint Name (EventName)
+# 12 - Time since last  in nanoseocnds
+# 13 - Reaching Safepoint in nanoseconds
+# 14 - At safepoint in nanosecnods
+# 15 - Total time in nanoseconds
+
+
+# Scema 2 for safepoints:: Appears in JDK11
+    # (?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$) 
+ # 16 Total time application threads stopped in seconds
+ # 17 Total time to stop in seconds
