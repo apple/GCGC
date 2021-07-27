@@ -8,24 +8,36 @@
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                       event_parsing_string
 #
-# Returns a regex-searchable string to handle parsing log lines.
-# Defined regex groups are each section of the code
+#   Returns a regex-searchable string to handle parsing log lines.
+#   Defined regex groups are each section of the code
 #
-# GROUP 1: "DateTime" -> information on time of recording
-# GROUP 2: "TimeFromStart_seconds" -> time of beginning of event in seconds
-# GROUP 3: "EventType" -> Either concurrent or stop the world pause
-# GROUP 4: "EventName" -> Specific action from the event. Example : "(pause) Young"
-# GROUP 5: "AdditionalEventInfo" -> Information about the event
-# GROUP 6: "MemoryChange_MB" -> Memory changed, following this patten: before->after(max_heapsize)
-# 7, 11: before
-# Return: string
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# The regex capture groups follow the following format:
+# 1 : DateTime
+# 2 : TimeFromStart_seconds
+# 3 : EventType
+# 4 : EventName
+# 5 : AdditionalEventInfo
+# 6 : HeapBeforeGC  * 
+# 7 : HeapAfterGC   *
+# 8 : Duration_miliseconds
+# 9 : HeapBeforeGC  * (collected from zgc logs)
+# 10: HeapAfterGC   * (collected from zgc logs)
+# 11: SafepointName
+# 12: TimeFromLastSafepoint_ns
+# 13: TimeToReachSafepoint_ns
+# 14: AtSafepoint_ns
+# 15: TotalTimeAtSafepoint_ns
+# 16: TotalApplicationThreadPauseTime_seconds
+# 17: TimeToStopApplication_seconds
 def event_parsing_string():
 # Note: the documentation of this regex string is confusing. It is recommended you follow along
-# Using this link to view the regex in a more natural way.
-# https://regexper.com/#%5E%28%3F%3A%5C%5B%28%5Cd%7B4%7D-%5Cd%5Cd-%5Cd%5CdT%5Cd%5Cd%3A%5Cd%5Cd%3A%5Cd%5Cd%5C.%5Cd%7B3%7D%5C%2B%5Cd%7B4%7D%29%5C%5D%29%3F%5C%5B%28%5Cd%2B%5C.%5Cd%2B%29s%5C%5D%28%3F%3A%5C%5B.*%3F%5C%5D%29%2B%28%3F%3A%28%3F%3A%20GC%5C%28%5Cd%2B%5C%29%20%28%28%3F%3APause%28%3F%3D.*ms%29%29%7C%28%3F%3AConcurrent%28%3F%3D.*ms%29%29%7C%28%3F%3AGarbage%20Collection%29%29%20%28%3F%3A%28%28%3F%3A%5Cw%2B%20%3F%29%7B1%2C3%7D%29%20%29%3F%28%28%3F%3A%5C%28%28%3F%3A%5Cw%2B%20%3F%29%7B1%2C3%7D%5C%29%20%29%7B0%2C3%7D%29%28%3F%3A%28%3F%3A%28%3F%3A%28%5Cd%2B%29%5Cw-%3E%28%5Cd%2B%29%5Cw%28%3F%3A%5C%28%5Cd%2B%5Cw%5C%29%3F%29%3F%29%3F%28%3F%3D%20%3F%28%5Cd%2B%5C.%5Cd%2B%29ms%29%29%7C%28%3F%3A%28%5Cd%2B%29%5Cw%5C%28%5Cd%2B%25%5C%29-%3E%28%5Cd%2B%29%5Cw%5C%28%5Cd%2B%25%5C%29%29%29%29%7C%28%3F%3A%20Safepoint%20%5C%22%28%5Cw%2B%29%5C%22%2C%20Time%20since%20last%3A%20%28%5Cd%2B%29%20ns%2C%20Reaching%20safepoint%3A%20%28%5Cd%2B%29%20ns%2C%20At%20safepoint%3A%20%28%5Cd%2B%29%20ns%2C%20Total%3A%20%28%5Cd%2B%29%20ns%24%29%7C%28%3F%3A%20Total%20time%20for%20which%20application%20threads%20were%20stopped%3A%20%28%5B%5Cd%5C.%5D%2B%29%20seconds%2C%20Stopping%20threads%20took%3A%20%28%5B%5Cd%5C.%5D%2B%29%20seconds%24%29%29
-# Required / Safepoint means that the filed is required in a "Safepoint" line
-# Required / Normal    means the filed is required for a general non-safepoint event
+    # Using this link to view the regex in a more natural way.
+    # https://regexper.com/#%5E%28%3F%3A%5C%5B%28%5Cd%7B4%7D-%5Cd%5Cd-%5Cd%5CdT%5Cd%5Cd%3A%5Cd%5Cd%3A%5Cd%5Cd%5C.%5Cd%7B3%7D%5C%2B%5Cd%7B4%7D%29%5C%5D%29%3F%5C%5B%28%5Cd%2B%5C.%5Cd%2B%29s%5C%5D%28%3F%3A%5C%5B.*%3F%5C%5D%29%2B%28%3F%3A%28%3F%3A%20GC%5C%28%5Cd%2B%5C%29%20%28%28%3F%3APause%28%3F%3D.*ms%29%29%7C%28%3F%3AConcurrent%28%3F%3D.*ms%29%29%7C%28%3F%3AGarbage%20Collection%29%29%20%28%3F%3A%28%28%3F%3A%5Cw%2B%20%3F%29%7B1%2C3%7D%29%20%29%3F%28%28%3F%3A%5C%28%28%3F%3A%5Cw%2B%20%3F%29%7B1%2C3%7D%5C%29%20%29%7B0%2C3%7D%29%28%3F%3A%28%3F%3A%28%3F%3A%28%5Cd%2B%29%5Cw-%3E%28%5Cd%2B%29%5Cw%28%3F%3A%5C%28%5Cd%2B%5Cw%5C%29%3F%29%3F%29%3F%28%3F%3D%20%3F%28%5Cd%2B%5C.%5Cd%2B%29ms%29%29%7C%28%3F%3A%28%5Cd%2B%29%5Cw%5C%28%5Cd%2B%25%5C%29-%3E%28%5Cd%2B%29%5Cw%5C%28%5Cd%2B%25%5C%29%29%29%29%7C%28%3F%3A%20Safepoint%20%5C%22%28%5Cw%2B%29%5C%22%2C%20Time%20since%20last%3A%20%28%5Cd%2B%29%20ns%2C%20Reaching%20safepoint%3A%20%28%5Cd%2B%29%20ns%2C%20At%20safepoint%3A%20%28%5Cd%2B%29%20ns%2C%20Total%3A%20%28%5Cd%2B%29%20ns%24%29%7C%28%3F%3A%20Total%20time%20for%20which%20application%20threads%20were%20stopped%3A%20%28%5B%5Cd%5C.%5D%2B%29%20seconds%2C%20Stopping%20threads%20took%3A%20%28%5B%5Cd%5C.%5D%2B%29%20seconds%24%29%29
+# The regex has 4 main capture patterns
+    # The "Normal" pattern is a gc event with an event type/name & duration
+    # The "Safepoint" pattern parses a log line relating to a safepoint
+    # The "ZGC Mem" pattern specifically targets lines with no duration, but have a ZGC heapsize change.
 
     start_of_line = "^"
     #   DateTime : Real time of the program's run in DateTime format
@@ -180,8 +192,15 @@ def event_parsing_string():
                      program_pause_time +           # safepoints jdk11
                      time_to_stop_application)      # safepoints jdk11
     return event_parsing
-    # TODO: Update documentation on capture group after new inclusion of "Safepoint" metrics
-    # return "^(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?\[(\d+\.\d+)s\](?:\[.*?\])+(?:(?: GC\(\d+\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) (?:((?:\w+ ?){1,3}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})(?:(?:(?:(\d+)\w->(\d+)\w(?:\(\d+\w\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)\w\(\d+%\)->(\d+)\w\(\d+%\))))|(?: Safepoint \"(\w+)\", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)|(?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$))"
-
-# Examples follow below:
+# The following lines are matches. Use https://regex101.com to test match groups.
+'''
+[1.044s][info][gc          ] GC(0) Garbage Collection (Warmup) 916M(11%)->246M(3%)
+[14.169s][info][gc          ] GC(6) Pause Young (Allocation Failure) 2597M->133M(7993M) 24.738ms
+[0.611s][info][gc          ] GC(0) Pause Young (Normal) (G1 Evacuation Pause) 411M->98M(8192M) 141.751ms
+[2021-07-20T12:29:49.655+0000][370.855s][2258357][2258375][info ] GC(78) Pause Young (Normal) (G1 Evacuation Pause) 5850M->985M(8192M) 78.739ms
+[2021-07-20T12:39:31.364+0000][26.826s][2267133][2267139][info ] Total time for which application threads were stopped: 0.0001782 seconds, Stopping threads took: 0.0000366 seconds
+[2021-07-20T12:39:57.833+0000][53.296s][2267133][2267139][info ] GC(15) Pause Young (Allocation Failure) 3160M->1787M(7592M) 69.406ms
+[2021-07-20T13:42:01.205+0000][96.063s][2302588][2302600][info ] GC(28) Concurrent cleanup 4045M->4040M(8192M) 0.031ms
+[2021-07-20T13:28:05.551+0000][1.061s][2294560][2294576][info ] Safepoint "ICBufferFull", Time since last: 352774642 ns, Reaching safepoint: 128133 ns, At safepoint: 1429 ns, Total: 129562 ns
+'''
 
