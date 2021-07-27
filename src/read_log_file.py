@@ -9,21 +9,24 @@ import pandas as pd
 import re
 import glob
 
+#       get_file_names_wildcard
 #
-#
-#
+#   Given a path including a linux style wildcard search, return the list of all matching files
+#   on that path. Each file is a string.
 #
 def get_file_names_wildcard(path):
     files = []
     for file in glob.glob(path):
         files.append(file)
     return files
-#       get_parsed_comparions_from_files
+
+
+#       get_gc_event_tables
 #
 #   Take a list of list of log file paths/names, and construct a list of tables, one for
 #   each log in the list.
 #
-def get_parsed_comparions_from_files(files, time_range_seconds, ignore_crashes = False):
+def get_gc_event_tables(files, time_range_seconds, ignore_crashes = False):
     # Files must be a list of strings
     # Time range in seconds is either a list with 2 values,
     # or a single integer max time.
@@ -32,24 +35,24 @@ def get_parsed_comparions_from_files(files, time_range_seconds, ignore_crashes =
     if not files:
         print("Warning: Files list empty in get_parsed_comparions_from_files")
         return []
-    gc_event_dataframes = []
-    super_list = []
-    df = pd.DataFrame() # empty dataframe, temporary
+    # all_runs
+    all_runs = []
     for filelist in files:
-    
-        gc_event_dataframes = []
+        gc_event_dataframes = [] # associated with one GC run. 
         for file in filelist:
             # Create each log gc_event_dataframe
             gc_event_dataframe = get_parsed_data_from_file(file, time_range_seconds, ignore_crashes)
+            
             if not gc_event_dataframe.empty:
                 gc_event_dataframes.append(gc_event_dataframe)
-            if gc_event_dataframes:
-                df = pd.concat(gc_event_dataframes)
-        super_list.append(df)
-
-    if not gc_event_dataframes:
-        print("Warning: No collected data for gc_event_dataframes")
-    return super_list
+        if gc_event_dataframes:
+            df = pd.concat(gc_event_dataframes)
+            all_runs.append(df)
+        else:
+            print("Warning: No collected data for the following files: ", filelist)  
+    if not all_runs:
+        print("Error: No data collected in get_gc_event_tables.")
+    return all_runs
 
 
 
@@ -67,13 +70,14 @@ def get_parsed_comparions_from_files(files, time_range_seconds, ignore_crashes =
 #   a pandas dataframe, where rows are each an individual event. Columns are labeled, and
 #   collect information on each event, such as when it occured, how long it lasted, and the name
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+from parse_log_line import event_parsing_string as eps
 def get_parsed_data_from_file(logfile, time_range_seconds=None, ignore_crashes = False):
     assert isinstance(logfile, str)  # input must be a string
-
+    
     if not logfile:
         print("No logfile provided in get_parsed_data_from_file")
         return
-    table = __manyMatch_LineSearch(event_parsing_string(), logfile)
+    table = __manyMatch_LineSearch(eps(), logfile)
     if not any(table):
         print("Unable to parse file " + str(logfile))
         return pd.DataFrame()
