@@ -43,7 +43,7 @@ def event_parsing_string():
     #   Other info fields detailing log line info
     #   Field : Required
     #   Group : Non capturing
-    other_info_fields = "(?:\[.*?\])+ "
+    other_info_fields = "(?:\[.*?\])+"
     
     #   Gc event number
     #   Field : Required
@@ -176,6 +176,7 @@ def event_parsing_string():
                      safepoint_time_since_last +    # safepoints jdk16
                      safepoint_time_to_reach +      # safepoints jdk16
                      time_at_safepoint +            # safepoints jdk16
+                     total_time_safepoint +         # safepoints jdk16
                      program_pause_time +           # safepoints jdk11
                      time_to_stop_application)      # safepoints jdk11
     return event_parsing
