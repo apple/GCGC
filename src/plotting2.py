@@ -213,7 +213,6 @@ def plot_percentile_intervals(
 
 
 #       plot_frequency_of_gc_intervals
-# KNOWN BUG: THIS DOES NOT CURRENTLY PRINT CORRECT INFORMATION.
 # 
 #   Given a list of gc_event_dataframes, and a filter and grouping, determine
 #   the frequency of gc for each group, and plot a line for that group
@@ -225,7 +224,7 @@ def plot_frequency_of_gc_intervals(
     labels=None,
     colors=None,
     plot=None,
-    column="Duration_miliseconds",
+    column="GCIndex", # Used to determine uniqueness of GC events
     interval_duration = 0,
     column_timing = None
     ):
@@ -249,7 +248,7 @@ def plot_frequency_of_gc_intervals(
         # First, group into buckets based on time interverals.
         buckets = group_into_buckets([time - min_time_duration for time in timestamps], dataset, number_of_buckets, interval_duration)
         # Calculate the frequency of gc events per bucket time interval. Then plot
-        frequency = [len(bucket) for bucket in buckets]
+        frequency = [len(set(bucket)) for bucket in buckets] # Based on frequency of UNIQUE VALUES
         plot.plot(x_alignment, frequency, label = labels[index], color = colors[index])
     
     # Add styling to the plot. Add legend, and correct x-axis labels
