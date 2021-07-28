@@ -85,8 +85,8 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None, ignore_crashes =
     table[2] = list(map(__number_to_float, table[2]))
     table[1] = list(map(__number_to_float, table[1]))
     table[8] = list(map(__number_to_float, table[8]))
-    table[6] = choose_non_zero(table[6], table[9]) # Before GC collection mem_size
-    table[7] = choose_non_zero(table[7], table[10]) # After GC collection mem_size
+    table[6] = __choose_non_zero(table[6], table[9]) # Before GC collection mem_size
+    table[7] = __choose_non_zero(table[7], table[10]) # After GC collection mem_size
     table[6] = list(map(__number_to_float, table[6])) 
     table[7] = list(map(__number_to_float, table[7]))
     # Schema 1 (JDK 16)
@@ -225,7 +225,7 @@ def __manyMatch_LineSearch(
 
 
 # Access the column names for a parsed file. Note that these are dependent
-# on the groups defined in event_string_parsing
+# on the groups defined in `parse_log_file.py`
 # Full descriptions of the columns can be found in the README under /src/
 def columnNames():
     return [
@@ -248,8 +248,13 @@ def columnNames():
     ]
 
 
-
-def choose_non_zero(list1, list2):
+#       __choose_non_zero
+#
+#   Given two lists, choose the value for each zipped index in the list
+#   that is non zero, or None if neither have values, and return the combined 
+#   list
+#
+def __choose_non_zero(list1, list2):
     list_non_zero = []
     for item1, item2 in zip(list1, list2):
         if item1:
