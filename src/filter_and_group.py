@@ -25,7 +25,7 @@ def filter_and_group(
 ):
     # Apply the filters, if any
     if filter_by:
-        datasets = apply_filter(datasets, filter_by)
+        datasets = apply_filter(datasets, filter_by)       
     # Create the labels if non provided
     if not labels:
         labels = [str(num + 1) for num in range(len(datasets))]
@@ -35,12 +35,12 @@ def filter_and_group(
     timestamp_groups = [] # For time of event 
     datapoint_groups = [] # For data in 'column'
     group_labels = []     # Label to descrbe the group.
+    
     if group_by:
-        print("Case GROUP BY")
         timestamp_groups, datapoint_groups, group_labels = arrange_into_groups(datasets, group_by, column, column_timing, labels)
     else:
         timestamp_groups, datapoint_groups, group_labels = arrange_no_groups(datasets, column, column_timing, labels)
-
+     
     # Add the colors.
     if not colors:
         colors, alphas = get_colors_and_alphas(len(group_labels))
