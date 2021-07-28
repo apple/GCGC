@@ -38,17 +38,9 @@ def plot_frequency_intervals(
     # if no plot is passed in, create a new plot
     if not plot:
         f, plot = plt.subplots()
-    # Determine the number of buckets from max_time and interval duration
-    max_pause_duration = 0
-    min_pause_duration = datapoint_groups[0].iloc[0]
-    
-    for dataset in datapoint_groups:
-        if list(dataset): # read as list to check for list legnth, rather than rely on pd.DataFrame.empty
-            max_pause_duration = max(dataset.max(), max_pause_duration)
-            min_pause_duration = min(dataset.min(), min_pause_duration)
 
-    number_of_buckets = int((max_pause_duration) / interval_duration) + 1
-    
+    number_of_buckets, min_time_duration, max_time_duration = get_buckets_and_range(datapoint_groups,
+                                                                                      interval_duration)
     # Create the time intervals 
     time_intervals = [[0 for m in range(len(datapoint_groups))] for idx in range(number_of_buckets)]
 
@@ -189,16 +181,8 @@ def plot_percentile_intervals(
     if not plot:
         f, plot = plt.subplots()
     
-    # Determine the longest pause to calculate the number of intervals
-    min_time_duration = int(timestamp_groups[0].iloc[0]) # get the initial time as the lowest.
+    number_of_buckets, min_time_duration, max_time_duration =  get_buckets_and_range(timestamp_groups, interval_duration)
 
-    max_pause_duration = 0 
-    for timestamp in timestamp_groups:
-        if list(timestamp):
-            max_pause_duration = max(timestamp.max(), max_pause_duration)
-            min_time_duration = min(timestamp.min(), min_time_duration)
-        
-    number_of_buckets = int((max_pause_duration - min_time_duration) / interval_duration) + 1
     print("Number of buckets", number_of_buckets)
     # Determine the spacing along the X axis for the data
     x_alignment = [idx * interval_duration + min_time_duration for idx in range(number_of_buckets)]
@@ -258,16 +242,7 @@ def plot_frequency_of_gc_intervals(
     if not plot:
         f, plot = plt.subplots()
 
-    # Determine the longest pause to calculate the number of intervals
-    # Determine the longest pause to calculate the number of intervals
-    max_pause_duration = 0 
-    min_time_duration = int(timestamp_groups[0].iloc[0]) # get the initial time as the lowest.
-    for timestamps in timestamp_groups:
-        if list(timestamps):
-            max_pause_duration = max(timestamps.max(), max_pause_duration)
-            min_time_duration = min(timestamps.min(), min_time_duration)
-        
-    number_of_buckets = int((max_pause_duration - min_time_duration) / interval_duration) + 1
+    number_of_buckets, min_time_duration, max_time_duration = get_buckets_and_range(timestamp_groups, interval_duration)
     
     # Determine the spacing along the X axis for the data
     x_alignment = list(range(number_of_buckets))
@@ -322,18 +297,14 @@ def plot_sum_pause_intervals(
         f, plot = plt.subplots()
     
     # Determine the longest pause to calculate the number of intervals
-    max_pause_duration = 0 
+    max_time_duration = 0 
     if not (timestamp_groups):
         return plot
     if not list(timestamp_groups[0]):
         return plot
-    min_time_duration = int(timestamp_groups[0].iloc[0]) # get the initial time as the lowest.
-    for timestamp in timestamp_groups:
-        if list(timestamp):
-            max_pause_duration = max(timestamp.max(), max_pause_duration)
-            min_time_duration = min(timestamp.min(), min_time_duration)
-        
-    number_of_buckets = int((max_pause_duration - min_time_duration) / interval_duration) + 1
+
+    number_of_buckets, min_time_duration, max_time_duration = get_buckets_and_range(timestamp_groups, interval_duration)    
+
     
     # Determine the spacing along the X axis for the data
     x_alignment = [idx * interval_duration + min_time_duration for idx in range(number_of_buckets)]
@@ -382,3 +353,23 @@ def plot_heatmap2(
         if heatmap.size != 0 and dimensions:
             graph = plot_heatmap(heatmap, dimensions, frequency_ticks) # Set the last value to TRUE to see labels of frequency
             graph.set_title("Latency during runtime: " +  label)
+
+#       get_buckets_and_range
+#
+#   Given a list of data, and the interval duration, find the maximum and 
+#   minimum values in the range, and return the number of buckets to fit
+#   that range
+#
+def get_buckets_and_range(datapoint_groups, interval_duration):
+    max_time_duration = 0
+    min_time_duration = datapoint_groups[0].iloc[0]
+    
+    for dataset in datapoint_groups:
+        if list(dataset): # read as list to check for list legnth, rather than rely on pd.DataFrame.empty
+            max_time_duration = max(dataset.max(), max_time_duration)
+            min_time_duration = min(dataset.min(), min_time_duration)
+
+    number_of_buckets = int((max_time_duration) / interval_duration) + 1
+
+    return number_of_buckets, min_time_duration, max_time_duration
+
