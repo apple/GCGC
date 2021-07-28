@@ -89,9 +89,6 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None, ignore_crashes =
     table[7] = choose_non_zero(table[7], table[10]) # After GC collection mem_size
     table[6] = list(map(__number_to_float, table[6])) 
     table[7] = list(map(__number_to_float, table[7]))
-    
-    
-
     # Schema 1 (JDK 16)
     temp = []
     for eventtype, safepoint1, safepoint2 in zip(table[3], table[11], table[17]):
