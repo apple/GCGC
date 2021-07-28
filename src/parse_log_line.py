@@ -16,21 +16,22 @@
 The regex capture groups follow the following format:
 1 : DateTime
 2 : TimeFromStart_seconds
-3 : EventType
-4 : EventName
-5 : AdditionalEventInfo
-6 : HeapBeforeGC  * 
-7 : HeapAfterGC   *
-8 : Duration_miliseconds
-9 : HeapBeforeGC  * (collected from zgc logs)
-10: HeapAfterGC   * (collected from zgc logs)
-11: SafepointName
-12: TimeFromLastSafepoint_ns
-13: TimeToReachSafepoint_ns
-14: AtSafepoint_ns
-15: TotalTimeAtSafepoint_ns
-16: TotalApplicationThreadPauseTime_seconds
-17: TimeToStopApplication_seconds
+3 : GGIndex
+4 : EventType
+5 : EventName
+6 : AdditionalEventInfo
+7 : HeapBeforeGC  * 
+8 : HeapAfterGC   *
+9 : Duration_miliseconds
+10 : HeapBeforeGC  * (collected from zgc logs)
+11: HeapAfterGC   * (collected from zgc logs)
+12: SafepointName
+13: TimeFromLastSafepoint_ns
+14: TimeToReachSafepoint_ns
+15: AtSafepoint_ns
+16: TotalTimeAtSafepoint_ns
+17: TotalApplicationThreadPauseTime_seconds
+18: TimeToStopApplication_seconds
 '''
 def event_parsing_string():
 # Note: the documentation of this regex string is confusing. It is recommended you follow along
@@ -59,26 +60,27 @@ def event_parsing_string():
     #   Group : Non capturing
     other_info_fields = "(?:\[.*?\])+"
     
-    #   Gc event number
+    #   GCIndex
     #   Field : Required
-    #   Group : Non capturing
-    gc_event_number = "(?:(?: GC\(\d+\) "
+    #   Group : 3
+    #   Captures: integer number of the GC's count for an event
+    gc_event_number = "(?:(?: GC\((\d+)\) "
     
     #   EventType : Type of gc event
     #   Field : Required / Normal
-    #   Group : 3
+    #   Group : 4
     #   Captures: The exact word from the choices of ("Pause", "Concurrent", "Garbage Collection")
     gc_event_type = "((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) " 
     
     #   EventName : The name of the GC event
     #   Field : Required / Normal
-    #   Group : 4
+    #   Group : 5
     #   Captures : The set of 1-3 words following the EventType that names the event
     gc_event_name = "(?:((?:\w+ ?){1,3}) )?"  # Young    *
     
     #   AdditionalEventInfo
     #   Field : Optional
-    #   Group : 5
+    #   Group : 6
     #   Captures: The set of 0-3 words in 0-3 parentheses following the EventName
     gc_additional_info = "((?:\((?:\w+ ?){1,3}\) ){0,3})"  # (Evacuation Pause)    *
     
@@ -89,13 +91,13 @@ def event_parsing_string():
 
     #   HeapBeforeGC : Captures the heapsize in MB before the GC run.
     #   Field : Optional
-    #   Group: 6
+    #   Group: 7
     #   Captures: The float value for the heapsize. No unit captured 
     heap_before_gc = "(\d+)\w->"
     
     #   HeapAfterGC : Captures the heapsize in MB after the GC run.
     #   Field : Optional
-    #   Group : 7
+    #   Group : 8
     #   Captures :  The float value for the heapsize. No unit captured
     heap_after_gc = "(\d+)\w(?:\(\d+\w\)?)?"
 
@@ -106,7 +108,7 @@ def event_parsing_string():
     
     #   Duration_miliseconds :  Time used for this event in miliseconds
     #   Field : Required / Normal
-    #   Group : 8
+    #   Group : 9
     #   Captures: The value of the duration. No unit captures
     time_spent_miliseconds = "(\d+\.\d+)ms))"  # 24.321ms
     
@@ -117,55 +119,55 @@ def event_parsing_string():
 
     #   HeapBeforeGC : ZGC style heap before gc metric
     #   Field : Required / ZGCmem
-    #   Group : 9 
+    #   Group : 10 
     #   Captures : The Heap size in MB before GC run. No unit captured.
     zgc_heap_before_gc = "(\d+)\w\(\d+%\)->"
 
     #   HeapAfterGC : ZGC style heap after gc metric
     #   Field : Required / ZGCmem
-    #   Group : 10 
+    #   Group : 11 
     #   Captures : The Heap size in MB after GC run. No unit captured.
     zgc_heap_after_gc = "(\d+)\w\(\d+%\))))"
 
     #   SafepointName : The name of the recorded safepoint
     #   Field : Required / Safepoint JDK16
-    #   Group : 11
+    #   Group : 12
     #   Captures: Name of the safepoint, not including parentheses
     safepoint_name = "|(?: Safepoint \"(\w+)\""
 
     #   TimeFromLastSafepoint_ns : Time from last safepoint in nanoseconds
     #   Field : Required / Safepoint JDK16
-    #   Group : 12 
+    #   Group : 13 
     #   Captures: The time since the last safepoint in nanoseconds. No unit captured.
     safepoint_time_since_last = ", Time since last: (\d+) ns, "
     
     #   TimeToReachSafepoint_ns
     #   Field : Required / Safepoint JDK16
-    #   Group : 13
+    #   Group : 14
     #   Captures : Time required to reach the safepoint
     safepoint_time_to_reach = "Reaching safepoint: (\d+) ns, "
     
     #   AtSafepoint_ns
     #   Field :  Required / Safepoint JDK16
-    #   Group : 14
+    #   Group : 15
     #   Captures: Time while at Safepoint. No unit captured,
     time_at_safepoint = "At safepoint: (\d+) ns, "
 
     #   TotalTimeAtSafepoint_ns
     #   Field :  Required / Safepoint JDK16
-    #   Group : 15
+    #   Group : 16
     #   Captures : Total time spent getting to and at the safepoint. No unit captured 
     total_time_safepoint = "Total: (\d+) ns$)"
 
     #   TotalApplicationThreadPauseTime_seconds
     #   Field : Required / Safepoint JDK11
-    #   Group : 16
+    #   Group : 17
     #   Captures : Total time the program's application threads were stopped
     program_pause_time = "|(?: Total time for which application threads were stopped: ([\d\.]+) seconds,"
 
     #   TimeToStopApplication_seconds
     #   Field : Required / Safepoint JDK11
-    #   Group : 17
+    #   Group : 18
     #   Captures: Time in seconds to stop threads for safepoint
     time_to_stop_application = " Stopping threads took: ([\d\.]+) seconds$))"
     

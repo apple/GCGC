@@ -82,47 +82,39 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None, ignore_crashes =
         print("Unable to parse file " + str(logfile))
         return pd.DataFrame()
     # Some data collected is read in as a string, but needs to be interpreted as a float. Fix.
-    
+    table[2] = list(map(__number_to_float, table[2]))
     table[1] = list(map(__number_to_float, table[1]))
+    table[8] = list(map(__number_to_float, table[8]))
+    table[6] = choose_non_zero(table[6], table[9]) # Before GC collection mem_size
+    table[7] = choose_non_zero(table[7], table[10]) # After GC collection mem_size
+    table[6] = list(map(__number_to_float, table[6])) 
     table[7] = list(map(__number_to_float, table[7]))
-    table[5] = choose_non_zero(table[5], table[8]) # Before GC collection mem_size
-    table[6] = choose_non_zero(table[6], table[9]) # After GC collection mem_size
-    table[5] = list(map(__number_to_float, table[5])) 
-    table[6] = list(map(__number_to_float, table[6]))
     
     
 
     # Schema 1 (JDK 16)
     temp = []
-    for eventtype, safepoint1, safepoint2 in zip(table[2], table[10], table[16]):
+    for eventtype, safepoint1, safepoint2 in zip(table[3], table[11], table[17]):
         if safepoint1 or safepoint2:
             temp.append("Safepoint")
         else:
             temp.append(eventtype)
-    table[2] = temp
+    table[3] = temp
     # table [10]  safepoint_name
-    table[11] = list(map(__number_to_float, table[11])) # time_since_last_safepoint
-    table[12] = list(map(__number_to_float, table[12])) # reaching_safepoint_time
-    table[13] = list(map(__number_to_float, table[13])) # at_safepoint_time
-    table[14] = list(map(__number_to_float, table[14])) # total_time_safepoint
-    table[15] = list(map(__number_to_float, table[15])) # total_application_thread_stopped_time_seconds
-    table[16] = list(map(__number_to_float, table[16])) # total_time_to_stop_seconds
+    table[11] = list(map(__number_to_float, table[12])) # time_since_last_safepoint
+    table[12] = list(map(__number_to_float, table[13])) # reaching_safepoint_time
+    table[13] = list(map(__number_to_float, table[14])) # at_safepoint_time
+    table[14] = list(map(__number_to_float, table[15])) # total_time_safepoint
+    table[15] = list(map(__number_to_float, table[16])) # total_application_thread_stopped_time_seconds
+    table[16] = list(map(__number_to_float, table[17])) # total_time_to_stop_seconds
 
-
-
-# Scema 2 for safepoints:: Appears in JDK11
-    # (?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$) 
- # 16 Total time application threads stopped in seconds
- # 17 Total time to stop in seconds
-
-    table.pop(9) # Used due to 2 types of memory change regex groups & before/after for each
-    table.pop(8) # Therefore, we gather before & after into 2 distinct columns, and remove other set
+    table.pop(10) # Used due to 2 types of memory change regex groups & before/after for each
+    table.pop(9) # Therefore, we gather before & after into 2 distinct columns, and remove other set
 
     parsed_data_table = pd.DataFrame(table).transpose() 
     # The data collected is in a 2d array, where table indicies represent a column. However,
     # a pandas dataframe expects each entry of the 2d array to be a row, not a column. Transpose
     # to fix this orientation error.
-
     parsed_data_table.columns = columnNames()  # add column titles, allow for clear references
     if time_range_seconds:
         min_time, max_time = __get_time_range(time_range_seconds)
@@ -178,11 +170,7 @@ def fix_timing_errors(gc_event_dataframe):
         gc_event_dataframe["TimeFromStart_seconds"][index] = time + add_maximum_time
         maximum_time = time + add_maximum_time
     
-    
     return gc_event_dataframe
-        
-    
-
 
 
 
@@ -246,6 +234,7 @@ def columnNames():
     return [
         "DateTime",
         "TimeFromStart_seconds",
+        "GCIndex",
         "EventType",
         "EventName",
         "AdditionalEventInfo",
@@ -260,3 +249,16 @@ def columnNames():
         "TotalApplicationThreadPauseTime_seconds",
         "TimeToStopApplication_seconds"
     ]
+
+
+
+def choose_non_zero(list1, list2):
+    list_non_zero = []
+    for item1, item2 in zip(list1, list2):
+        if item1:
+            list_non_zero.append(item1)
+        elif list2:
+            list_non_zero.append(item2)
+        else:
+            list_non_zero.append(None)
+    return list_non_zero
