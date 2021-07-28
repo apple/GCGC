@@ -641,7 +641,7 @@ def plot_heatmaps(
     column_timing = None, 
     frequency_ticks = None
     ):
-    from graphing.heatmap import get_heatmap_data, plot_heatmap
+    from src.graphing.heatmap import get_heatmap_data, plot_heatmap
     timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing,
     )
