@@ -1,8 +1,0 @@
-from src.graphing.i_mess_around_with_log_graphs import plot_heatmap, get_heatmap_data_2
-for label, gc_event_dataframe in zip(labels, gc_event_dataframes):
-    gc_event_df = gc_event_dataframe[gc_event_dataframe.apply(lambda row: row["EventType"] == "Pause", axis=1)]
-    heatmap, dimensions = get_heatmap_data_2(gc_event_df, 16,4,32,0.05, True)     # Set the last value to FALSE to get warnings                                                                              # Set true to false 
-#plot_heatmap(heatmap, dimensions, True)                                  #x,y,x,y
-    graph = plot_heatmap(heatmap, dimensions, True) # Set the last value to TRUE to see labels of frequency
-    graph.set_title("Latency during runtime: " +  label)
-plt.rcParams["figure.figsize"] = [12, 7]
