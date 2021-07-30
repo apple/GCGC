@@ -607,11 +607,9 @@ def plot_sum_pause_intervals(
         return plot
 
     number_of_buckets, min_time_duration, max_time_duration = get_buckets_and_range(timestamp_groups, interval_duration)    
-    print(number_of_buckets)
     # Determine the spacing along the X axis for the data
     x_alignment = [idx * interval_duration + min_time_duration for idx in range(number_of_buckets)]
-    print(min_time_duration)
-    print(max_time_duration)
+
     # Loop through all lists, and plot the line graphs 
     for index, (timestamps, dataset) in enumerate(zip(timestamp_groups, datapoint_groups)):
         # First, group into buckets based on time interverals.
