@@ -418,3 +418,142 @@ def get_time_in_seconds(gc_event_dataframe):
                     timestamps_seconds.append(float(time))
         return timestamps_seconds
 
+
+def get_heatmap_data_logarithmic(timestamp_groups, datapoint_groups, labels, dimensions):
+    
+    x_bucket_count    = dimensions[0]  # Number of time intervals to group gc events into. INT ONLY
+    y_bucket_count    = dimensions[1]  # Number of latency time intervals to group events into. INT ONLY
+    x_bucket_duration = dimensions[2]  # Duration in seconds that each time interval bucket has for gc event timestamps
+    base              = dimensions[3]  # Duration in miliseconds for the length of each latency interval bucket
+    
+    heatmap_list = []
+    for times_seconds, pauses_ms in zip(timestamp_groups, datapoint_groups):
+        # create buckets to store the time information.
+        # first, compress into num_b buckets along the time X-axis.
+        x_b = [[] for i in range(x_bucket_count)]
+
+        out_of_range_time = 0
+        # populate buckets along the x axis.
+        for pause, time in zip(pauses_ms, times_seconds):
+            bucket_no = int(time / x_bucket_duration)
+            if bucket_no == x_bucket_count:
+                bucket_no = x_bucket_count - 1
+                x_b[bucket_no].append(pause)
+            
+            elif bucket_no < x_bucket_count:
+                x_b[bucket_no].append(pause)
+            else:
+                out_of_range_time += 1
+
+        # create heatmap, which will be a 2d-array
+        heatmap = []
+        max_number = max(pauses_ms)
+        y_range_buckets = get_bucket_upper_ranges(base, y_bucket_count, max_number)
+        out_of_range_latency = 0
+        # go through each time interval, and sort the pauses there into frequency lists
+        for bucket in x_b:
+            yb = [0 for i in range(y_bucket_count)]  # construct a 0 frequency list
+            for pause in bucket:
+                # determine which ms pause bucket
+                y_bucket_no = get_y_bucket_number(pause, base)
+                y_bucket_no = binary_search(y_range_buckets, pause)
+                if y_bucket_no == -1:
+                    out_of_range_latency += 1
+                else:
+                    yb[y_bucket_no] += 1
+         # Add the data to the 2d array
+            heatmap.append(yb)
+        heatmap = np.rot90(heatmap)  # fix orientation
+        
+        if out_of_range_time:
+            print(" Warning: "  + str(out_of_range_time) + " values lies outside of the provided time range. Max value outside range: " + str (max(times_seconds)))
+        if out_of_range_latency:
+            print(" Warning: " + str(out_of_range_latency) + " values lies outside the provided range for latency. Max value outside range: " + str(max_number))
+        
+        heatmap_list.append(np.array(heatmap))
+    dimensions.append(y_range_buckets)
+    return heatmap_list, dimensions
+
+
+def plot_heatmap_logarithmic(heatmap, dimensions, labels=True):
+
+    width = dimensions[0]  # x_bucket_count
+    height = dimensions[1]  # y_bucket_count
+    max_pause_ms = height * dimensions[3]
+    max_time_ms = width * dimensions[2]
+    min_pause_ms = 0
+    multipler = max_time_ms / width  # multipler is the size of a bucket for time direction
+
+    # x labels are the time labels
+    time_labels = [num * multipler for num in range(1, width + 1)]  # TODO : UPDATE TO BE FASTER
+
+    time_labels_temp = []
+    for i in range(len(time_labels)):
+        if not i % 2:
+            time_labels_temp.append(str(round(time_labels[i], 2)) + " s")
+        else:
+            time_labels_temp.append("")
+
+    # time_labels = [str(round(label, 2)) + " s" for label in time_labels]
+    time_labels = time_labels_temp
+
+    # size of the buckets for ms pause
+    multipler = (max_pause_ms - min_pause_ms) / height
+    # y labels are ms pause time labels
+    base = dimensions[3]
+    latency_labels = [str(round(math.pow(base, idx), 4)) for idx in range(height)]
+    latency_labels.reverse()
+    
+    latency_labels = list(dimensions[4])
+    
+    latency_labels.reverse()
+    latency_labels = [str(round(label, 4)) for label in latency_labels]
+    # latency_labels = [round((num * multipler) + min_pause_ms, 2) for num in reversed(range(1, height + 1))]
+    # latency_labels = [str(label) + " ms" for label in latency_labels]
+    ## Create a figure, and add data to heatmap. Plot then show heatmap.
+    fig, ax = plt.subplots()
+    ax.set_title("Latency during runtime.")
+    im = heatmap_make(heatmap, latency_labels, time_labels, ax=ax, cmap="cubehelix_r", cbarlabel="Frequency")
+    if labels:
+        __annotate_heatmap(im, valfmt="{x}")
+    fig.tight_layout()
+    return ax
+
+import math
+def get_bucket_upper_ranges(base, num_buckets, max_number):
+    y_ranges = [max_number]
+    for idx in range(num_buckets - 1):
+        y_ranges.append(y_ranges[-1] / base )
+    y_ranges.reverse()
+    return y_ranges
+
+def get_y_bucket_number(time, base):
+    if time < base:
+        return 0
+    return int(math.log(time, base))
+
+def binary_search(arr, x):
+    # https://www.geeksforgeeks.org/python-program-for-binary-search/
+    low = 0
+    high = len(arr) - 1
+    mid = 0
+ 
+    while low <= high:
+        mid = (high + low) // 2
+        # If we at the highest index, check if we have found the value in range
+        if mid + 1 == len(arr):
+            if arr[mid] >= x:
+                return mid
+            else:
+                return -1
+        # If our current value lies between 2 points, then we have found the correct range.
+        if arr[mid] <= x and arr[mid + 1] > x:
+            return mid
+        # If x is greater, ignore left half
+        elif arr[mid] < x:
+            low = mid + 1
+        # If x is smaller, ignore right half
+        elif arr[mid] > x:
+            high = mid - 1
+    # If we reach here, then the element was not present
+    return -1
