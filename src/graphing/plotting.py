@@ -515,7 +515,6 @@ def plot_percentile_intervals(
     if different_colors:
         from filter_and_group import get_colors_and_alphas
         colors, _ = get_colors_and_alphas(len(colors) * len(percentiles))
-        print(colors)
     # # if no plot is passed in, create a new plot
     if not plot:
         f, plot = plt.subplots()
@@ -763,3 +762,26 @@ def plot_using_intervals(
     # Set the labels for the buckets, starting with a non-zero bucket    
     plot.legend()
     return plot
+
+########
+def plot_heatmaps_logarithmic(
+    gc_event_dataframes,
+    dimensions,
+    group_by=None,
+    filter_by=None,
+    labels=None,
+    colors=None,
+    column="Duration_miliseconds",
+    column_timing = None, 
+    frequency_ticks = None,
+    ):
+    from src.graphing.heatmap import plot_heatmap
+    from src.graphing.logarithamic_heatmap_testing import get_heatmap_data_2, plot_heatmap_2
+    timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
+        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing,
+    )
+    heatmap_list, dimensions = get_heatmap_data_2(timestamp_groups, datapoint_groups, labels, dimensions)
+    for heatmap, label in zip(heatmap_list, labels):
+        if heatmap.size != 0 and dimensions:
+            graph = plot_heatmap_2(heatmap, dimensions, frequency_ticks) # Set the last value to TRUE to see labels of frequency
+            graph.set_title("Latency during runtime: " +  label)
