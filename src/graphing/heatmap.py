@@ -52,7 +52,9 @@ def plot_heatmap(heatmap, dimensions, labels=True):
     ## Create a figure, and add data to heatmap. Plot then show heatmap.
     fig, ax = plt.subplots()
     ax.set_title("Latency during runtime.")
-    im = heatmap_make(heatmap, latency_labels, time_labels, ax=ax, cmap="YlOrRd", cbarlabel="Frequency")
+    # cmap is the color scheme. To change the heatmap color scheme, use a color scheme from here:
+    # https://matplotlib.org/stable/tutorials/colors/colormaps.html
+    im = heatmap_make(heatmap, latency_labels, time_labels, ax=ax, cmap="plasma_r", cbarlabel="Frequency")
     if labels:
         __annotate_heatmap(im, valfmt="{x}")
     fig.tight_layout()
