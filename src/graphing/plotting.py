@@ -37,6 +37,10 @@ def plot_scatter(
     if not plot:
         f, plot = plt.subplots()
     # Create a scatter plot with all data
+    if len(datapoint_groups) > len(labels):
+        print("Not enough labels to plot")
+    if len(datapoint_groups) > len(colors):
+        print("Not enough colors to plot")
     for time, datapoints, color, label in zip(timestamp_groups, datapoint_groups, colors, labels):
         plot.plot(time, datapoints, marker='o', linestyle='',markersize=3, label=label, color=color)
     plot.legend()
@@ -66,7 +70,10 @@ def plot_line(
     # if no plot is passed in, create a new plot
     if not plot:
         f, plot = plt.subplots()
-
+    if len(datapoint_groups) > len(labels):
+        print("Not enough labels to plot")
+    if len(datapoint_groups) > len(colors):
+        print("Not enough colors to plot")
     for time, datapoints, color, label in zip(timestamp_groups, datapoint_groups, colors, labels):
         plot.plot(time, datapoints, label=label, color=color)
     plot.legend()
@@ -133,7 +140,10 @@ def plot_bar_sum(
     # if no plot is passed in, create a new plot
     if not plot:
         f, plots = plt.subplots()
-
+    if len(datapoint_groups) > len(labels):
+        print("Not enough labels to plot")
+    if len(datapoint_groups) > len(colors):
+        print("Not enough colors to plot")
     # Add the values to the plot. Labels will have the value of the sum appended to the end
     for idx, (datapoints, color, label, alpha) in enumerate(zip(datapoint_groups, colors, labels, alphas)):
         barheight = sum(datapoints)
@@ -168,7 +178,10 @@ def plot_bar_avg(
     # if no plot is passed in, create a new plot
     if not plot:
         f, plots = plt.subplots()
-
+    if len(datapoint_groups) > len(labels):
+        print("Not enough labels to plot")
+    if len(datapoint_groups) > len(colors):
+        print("Not enough colors to plot")
     for idx, (datapoints, color, label) in enumerate(zip(datapoint_groups, colors, labels)):
         barheight = sum(datapoints) / len(datapoints)
         plots.bar(idx, barheight, label=label + " : " + str(round(barheight, 4)), color=color)
@@ -268,6 +281,8 @@ def plot_percentiles(
 
     temporary_labels = []
     char_start = ord('A')
+    if len(timestamp_groups) > len(labels):
+        print("Not enough labels to plot")
     print("Legend (All timing in miliseconds) : ")
     for index, label in enumerate(labels):
         print(chr(char_start + index) + " | " + label)
@@ -312,6 +327,10 @@ def plot_reclaimed_bytes(
         reclaimed_bytes_groups.append([before - after for before, after in zip(before_gc, after_gc)])
 
     # Use the reclaimed_bytes_groups to plot the data
+    if len(timestamp_groups) > len(labels):
+        print("Not enough labels to plot")
+    if len(timestamp_groups) > len(colors):
+        print("Not enough colors to plot")
     for time, datapoints, color, label in zip(timestamp_groups, reclaimed_bytes_groups, colors, labels):
         plot.scatter(time, datapoints, label=label, color=color)
     plot.legend()
@@ -345,20 +364,20 @@ def plot_frequency_intervals(
     _, datapoint_groups, labels, colors, _ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing
     )
-    
+    if len(datapoint_groups) > len(colors):
+        print("Not enough colors to plot")
     # if no plot is passed in, create a new plot
     if not plot:
         f, plot = plt.subplots()
 
-    number_of_buckets, min_time_duration, _ = get_buckets_and_range(datapoint_groups,
+    number_of_buckets, min_time_duration, max_time_duration = get_buckets_and_range(datapoint_groups,
                                                                                       interval_duration)
     # Create the time intervals 
     time_intervals = [[0 for m in range(len(datapoint_groups))] for idx in range(number_of_buckets)]
-
     # put the data into buckets, creating a frequency plot for each bucket
     for idx, dataset in enumerate(datapoint_groups):
         for value in dataset:
-            bucket_number = int(value / interval_duration)
+            bucket_number = int((value - min_time_duration) / interval_duration)
             time_intervals[bucket_number][idx] += 1
     
     # time_intervals is a 2d array, with index representing a bucket.
@@ -475,7 +494,8 @@ def plot_percentile_intervals(
     column="Duration_miliseconds",
     interval_duration = 0,
     percentiles = [99.99, 90, 50],
-    column_timing = None
+    column_timing = None,
+    line_graph = False
     ):
     if not interval_duration:
         print("No interval length provided. Abort.")
@@ -498,7 +518,10 @@ def plot_percentile_intervals(
     print("Number of buckets", number_of_buckets)
     # Determine the spacing along the X axis for the data
     x_alignment = [idx * interval_duration + min_time_duration for idx in range(number_of_buckets)]
-
+    if len(timestamp_groups) > len(labels):
+        print("Not enough labels to plot")
+    if len(datapoint_groups) > len(colors):
+        print("Not enough colors to plot")
     # For each group, determine the percentile, and plot an independent line for that percentile
     for group, (timestamps, dataset) in enumerate(zip(timestamp_groups, datapoint_groups)):
         
@@ -510,12 +533,20 @@ def plot_percentile_intervals(
         single_line = [buckets_of_percentiles[i][0] for i in range(len(buckets_of_percentiles))] 
         
         # Plot the first line based on the first percentile, with a label
-        plot.scatter(x_alignment, single_line, label = labels[group], color = colors[group]) # changed 
+        if line_graph:
+            plot.plot(x_alignment, single_line, label = labels[group], color = colors[group]) # changed 
+        else:
+
+            plot.scatter(x_alignment, single_line, label = labels[group], color = colors[group]) # changed 
         
         # Plot the rest of the percentiles, with decreasing alpha (opacity) values per line
         for idx in range(1, len(percentiles)):
+            
             single_line = [buckets_of_percentiles[i][idx] for i in range(len(buckets_of_percentiles))]
-            plot.scatter(x_alignment, single_line, color = colors [group], alpha = 1 - 0.15 * idx ) # changed
+            if line_graph:
+                plot.plot(x_alignment, single_line, color = colors [group], alpha = 1 - 0.15 * idx ) # changed
+            else:
+                plot.scatter(x_alignment, single_line, color = colors [group], alpha = 1 - 0.15 * idx ) # changed
     
     # Add styling to the plot. Add legend, and x axis correct titles
     plot.legend()
@@ -553,7 +584,10 @@ def plot_frequency_of_gc_intervals(
     
     # Determine the spacing along the X axis for the data
     x_alignment = [idx * interval_duration + min_time_duration for idx in range(number_of_buckets)]
-    
+    if len(timestamp_groups) > len(labels):
+        print("Not enough labels to plot")
+    if len(datapoint_groups) > len(colors):
+        print("Not enough colors to plot")
     # Create a list of frequencies, one for each group, and plot that line
     for index, (timestamps, dataset) in enumerate(zip(timestamp_groups, datapoint_groups)):
         # First, group into buckets based on time interverals.
@@ -585,7 +619,8 @@ def plot_sum_pause_intervals(
     plot=None,
     column="Duration_miliseconds",
     interval_duration = 0, # miliseconds
-    column_timing = None
+    column_timing = None,
+    remove_empty_intervals = False
     ):
     if not interval_duration:
         print("No interval length provided. Abort.")
@@ -610,6 +645,11 @@ def plot_sum_pause_intervals(
     # Determine the spacing along the X axis for the data
     x_alignment = [idx * interval_duration + min_time_duration for idx in range(number_of_buckets)]
 
+    
+    if len(timestamp_groups) > len(labels):
+        print("Not enough labels to plot")
+    if len(datapoint_groups) > len(colors):
+        print("Not enough colors to plot")
     # Loop through all lists, and plot the line graphs 
     for index, (timestamps, dataset) in enumerate(zip(timestamp_groups, datapoint_groups)):
         # First, group into buckets based on time interverals.
@@ -621,6 +661,17 @@ def plot_sum_pause_intervals(
                                     number_of_buckets, 
                                     interval_duration)
         # Calculate the sum in each bucket, to then plot
+        if remove_empty_intervals:
+            x_alignment = [idx * interval_duration + min_time_duration for idx in range(number_of_buckets)]
+            non_zero_buckets = []
+            related_timestamps = []
+            for idx, bucket in enumerate(buckets):
+                if sum(bucket) != 0:
+                    non_zero_buckets.append(bucket)
+                    related_timestamps.append(x_alignment[idx])
+            buckets = non_zero_buckets
+            x_alignment = related_timestamps
+            
         sums = [sum(bucket) for bucket in buckets]
         plot.scatter(x_alignment, sums, label = labels[index], color = colors[index])
 
@@ -669,4 +720,3 @@ def get_buckets_and_range(datapoint_groups, interval_duration):
     number_of_buckets = int((max_time_duration - min_time_duration) / interval_duration) + 1
 
     return number_of_buckets, min_time_duration, max_time_duration
-
