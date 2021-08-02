@@ -495,7 +495,8 @@ def plot_percentile_intervals(
     interval_duration = 0,
     percentiles = [99.99, 90, 50],
     column_timing = None,
-    line_graph = False
+    line_graph = False, 
+    different_colors = None
     ):
     if not interval_duration:
         print("No interval length provided. Abort.")
@@ -509,6 +510,12 @@ def plot_percentile_intervals(
                                                                              column, 
                                                                              colors,
                                                                              column_timing)
+    if not line_graph and different_colors == None:
+        different_colors = True
+    if different_colors:
+        from filter_and_group import get_colors_and_alphas
+        colors, _ = get_colors_and_alphas(len(colors) * len(percentiles))
+        print(colors)
     # # if no plot is passed in, create a new plot
     if not plot:
         f, plot = plt.subplots()
@@ -541,12 +548,18 @@ def plot_percentile_intervals(
         
         # Plot the rest of the percentiles, with decreasing alpha (opacity) values per line
         for idx in range(1, len(percentiles)):
-            
-            single_line = [buckets_of_percentiles[i][idx] for i in range(len(buckets_of_percentiles))]
-            if line_graph:
-                plot.plot(x_alignment, single_line, color = colors [group], alpha = 1 - 0.15 * idx ) # changed
+            if different_colors:
+                single_line = [buckets_of_percentiles[i][idx] for i in range(len(buckets_of_percentiles))]
+                if line_graph:
+                    plot.plot(x_alignment, single_line, color = colors [group + idx], alpha = 1 - 0.15 * idx )
+                else:
+                    plot.scatter(x_alignment, single_line, color = colors [group + idx ], alpha = 1 - 0.15 * idx ) 
             else:
-                plot.scatter(x_alignment, single_line, color = colors [group], alpha = 1 - 0.15 * idx ) # changed
+                single_line = [buckets_of_percentiles[i][idx] for i in range(len(buckets_of_percentiles))]
+                if line_graph:
+                    plot.plot(x_alignment, single_line, color = colors [group], alpha = 1 - 0.15 * idx )
+                else:
+                    plot.scatter(x_alignment, single_line, color = colors [group], alpha = 1 - 0.15 * idx ) 
     
     # Add styling to the plot. Add legend, and x axis correct titles
     plot.legend()
