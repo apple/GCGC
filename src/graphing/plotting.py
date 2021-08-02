@@ -620,7 +620,8 @@ def plot_sum_pause_intervals(
     column="Duration_miliseconds",
     interval_duration = 0, # miliseconds
     column_timing = None,
-    remove_empty_intervals = False
+    remove_empty_intervals = False,
+    plot_line = False
     ):
     if not interval_duration:
         print("No interval length provided. Abort.")
@@ -673,7 +674,10 @@ def plot_sum_pause_intervals(
             x_alignment = related_timestamps
             
         sums = [sum(bucket) for bucket in buckets]
-        plot.scatter(x_alignment, sums, label = labels[index], color = colors[index])
+        if plot_line:
+            plot.plot(x_alignment, sums, label = labels[index], color = colors[index])    
+        else:
+            plot.scatter(x_alignment, sums, label = labels[index], color = colors[index])
 
     # Set the labels for the buckets, starting with a non-zero bucket    
     plot.legend()
@@ -720,3 +724,87 @@ def get_buckets_and_range(datapoint_groups, interval_duration):
     number_of_buckets = int((max_time_duration - min_time_duration) / interval_duration) + 1
 
     return number_of_buckets, min_time_duration, max_time_duration
+
+
+
+
+#       plot_sum_pause_intervals
+#
+#   Given a list of gc_event_dataframes, and groupings and filters,
+#   plot the sum of all pauses in a provided interval in miliseconds,
+#   for each resulting group.
+#
+#
+def plot_using_intervals(
+    gc_event_dataframes,
+    group_by=None,
+    filter_by=None,
+    labels=None,
+    colors=None,
+    plot=None,
+    column="Duration_miliseconds",
+    interval_duration = 0, # miliseconds
+    column_timing = None,
+    remove_empty_intervals = False,
+    plot_line = False,
+    grouping_function = sum,
+    ):
+    if not interval_duration:
+        print("No interval length provided. Abort.")
+        return
+
+    # Filter and group data
+    timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
+        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing
+    )
+    
+    # if no plot is passed in, create a new plot
+    if not plot:
+        f, plot = plt.subplots()
+    
+    # Determine the longest pause to calculate the number of intervals
+    if not (timestamp_groups):
+        return plot
+    if not list(timestamp_groups[0]):
+        return plot
+
+    number_of_buckets, min_time_duration, max_time_duration = get_buckets_and_range(timestamp_groups, interval_duration)    
+    # Determine the spacing along the X axis for the data
+    x_alignment = [idx * interval_duration + min_time_duration for idx in range(number_of_buckets)]
+
+    
+    if len(timestamp_groups) > len(labels):
+        print("Not enough labels to plot")
+    if len(datapoint_groups) > len(colors):
+        print("Not enough colors to plot")
+    # Loop through all lists, and plot the line graphs 
+    for index, (timestamps, dataset) in enumerate(zip(timestamp_groups, datapoint_groups)):
+        # First, group into buckets based on time interverals.
+        # print(dataset)
+
+        # NOTE: here, we are subtracting the minimum time from everything to easily group them
+        buckets = group_into_buckets([time - min_time_duration for time in timestamps], 
+                                    dataset,
+                                    number_of_buckets, 
+                                    interval_duration)
+        # Calculate the sum in each bucket, to then plot
+        if remove_empty_intervals:
+            x_alignment = [idx * interval_duration + min_time_duration for idx in range(number_of_buckets)]
+            non_zero_buckets = []
+            related_timestamps = []
+            for idx, bucket in enumerate(buckets):
+                if sum(bucket) != 0:
+                    non_zero_buckets.append(bucket)
+                    related_timestamps.append(x_alignment[idx])
+            buckets = non_zero_buckets
+            x_alignment = related_timestamps
+            
+        sums = [grouping_function(bucket) for bucket in buckets]
+        if plot_line:
+            plot.plot(x_alignment, sums, label = labels[index], color = colors[index])    
+        else:
+            plot.scatter(x_alignment, sums, label = labels[index], color = colors[index])
+
+    # Set the labels for the buckets, starting with a non-zero bucket    
+    plot.legend()
+    return plot
