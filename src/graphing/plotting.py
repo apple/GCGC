@@ -795,6 +795,7 @@ def plot_percentages(
     column="Duration_miliseconds",
     column_timing = None,
     max_percentage_values = None,
+    line_graph = False
 ):  
     # Filter and group data. Update colors and labels to reflect to-be-plotted data
     timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
@@ -812,7 +813,10 @@ def plot_percentages(
         print("Not enough max values for associated percentages to plot")
     for time, datapoints, maxv, color, label in zip(timestamp_groups, datapoint_groups, max_percentage_values, colors, labels):
         datapoints = get_percentages(datapoints, maxv)
-        plot.plot(time, datapoints, marker='o', linestyle='',markersize=3, label=label, color=color)
+        if line_graph:
+            plot.plot(time, datapoints, label=label, color=color)
+        else:
+            plot.scatter(time, datapoints,  label=label, color=color)
     plot.legend()
     # return a plot object to be displayed or modified
     return plot
