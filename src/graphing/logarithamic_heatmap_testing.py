@@ -305,7 +305,7 @@ def get_heatmap_data_2(timestamp_groups, datapoint_groups, labels, dimensions):
         # first, compress into num_b buckets along the time X-axis.
         x_b = [[] for i in range(x_bucket_count)]
 
-        out_of_range_time = False
+        out_of_range_time = 0
         # populate buckets along the x axis.
         for pause, time in zip(pauses_ms, times_seconds):
             bucket_no = int(time / x_bucket_duration)
@@ -316,13 +316,13 @@ def get_heatmap_data_2(timestamp_groups, datapoint_groups, labels, dimensions):
             elif bucket_no < x_bucket_count:
                 x_b[bucket_no].append(pause)
             else:
-                out_of_range_time = True
+                out_of_range_time += 1
 
         # create heatmap, which will be a 2d-array
         heatmap = []
         max_number = max(pauses_ms)
         y_range_buckets = get_bucket_upper_ranges(base, y_bucket_count, max_number)
-        out_of_range_latency = False
+        out_of_range_latency = 0
         # go through each time interval, and sort the pauses there into frequency lists
         for bucket in x_b:
             yb = [0 for i in range(y_bucket_count)]  # construct a 0 frequency list
@@ -331,7 +331,7 @@ def get_heatmap_data_2(timestamp_groups, datapoint_groups, labels, dimensions):
                 y_bucket_no = get_y_bucket_number(pause, base)
                 y_bucket_no = binary_search(y_range_buckets, pause)
                 if y_bucket_no == -1:
-                    out_of_range_latency = True
+                    out_of_range_latency += 1
                 else:
                     yb[y_bucket_no] += 1
          # Add the data to the 2d array
@@ -339,9 +339,9 @@ def get_heatmap_data_2(timestamp_groups, datapoint_groups, labels, dimensions):
         heatmap = np.rot90(heatmap)  # fix orientation
         
         if out_of_range_time:
-            print("Warning: At least one value lies outside of the provided time range.")
+            print(" Warning: "  + str(out_of_range_time) + " values lies outside of the provided time range. Max value outside range: " + str (max(times_seconds)))
         if out_of_range_latency:
-            print("Warning: At least one value lies outside the provided range for latency")
+            print(" Warning: " + str(out_of_range_latency) + " values lies outside the provided range for latency. Max value outside range: " + str(max_value))
         
         heatmap_list.append(np.array(heatmap))
     dimensions.append(y_range_buckets)
