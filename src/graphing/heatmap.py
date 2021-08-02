@@ -54,7 +54,7 @@ def plot_heatmap(heatmap, dimensions, labels=True):
     ax.set_title("Latency during runtime.")
     # cmap is the color scheme. To change the heatmap color scheme, use a color scheme from here:
     # https://matplotlib.org/stable/tutorials/colors/colormaps.html
-    im = heatmap_make(heatmap, latency_labels, time_labels, ax=ax, cmap="plasma_r", cbarlabel="Frequency")
+    im = heatmap_make(heatmap, latency_labels, time_labels, ax=ax, cmap="cubehelix_r", cbarlabel="Frequency")
     if labels:
         __annotate_heatmap(im, valfmt="{x}")
     fig.tight_layout()
