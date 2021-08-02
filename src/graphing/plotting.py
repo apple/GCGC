@@ -8,7 +8,6 @@
 import matplotlib.pyplot as plt
 from filter_and_group import filter_and_group
 from os import times
-from src.filter_and_group import filter_and_group
 from matplotlib import pyplot as plt
 import numpy as np # Used in percentile calculation
 
