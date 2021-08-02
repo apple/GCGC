@@ -47,7 +47,7 @@ def event_parsing_string():
     #   Field : Optional
     #   Group : 1 
     #   Captures : Full date time expression, including formatting digits
-    date_time = "(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}\+\d{4})\])?"  # [2021-07-01T23:23:22.001+0000]    *
+    date_time = "(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\])?"  # [2021-07-01T23:23:22.001+0000]    *
 
     #   TimeFromStart_seconds : 
     #   Field : Required
