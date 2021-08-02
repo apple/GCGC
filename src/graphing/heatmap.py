@@ -315,7 +315,7 @@ def get_heatmap_data(timestamp_groups, datapoint_groups, labels, dimensions):
         # first, compress into num_b buckets along the time X-axis.
         x_b = [[] for i in range(x_bucket_count)]
 
-        out_of_range_time = False
+        out_of_range_time = 0
         # populate buckets along the x axis.
         for pause, time in zip(pauses_ms, times_seconds):
             bucket_no = int(time / x_bucket_duration)
@@ -328,11 +328,11 @@ def get_heatmap_data(timestamp_groups, datapoint_groups, labels, dimensions):
             elif bucket_no < x_bucket_count:
                 x_b[bucket_no].append(pause)
             else:
-                out_of_range_time = True
+                out_of_range_time += 1
 
         # create heatmap, which will be a 2d-array
         heatmap = []
-        out_of_range_latency = False
+        out_of_range_latency = 0
         max_value = 0
         
         for pause in pauses_ms:
@@ -356,7 +356,7 @@ def get_heatmap_data(timestamp_groups, datapoint_groups, labels, dimensions):
                         y_bucket_no = y_bucket_count - 1
                         yb[y_bucket_no] += 1
                     else:
-                        out_of_range_latency = True
+                        out_of_range_latency += 1
 
 
 
@@ -365,9 +365,9 @@ def get_heatmap_data(timestamp_groups, datapoint_groups, labels, dimensions):
         heatmap = np.rot90(heatmap)  # fix orientation
         
         if out_of_range_time:
-            print(label + " Warning: At least one value lies outside of the provided time range. Max value outside range: " + str (max(times_seconds)))
+            print(label + " Warning: "  + str(out_of_range_time) + " values lies outside of the provided time range. Max value outside range: " + str (max(times_seconds)))
         if out_of_range_latency:
-            print(label + " Warning: At least one value lies outside the provided range for latency. Max value outside range: " + str(max_value))
+            print(label + " Warning: " + str(out_of_range_latency) + " values lies outside the provided range for latency. Max value outside range: " + str(max_value))
         
         heatmap_list.append(heatmap)
         if not heatmap_list:
