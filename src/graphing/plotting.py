@@ -775,13 +775,14 @@ def plot_heatmaps_logarithmic(
     column_timing = None, 
     frequency_ticks = None,
     ):
-    from src.graphing.heatmap import plot_heatmap
-    from src.graphing.logarithamic_heatmap_testing import get_heatmap_data_2, plot_heatmap_2
+    from src.graphing.heatmap import plot_heatmap_logarithmic, get_heatmap_data_logarithmic
     timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing,
     )
-    heatmap_list, dimensions = get_heatmap_data_2(timestamp_groups, datapoint_groups, labels, dimensions)
+    heatmap_list, dimensions = get_heatmap_data_logarithmic(timestamp_groups, datapoint_groups, labels, dimensions)
     for heatmap, label in zip(heatmap_list, labels):
         if heatmap.size != 0 and dimensions:
-            graph = plot_heatmap_2(heatmap, dimensions, frequency_ticks) # Set the last value to TRUE to see labels of frequency
+            graph = plot_heatmap_logarithmic(heatmap, dimensions, frequency_ticks) # Set the last value to TRUE to see labels of frequency
             graph.set_title("Latency during runtime: " +  label)
+
+            
