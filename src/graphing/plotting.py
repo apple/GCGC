@@ -8,7 +8,6 @@
 import matplotlib.pyplot as plt
 from filter_and_group import filter_and_group
 from os import times
-from src.filter_and_group import filter_and_group
 from matplotlib import pyplot as plt
 import numpy as np # Used in percentile calculation
 
@@ -785,4 +784,41 @@ def plot_heatmaps_logarithmic(
             graph = plot_heatmap_logarithmic(heatmap, dimensions, frequency_ticks) # Set the last value to TRUE to see labels of frequency
             graph.set_title("Latency during runtime: " +  label)
 
-            
+def plot_percentages(
+    gc_event_dataframes,  # list of dataframes, containing gc event information. 
+    group_by=None,  # A string to explain what groups to make within 1 gc_event_dataframe
+    filter_by=None, # resitrctions on the data. list of tuples: (column, boolean-function) 
+    labels=None,    # list of str labels to describe each gc_event_dataframe.  
+    colors=None,    # colors to override 
+    plot=None,
+    column="Duration_miliseconds",
+    column_timing = None,
+    max_percentage_values = None,
+    line_graph = False
+):  
+    # Filter and group data. Update colors and labels to reflect to-be-plotted data
+    timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
+        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing
+    )
+    # if no plot is passed in, create a new plot
+    if not plot:
+        f, plot = plt.subplots()
+    # Create a scatter plot with all data
+    if len(datapoint_groups) > len(labels):
+        print("Not enough labels to plot")
+    if len(datapoint_groups) > len(colors):
+        print("Not enough colors to plot")
+    if len(max_percentage_values) < len(datapoint_groups):
+        print("Not enough max values for associated percentages to plot")
+    for time, datapoints, maxv, color, label in zip(timestamp_groups, datapoint_groups, max_percentage_values, colors, labels):
+        datapoints = get_percentages(datapoints, maxv)
+        if line_graph:
+            plot.plot(time, datapoints, label=label, color=color)
+        else:
+            plot.scatter(time, datapoints,  label=label, color=color)
+    plot.legend()
+    # return a plot object to be displayed or modified
+    return plot
+
+def get_percentages(datalist, max_value):
+    return [data / max_value * 100 for data in datalist]
