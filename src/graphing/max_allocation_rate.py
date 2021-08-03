@@ -8,6 +8,7 @@ def difference_in_entries(
     group_by=None,  # A string to explain what groups to make within 1 gc_event_dataframe
     filter_by=None, # resitrctions on the data. list of tuples: (column, boolean-function) 
     labels=None,    # list of str labels to describe each gc_event_dataframe.  
+    interval_seconds=None,
     colors=None,    # colors to override 
     plot=None,
     column_before="HeapBeforeGC",
@@ -31,20 +32,29 @@ def difference_in_entries(
     if len(after_list) > len(colors):
         print("Not enough colors to plot")
     for time, before_list, after_list, color, label in zip(timestamp_groups, before_list, after_list, colors, labels):
-        datapoints = get_difference(list(before_list), list(after_list))
         time = list(time)
+        start_times, datapoints = get_difference(list(before_list), list(after_list), time, interval_seconds)
         time.pop()
         if line_graph:
-            plot.plot(time, datapoints, label=label, color=color)
+            plot.plot(start_times, datapoints, label=label, color=color)
         else:
-            plot.scatter(time, datapoints,  label=label, color=color)
+            plot.scatter(start_times, datapoints,  label=label, color=color)
     plot.legend()
     # return a plot object to be displayed or modified
     return plot
 
-def get_difference(before_list, after_list):
+def get_difference(before_list, after_list, time, interval_seconds):
+    times = []
     difference_list = []
     # https://plumbr.io/handbook/gc-tuning-in-practice/high-allocation-rate
+    interval_start_time = time[0]
+    allocated_bytes = 0
     for index in range(len(before_list) - 1):
-        difference_list.append(before_list[index + 1] - after_list[index] )
-    return difference_list
+        allocated_bytes += before_list[index + 1] - after_list[index] 
+        elapsed_seconds = time[index + 1] - interval_start_time
+        if (interval_seconds is None or elapsed_seconds >= interval_seconds):
+            difference_list.append(allocated_bytes / elapsed_seconds)
+            times.append(time[index])
+            allocated_bytes = 0
+            interval_start_time = time[index + 1]
+    return times, difference_list
