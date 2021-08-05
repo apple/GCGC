@@ -6,6 +6,7 @@
 #   Ellis Brown, 6/29/2021
 
 import pandas as pd
+import numpy as np
 import re
 import glob
 
@@ -309,8 +310,10 @@ def get_parsed_data_from_file_updated(logfile,  time_range_seconds, ignore_crash
     # For each unique column name, select from the table the non-zero values for the associated
     # column(s), and return a list in that correct data type. Then, update the dictionary's value
     # to be that updated list. If no value, 'None' lives in the row
-    for column in table_groups:                                            # data_types             # columns indicies
-        table_groups[column] = __create_column(table, table_groups[column][1], table_groups[column][0])
+    for column in table_groups:  
+        table_groups[column] = __create_column(table, # data
+                                               table_groups[column][1],  # DATATYPES
+                                               table_groups[column][0])  # table indicies
 
     ### Special Case ###
     # Updates the eventtype column to properly put "Safepoint" at the eventtype, rather than None
@@ -318,8 +321,10 @@ def get_parsed_data_from_file_updated(logfile,  time_range_seconds, ignore_crash
                                 table_groups["EventType"], 
                                 table_groups["SafepointName"], 
                                 table_groups["TimeToStopApplication_seconds"])
+    df = pd.DataFrame(table_groups)
+    df.replace({np.nan: None}, inplace= True)
 
-    return pd.DataFrame(table_groups)
+    return df
 
 
 #   Given the table of information, the specified datatype, and all columns
@@ -330,7 +335,7 @@ def __create_column(table, data_types, table_columns):
     if len(table_columns) == 1:
         datavalues = []
         for idx in range(len(table[table_columns[0]])):
-            if table[table_columns[0]][idx]:
+            if table[table_columns[0]][idx] != None:
                 datavalues.append(data_types[0](table[table_columns[0]][idx]))
             else:
                 datavalues.append(None)
@@ -340,7 +345,7 @@ def __create_column(table, data_types, table_columns):
         for row in range(len(table[table_columns[0]])):
             found = False
             for i, colval in enumerate(table_columns):
-                if table[colval][row]:
+                if table[colval][row] != None:
                     new_column.append(data_types[i](table[colval][row]))
                     found = True
                     break
