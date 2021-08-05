@@ -14,24 +14,26 @@
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 '''
 The regex capture groups follow the following format:
-1 : DateTime
-2 : TimeFromStart_seconds
-3 : GGIndex
-4 : EventType
-5 : EventName
-6 : AdditionalEventInfo
-7 : HeapBeforeGC  * 
-8 : HeapAfterGC   *
-9 : Duration_miliseconds
-10 : HeapBeforeGC  * (collected from zgc logs)
-11: HeapAfterGC   * (collected from zgc logs)
-12: SafepointName
-13: TimeFromLastSafepoint_ns
-14: TimeToReachSafepoint_ns
-15: AtSafepoint_ns
-16: TotalTimeAtSafepoint_ns
-17: TotalApplicationThreadPauseTime_seconds
-18: TimeToStopApplication_seconds
+1 : DateTime                    | string
+2 : TimeFromStart_seconds       | float
+3 : GGIndex                     | float
+4 : EventType                   | string
+5 : EventName                   | string
+6 : AdditionalEventInfo         | string
+7 : HeapBeforeGC  *             | float
+8 : HeapAfterGC   *             | float
+9 : MaxHeapsize   *             | float
+10: Duration_miliseconds        | float
+11: HeapBeforeGC * (zgc)        | float
+12: HeapAfterGC  * (zgc)        | float
+13: MaxHeapsize  * (zgc)        | float
+14: SafepointName               | string
+15: TimeFromLastSafepoint_ns    | float
+16: TimeToReachSafepoint_ns     | float
+17: AtSafepoint_ns              | float
+18: TotalTimeAtSafepoint_ns     | float
+19: TotalApplicationThreadPauseTime_seconds | float
+20: TimeStopApplication_seconds | float
 '''
 def event_parsing_string():
 # Note: the documentation of this regex string is confusing. It is recommended you follow along
@@ -47,13 +49,13 @@ def event_parsing_string():
     #   Field : Optional
     #   Group : 1 
     #   Captures : Full date time expression, including formatting digits
-    date_time = "(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\])?"  # [2021-07-01T23:23:22.001+0000]    *
+    date_time = "(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\])?"  # [2021-07-01T23:23:22.001+0000]
 
     #   TimeFromStart_seconds : 
     #   Field : Required
     #   Group : 2
     #   Captures : Full time in seconds, only including floating numbers and decimal place. Does not include unit.
-    time_from_start_seconds = "\[(\d+\.\d+)s\]"  #[243.45s]
+    time_from_start_seconds = "\[(\d+\.\d+)s\]"  # [243.45s]
     
     #   Other info fields detailing log line info
     #   Field : Required
@@ -99,7 +101,13 @@ def event_parsing_string():
     #   Field : Optional
     #   Group : 8
     #   Captures :  The float value for the heapsize. No unit captured
-    heap_after_gc = "(\d+)\w(?:\(\d+\w\)?)?"
+    heap_after_gc = "(\d+)\w(?:\("
+
+    #   MaxHeapsize: The current maximum heap size after the GC run
+    #   Field : Optional  
+    #   Group: 9
+    #   Captures : The integer value for the heapsize
+    max_heap_size = "(\d+)\w\)?)?"
 
     #   Closing capture group, create positive lookahead
     #   Field : NA
@@ -108,7 +116,7 @@ def event_parsing_string():
     
     #   Duration_miliseconds :  Time used for this event in miliseconds
     #   Field : Required / Normal
-    #   Group : 9
+    #   Group : 10
     #   Captures: The value of the duration. No unit captures
     time_spent_miliseconds = "(\d+\.\d+)ms))"  # 24.321ms
     
@@ -119,55 +127,62 @@ def event_parsing_string():
 
     #   HeapBeforeGC : ZGC style heap before gc metric
     #   Field : Required / ZGCmem
-    #   Group : 10 
+    #   Group : 11
     #   Captures : The Heap size in MB before GC run. No unit captured.
     zgc_heap_before_gc = "(\d+)\w\(\d+%\)->"
 
     #   HeapAfterGC : ZGC style heap after gc metric
     #   Field : Required / ZGCmem
-    #   Group : 11 
+    #   Group : 12 
     #   Captures : The Heap size in MB after GC run. No unit captured.
-    zgc_heap_after_gc = "(\d+)\w\(\d+%\))))"
+    zgc_heap_after_gc = "(\d+)\w\("
+        
+    
+    #   MaxHeapsize : The size of the current heap in MB
+    #   Field : 99
+    #   Group : 13
+    #   Captures : 
+    zgc_max_heapsize = "(\d+)%\))))"
 
     #   SafepointName : The name of the recorded safepoint
     #   Field : Required / Safepoint JDK16
-    #   Group : 12
+    #   Group : 14
     #   Captures: Name of the safepoint, not including parentheses
     safepoint_name = "|(?: Safepoint \"(\w+)\""
 
     #   TimeFromLastSafepoint_ns : Time from last safepoint in nanoseconds
     #   Field : Required / Safepoint JDK16
-    #   Group : 13 
+    #   Group : 15 
     #   Captures: The time since the last safepoint in nanoseconds. No unit captured.
     safepoint_time_since_last = ", Time since last: (\d+) ns, "
     
     #   TimeToReachSafepoint_ns
     #   Field : Required / Safepoint JDK16
-    #   Group : 14
+    #   Group : 16
     #   Captures : Time required to reach the safepoint
     safepoint_time_to_reach = "Reaching safepoint: (\d+) ns, "
     
     #   AtSafepoint_ns
     #   Field :  Required / Safepoint JDK16
-    #   Group : 15
+    #   Group : 17
     #   Captures: Time while at Safepoint. No unit captured,
     time_at_safepoint = "At safepoint: (\d+) ns, "
 
     #   TotalTimeAtSafepoint_ns
     #   Field :  Required / Safepoint JDK16
-    #   Group : 16
+    #   Group : 18
     #   Captures : Total time spent getting to and at the safepoint. No unit captured 
     total_time_safepoint = "Total: (\d+) ns$)"
 
     #   TotalApplicationThreadPauseTime_seconds
     #   Field : Required / Safepoint JDK11
-    #   Group : 17
+    #   Group : 19
     #   Captures : Total time the program's application threads were stopped
     program_pause_time = "|(?: Total time for which application threads were stopped: ([\d\.]+) seconds,"
 
     #   TimeToStopApplication_seconds
     #   Field : Required / Safepoint JDK11
-    #   Group : 18
+    #   Group : 20
     #   Captures: Time in seconds to stop threads for safepoint
     time_to_stop_application = " Stopping threads took: ([\d\.]+) seconds$))"
     
@@ -183,11 +198,13 @@ def event_parsing_string():
                      setup_optional_groups +        # normal
                      heap_before_gc +               # normal
                      heap_after_gc +                # normal
+                     max_heap_size +                # normal
                      optional_group_stuff +         # normal
                      time_spent_miliseconds +       # normal
                      zgc_memory_start +             # zgc mem
                      zgc_heap_before_gc +           # zgc mem
                      zgc_heap_after_gc +            # zgc mem
+                     zgc_max_heapsize +             # zgc mem
                      safepoint_name +               # safepoints jdk16
                      safepoint_time_since_last +    # safepoints jdk16
                      safepoint_time_to_reach +      # safepoints jdk16
