@@ -70,7 +70,7 @@ def get_gc_event_tables(files, time_range_seconds, ignore_crashes = False):
 #   a pandas dataframe, where rows are each an individual event. Columns are labeled, and
 #   collect information on each event, such as when it occured, how long it lasted, and the name
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-from parse_log_line import event_parsing_string as eps
+from src.parse_log_line import event_parsing_string as eps
 def get_parsed_data_from_file(logfile, time_range_seconds=None, ignore_crashes = False):
     assert isinstance(logfile, str)  # input must be a string
     
@@ -85,34 +85,39 @@ def get_parsed_data_from_file(logfile, time_range_seconds=None, ignore_crashes =
     table[2] = list(map(__number_to_float, table[2]))
     table[1] = list(map(__number_to_float, table[1]))
     table[8] = list(map(__number_to_float, table[8]))
-    table[6] = __choose_non_zero(table[6], table[9]) # Before GC collection mem_size
-    table[7] = __choose_non_zero(table[7], table[10]) # After GC collection mem_size
+    table[6] = __choose_non_zero(table[6], table[10]) # Before GC collection mem_size
+    table[7] = __choose_non_zero(table[7], table[11]) # After GC collection mem_size
+    table[8] = __choose_non_zero(table[8], table[12]) # Max heapsize
     table[6] = list(map(__number_to_float, table[6])) 
     table[7] = list(map(__number_to_float, table[7]))
+    table[8] = list(map(__number_to_float, table[8])) 
+    table[9] = list(map(__number_to_float, table[9])) 
     # Schema 1 (JDK 16)
     temp = []
-    for eventtype, safepoint1, safepoint2 in zip(table[3], table[11], table[17]):
+    for eventtype, safepoint1, safepoint2 in zip(table[3], table[12], table[18]):
         if safepoint1 or safepoint2:
             temp.append("Safepoint")
         else:
             temp.append(eventtype)
     table[3] = temp
     # table [10]  safepoint_name
-    table[11] = list(map(__number_to_float, table[12])) # time_since_last_safepoint
-    table[12] = list(map(__number_to_float, table[13])) # reaching_safepoint_time
-    table[13] = list(map(__number_to_float, table[14])) # at_safepoint_time
-    table[14] = list(map(__number_to_float, table[15])) # total_time_safepoint
-    table[15] = list(map(__number_to_float, table[16])) # total_application_thread_stopped_time_seconds
-    table[16] = list(map(__number_to_float, table[17])) # total_time_to_stop_seconds
+#    table[12] = list(map(__number_to_float, table[13])) # time_since_last_safepoint
+    table[13] = list(map(__number_to_float, table[14])) # reaching_safepoint_time
+    table[14] = list(map(__number_to_float, table[15])) # at_safepoint_time
+    table[15] = list(map(__number_to_float, table[16])) # total_time_safepoint
+    table[16] = list(map(__number_to_float, table[17])) # total_application_thread_stopped_time_seconds
+    table[17] = list(map(__number_to_float, table[18])) # total_time_to_stop_seconds
 
-    table.pop(10) # Used due to 2 types of memory change regex groups & before/after for each
-    table.pop(9) # Therefore, we gather before & after into 2 distinct columns, and remove other set
+    table.pop(12) # Used due to 2 types of memory change regex groups & before/after for each
+    table.pop(11) # Therefore, we gather before & after into 2 distinct columns, and remove other set
+    table.pop(10) 
 
     parsed_data_table = pd.DataFrame(table).transpose() 
     # The data collected is in a 2d array, where table indicies represent a column. However,
     # a pandas dataframe expects each entry of the 2d array to be a row, not a column. Transpose
     # to fix this orientation error.
     parsed_data_table.columns = columnNames()  # add column titles, allow for clear references
+    
     if time_range_seconds:
         min_time, max_time = __get_time_range(time_range_seconds)
         # Get the maximum and minimums and enforce the time range
@@ -237,6 +242,7 @@ def columnNames():
         "AdditionalEventInfo",
         "HeapBeforeGC",
         "HeapAfterGC",
+        "MaxHeapsize",
         "Duration_miliseconds",
         "SafepointName",
         "TimeFromLastSafepoint_ns",
@@ -244,7 +250,7 @@ def columnNames():
         "AtSafepoint_ns",
         "TotalTimeAtSafepoint_ns",
         "TotalApplicationThreadPauseTime_seconds",
-        "TimeToStopApplication_seconds"
+        "TimeStopApplication_seconds"
     ]
 
 
