@@ -6,7 +6,6 @@
 # Ellis Brown
 # 7-12-2021
 #
-import math
 import matplotlib
 
 #       filter_and_group
@@ -133,9 +132,9 @@ def arrange_into_groups(datasets, group_by, column, column_timing, labels):
                     
                     groups = {} # Create a dictionary to hold unique groups
                     if column_timing == "DateTime":
-                        timing = matplotlib.dates.date2num(df[column_timing])
+                        timing = pd.Series(matplotlib.dates.date2num(df[column_timing]))
                     else:
-                        timing = df[column_timing]
+                        timing = df[column_timing]                        
                     for group, time, datapoint in zip(df[group_by], timing, df[column]):
                         if group:
                             if group not in groups:
@@ -171,7 +170,7 @@ def arrange_no_groups(datasets, column, column_timing, labels):
         # Make sure both the columns are present, and rows are present
         if not df.empty and column_timing in df and column in df:
             if column_timing == "DateTime":
-                timestamp_groups.append(matplotlib.dates.date2num(df[column_timing]))
+                timestamp_groups.append(pd.Series(matplotlib.dates.date2num(df[column_timing])))
             else:
                 timestamp_groups.append(df[column_timing])
             datapoint_groups.append(df[column])
