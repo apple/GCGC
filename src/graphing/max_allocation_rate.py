@@ -1,8 +1,8 @@
 # The max allocation rate is defined as the difference bewtween the heap usage at GC event A and event A+1.
 # To find it, given a list of data, find the difference between values in "column"
-from numpy import diff
 from filter_and_group import filter_and_group
 from matplotlib import pyplot as plt
+
 def difference_in_entries(
     gc_event_dataframes,  # list of dataframes, containing gc event information. 
     group_by=None,  # A string to explain what groups to make within 1 gc_event_dataframe
@@ -39,6 +39,7 @@ def difference_in_entries(
             plot.plot(start_times, datapoints, label=label, color=color)
         else:
             plot.scatter(start_times, datapoints,  label=label, color=color)
+            
     plot.legend()
     # return a plot object to be displayed or modified
     return plot
