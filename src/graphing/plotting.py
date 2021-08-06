@@ -518,9 +518,7 @@ def plot_percentile_intervals(
     if not plot:
         f, plot = plt.subplots()
     
-    number_of_buckets, min_time_duration, _ =  get_buckets_and_range(timestamp_groups, interval_duration)
-
-    print("Number of buckets", number_of_buckets)
+    number_of_buckets, min_time_duration, _ = get_buckets_and_range(timestamp_groups, interval_duration)
     # Determine the spacing along the X axis for the data
     x_alignment = [idx * interval_duration + min_time_duration for idx in range(number_of_buckets)]
     if len(timestamp_groups) > len(labels):
@@ -562,8 +560,7 @@ def plot_percentile_intervals(
     # Add styling to the plot. Add legend, and x axis correct titles
     plot.legend()
     return plot
-            
-
+        
 
 #       plot_frequency_of_gc_intervals
 # 
@@ -586,11 +583,9 @@ def plot_frequency_of_gc_intervals(
         return
     timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing)
-    
     # # if no plot is passed in, create a new plot
     if not plot:
         f, plot = plt.subplots()
-
     number_of_buckets, min_time_duration, _ = get_buckets_and_range(timestamp_groups, interval_duration)
     
     # Determine the spacing along the X axis for the data
@@ -639,7 +634,7 @@ def plot_sum_pause_intervals(
 
 def plot_heatmaps(
     gc_event_dataframes,
-    dimensions,
+    dimensions = None,
     group_by=None,
     filter_by=None,
     labels=None,
@@ -656,8 +651,8 @@ def plot_heatmaps(
     heatmap_list, dimensions = get_heatmap_data(timestamp_groups, datapoint_groups, labels, dimensions)
     for heatmap, label in zip(heatmap_list, labels):
         if heatmap.size != 0 and dimensions:
-            graph = plot_heatmap(heatmap, dimensions, frequency_ticks) # Set the last value to TRUE to see labels of frequency
-            graph.set_title("Latency during runtime: " +  label)
+           graph = plot_heatmap(heatmap, dimensions, frequency_ticks) # Set the last value to TRUE to see labels of frequency
+           graph.set_title("Latency during runtime: " +  label)
 
 #       get_buckets_and_range
 #
@@ -666,16 +661,17 @@ def plot_heatmaps(
 #   that range
 #
 def get_buckets_and_range(datapoint_groups, interval_duration):
-    max_time_duration = 0
+    max_time_duration = 0    
     min_time_duration = datapoint_groups[0].iloc[0]
-    
+
     for dataset in datapoint_groups:
         if list(dataset): # read as list to check for list legnth, rather than rely on pd.DataFrame.empty
             max_time_duration = max(dataset.max(), max_time_duration)
             min_time_duration = min(dataset.min(), min_time_duration)
-
-    number_of_buckets = int((max_time_duration - min_time_duration) / interval_duration) + 1
-
+    if interval_duration:
+        number_of_buckets = int((max_time_duration - min_time_duration) / interval_duration) + 1
+    else:
+        number_of_buckets = 0
     return number_of_buckets, min_time_duration, max_time_duration
 
 
