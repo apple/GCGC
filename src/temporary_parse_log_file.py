@@ -45,17 +45,21 @@ def event_parsing_string_temp():
     # The "ZGC Mem" pattern specifically targets lines with no duration, but have a ZGC heapsize change.
 
     start_of_line = "^", None, None
+
+
     #   DateTime : Real time of the program's run in DateTime format
     #   Field : Optional
     #   Group : 1 
     #   Captures : Full date time expression, including formatting digits
-    date_time = "(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\])?", "DateTime", str  # [2021-07-01T23:23:22.001+0000]
+    #   [2021-07-01T23:23:22.001+0000]
+    date_time = "(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\])?", "DateTime", str  
 
     #   TimeFromStart_seconds : 
     #   Field : Required
     #   Group : 2
     #   Captures : Full time in seconds, only including floating numbers and decimal place. Does not include unit.
-    time_from_start_seconds = "\[(\d+\.\d+)s\]", "TimeFromStart_seconds", float   # [243.45s]
+    #   [243.45s]
+    time_from_start_seconds = "\[(\d+\.\d+)s\]", "TimeFromStart_seconds", float   
     
     #   Other info fields detailing log line info
     #   Field : Required
