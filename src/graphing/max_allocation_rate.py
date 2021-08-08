@@ -14,6 +14,7 @@ def difference_in_entries(
     column_before="HeapBeforeGC",
     column_after= "HeapAfterGC",
     column_timing = None,
+    percentile = None,
     line_graph = False
 ):  
 # Filter and group data. Update colors and labels to reflect to-be-plotted data
@@ -23,6 +24,9 @@ def difference_in_entries(
     timestamp_groups, after_list, labels, colors, _ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column_after, colors, column_timing
     )
+    if not percentile:
+        percentile = 100
+
     # if no plot is passed in, create a new plot
     if not plot:
         f, plot = plt.subplots()
@@ -33,7 +37,7 @@ def difference_in_entries(
         print("Not enough colors to plot")
     for time, before_list, after_list, color, label in zip(timestamp_groups, before_list, after_list, colors, labels):
         time = list(time)
-        start_times, datapoints = get_difference(list(before_list), list(after_list), time, interval_seconds)
+        start_times, datapoints = get_difference(list(before_list), list(after_list), time, interval_seconds, percentile)
         time.pop()
         if line_graph:
             plot.plot(start_times, datapoints, label=label, color=color)
@@ -44,18 +48,35 @@ def difference_in_entries(
     # return a plot object to be displayed or modified
     return plot
 
-def get_difference(before_list, after_list, time, interval_seconds):
+def get_difference(before_list, after_list, time, interval_seconds, percentile):
     times = []
     difference_list = []
     # https://plumbr.io/handbook/gc-tuning-in-practice/high-allocation-rate
     interval_start_time = time[0]
     allocated_bytes = 0
-    for index in range(len(before_list) - 1):
-        allocated_bytes += before_list[index + 1] - after_list[index] 
-        elapsed_seconds = time[index + 1] - interval_start_time
-        if (interval_seconds is None or elapsed_seconds >= interval_seconds):
-            difference_list.append(allocated_bytes / elapsed_seconds)
-            times.append(time[index])
-            allocated_bytes = 0
-            interval_start_time = time[index + 1]
-    return times, difference_list
+    if percentile == 100 or interval_seconds is None:
+        for index in range(len(before_list) - 1):
+            allocated_bytes += before_list[index + 1] - after_list[index] 
+            elapsed_seconds = time[index + 1] - interval_start_time
+            if (interval_seconds is None or elapsed_seconds >= interval_seconds):
+                difference_list.append(allocated_bytes / elapsed_seconds)
+                times.append(time[index])
+                allocated_bytes = 0
+                interval_start_time = time[index + 1]
+        return times, difference_list
+    else:
+        import numpy as np
+        allocated_bytes_rate= []
+        percentile_array = []
+        elapsed_seconds = 0
+        # Create a list of all allocation rates within a time interval. Then, take the percentile from that time interval.
+        for index in range( len(before_list) - 1):
+            allocated_bytes_rate.append((before_list[index + 1] - after_list[index]) / (time[index + 1] - time[index]))
+            elapsed_seconds = time[index + 1] - interval_start_time
+            if (elapsed_seconds >= interval_seconds):
+                times.append(time[index]) # Set the timestamp for this time interval
+                percentile_array.append(np.percentile(allocated_bytes_rate, percentile)) # Percentile for allocation rate
+                interval_start_time = time[index + 1]
+                allocated_bytes_rate = []
+        return times, percentile_array
+    
