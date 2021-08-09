@@ -24,8 +24,6 @@ def difference_in_entries(
     timestamp_groups, after_list, labels, colors, _ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column_after, colors, column_timing
     )
-    if not percentile:
-        percentile = 100
 
     # if no plot is passed in, create a new plot
     if not plot:
@@ -54,7 +52,7 @@ def get_difference(before_list, after_list, time, interval_seconds, percentile):
     # https://plumbr.io/handbook/gc-tuning-in-practice/high-allocation-rate
     interval_start_time = time[0]
     allocated_bytes = 0
-    if percentile == 100 or interval_seconds is None:
+    if percentile is None or interval_seconds is None:
         for index in range(len(before_list) - 1):
             allocated_bytes += before_list[index + 1] - after_list[index] 
             elapsed_seconds = time[index + 1] - interval_start_time
@@ -68,14 +66,14 @@ def get_difference(before_list, after_list, time, interval_seconds, percentile):
         import numpy as np
         allocated_bytes_rate= []
         percentile_array = []
-        elapsed_seconds = 0
-        # Create a list of all allocation rates within a time interval. Then, take the percentile from that time interval.
+        # Create a list of all allocation rates within a time interval.
+        # Then, take the percentile from that list
         for index in range( len(before_list) - 1):
             allocated_bytes_rate.append((before_list[index + 1] - after_list[index]) / (time[index + 1] - time[index]))
             elapsed_seconds = time[index + 1] - interval_start_time
             if (elapsed_seconds >= interval_seconds):
                 times.append(time[index]) # Set the timestamp for this time interval
-                percentile_array.append(np.percentile(allocated_bytes_rate, percentile)) # Percentile for allocation rate
+                percentile_array.append(np.percentile(allocated_bytes_rate, percentile)) 
                 interval_start_time = time[index + 1]
                 allocated_bytes_rate = []
         return times, percentile_array
