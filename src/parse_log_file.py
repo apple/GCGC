@@ -35,7 +35,7 @@ The regex capture groups follow the following format:
 19: TotalApplicationThreadPauseTime_seconds | float
 20: TimeStopApplication_seconds | float
 '''
-def event_parsing_string_temp():
+def event_parsing_string():
 # Note: the documentation of this regex string is confusing. It is recommended you follow along
     # Using this link to view the regex in a more natural way.
     # https://regexper.com/#%5E%28%3F%3A%5C%5B%28%5Cd%7B4%7D-%5Cd%5Cd-%5Cd%5CdT%5Cd%5Cd%3A%5Cd%5Cd%3A%5Cd%5Cd%5C.%5Cd%7B3%7D%5C%2B%5Cd%7B4%7D%29%5C%5D%29%3F%5C%5B%28%5Cd%2B%5C.%5Cd%2B%29s%5C%5D%28%3F%3A%5C%5B.*%3F%5C%5D%29%2B%28%3F%3A%28%3F%3A%20GC%5C%28%5Cd%2B%5C%29%20%28%28%3F%3APause%28%3F%3D.*ms%29%29%7C%28%3F%3AConcurrent%28%3F%3D.*ms%29%29%7C%28%3F%3AGarbage%20Collection%29%29%20%28%3F%3A%28%28%3F%3A%5Cw%2B%20%3F%29%7B1%2C3%7D%29%20%29%3F%28%28%3F%3A%5C%28%28%3F%3A%5Cw%2B%20%3F%29%7B1%2C3%7D%5C%29%20%29%7B0%2C3%7D%29%28%3F%3A%28%3F%3A%28%3F%3A%28%5Cd%2B%29%5Cw-%3E%28%5Cd%2B%29%5Cw%28%3F%3A%5C%28%5Cd%2B%5Cw%5C%29%3F%29%3F%29%3F%28%3F%3D%20%3F%28%5Cd%2B%5C.%5Cd%2B%29ms%29%29%7C%28%3F%3A%28%5Cd%2B%29%5Cw%5C%28%5Cd%2B%25%5C%29-%3E%28%5Cd%2B%29%5Cw%5C%28%5Cd%2B%25%5C%29%29%29%29%7C%28%3F%3A%20Safepoint%20%5C%22%28%5Cw%2B%29%5C%22%2C%20Time%20since%20last%3A%20%28%5Cd%2B%29%20ns%2C%20Reaching%20safepoint%3A%20%28%5Cd%2B%29%20ns%2C%20At%20safepoint%3A%20%28%5Cd%2B%29%20ns%2C%20Total%3A%20%28%5Cd%2B%29%20ns%24%29%7C%28%3F%3A%20Total%20time%20for%20which%20application%20threads%20were%20stopped%3A%20%28%5B%5Cd%5C.%5D%2B%29%20seconds%2C%20Stopping%20threads%20took%3A%20%28%5B%5Cd%5C.%5D%2B%29%20seconds%24%29%29

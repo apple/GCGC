@@ -42,7 +42,7 @@ def get_gc_event_tables(files, time_range_seconds, ignore_crashes = False):
         gc_event_dataframes = [] # associated with one GC run. 
         for file in filelist:
             # Create each log gc_event_dataframe
-            gc_event_dataframe = get_parsed_data_from_file_updated(file, time_range_seconds, ignore_crashes)
+            gc_event_dataframe = get_parsed_data_from_file(file, time_range_seconds, ignore_crashes)
             
             if not gc_event_dataframe.empty:
                 gc_event_dataframes.append(gc_event_dataframe)
@@ -148,7 +148,7 @@ def set_safepoints_eventype(eventtype_list, safepoint_list1, safepoint_list2):
             temp.append(eventtype)
     return temp
 
-from src.temporary_parse_log_file import event_parsing_string_temp
+from src.parse_log_file import event_parsing_string
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -167,8 +167,8 @@ from src.temporary_parse_log_file import event_parsing_string_temp
 #   a pandas dataframe, where rows are each an individual event. Columns are labeled, and
 #   collect information on each event, such as when it occured, how long it lasted, and the name
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def get_parsed_data_from_file_updated(logfile,  time_range_seconds, ignore_crashes = False):
-    regex_capture_string, column_names, data_types = event_parsing_string_temp()    
+def get_parsed_data_from_file(logfile,  time_range_seconds, ignore_crashes = False):
+    regex_capture_string, column_names, data_types = event_parsing_string()    
     table = __manyMatch_LineSearch(regex_capture_string, logfile)
     
     # Construct a dictionary to hold column names, and associated data
