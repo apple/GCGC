@@ -30,7 +30,7 @@ def plot_heatmap(heatmap, dimensions, labels=True):
     min_time_ms = dimensions[4]
     multipler = max_time_ms / width  # multipler is the size of a bucket for time direction
     # x labels are the time labels
-    print(min_time_ms)
+    
     time_labels = [num * multipler + min_time_ms for num in range(1, width + 1)]  # TODO : UPDATE TO BE FASTER
 
     time_labels_temp = []
@@ -63,8 +63,8 @@ def plot_heatmap(heatmap, dimensions, labels=True):
 
 
 
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 ## The following code block was taken directly from matplotlib's documentation
 ## seen here:
 # https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html
@@ -98,15 +98,24 @@ def heatmap_make(data, row_labels, col_labels, ax=None, cbar_kw={}, cbarlabel=""
     threshold = 0.5
     im = ax.imshow(data,  vmin=threshold, **kwargs)
 
-    # Create colorbar
-    #
+    # Create colorbar    
     divider = make_axes_locatable(ax)
-    
     cax = divider.append_axes("right", size="5%", pad=0.35)
+    # Create the colorbar using the data, and the located divider
     cbar = plt.colorbar(im, cax=cax, extend='min')
-    cbar.cmap.set_under('white')
 
-    # cbar = ax.figure.colorbar(im, ax=ax, **cbar_kw)
+    # Add minimum and maximum values to colorbar tick label
+    yticks = list(cbar.ax.get_yticks())
+    if yticks[0] != 0:
+        yticks.insert(0, 0)
+    if cbar.ax.get_ylim()[1] != yticks[-1]:
+        yticks.append(cbar.ax.get_ylim()[1])
+    cbar.set_ticks(yticks)
+    cmap = matplotlib.cm.get_cmap("plasma").copy()
+    cmap.set_under('white')
+    
+    
+
     cax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
 
     # We want to show all ticks...
@@ -124,12 +133,11 @@ def heatmap_make(data, row_labels, col_labels, ax=None, cbar_kw={}, cbarlabel=""
 
     # Turn spines off and create white grid.
     ax.spines[:].set_visible(False)
-
     ax.set_xticks(np.arange(data.shape[1] + 1) - 0.5, minor=True)
     ax.set_yticks(np.arange(data.shape[0] + 1) - 0.5, minor=True)
     ax.grid(which="minor", color="w", linestyle="-", linewidth=3)
     ax.tick_params(which="minor", bottom=False, left=False)
-
+    
     return im
 
 
@@ -225,11 +233,11 @@ def get_heatmap_data(timestamp_groups, datapoint_groups, labels, dimensions):
 
     # Determine minimum time
     min_time_duration = __get_minimum_time(timestamp_groups)
-    print(min_time_duration)
+    
     ## Scale minimum time to be a multiple of the time interval, floored.
     min_time_duration = int(min_time_duration - (min_time_duration % x_bucket_duration))
-    print(min_time_duration)
-    print("Min time", min_time_duration)
+    
+    # print("Min time", min_time_duration)
     
     heatmap_list = []
     for times_seconds, pauses_ms, label in zip(timestamp_groups, datapoint_groups, labels):
@@ -417,8 +425,6 @@ def plot_heatmap_logarithmic(heatmap, dimensions, labels=True):
     # time_labels = [str(round(label, 2)) + " s" for label in time_labels]
     time_labels = time_labels_temp
 
-    # size of the buckets for ms pause
-    multipler = (max_pause_ms - min_pause_ms) / height
     # y labels are ms pause time labels
     base = dimensions[3]
     latency_labels = [str(round(math.pow(base, idx), 4)) for idx in range(height)]
@@ -433,7 +439,7 @@ def plot_heatmap_logarithmic(heatmap, dimensions, labels=True):
     ## Create a figure, and add data to heatmap. Plot then show heatmap.
     fig, ax = plt.subplots()
     ax.set_title("Latency during runtime.")
-    im = heatmap_make(heatmap, latency_labels, time_labels, ax=ax, cmap="cubehelix_r", cbarlabel="Frequency")
+    im = heatmap_make(heatmap, latency_labels, time_labels, ax=ax, cmap="plasma", cbarlabel="Frequency")
     if labels:
         __annotate_heatmap(im, valfmt="{x}")
     fig.tight_layout()
@@ -486,5 +492,4 @@ def __get_minimum_time(timestamp_lists):
     min_time = timestamp_lists[0].iloc[0]
     for timestamp_list in timestamp_lists:
         min_time = min(timestamp_list.min(), min_time)
-    print("Minimum time recorded in __get_minimum_time", min_time)
     return min_time 
