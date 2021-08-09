@@ -3,19 +3,27 @@
 from filter_and_group import filter_and_group
 from matplotlib import pyplot as plt
 
+#       allocation_rate
+#
+#   Calculates and reports the allocation rate during runtime from gc information.
+#   Optional parameter: percentile: If used, then calculates the specified percentile 
+#                       allocation rate. If left as None, finds the mean allocation rate.
+#   Optional parameter: interval_seconds: Groups collected data into ranges, then either
+#                       finds the mean or a percentile based on above optional param.
+#
 def allocation_rate(
     gc_event_dataframes,  # list of dataframes, containing gc event information. 
     group_by=None,  # A string to explain what groups to make within 1 gc_event_dataframe
     filter_by=None, # resitrctions on the data. list of tuples: (column, boolean-function) 
     labels=None,    # list of str labels to describe each gc_event_dataframe.  
-    interval_seconds=None,
+    interval_seconds=None, # integer or float. Creates groups of this size to find alloc rate.
     colors=None,    # colors to override 
-    plot=None,
-    column_before="HeapBeforeGC",
-    column_after= "HeapAfterGC",
-    column_timing = None,
-    percentile = None,
-    line_graph = False
+    plot=None, #    matplotlib ax to plot onto. If none provided, one is created
+    column_before="HeapBeforeGC", # Column used as information before event
+    column_after= "HeapAfterGC", # Column used to find information after event
+    column_timing = None, # Timing information used for X axis. List of floats or ints
+    percentile = None, #  If True, and interval_seconds is not None, plots the percentile
+    line_graph = False # Plots as a line graph rather than a scatter plot
 ):  
 # Filter and group data. Update colors and labels to reflect to-be-plotted data
     timestamp_groups, before_list, labels, colors, _ = filter_and_group(
