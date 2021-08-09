@@ -626,10 +626,10 @@ def plot_sum_pause_intervals(
     interval_duration = 0, # miliseconds
     column_timing = None,
     remove_empty_intervals = False,
-    plot_line = False
+    line_graph = False
     ):
     return plot_using_intervals(gc_event_dataframes, group_by, filter_by, labels, colors, plot,
-                                column, interval_duration, column_timing, remove_empty_intervals, plot_line)
+                                column, interval_duration, column_timing, remove_empty_intervals, line_graph)
 
 
 def plot_heatmaps(
