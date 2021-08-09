@@ -3,7 +3,7 @@
 from filter_and_group import filter_and_group
 from matplotlib import pyplot as plt
 
-def difference_in_entries(
+def allocation_rate(
     gc_event_dataframes,  # list of dataframes, containing gc event information. 
     group_by=None,  # A string to explain what groups to make within 1 gc_event_dataframe
     filter_by=None, # resitrctions on the data. list of tuples: (column, boolean-function) 
