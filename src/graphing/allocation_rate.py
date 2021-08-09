@@ -65,10 +65,11 @@ def get_difference(before_list, after_list, time, interval_seconds, percentile):
             allocated_bytes += before_list[index + 1] - after_list[index] 
             elapsed_seconds = time[index + 1] - interval_start_time
             if (interval_seconds is None or elapsed_seconds >= interval_seconds):
-                difference_list.append(allocated_bytes / elapsed_seconds)
-                times.append(time[index])
-                allocated_bytes = 0
-                interval_start_time = time[index + 1]
+                if elapsed_seconds != 0:
+                    difference_list.append(allocated_bytes / elapsed_seconds)
+                    times.append(time[index])
+                    allocated_bytes = 0
+                    interval_start_time = time[index + 1]
         return times, difference_list
     else:
         import numpy as np
@@ -77,12 +78,14 @@ def get_difference(before_list, after_list, time, interval_seconds, percentile):
         # Create a list of all allocation rates within a time interval.
         # Then, take the percentile from that list
         for index in range( len(before_list) - 1):
-            allocated_bytes_rate.append((before_list[index + 1] - after_list[index]) / (time[index + 1] - time[index]))
-            elapsed_seconds = time[index + 1] - interval_start_time
-            if (elapsed_seconds >= interval_seconds):
-                times.append(time[index]) # Set the timestamp for this time interval
-                percentile_array.append(np.percentile(allocated_bytes_rate, percentile)) 
-                interval_start_time = time[index + 1]
-                allocated_bytes_rate = []
+            time_delta = (time[index + 1] - time[index])
+            if time_delta != 0:
+                allocated_bytes_rate.append((before_list[index + 1] - after_list[index]) / time_delta)
+                elapsed_seconds = time[index + 1] - interval_start_time
+                if (elapsed_seconds >= interval_seconds):
+                    times.append(time[index]) # Set the timestamp for this time interval
+                    percentile_array.append(np.percentile(allocated_bytes_rate, percentile)) 
+                    interval_start_time = time[index + 1]
+                    allocated_bytes_rate = []
         return times, percentile_array
     
