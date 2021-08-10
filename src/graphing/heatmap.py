@@ -111,7 +111,7 @@ def heatmap_make(data, row_labels, col_labels, ax=None, cbar_kw={}, cbarlabel=""
     if cbar.ax.get_ylim()[1] != yticks[-1]:
         yticks.append(cbar.ax.get_ylim()[1])
     cbar.set_ticks(yticks)
-    cmap = matplotlib.cm.get_cmap("plasma").copy()
+    cmap = matplotlib.cm.get_cmap("plasma")
     cmap.set_under('white')
     
     
