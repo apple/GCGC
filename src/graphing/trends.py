@@ -55,18 +55,20 @@ def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime
     number_label_chars = 15
     label = label[-number_label_chars:]
     line = __string_const_chars(label, number_label_chars) + " | "
-    line += __float_const_chars(str(len(pauses_miliseconds)), num_chars) + " | "
-    line += __float_const_chars(str(max_pause), num_chars) + " | "
-    line += __float_const_chars(str(sum_pauses), num_chars) + " | "
-    line += __float_const_chars(str(average_wait), num_chars) + " | "
-    line += __float_const_chars(str(std_deviation), num_chars) + " | "
+    line += float_constant_chars(str(len(pauses_miliseconds)), num_chars) + " | "
+    line += float_constant_chars(str(max_pause), num_chars) + " | "
+    line += float_constant_chars(str(sum_pauses), num_chars) + " | "
+    line += float_constant_chars(str(average_wait), num_chars) + " | "
+    line += float_constant_chars(str(std_deviation), num_chars) + " | "
     if throughput:
-        line += __float_const_chars(str(round(throughput, 7)), num_chars) + " % "
+        line += float_constant_chars(str(round(throughput, 7)), num_chars) + " % "
     print(line)
 
-def __float_const_chars(value, length):
+def float_constant_chars(value, length):
     value = float(value)
-    output = "%9.4f" % (value) + ((length - 9) * " ")     
+    output = "%9.4f" % (value)
+    output_len = len(str(output))
+    output = (length - output_len) * " " + output    
     return output
 
 
