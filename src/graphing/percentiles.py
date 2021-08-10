@@ -27,22 +27,21 @@ def print_percentiles(pauses_miliseconds=[], print_title=True, percentiles=None,
 
     percentile_table = {}
     if not percentiles:
-        percentiles = [50, 75, 90, 95, 99, 99.9, 99.99]
+        percentiles = [50, 95, 99, 99.99]
     for p in percentiles:
         percentile_table[p] = np.percentile(pauses_miliseconds, p)
     if not label:
         label = "label"
+    num_column_spaces = 18
     if print_title:
         title = ""
         for p in percentiles:
-            title += __string_const_chars(str(p) + "%", 9) + " | "
+            title += __string_const_chars(str(p) + "%", num_column_spaces) + " | "
         print("    | " + title + "\n" + "-" * (len(title) + 12))
     print(__string_const_chars(label, 3) + " | ", end="")
     
     for p in percentiles:
-        print(float_constant_chars(str(round(percentile_table[p], 4)), 9) + " | ", end="")
-        
-        #print(__string_const_chars(str(round(percentile_table[p], 2)) + " ms", 9) + " | ", end="")
+        print(float_constant_chars(str(round(percentile_table[p], 4)), num_column_spaces) + " | ", end="")
     print("")
 
 
@@ -81,8 +80,9 @@ def __string_const_chars(string, numchars):
         numchars -= 1
         if numchars == 0:
             return char_list
+    temp_list = ""
     for i in range(numchars):
-        char_list += " "
-    return char_list
+        temp_list += " "
+    return temp_list + char_list
 
 from src.graphing.trends import float_constant_chars
