@@ -5,3 +5,4 @@ src/graphing/__pycache__
 *.pdf
 .vscode
 .ipynb_checkpoints
+datasets/hbase-regionserver-gc-ps1187-pid4217.log.2
