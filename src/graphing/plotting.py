@@ -205,10 +205,8 @@ def plot_trends(
     group_by=None,      # A string to explain what groups to make within 1 log file
     filter_by=None,     # resitrctions on the data. list of tuples: (column, boolean-function)
     labels=None,        # list of str labels to describe each entry of gc_event_dataframes
-    plot=None,          # unsued
     column="Duration_miliseconds", # Describes the column to find the percentiles of.
     throughput=False, # If true, then the throughput will be calculated from the gc_event_dataframe log info
-    column_timing = None,
 ):
     # Filter and group
     timestamp_groups, datapoint_groups, labels, _, __ = filter_and_group(
@@ -263,9 +261,7 @@ def plot_percentiles(
     group_by=None,      # A string to explain what groups to make within 1 log file
     filter_by=None,     # resitrctions on the data. list of tuples: (column, boolean-function)
     labels=None,        # list of str labels to describe each entry of gc_event_dataframes
-    plot=None,          # unusued
     column="Duration_miliseconds", # Describes the column to find the percentiles of.
-    column_timing = None,
 ):
     timestamp_groups, datapoint_groups, labels, _, __ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column
@@ -304,7 +300,6 @@ def plot_reclaimed_bytes(
     filter_by=None, # resitrctions on the data. list of tuples: (column, boolean-function)
     labels=None,    # list of str labels to describe each entry of gc_event_dataframes
     plot=None,      # used if you would like to add this data to another plot
-    column=None,    # overwritten manually 
     column_timing = None,
     colors = None,
 ):
@@ -638,13 +633,12 @@ def plot_heatmaps(
     group_by=None,
     filter_by=None,
     labels=None,
-    colors=None,
     column="Duration_miliseconds",
     column_timing = None, 
     frequency_ticks = None
     ):
     from src.graphing.heatmap import get_heatmap_data, plot_heatmap
-    timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
+    timestamp_groups, datapoint_groups, labels, _, _ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing,
     )
 
