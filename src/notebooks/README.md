@@ -29,7 +29,8 @@ The following are a list of automatically generated graphs/tables that are creat
 > #### 6a. Pause percentiles
 > #### 6b. Pause percentiles by name
 
-> #### 7. Average STW pause duration
+> #### 7a. Mean event durations
+> #### 7b. Sum event durations
 
 > #### 8a. Heap Before GC 
 > #### 8b. Heap After GC
@@ -83,7 +84,7 @@ To set a plot to logarithimic, use the returned object, and call the function se
 `plot.yaxis.set_major_formatter(ScalarFormatter())`
 
 --- 
-pauses_only and other functions are defined in the 
+Note: all functions are defined [src.graphing.plotting](../graphing/plotting.py) unless mentioned otherwise.
 
 List of graphs, their associated plotting function, and parameters.
 > #### 1a. STW Pauses during program runtime, Linear
@@ -111,6 +112,8 @@ List of graphs, their associated plotting function, and parameters.
 
 set yscale to log manually
 
+--- 
+
 > #### 2a. STW Pauses during program runtime, group by EventName, Linear
 ### plot_scatter() 
 - gc_event_dataframes
@@ -137,6 +140,8 @@ set yscale to log manually
 
 set yscale to log manually
 
+--- 
+
 > #### 3. Concurrent durations during runtime
 - gc_event_dataframes
 - group_by
@@ -146,7 +151,7 @@ set yscale to log manually
 - plot
 - column
 - column_timing
-
+--- 
 > #### 4. Total time spent in STW pauses vs. Concurrent durations
 ### plot_bar_sum()
 - gc_event_dataframes
@@ -157,6 +162,8 @@ set yscale to log manually
 - plot
 - column
 - column_timing
+
+--- 
 > #### 5a. Pauses trends (max, sum, mean, count, std.dev)
 ### plot_trends()
 - gc_event_dataframes
@@ -174,7 +181,7 @@ set yscale to log manually
 - labels
 - column
 - throughput : If True, then a throughput is calculated from the timestamps provided, and the sum of the event durations for each group/log file.
-
+--- 
 > #### 6a. Pause percentiles
 ### plot_percentiles()
 - gc_event_dataframes
@@ -190,7 +197,7 @@ set yscale to log manually
 - filter_by = pauses_only 
 - labels
 - column
-
+--- 
 > #### 7a. Average event durations
 ### plot_bar_avg()
 - gc_event_dataframes,
@@ -201,6 +208,7 @@ set yscale to log manually
 - plot
 - column
 - column_timing
+
 
 > #### 7b. Sum event durations
 ### plot_bar_sum()
@@ -213,6 +221,7 @@ set yscale to log manually
 - column
 - column_timing
 
+--- 
 > #### 8a. Heap Before GC 
 ### plot_line()
 - gc_event_dataframes
@@ -234,6 +243,7 @@ set yscale to log manually
 - column
 - column_timing
 
+--- 
 > #### 9. MB Reclaimed during program runtime
 ### plot_reclaimed_bytes()
 Note: Relies on data being stored in columns named "HeapBeforeGC" and "HeapAfterGC".
@@ -244,7 +254,7 @@ Note: Relies on data being stored in columns named "HeapBeforeGC" and "HeapAfter
 - plot
 - column_timing
 - colors
-
+---
 > #### 10. Latency Heatmaps, Linear
 ### plot_heatmaps()
 - gc_event_dataframes
@@ -260,7 +270,7 @@ Note: Relies on data being stored in columns named "HeapBeforeGC" and "HeapAfter
 - column_timing
 - frequency_ticks : If True, the heatmap prints the frequency as a number onto each cell. If False, it does not. Default = False.
 
-
+---
 > #### 11. Pause frequencies histogram
 ### plot_frequency_intervals() 
 - gc_event_dataframes
@@ -272,7 +282,7 @@ Note: Relies on data being stored in columns named "HeapBeforeGC" and "HeapAfter
 - column
 - interval_duration
 - column_timing
-
+---
 > #### 12. Latency percentiles over time intervals
 ### plot_percentile_intervals()
 - gc_event_dataframes
@@ -288,7 +298,7 @@ Note: Relies on data being stored in columns named "HeapBeforeGC" and "HeapAfter
 - line_graph
 - different_colors : if True, each individual percentile line has its own color. If false, the percentiles for one log / group share the same color.
 
-
+---
 > #### 13. Number of times GC invoked over time intervals
 ### plot_frequency_of_gc_intervals()
 - gc_event_dataframes
@@ -300,7 +310,7 @@ Note: Relies on data being stored in columns named "HeapBeforeGC" and "HeapAfter
 - column = "GCIndex"
 - interval_duration
 - column_timing
-
+---
 > #### 14. Sum of pause durations over intervals
 ### plot_sum_pause_intervals()
 - gc_event_dataframes
@@ -315,7 +325,7 @@ Note: Relies on data being stored in columns named "HeapBeforeGC" and "HeapAfter
 - remove_empty_intervals : if True, then intervals where the sum of pauses = 0 will not be plotted. Default = False.
 - line_graph 
 
-
+---
 > #### 15. Logarithmic heatmaps.* known bug where start time is always 0
 ### plot_heatmaps_logarithmic()
 - gc_event_dataframes
@@ -331,6 +341,7 @@ Note: Relies on data being stored in columns named "HeapBeforeGC" and "HeapAfter
 - column_timing
 - frequency_ticks : If True, the heatmap prints the frequency as a number onto each cell. If False, it does not. Default = False.
 
+---
 > #### 16. Percentage of heap filled after GC
 ### plot_percentages()
 - gc_event_dataframes
@@ -344,6 +355,7 @@ Note: Relies on data being stored in columns named "HeapBeforeGC" and "HeapAfter
 - max_percentage_values : a list of the max heapsize in MB for each of the passed lists for gc_event_dataframes. (coming soon! Automatic detection of the max heapsize!)
 - line_graph
 
+---
 > #### 17. Heap allocation rate 
 ### src.graphing.allocation_rate.allocation_rate()
 - gc_event_dataframes
