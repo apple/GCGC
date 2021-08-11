@@ -1,6 +1,6 @@
 # Setup
 
->This section explains how to locally install python3, jupyter notebook, and any needed python packages (such as matplotlib). Explanation assumes you are running macOS locally on BigSur
+>This section explains how to locally install python3, jupyter notebook, and any needed python packages (such as matplotlib). Explanation assumes you are running macOS locally on BigSur. MacOS comes with python2 locally installed by default, but it is required to also install python3 for this tool.
 ## Part 1 - Python 3
 The official documentation can be found here:  [Python setup MacOS](https://docs.python.org/3/using/mac.html)
 
