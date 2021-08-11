@@ -40,3 +40,12 @@ Setup for these explained in [setup.md](./setup.md)
 > > - [*.py](./src) - contains python scripts to aid in simplicity of the Jupyter notebook interface
 
 > [setup.md](setup.md) - contains instructions on how to setup the required parts of this project
+
+--- 
+
+Note: Not all files are documented up to date fully:
+The following files are still being documented.
+
+- src/parse_log_file.py -> Correct, but improved documentation will be coming soon, to improve experience.
+- src/graping/logarithamic_heatmap_testing.py
+- src/graphing/allocation_rate.py

@@ -1,8 +1,6 @@
 # Notebooks
 
 
-> If this is your first time using a Jupyter notebook for python3, and you would like to modifiy and understand the source code, use can use the [tutorials](../../tutorials)
-
 
 The notebook GCGC.ipynb is a complete analysis notebook, and only requires a user to edit the first cell.  Locally create a copy of this file to do any work, and use the original as a reference. 
 
