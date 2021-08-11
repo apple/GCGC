@@ -8,7 +8,7 @@ Known edge cases documented at the end of this file.
 
 
 ## Important: 
-If you do not know how to start a jupyter notebooks server/kernel required for all notebooks, follow the setup instructions in [setup.md](../../setup.md)
+If you do not know how to start a jupyter notebooks server/kernel required for a notebook, follow the setup instructions in [setup.md](../../setup.md)
 
 # GC Analysis provided
 The following are a list of automatically generated graphs/tables that are created after filling in the first cell with GC information. Afterwards, a detailed tuning section for each graph can be found. After generating a graph, feel free to change the parameters and labels, and re-run.
