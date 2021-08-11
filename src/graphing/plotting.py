@@ -42,8 +42,11 @@ def plot_scatter(
         print("Not enough colors to plot")
     for time, datapoints, color, label in zip(timestamp_groups, datapoint_groups, colors, labels):
         plot.plot(time, datapoints, marker='o', linestyle='',markersize=3, label=label, color=color)
-    plot.legend()
+
     # return a plot object to be displayed or modified
+    plot.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+    
+
     return plot
 
 
@@ -75,7 +78,7 @@ def plot_line(
         print("Not enough colors to plot")
     for time, datapoints, color, label in zip(timestamp_groups, datapoint_groups, colors, labels):
         plot.plot(time, datapoints, label=label, color=color)
-    plot.legend()
+    plot.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
     # Return a plot to be displayed or modified
     return plot
 
@@ -111,7 +114,7 @@ def plot_pie_sum(
         pie_slices_sizes.append(slice)
         labels[idx] = labels[idx] + " : " + str(pslice)
     plot.pie(pie_slices_sizes, labels=labels, colors=colors, startangle=-40)
-    plot.legend()
+    plot.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
     return plot
 
 
@@ -138,7 +141,7 @@ def plot_bar_sum(
     )
     # if no plot is passed in, create a new plot
     if not plot:
-        f, plots = plt.subplots()
+        f, plot = plt.subplots()
     if len(datapoint_groups) > len(labels):
         print("Not enough labels to plot")
     if len(datapoint_groups) > len(colors):
@@ -146,12 +149,12 @@ def plot_bar_sum(
     # Add the values to the plot. Labels will have the value of the sum appended to the end
     for idx, (datapoints, color, label, alpha) in enumerate(zip(datapoint_groups, colors, labels, alphas)):
         barheight = sum(datapoints)
-        plots.bar(idx, barheight, label=label + " : " + str(round(barheight, 4)), color=color, alpha=alpha)
+        plot.bar(idx, barheight, label=label + " : " + str(round(barheight, 4)), color=color, alpha=alpha)
     
-    plots.set_xticks(range(len(datapoint_groups)))
-    plots.set_xticklabels(labels)
-    plots.legend()
-    return plots
+    plot.set_xticks(range(len(datapoint_groups)))
+    plot.set_xticklabels(labels)
+    plot.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+    return plot
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -176,18 +179,18 @@ def plot_bar_avg(
     )
     # if no plot is passed in, create a new plot
     if not plot:
-        f, plots = plt.subplots()
+        f, plot = plt.subplots()
     if len(datapoint_groups) > len(labels):
         print("Not enough labels to plot")
     if len(datapoint_groups) > len(colors):
         print("Not enough colors to plot")
     for idx, (datapoints, color, label) in enumerate(zip(datapoint_groups, colors, labels)):
         barheight = sum(datapoints) / len(datapoints)
-        plots.bar(idx, barheight, label=label + " : " + str(round(barheight, 4)), color=color)
-    plots.set_xticks(range(len(datapoint_groups)))
-    plots.set_xticklabels(labels)
-    plots.legend()
-    return plots
+        plot.bar(idx, barheight, label=label + " : " + str(round(barheight, 4)), color=color)
+    plot.set_xticks(range(len(datapoint_groups)))
+    plot.set_xticklabels(labels)
+    plot.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+    return plot
 
 
 from src.graphing.trends import compare_trends
@@ -327,7 +330,7 @@ def plot_reclaimed_bytes(
         print("Not enough colors to plot")
     for time, datapoints, color, label in zip(timestamp_groups, reclaimed_bytes_groups, colors, labels):
         plot.scatter(time, datapoints, label=label, color=color)
-    plot.legend()
+    plot.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
 
     # Return a plot to be displayed or modified
     return plot
@@ -400,7 +403,7 @@ def plot_frequency_intervals(
     xticks, xlabels = simplify_xtickslabels(plot.get_xticks(), plot.get_xticklabels(), 20)
     plot.set_xticks(xticks)
     plot.set_xticklabels(xlabels)
-    plot.legend()
+    plot.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
     return plot
 
 
@@ -553,7 +556,7 @@ def plot_percentile_intervals(
                     plot.scatter(x_alignment, single_line, color = colors [group], alpha = 1 - 0.15 * idx ) 
     
     # Add styling to the plot. Add legend, and x axis correct titles
-    plot.legend()
+    plot.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
     return plot
         
 
@@ -598,7 +601,7 @@ def plot_frequency_of_gc_intervals(
         plot.plot(x_alignment, frequency, label = labels[index], color = colors[index])
     
     # Add styling to the plot. Add legend, and correct x-axis labels
-    plot.legend()
+    plot.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
     return plot
 
 
@@ -639,7 +642,7 @@ def plot_heatmaps(
     ):
     from src.graphing.heatmap import get_heatmap_data, plot_heatmap
     timestamp_groups, datapoint_groups, labels, _, _ = filter_and_group(
-        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing,
+        gc_event_dataframes, group_by, filter_by, labels, column, None, column_timing,
     )
 
     heatmap_list, dimensions = get_heatmap_data(timestamp_groups, datapoint_groups, labels, dimensions)
@@ -749,7 +752,7 @@ def plot_using_intervals(
             plot.scatter(x_alignment, sums, label = labels[index], color = colors[index])
 
     # Set the labels for the buckets, starting with a non-zero bucket    
-    plot.legend()
+    plot.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
     return plot
 
 ########
@@ -806,7 +809,7 @@ def plot_percentages(
             plot.plot(time, datapoints, label=label, color=color)
         else:
             plot.scatter(time, datapoints,  label=label, color=color)
-    plot.legend()
+    plot.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
     # return a plot object to be displayed or modified
     return plot
 

@@ -50,7 +50,7 @@ def allocation_rate(
         else:
             plot.scatter(start_times, datapoints,  label=label, color=color)
             
-    plot.legend()
+    plot.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
     # return a plot object to be displayed or modified
     return plot
 
