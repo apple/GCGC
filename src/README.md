@@ -28,7 +28,7 @@ The columns used during the program, that MUST be present in the data set are:
     - TimeFromStart_seconds
     - Duration_miliseconds
 
-Without these two columns, the notebook will fail to automatically either X or Y information. 
+Without these two columns, the notebook will fail to automatically capture either X or Y information. 
 
 The columns, patterns for them, and the actual regex capture groups are defined in [./read_log_file.py](read_log_file.py).
 1. `TimeFromStart_seconds` : Time since program begins. Used for all plots x-axis values. Make sure to enable this metric when creating a log file.
