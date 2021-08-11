@@ -1,9 +1,10 @@
-# GC log analysis
+# GCGC
+## Garbage Collection Graph Collector 
 #### Ellis Brown (7/13/2021)
 
 #
 This GC log analysis tool using a Juputer notebooks interface is useful for parsing gc log files created from java workloads. 
-Currently supports Shenandoah, G1, Parallel GC, Serial GC, and Z garbage collectors in JDK11.
+Currently supports collectors in both JDK11 & JDK 16.
 
 
 > ## Requirements to run
@@ -11,6 +12,7 @@ Currently supports Shenandoah, G1, Parallel GC, Serial GC, and Z garbage collect
 - Python3 
 - The following Python3 packages
     - numpy
+    - pandas
     - matplotlib
     - Jupyter notebook 
 
@@ -19,19 +21,17 @@ Setup for these explained in [setup.md](./setup.md)
 ## How to run analysis
 
 1. Navigate to [src/notebooks](./src/notebooks)
-2. Run the terminal command `jupyter notebook` under [src/notebooks](./src/notebooks) or open a notebook using a compatible IDE. This will begin a python3 kernel to execute commands.
-3. Open [analyze_logs_simple.ipynb](./src/notebooks/analyze_logs_simple.ipynb) in the web page that opened as a result of running the above command. If using an IDE, open the file from [src/notebooks](src/notebooks)
-4. Set the second code cell's state information
+2. Run the terminal command `jupyter notebook` under [src/notebooks](./src/notebooks) or open a notebook using a compatible IDE such as VSCode. This will begin a python3 kernel to execute commands.
+3. Open [GCGC.ipynb](./src/notebooks/GCGC.ipynb) in the web page that opened as a result of running the above command. If using an IDE, open the file from [src/notebooks](src/notebooks)
+4. Set the second code cell's required state information
    - `files` : a list of log files to be analyzed
-   - `labels`: describe the log files listed above. 
-   - `time_range_seconds` : Minimum and maximum time, or None for the whole file
-4. Use the in-notebook instructions to run analysis, or run all cells at the top. For help running cells, view the notebooks in [/tutorials](./tutorials).
+   - `labels`: describe the log files listed above.    
+5. Run all cells. In the web based Jupyter notebooks, press `Cell` from the top menu, and select `Run All`. If you are working from an IDE rather than web based Jupyter, follow the online documentation for your particular IDE.  
 
 
 ## File Structure
 
 > [datasets](./datasets)
-> > - [long/](./datasets/long) - contains example log files. 
 > > - [short/](./datasets/short) - contains example log files
 
 > [src](./src)
