@@ -1,17 +1,19 @@
 # Notebooks
 
 
-> If this is your first time using a Jupyter notebook for python3, and you would like to modifiy and understand the source code, use the following [tutorials](../../tutorials)
+> If this is your first time using a Jupyter notebook for python3, and you would like to modifiy and understand the source code, use can use the [tutorials](../../tutorials)
 
 
-The notebook compare_any.ipynb is a complete analysis notebook, and only requires a user to edit the first cell. Locally create a copy of this file to do any work, and use the original as a reference.
+The notebook GCGC.ipynb is a complete analysis notebook, and only requires a user to edit the first cell.  Locally create a copy of this file to do any work, and use the original as a reference. 
+
+Known edge cases documented at the end of this file.
 
 
 ## Important: 
 If you do not know how to start a jupyter notebooks server/kernel required for all notebooks, follow the setup instructions in [setup.md](../../setup.md)
 
 # GC Analysis provided
-The following are a list of automatically generated graphs/tables that are created after filling in the first cell with GC information. Afterwards, a detailed tuning section for each graph can be found.
+The following are a list of automatically generated graphs/tables that are created after filling in the first cell with GC information. Afterwards, a detailed tuning section for each graph can be found. After generating a graph, feel free to change the parameters and labels, and re-run.
 
 > #### 1a. STW Pauses during program runtime, Linear
 > #### 1b. STW Pauses during program runtime, Logarithmic
@@ -369,3 +371,15 @@ Note: Relies on data being stored in columns named "HeapBeforeGC" and "HeapAfter
 - column_after : the column in the gc_event_dataframe to find the heapsize after gc run
 - percentile : if a percentile is provided, and an interval_seconds, then the passed percentile for allocation rate is plotted for each of the intervals.
 - line_graph
+
+--- 
+
+### Known edge cases:
+
+Note: The following edge cases are known and not handled automatically:
+
+1) Shenandoah has two phases reporting Heap allocation: Does not imply twice the GC runs.
+2) ZGC in JDK16 Puts information in safepoints, does not AUTOMATICALLY print these in log analysis as it currently stands. These safepoints have comparable metrics to pause times, but ZGC does not report them in the same fashion, so manual manipulation is needed.
+3) ZGC bytes reclaimed calculation (This may extend to Shenandoah) may be negative, if the rate of allocation exceeds the rate of gc collection. Information is correctly provided in logs, not properly analyzed here.
+4) Trying to plot a graph declared in another cell does not show up inline in Jupyter notebooks
+5) Using column_timing = "DateTime" in any function that requires as an "interval_duration" breaks the tool's analysis features, since DateTime represents each day with about 0.25 float value percision, not the expected unit of seconds.
