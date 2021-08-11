@@ -193,7 +193,7 @@ def __annotate_heatmap(im, data=None, valfmt="{x}", textcolors=("black", "white"
     texts = []
     for i in range(data.shape[0]):
         for j in range(data.shape[1]):
-            kw.update(color=textcolors[int(im.norm(data[i, j]) > threshold)])
+            kw.update(color=textcolors[int(im.norm(data[i, j]) < threshold)])
             text = im.axes.text(j, i, valfmt(data[i, j], None), **kw)
             texts.append(text)
 
