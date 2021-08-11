@@ -1,8 +1,8 @@
 # GCGC
 ## Garbage Collection Graph Collector 
-![Pauses during runtime](STW_Pauses.pdf)
 
-#
+<img src="images/s2.jpg" alt="Example heat map plot" height="300px" />
+
 This GC log analysis tool using a Juputer notebooks interface is useful for parsing gc log files created from java workloads. 
 Currently supports collectors in both JDK11 & JDK 16.
 
