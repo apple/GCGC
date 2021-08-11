@@ -1,6 +1,6 @@
 # GCGC
 ## Garbage Collection Graph Collector 
-#### Ellis Brown (7/13/2021)
+![Pauses during runtime](images/STW_Pauses.pdf)
 
 #
 This GC log analysis tool using a Juputer notebooks interface is useful for parsing gc log files created from java workloads. 

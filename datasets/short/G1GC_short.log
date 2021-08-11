@@ -30,7 +30,7 @@
 [0.611s][info][gc,heap     ] GC(0) Archive regions: 2->2
 [0.611s][info][gc,heap     ] GC(0) Humongous regions: 0->0
 [0.611s][info][gc,metaspace] GC(0) Metaspace: 758K(896K)->758K(896K) NonClass: 707K(768K)->707K(768K) Class: 51K(128K)->51K(128K)
-[0.611s][info][gc          ] GC(0) Pause Young (Normal) (G1 Evacuation Pause) 411M->98M(8192M) 141.751ms
+[0.611s][info][gc          ] GC(0) Pause Young (Normal) (G1 Evacuation Pause) 411M->98M(8192M) 11.751ms
 [0.611s][info][gc,cpu      ] GC(0) User=0.21s Sys=1.16s Real=0.14s
 [0.816s][info][gc,start    ] GC(1) Pause Young (Normal) (G1 Evacuation Pause)
 [0.816s][info][gc,task     ] GC(1) Using 13 workers of 13 for evacuation
