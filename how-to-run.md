@@ -19,7 +19,7 @@
 ---
 
 ### 4. Set the second code cell's required state information. There will be an example already filled out.
-   - `files` : a list of log files to be analyzed
+   - `filepaths` : a list of log files to be analyzed
    - `labels`: describe the log files listed above. 
 
 <img src="images/set_filepaths_and_labels.jpg" alt="Setting the state variables"/>
