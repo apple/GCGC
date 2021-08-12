@@ -3,7 +3,7 @@
 
 <img src="images/pauses_scatterplot.jpg" alt="Example heat map plot" height="auto" />
 
-This GC log analysis tool using a Juputer notebooks interface is useful for parsing gc log files created from java workloads. 
+This tool enables analysis of gc log files in a Jupyter notebook interface. Allows for comparing multiple log files and or external datasets.
 Currently supports collectors in both JDK11 & JDK 16.
 
 
