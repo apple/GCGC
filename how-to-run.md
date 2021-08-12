@@ -6,7 +6,7 @@
 
 --- 
 
-### 2. Run the terminal command `jupyter notebook` under [src/notebooks](./src/notebooks) or open a notebook using a compatible IDE such as VSCode. This will begin a python3 kernel to execute commands.
+### 2. Run the terminal command `jupyter notebook` under [src/notebooks](./src/notebooks). This will begin a python3 kernel to execute commands. It will also open a web page in your default browser. The terminal output contains information on how to open the correct web page if it d
 
 <img src="images/open_notebook_with_terminal.jpg" alt="Opening notebook using terminal" />
 
@@ -32,4 +32,18 @@
 
 --- 
 
-### 6. After that, the analysis should be automatically generated!
+### 6. After that, the analysis should be automatically generated! To view the analysis, the plots will generate one by one starting from the top of the file. After running all cells, scroll down to verify they have begun to run.
+<img src="images/plot1_cells.jpg" alt="After running notebook cells" />
+Notice, your cell's output has automatically been plotted inline. Wait for the full notebook analysis to finish, then analyze your results. Warning: An Error caused by a plot will prevent the following cells from executing. 
+
+---
+
+### 7. Wait for all cells to finish running.
+
+<img src="images/running_cell.jpg" alt="Cell currently running" />
+
+A cell that is running will have the term In [ * ] :
+
+A cell that is finished running will have In [ n ]:  meaning that the cell was the n-th cell to be run.
+
+Example for order of cells run: Running the same cell, which starts with value N, 10 times, will result in the same cell displaying (N + 10) as a result. Running X cells once each, starting at 1, will display the numbers 1...X on the cells sequentially.
