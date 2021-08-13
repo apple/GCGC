@@ -1,13 +1,20 @@
-# GCGC
-## Garbage Collection Graph Collector 
+# GCGC :  Garbage Collection Graph Collector 
 
 <img src="images/pauses_scatterplot.jpg" alt="Example heat map plot" height="auto" />
 
+
+
+# Features
 This tool enables analysis of gc log files in a Jupyter notebook interface. Allows for comparing multiple log files and or external datasets.
+
+GC information is collected in event logs, which can then be sorted and filtered in both pre-set and adaptable ways.
+ 
+There are 17 generated plots, which analyze latency, concurrent and stw events, heap information, allocation rates, trends, and frequencies of events plotted onto customizable charts and tables. 
+
+Furthermore, using Jupyter notebook for analysis allows for re-running analysis with minor changes to plots, and enables users to apply data transformations during analysis.
+
 Currently supports collectors in both JDK11 & JDK 16.
-
-
- # Requirements to run
+ # Requirements
 
 - Python3 
 - The following Python3 packages
@@ -16,7 +23,7 @@ Currently supports collectors in both JDK11 & JDK 16.
     - matplotlib
     - Jupyter notebook 
 
-Setup for these explained in [setup.md](./setup.md)
+Installation explained here:[setup.md](./setup.md)
 
 
 
@@ -24,19 +31,6 @@ Setup for these explained in [setup.md](./setup.md)
 
 Follow the instructions in [how-to-run.md](how-to-run.md)
 
-# File Structure
-
-> [datasets](./datasets)
-> > - [short/](./datasets/short) - contains example log files
-
-> [src](./src)
-> > - [graphing/](./src/graphing) - contains plotting and graphing python scripts
-> > - [notebooks/](./src/notebooks) - contains notebooks to analyze log files with.
-> > - [*.py](./src) - contains python scripts to aid in simplicity of the Jupyter notebook interface
-
-> [setup.md](setup.md) - contains instructions on how to setup the required parts of this project
-
---- 
 
 Note: Not all files are documented up to date fully:
 The following files are still being documented.
