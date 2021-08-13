@@ -1,6 +1,7 @@
 # GCGC :  Garbage Collection Graph Collector 
 
-<img src="images/pauses_scatterplot.jpg" alt="Example heat map plot" height="auto" />
+<img src="images/stw_pauses_log.jpg" alt="Example scatter plot" />
+<img src="images/heatmap.jpg" alt="Example heat map plot" />
 
 
 
