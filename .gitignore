@@ -1,8 +1,5 @@
-# Files not needed.
-# The gc log is too large, not needed.
 src/__pycache__
 src/graphing/__pycache__
 .vscode
 .ipynb_checkpoints
-datasets/hbase-regionserver-gc-ps1187-pid4217.log.2
 *.DS_Store
