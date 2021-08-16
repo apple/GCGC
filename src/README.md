@@ -7,7 +7,7 @@
 
 ## Design choices
 
-This project is built using Jupyter notebooks with a python3 kernel, rather than as a standalone tool with a graphical interface. Therefore, after collecting the GC log information and storing it into the state variable called `gc_event_dataframes`, it becomes possible for manual manipulation of the data. This was choosen for the project to allow for importing and exporting filtered data easily using well known packages in Python. The data structure used to hold the gc_event_dataframes is a [pandas](https://pandas.pydata.org) dataframe. The filters and groups while plotting provide fast ways to view subsets of the data, and further manipulation is possible due to the Notebook's interactive cell structure. All plots are created using the matplotlib package, which integrates well with inline plotting in Jupyter notebooks.
+This project is built using Jupyter notebooks with a python3 kernel, rather than as a standalone tool with a graphical interface. Therefore, after collecting the GC log information and storing it into the state variable called `gc_event_dataframes`, it becomes possible for manual manipulation of the data. This was chosen for the project to allow for importing and exporting filtered data easily using well known packages in Python. The data structure used to hold the gc_event_dataframes is a [pandas](https://pandas.pydata.org) dataframe. The filters and groups while plotting provide fast ways to view subsets of the data, and further manipulation is possible due to the Notebook's interactive cell structure. All plots are created using the matplotlib package, which integrates well with inline plotting in Jupyter notebooks.
 
 ---
 
@@ -57,6 +57,4 @@ The program holds a list of these gc_event_dataframes in state, which is then ne
 To run analysis on the data, a user runs a cell with a printing function, which takes a grouping & filter as parameters.
 A grouping will group all matching values for a column into one place. A filter selects rows from the dataframe, based on conditions. Then, the remaining data is processed and plotted. The resulting plot is returned, so easy labeling can be set for axis and titles. The axis of the plot are automatically adjusted (with the exception of the heatmaps) to fit the plotted data. 
 
-Furhter manipulation of the data before or after plotting is possible, by using notebook cells. Each cell currently provided in the notebook comes with a link to the documentation of that cell.
-
-(TODO)
+Further manipulation of the data before or after plotting is possible, by using notebook cells. Each cell currently provided in the notebook comes with a link to the documentation of that cell.
