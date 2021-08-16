@@ -43,8 +43,6 @@ Note: The following edge cases are known and not handled automatically:
 4) Trying to plot a graph or plot with a returned matlpotlib.axes variable declared in another cell does not show up inline in Jupyter notebooks.
 5) Using column_timing = "DateTime" in any function that requires an "interval_duration" breaks the tool's analysis features, since DateTime represents each day with about 0.25 float value precision, not the expected unit of seconds. Feature is being fixed in a later version.
 
-
-
 --- 
 ### Note:
 The following files are still being documented.
