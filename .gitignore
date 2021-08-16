@@ -5,6 +5,4 @@ src/graphing/__pycache__
 .vscode
 .ipynb_checkpoints
 datasets/hbase-regionserver-gc-ps1187-pid4217.log.2
-.DS_Store
-datasets/.DS_Store
 *.DS_Store
