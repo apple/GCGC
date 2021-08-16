@@ -44,16 +44,6 @@ Note: The following edge cases are known and not handled automatically:
 5) Using column_timing = "DateTime" in any function that requires as an "interval_duration" breaks the tool's analysis features, since DateTime represents each day with about 0.25 float value percision, not the expected unit of seconds. Feature is being fixed in a later version.
 
 
----
-
-Other solutions: 
-
-This project is one of multiple used for analyzing GC log files. The main benefit of this GCGC tool is the interactive interface using Jupyter notebooks, which allows for easy customization with fast visualization. There are other tools for this job, noteably the following:
-
-[GCEasy](https://gceasy.io) : A paid tool for through analysis of a single log file. Very simple to use. The free version allows for 5 log files of up to 10mb uploaded per month, with different paid versions.
-
-[Microsoft GCToolKit](https://github.com/microsoft/gctoolkit) : "Parses GC log files into discrete events and provides an API for aggregating data from those events"
-
 
 --- 
 ### Note:
