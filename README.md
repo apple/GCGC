@@ -50,5 +50,4 @@ Note: The following edge cases are known and not handled automatically:
 The following files are still being documented.
 
 - src/parse_log_file.py -> Correct, but improved documentation will be coming soon, to improve experience.
-- src/graping/logarithamic_heatmap_testing.py
 - src/graphing/allocation_rate.py
