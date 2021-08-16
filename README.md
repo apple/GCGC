@@ -5,16 +5,15 @@
 
 
 
-# Features
-This tool enables analysis of gc log files in a Jupyter notebook interface. Allows for comparing multiple log files and or external datasets.
+GCGC uses a Jupyter notebook interface to analyze GC log files.
 
-GC information is collected in event logs, which can then be sorted and filtered in both pre-set and adaptable ways.
+The analysis is built into a provided notebook, and generates plots and tables from collected GC information. The collected data for each log is parsed into a python pandas 'event log'. Then, using the event logs as a persistant database, the event information can be sorted, filtered, and grouped in both pre-set and customizable ways to display relevant trends and outliers.
  
-There are 17 generated plots, which analyze latency, concurrent and stw events, heap information, allocation rates, trends, and frequencies of events plotted onto customizable charts and tables. 
+There are 17 generated plots, which analyze latency, concurrent and STW events, heap information, allocation rates, frequencies of events, and trends, comparing any number of log files and external data sources. 
 
-Furthermore, using Jupyter notebook for analysis allows for re-running analysis with minor changes to plots, and enables users to apply data transformations during analysis.
+Furthermore, using Jupyter notebook data visualization allows for easy customization of provided plots.
 
-Currently supports collectors in both JDK11 & JDK 16.
+Currently supports collectors in JDK11 & JDK 16.
  # Requirements
 
 - Python3 
@@ -24,16 +23,40 @@ Currently supports collectors in both JDK11 & JDK 16.
     - matplotlib
     - Jupyter notebook 
 
-Installation explained here:[setup.md](./setup.md)
+Installation explained here: [docs/setup.md](./docs/setup.md)
 
 
 
 # How to run analysis
 
-Follow the instructions in [how-to-run.md](how-to-run.md)
+Follow the instructions in [docs/how-to-run.md](./docs/how-to-run.md)
+
+--- 
+
+## Known edge cases:
+
+Note: The following edge cases are known and not handled automatically:
+
+1) Shenandoah has two phases per garbage collection cycle reporting Heap allocation, will lead to two plotted heap occupancy metrics for each GC phase.
+2) ZGC in JDK16 Puts information in safepoints, does not automatically print these in log analysis as it currently stands. These safepoints have comparable metrics to pause times, but ZGC does not report them in the same fashion, so these must be manually enabled on plots.
+3) ZGC bytes reclaimed calculation (This may extend to Shenandoah) may be negative, if the rate of allocation exceeds the rate of gc collection. Information is correctly provided in logs, not properly analyzed here. Feature is being fixed in a later version
+4) Trying to plot a graph or plot with a returned matlpotlib.axes variable declared in another cell does not show up inline in Jupyter notebooks.
+5) Using column_timing = "DateTime" in any function that requires as an "interval_duration" breaks the tool's analysis features, since DateTime represents each day with about 0.25 float value percision, not the expected unit of seconds. Feature is being fixed in a later version.
 
 
-Note: Not all files are documented up to date fully:
+---
+
+Other solutions: 
+
+This project is one of multiple used for analyzing GC log files. The main benefit of this GCGC tool is the interactive interface using Jupyter notebooks, which allows for easy customization with fast visualization. There are other tools for this job, noteably the following:
+
+[GCEasy](https://gceasy.io) : A paid tool for through analysis of a single log file. Very simple to use. The free version allows for 5 log files of up to 10mb uploaded per month, with different paid versions.
+
+[Microsoft GCToolKit](https://github.com/microsoft/gctoolkit) : "Parses GC log files into discrete events and provides an API for aggregating data from those events"
+
+
+--- 
+### Note:
 The following files are still being documented.
 
 - src/parse_log_file.py -> Correct, but improved documentation will be coming soon, to improve experience.

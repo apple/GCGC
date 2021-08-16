@@ -1,6 +1,10 @@
 # Setup
 
 This section explains how to locally install python3, jupyter notebook, and other needed python packages (such as matplotlib). Explanation assumes you are running macOS locally on BigSur. MacOS comes with python2 locally installed by default, but it is required to also install python3 for this tool.
+
+## Part 0 - Download this repository
+The project repository must be downloaded locally to run analyisis, and complete the setup tutorial. Download a local copy of this project by using the command  `git clone (repository url)`.
+
 ## Part 1 - Python 3
 The official documentation can be found here:  [Python setup MacOS](https://docs.python.org/3/using/mac.html)
 However, you are welcome to follow this guide.
@@ -36,5 +40,5 @@ After completing the above steps to install Python packages, Jupyter notebooks i
 
 1. Using a terminal window, navigate to the correct folder that holds your `.ipynb` files, which should be the `./src/notebooks` folder in this project.
 2. run the command `jupyter notebook` in terminal to launch a local notebook server. This should cause your default web browser to open to a locally hosted notebooks server. A more detailed explanation of this step can be found in [how-to-run.md](./how-to-run.md) steps 1-3.
-3. Use the web based notebook to interact with the notebook. Select which notebook to begin interacting with, and 
-> Note: You can use some IDEs to edit and run your Jupyter-notebook, if desired. One example is VS-Code, which lets you modifiy and run the notebook in the IDE. However, all documentation in this project expects you to be using web based Jupyter notebooks
+3. Use the web based notebook to interact with the notebook. Select which notebook to begin interacting with, and confirm the notebook opens in your browser.
+> Note: You can use some IDEs to edit and run your Jupyter-notebook, if desired. One example is Visual Studio Code, which lets you modifiy and run the notebook in the IDE. However, all documentation in this project expects you to be using web based Jupyter notebooks

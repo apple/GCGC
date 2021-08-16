@@ -372,12 +372,3 @@ Note: Relies on data being stored in columns named "HeapBeforeGC" and "HeapAfter
 
 --- 
 
-### Known edge cases:
-
-Note: The following edge cases are known and not handled automatically:
-
-1) Shenandoah has two phases reporting Heap allocation: Does not imply twice the GC runs.
-2) ZGC in JDK16 Puts information in safepoints, does not AUTOMATICALLY print these in log analysis as it currently stands. These safepoints have comparable metrics to pause times, but ZGC does not report them in the same fashion, so manual manipulation is needed.
-3) ZGC bytes reclaimed calculation (This may extend to Shenandoah) may be negative, if the rate of allocation exceeds the rate of gc collection. Information is correctly provided in logs, not properly analyzed here.
-4) Trying to plot a graph declared in another cell does not show up inline in Jupyter notebooks
-5) Using column_timing = "DateTime" in any function that requires as an "interval_duration" breaks the tool's analysis features, since DateTime represents each day with about 0.25 float value percision, not the expected unit of seconds.
