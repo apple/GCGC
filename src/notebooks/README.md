@@ -149,7 +149,7 @@ Important: The plot generated in `1b` is the same as that generated in `1a`, but
                         filter_by = pauses_only,
                         labels = labels)
     plot.set_yscale("log")
-    plot.yaxis.set_major_formatter(ScalarFormatter()) # optiona
+    plot.yaxis.set_major_formatter(ScalarFormatter()) # optional
 
 
 Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line()` if a line plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by `1a. STW pauses during program runtime, linear` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
@@ -286,7 +286,7 @@ Important: The plot generated in `2b` is the same as that generated in `2a`, but
                         filter_by = pauses_only,
                         labels = labels)
     plot.set_yscale("log")
-    plot.yaxis.set_major_formatter(ScalarFormatter()) # optiona
+    plot.yaxis.set_major_formatter(ScalarFormatter()) # optional
 
 Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line` if a line plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by `2b. STW Pauses during program runtime, group by AdditionalEventInfo, Logarithmic` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
     
