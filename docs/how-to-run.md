@@ -37,7 +37,7 @@ In the example below, you can see filepaths to sample data, with labels describi
 --- 
 
 6. After pressing `run all`, the GCGC notebook analysis will be generated. The plots will generate one by one starting from the top of the notebook. Each plot takes a few seconds to generate, and may take longer for larger source log files. While cells are running, your screen may jump to the cell that is executing, or jump around in the notebook. This behavior is expected, and will not persist after analysis is complete.
-<img src="../images/plot1_cells.jpg" alt="After running notebook cells" height="300px"/>
+<img src="../images/plot1_cells.jpg" alt="After running notebook cells" height="700px"/>
 
 Notice, your cell's output has automatically been plotted inline. Wait for the full notebook analysis to finish, then analyze your results. 
 > Warning: An Error caused by a plot will prevent the following cells from executing.  Here is an example of an error message. If you find an error, such as this one caused by failing to put the correct number of labels for the provided files, try to resolve the error by reading all output messages from the top of the file downwards first. For this particular example, you would have found a cell outputting the message "Error: Labels do not have same length as collected data" in a cell above the runtime error.
