@@ -7,7 +7,7 @@ List of functions and the plots they are expected to produce. For each of the pr
 
 > #### [2a. STW Pauses during program runtime, group by EventName, Linear : link](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#2a-stw-pauses-during-program-runtime-group-by-eventname-linear)
 >
-> #### [2b. STW Pauses during program runtime, group by AdditionalEventInfo, Logarithmic : link](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#15-logarithmic-heatmaps)
+> #### [2b. STW Pauses during program runtime, group by AdditionalEventInfo, Logarithmic : link](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#2b-stw-pauses-during-program-runtime-group-by-additionaleventinfo-logarithmic)
 
 > #### [3. Concurrent durations during runtime : link](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#3-concurrent-durations-during-runtime)
 
