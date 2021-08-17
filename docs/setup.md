@@ -19,8 +19,8 @@ However, you are welcome to follow this guide.
 5. (If step 4 did not work) : Navigate to the Python3.x folder in your `Applications` folder. Open the folder, and run the following program: `Update Shell Profile.command`
 6. Repeat step 4. If lost, follow the official documentation for more setup guidance and troubleshooting
 
-## Installing additional packages
-You can use pip package manager to install additional packages.
+## Installing packages
+You can use pip package manager to install packages.
 1. Check if pip is already installed. Type `python3 -m pip --version`
 2. Use `pip3` for installing packages. 
 3. `pip3 install <package name>`. 
