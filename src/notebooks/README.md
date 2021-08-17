@@ -797,7 +797,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
 ## 8a. Heap Before GC 
 
-Uses the function `plot_line()`. This function is interchangeable with the function `plot_scatter()` if a line plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by `2a. STW Pauses during program runtime, group by EventName, Linear` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
+Uses the function `plot_line()`. This function is interchangeable with the function `plot_scatter()` if a line plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by `8a. Heap Before GC` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
     
     gc_event_dataframes (required)
     group_by            (Expected = "EventName") 
