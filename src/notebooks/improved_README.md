@@ -2,7 +2,45 @@
 
 List of functions and the plots they are expected to produce. For each of the provided GCGC original plots, the suggested parameters will be provided.
 
+> #### [1a. STW Pauses during program runtime, Linear](#1a.-stw-pauses-during-program-runtime,-linear)
+> #### [1b. STW Pauses during program runtime, Logarithmic](#1b.-stw-pauses-during-program-runtime,-logarithmic)
 
+> #### 2a. STW Pauses during program runtime, group by EventName, Linear
+> #### 2b. STW Pauses during program runtime, group by AdditionalEventInfo, Logarithmic
+
+> #### 3. Concurrent durations during runtime
+
+> #### 4. Total time spent in STW pauses vs. Concurrent durations
+
+> #### 5a. Pauses trends (max, sum, mean, count, std.dev)
+> #### 5b. Pauses trends by name
+
+> #### 6a. Pause percentiles
+> #### 6b. Pause percentiles by name
+
+> #### 7a. Mean event durations
+> #### 7b. Sum event durations
+
+> #### 8a. Heap Before GC 
+> #### 8b. Heap After GC
+
+> #### 9. MB Reclaimed during program runtime
+
+> #### 10. Latency Heatmaps, Linear
+
+> #### 11. Pause frequencies histogram
+
+> #### 12. Latency percentiles over time intervals
+
+> #### 13. Number of times GC invoked over time intervals
+
+> #### 14. Sum of pause durations over intervals
+
+> #### 15. Logarithmic heatmaps.* known bug where start time is always 0
+
+> #### 16. Percentage of heap filled after GC
+
+> #### 17. Heap allocation rate 
 ## Configurations for plots
 The following parameters can be found in some of the plotting functions. The list of the parameters for each function can be found below.
 - `gc_event_dataframes` a list of pandas dataframes (gc event logs) containing information to be plotted
@@ -1375,23 +1413,19 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
 
 
-
-
-
-
 ## 16. Percentage of heap filled after GC
-Uses the function `plot_percentages()`. The parameters are listed below for the functions, with the expected values to create the plot described by `14. Sum of pause durations over intervals` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
+Uses the function `plot_percentages()`. The parameters are listed below for the functions, with the expected values to create the plot described by `16. Percentage of heap filled after GC` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
     
-    gc_event_dataframes    (required)
-    group_by               (Expected = None) 
-    filter_by              (Expected = pauses_only)
-    labels                 (Expected = labels variable)
-    colors                 (Expected = None)
-    plot                   (Expected = None)
-    column                 (Expected = "GCIndex")
-    column_timing          (Expected = None)
-    max_heapsize_list  (Expected = [int value in MB]) # heapsize 8gb = 8 * 1024
-    line_graph             (Expected = False)
+    gc_event_dataframes  (required)
+    group_by             (Expected = None) 
+    filter_by            (Expected = heap_before_gc)
+    labels               (Expected = labels variable)
+    colors               (Expected = None)
+    plot                 (Expected = None)
+    column               (Expected = "HeapAfterGC")
+    column_timing        (Expected = None)
+    max_heapsize_list    (Expected = [int value in MB]) # heapsize 8gb = 8 * 1024
+    line_graph           (Expected = False)
 
 Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
@@ -1453,7 +1487,76 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
 
 ## 17. Heap allocation rate 
+Uses the function `src.graphing.allocation_rate.allocation_rate()`. The parameters are listed below for the functions, with the expected values to create the plot described by `17. Heap allocation rate ` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
+    
+    gc_event_dataframes  (required)
+    group_by            (Expected = None) 
+    filter_by           (Expected = diff_in_entries_filter)
+    labels              (Expected = labels variable)
+    interval_duration    (Expected = 60) # some int or float number
+    colors              (Expected = None)
+    plot                (Expected = None)
+    column_before       (Expected = None)
+    column_after        (Expected = None)
+    column_timing       (Expected = None)
+    percentile          (Expected = 100) 
+    line_graph          (Expected = False)
 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+
+`src.graphing.allocation_rate.allocation_rate()` parameters:
+
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+
+      group_by = "EventName"
+      group_by = "EventType"
+
+- **filter_by** : `function` datatype. A boolean function to be applied to each row of each `gc event log`. If the function evaluates to false, then that event will not be included in the resulting plot. A typical function first checks if the column exists before checking any values, as seen in the example below. If this check is not in place, a `KeyError` may be thrown.
+        
+      def pauses_only(row):
+           if "EventType" in row:
+               if row["EventType] == "Pause":
+                   return True
+       return False
+        
+     filter_by = pauses_only
+
+- **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
+
+      labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
+
+- **interval_duration** : `float` or `int` datatype. The duration in seconds for grouping of times. For this function, that would be the size of each grouping on the histogram
+
+      interval_duration = 3600 # 1 hour
+      interval_duration = 1.5  # 1.5 seconds
+
+
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+
+      colors = ["black", "darkslateblue", (1, 0.5, 0)]
+
+- **plot** : `matplotlib.axes._subplots.AxesSubplot` datatype. Each graphing function returns an instance of this plot object. Passing None creates a new figure. Passing an instance of a plot will keep all old data on the plot, and add the newly plotted data on top. Typically used to overlay two data sets with different column names.
+
+      plot = plot_scatter(gc_event_dataframes)
+      plot = plot_line(gc_event_dataframes, group_by = "EventNames")
+
+- **column_before** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot before the event. If None is passed, the default value for this parameter is `"HeapBeforeGC"`. 
+
+      column_before = "HeapBeforeGC"
+
+- **column_after** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of the data to plot after the event. If None is passed, the default value for this parameter is `"HeapAfterGC"`. 
+      
+      column_after = "HeapAfterGC"
+
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+      
+      column_timing = "TimeFromStart_seconds"
+
+- **line_graph** : `bool` datatype. If True, the graph plotted will be in line graph style, rather than scatter plot. If False or None, then it will remain scatter plot. Default False.
+
+      line_graph = False
 ---
 
 

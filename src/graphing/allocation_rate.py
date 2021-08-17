@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 #   Calculates and reports the allocation rate during runtime from gc information.
 #   Optional parameter: percentile: If used, then calculates the specified percentile 
 #                       allocation rate. If left as None, finds the mean allocation rate.
-#   Optional parameter: interval_seconds: Groups collected data into ranges, then either
+#   Optional parameter: interval_durationw: Groups collected data into ranges, then either
 #                       finds the mean or a percentile based on above optional param.
 #
 def allocation_rate(
@@ -16,13 +16,13 @@ def allocation_rate(
     group_by=None,  # A string to explain what groups to make within 1 gc_event_dataframe
     filter_by=None, # resitrctions on the data. list of tuples: (column, boolean-function) 
     labels=None,    # list of str labels to describe each gc_event_dataframe.  
-    interval_seconds=None, # integer or float. Creates groups of this size to find alloc rate.
+    interval_durationw=None, # integer or float. Creates groups of this size to find alloc rate.
     colors=None,    # colors to override 
     plot=None, #    matplotlib ax to plot onto. If none provided, one is created
     column_before="HeapBeforeGC", # Column used as information before event
     column_after= "HeapAfterGC", # Column used to find information after event
     column_timing = None, # Timing information used for X axis. List of floats or ints
-    percentile = None, #  If True, and interval_seconds is not None, plots the percentile
+    percentile = None, #  If True, and interval_durationw is not None, plots the percentile
     line_graph = False # Plots as a line graph rather than a scatter plot
 ):  
 # Filter and group data. Update colors and labels to reflect to-be-plotted data
@@ -43,7 +43,7 @@ def allocation_rate(
         print("Not enough colors to plot")
     for time, before_list, after_list, color, label in zip(timestamp_groups, before_list, after_list, colors, labels):
         time = list(time)
-        start_times, datapoints = get_difference(list(before_list), list(after_list), time, interval_seconds, percentile)
+        start_times, datapoints = get_difference(list(before_list), list(after_list), time, interval_durationw, percentile)
         time.pop()
         if line_graph:
             plot.plot(start_times, datapoints, label=label, color=color)
@@ -54,17 +54,17 @@ def allocation_rate(
     # return a plot object to be displayed or modified
     return plot
 
-def get_difference(before_list, after_list, time, interval_seconds, percentile):
+def get_difference(before_list, after_list, time, interval_durationw, percentile):
     times = []
     difference_list = []
     # https://plumbr.io/handbook/gc-tuning-in-practice/high-allocation-rate
     interval_start_time = time[0]
     allocated_bytes = 0
-    if percentile is None or interval_seconds is None:
+    if percentile is None or interval_durationw is None:
         for index in range(len(before_list) - 1):
             allocated_bytes += before_list[index + 1] - after_list[index] 
             elapsed_seconds = time[index + 1] - interval_start_time
-            if (interval_seconds is None or elapsed_seconds >= interval_seconds):
+            if (interval_durationw is None or elapsed_seconds >= interval_durationw):
                 if elapsed_seconds != 0:
                     difference_list.append(allocated_bytes / elapsed_seconds)
                     times.append(time[index])
@@ -82,7 +82,7 @@ def get_difference(before_list, after_list, time, interval_seconds, percentile):
             if time_delta != 0:
                 allocated_bytes_rate.append((before_list[index + 1] - after_list[index]) / time_delta)
                 elapsed_seconds = time[index + 1] - interval_start_time
-                if (elapsed_seconds >= interval_seconds):
+                if (elapsed_seconds >= interval_durationw):
                     times.append(time[index]) # Set the timestamp for this time interval
                     percentile_array.append(np.percentile(allocated_bytes_rate, percentile)) 
                     interval_start_time = time[index + 1]

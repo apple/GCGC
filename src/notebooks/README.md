@@ -360,12 +360,13 @@ Note: Relies on data being stored in columns named "HeapBeforeGC" and "HeapAfter
 - group_by
 - filter_by = diff_in_entries_filter
 - labels
-- interval_seconds
+- interval_duration
 - colors
 - plot
 - column_before : the column in the gc_event_dataframe to find the heapsize before gc run
 - column_after : the column in the gc_event_dataframe to find the heapsize after gc run
-- percentile : if a percentile is provided, and an interval_seconds, then the passed percentile for allocation rate is plotted for each of the intervals.
+- column_timing :
+- percentile : if a percentile is provided, and an interval_duration, then the passed percentile for allocation rate is plotted for each of the intervals.
 - line_graph
 
 --- 
