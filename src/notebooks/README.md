@@ -80,7 +80,7 @@ Note: all functions are defined [src.graphing.plotting](../graphing/plotting.py)
 
 ## 1a. STW pauses during program runtime, linear
 
-Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line()` if a line plot is desired, with the same parameters for each function. The parameters are listed below for the functions, with the expected values to create the plot described by `1a. STW pauses during program runtime, linear` being described in paranthesis. The only required parameter is `gc_event_dataframes` 
+Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line()` if a line plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by `1a. STW pauses during program runtime, linear` being described in paranthesis. The only required parameter is `gc_event_dataframes` 
     
     gc_event_dataframes (required)
     group_by            (Expected = None) 
@@ -91,7 +91,7 @@ Uses the function `plot_scatter()`. This function is interchangeable with the fu
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_scatter()` / `plot_line()` parameters:
 
@@ -110,7 +110,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -152,7 +152,7 @@ Important: The plot generated in `1b` is the same as that generated in `1a`, but
     plot.yaxis.set_major_formatter(ScalarFormatter()) # optiona
 
 
-Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line()` if a line plot is desired, with the same parameters for each function. The parameters are listed below for the functions, with the expected values to create the plot described by `1a. STW pauses during program runtime, linear` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
+Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line()` if a line plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by `1a. STW pauses during program runtime, linear` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
     
     gc_event_dataframes (required)
     group_by            (Expected = None) 
@@ -163,7 +163,7 @@ Uses the function `plot_scatter()`. This function is interchangeable with the fu
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_scatter()` / `plot_line()` parameters:
 
@@ -182,7 +182,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -215,7 +215,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
 ## 2a. STW Pauses during program runtime, group by EventName, Linear
 
-Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line` if a line plot is desired, with the same parameters for each function. The parameters are listed below for the functions, with the expected values to create the plot described by `2a. STW Pauses during program runtime, group by EventName, Linear` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
+Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line` if a line plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by `2a. STW Pauses during program runtime, group by EventName, Linear` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
     
     gc_event_dataframes (required)
     group_by            (Expected = "EventName") 
@@ -226,7 +226,7 @@ Uses the function `plot_scatter()`. This function is interchangeable with the fu
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_scatter()` / `plot_line()` parameters:
 
@@ -245,7 +245,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -288,7 +288,7 @@ Important: The plot generated in `2b` is the same as that generated in `2a`, but
     plot.set_yscale("log")
     plot.yaxis.set_major_formatter(ScalarFormatter()) # optiona
 
-Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line` if a line plot is desired, with the same parameters for each function. The parameters are listed below for the functions, with the expected values to create the plot described by `2b. STW Pauses during program runtime, group by AdditionalEventInfo, Logarithmic` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
+Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line` if a line plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by `2b. STW Pauses during program runtime, group by AdditionalEventInfo, Logarithmic` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
     
     gc_event_dataframes (required)
     group_by            (Expected = "EventName") 
@@ -299,7 +299,7 @@ Uses the function `plot_scatter()`. This function is interchangeable with the fu
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_scatter()` / `plot_line()` parameters:
 
@@ -318,7 +318,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -353,7 +353,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
 ## 3. Concurrent durations during runtime
 
-Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line` if a line plot is desired, with the same parameters for each function. The parameters are listed below for the functions, with the expected values to create the plot described by `3. Concurrent durations during runtime` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
+Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line` if a line plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by `3. Concurrent durations during runtime` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
     
     gc_event_dataframes (required)
     group_by            (Expected = None) 
@@ -364,7 +364,7 @@ Uses the function `plot_scatter()`. This function is interchangeable with the fu
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_scatter()` / `plot_line()` parameters:
 
@@ -383,7 +383,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -428,7 +428,7 @@ Uses the function `plot_bar_sum()`. The parameters are listed below for the func
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_bar_sum()` parameters:
 
@@ -447,7 +447,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -489,7 +489,7 @@ Uses the function `plot_trends()`. The parameters are listed below for the funct
     column              (Expected = None)
     throughput          (Expected = True)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_trends()` parameters:
 
@@ -508,7 +508,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -537,7 +537,7 @@ Uses the function `plot_trends()`. The parameters are listed below for the funct
     column              (Expected = None)
     throughput          (Expected = False)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_trends()` parameters:
 
@@ -556,7 +556,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -584,7 +584,7 @@ Uses the function `plot_percentiles()`. The parameters are listed below for the 
     labels              (Expected = labels variable)
     column              (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_percentiles()` parameters:
 
@@ -603,7 +603,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -629,7 +629,7 @@ Uses the function `plot_percentiles()`. The parameters are listed below for the 
     labels              (Expected = labels variable)
     column              (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_bar_sum()` parameters:
 
@@ -648,7 +648,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -681,7 +681,7 @@ Uses the function `plot_bar_sum()`. The parameters are listed below for the func
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_bar_sum()` parameters:
 
@@ -700,7 +700,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -744,7 +744,7 @@ Uses the function `plot_bar_avg()`. The parameters are listed below for the func
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_bar_avg()` parameters:
 
@@ -763,7 +763,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -797,7 +797,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
 ## 8a. Heap Before GC 
 
-Uses the function `plot_line()`. This function is interchangeable with the function `plot_scatter()` if a line plot is desired, with the same parameters for each function. The parameters are listed below for the functions, with the expected values to create the plot described by `2a. STW Pauses during program runtime, group by EventName, Linear` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
+Uses the function `plot_line()`. This function is interchangeable with the function `plot_scatter()` if a line plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by `2a. STW Pauses during program runtime, group by EventName, Linear` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
     
     gc_event_dataframes (required)
     group_by            (Expected = "EventName") 
@@ -808,7 +808,7 @@ Uses the function `plot_line()`. This function is interchangeable with the funct
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_scatter()` / `plot_line()` parameters:
 
@@ -859,7 +859,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
 ## 8b. Heap After GC
 
-Uses the function `plot_line()`. This function is interchangeable with the function `plot_scatter()` if a line plot is desired, with the same parameters for each function. The parameters are listed below for the functions, with the expected values to create the plot described by `8b. Heap After GC` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
+Uses the function `plot_line()`. This function is interchangeable with the function `plot_scatter()` if a line plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by `8b. Heap After GC` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
     
     gc_event_dataframes (required)
     group_by            (Expected = "EventName") 
@@ -870,7 +870,7 @@ Uses the function `plot_line()`. This function is interchangeable with the funct
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_scatter()` / `plot_line()` parameters:
 
@@ -889,7 +889,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -934,7 +934,7 @@ Uses the function `plot_reclaimed_bytes()`. The parameters are listed below for 
     plot                (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_reclaimed_bytes()` parameters:
 
@@ -997,7 +997,7 @@ Uses the function `plot_heatmap()`. The parameters are listed below for the func
     column_timing       (Expected = None)
     frequency_ticks     (Expected = True/False)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_heatmap()` parameters:
 
@@ -1023,7 +1023,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -1064,7 +1064,7 @@ Uses the function `plot_frequency_intervals()`. The parameters are listed below 
     interval_duration   (Expected = 60) # any positive float or integer 
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_frequency_intervals()` parameters:
 
@@ -1083,7 +1083,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -1135,7 +1135,7 @@ Uses the function `plot_percentile_intervals()`. The parameters are listed below
     line_graph          (Expected = False)
     different_colors    (Expected = True)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_percentile_intervals()` parameters:
 
@@ -1154,7 +1154,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -1212,7 +1212,7 @@ Uses the function `plot_frequency_of_gc_intervals()`. The parameters are listed 
     interval_duration   (Expected = 60) # any positive integer or float
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_frequency_of_gc_intervals()` parameters:
 
@@ -1231,7 +1231,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -1284,7 +1284,7 @@ Uses the function `plot_sum_pause_intervals()`. The parameters are listed below 
     remove_empty_intervals (Expected = False)
     line_graph             (Expected = False)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_frequency_of_gc_intervals()` parameters:
 
@@ -1303,7 +1303,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -1364,7 +1364,7 @@ Uses the function `plot_heatmaps_logarithmic()`. The parameters are listed below
     column_timing       (Expected = None)
     frequency_ticks     (Expected = True/False)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_heatmaps_logarithmic()` parameters:
 
@@ -1390,7 +1390,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -1429,7 +1429,7 @@ Uses the function `plot_percentages()`. The parameters are listed below for the 
     max_heapsize_list    (Expected = [int value in MB]) # heapsize 8gb = 8 * 1024
     line_graph           (Expected = False)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_percentages()` parameters:
 
@@ -1448,7 +1448,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
@@ -1504,7 +1504,7 @@ Uses the function `src.graphing.allocation_rate.allocation_rate()`. The paramete
     percentile          (Expected = 100) 
     line_graph          (Expected = False)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and rows with values describing discrete events. a list of `gc event log`s are returned from thefunction `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `src.graphing.allocation_rate.allocation_rate()` parameters:
 
@@ -1523,7 +1523,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
                    return True
        return False
         
-     filter_by = pauses_only
+       filter_by = pauses_only
 
 - **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
 
