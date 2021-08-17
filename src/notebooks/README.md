@@ -350,7 +350,7 @@ Note: Relies on data being stored in columns named "HeapBeforeGC" and "HeapAfter
 - plot
 - column
 - column_timing
-- max_percentage_values : a list of the max heapsize in MB for each of the passed lists for gc_event_dataframes. (coming soon! Automatic detection of the max heapsize!)
+- max_heapsize_list : a list of the max heapsize in MB for each of the passed lists for gc_event_dataframes. (coming soon! Automatic detection of the max heapsize!)
 - line_graph
 
 ---

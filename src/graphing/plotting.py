@@ -786,7 +786,7 @@ def plot_percentages(
     plot=None,
     column="Duration_miliseconds",
     column_timing = None,
-    max_percentage_values = None,
+    max_heapsize_list = None,
     line_graph = False
 ):  
     # Filter and group data. Update colors and labels to reflect to-be-plotted data
@@ -801,9 +801,9 @@ def plot_percentages(
         print("Not enough labels to plot")
     if len(datapoint_groups) > len(colors):
         print("Not enough colors to plot")
-    if len(max_percentage_values) < len(datapoint_groups):
+    if len(max_heapsize_list) < len(datapoint_groups):
         print("Not enough max values for associated percentages to plot")
-    for time, datapoints, maxv, color, label in zip(timestamp_groups, datapoint_groups, max_percentage_values, colors, labels):
+    for time, datapoints, maxv, color, label in zip(timestamp_groups, datapoint_groups, max_heapsize_list, colors, labels):
         datapoints = get_percentages(datapoints, maxv)
         if line_graph:
             plot.plot(time, datapoints, label=label, color=color)
