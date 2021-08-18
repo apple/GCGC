@@ -91,13 +91,13 @@ Uses the function `plot_scatter()`. This function is interchangeable with the fu
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_scatter()` / `plot_line()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -116,7 +116,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
 
       colors = ["black", "darkslateblue", (1, 0.5, 0)]
 
@@ -125,11 +125,11 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
       column = "Duration_miliseconds"
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 
@@ -163,13 +163,13 @@ Uses the function `plot_scatter()`. This function is interchangeable with the fu
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_scatter()` / `plot_line()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -188,7 +188,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
 
       colors = ["black", "darkslateblue", (1, 0.5, 0)]
 
@@ -197,11 +197,11 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
       column = "Duration_miliseconds"
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 
@@ -226,13 +226,13 @@ Uses the function `plot_scatter()`. This function is interchangeable with the fu
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_scatter()` / `plot_line()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -251,7 +251,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
 
       colors = ["black", "darkslateblue", (1, 0.5, 0)]
 
@@ -260,11 +260,11 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
       column = "Duration_miliseconds"
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 
@@ -299,13 +299,13 @@ Uses the function `plot_scatter()`. This function is interchangeable with the fu
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_scatter()` / `plot_line()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -324,7 +324,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
 
       colors = ["black", "darkslateblue", (1, 0.5, 0)]
 
@@ -333,11 +333,11 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
       column = "Duration_miliseconds"
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 
@@ -364,13 +364,13 @@ Uses the function `plot_scatter()`. This function is interchangeable with the fu
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_scatter()` / `plot_line()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -389,7 +389,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
 
       colors = ["black", "darkslateblue", (1, 0.5, 0)]
 
@@ -398,11 +398,11 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
       column = "Duration_miliseconds"
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 
@@ -428,13 +428,13 @@ Uses the function `plot_bar_sum()`. The parameters are listed below for the func
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_bar_sum()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -453,7 +453,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
 
       colors = ["black", "darkslateblue", (1, 0.5, 0)]
 
@@ -462,11 +462,11 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
       column = "Duration_miliseconds"
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 
@@ -489,13 +489,13 @@ Uses the function `plot_trends()`. The parameters are listed below for the funct
     column              (Expected = None)
     throughput          (Expected = True)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_trends()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -514,7 +514,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
 - **throughput** : `bool` datatype. If True, uses the provided timing information to attempt to calculate a throughput (time spent in program execution) / (total program time) * 100. Typically an illogical metric unless each group is all pauses from 1 file.
 
@@ -537,13 +537,13 @@ Uses the function `plot_trends()`. The parameters are listed below for the funct
     column              (Expected = None)
     throughput          (Expected = False)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_trends()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -562,7 +562,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
 - **throughput** : `bool` datatype. If True, uses the provided timing information to attempt to calculate a throughput (time spent in program execution) / (total program time) * 100. Typically an illogical metric unless each group is all pauses from 1 file.
 
@@ -584,13 +584,13 @@ Uses the function `plot_percentiles()`. The parameters are listed below for the 
     labels              (Expected = labels variable)
     column              (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_percentiles()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -609,7 +609,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
 ---
 
@@ -629,13 +629,13 @@ Uses the function `plot_percentiles()`. The parameters are listed below for the 
     labels              (Expected = labels variable)
     column              (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_bar_sum()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -654,7 +654,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
 ---
 
@@ -681,13 +681,13 @@ Uses the function `plot_bar_sum()`. The parameters are listed below for the func
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_bar_sum()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -706,7 +706,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
 
       colors = ["black", "darkslateblue", (1, 0.5, 0)]
 
@@ -715,11 +715,11 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
       column = "Duration_miliseconds"
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 
@@ -744,13 +744,13 @@ Uses the function `plot_bar_avg()`. The parameters are listed below for the func
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_bar_avg()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -769,7 +769,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
 
       colors = ["black", "darkslateblue", (1, 0.5, 0)]
 
@@ -778,11 +778,11 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
       column = "Duration_miliseconds"
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 
@@ -808,13 +808,13 @@ Uses the function `plot_line()`. This function is interchangeable with the funct
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_scatter()` / `plot_line()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -833,7 +833,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
 
       colors = ["black", "darkslateblue", (1, 0.5, 0)]
 
@@ -842,11 +842,11 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
       column = "Duration_miliseconds"
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 ---
@@ -870,13 +870,13 @@ Uses the function `plot_line()`. This function is interchangeable with the funct
     column              (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_scatter()` / `plot_line()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -895,7 +895,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
 
       colors = ["black", "darkslateblue", (1, 0.5, 0)]
 
@@ -904,11 +904,11 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
       column = "Duration_miliseconds"
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 ---
@@ -934,13 +934,13 @@ Uses the function `plot_reclaimed_bytes()`. The parameters are listed below for 
     plot                (Expected = None)
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_reclaimed_bytes()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -959,7 +959,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
 
       colors = ["black", "darkslateblue", (1, 0.5, 0)]
 
@@ -969,7 +969,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
 
 ---
 
@@ -997,11 +997,11 @@ Uses the function `plot_heatmap()`. The parameters are listed below for the func
     column_timing       (Expected = None)
     frequency_ticks     (Expected = True/False)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_heatmap()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
 - **-dimensions**-: a 4 length list, with the following values contained within the list
     - dimensions[0] = number of x intervals, or number of columns in the heat map
@@ -1010,7 +1010,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
     - dimensions[3] = duration of a single y interval in seconds, or time duration in each row of the heatmap.
 
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -1030,11 +1030,11 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
       column = "Duration_miliseconds"
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 
@@ -1064,13 +1064,13 @@ Uses the function `plot_frequency_intervals()`. The parameters are listed below 
     interval_duration   (Expected = 60) # any positive float or integer 
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_frequency_intervals()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -1089,7 +1089,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
 
       colors = ["black", "darkslateblue", (1, 0.5, 0)]
 
@@ -1098,7 +1098,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
       column = "Duration_miliseconds"
 
@@ -1107,7 +1107,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       interval_duration = 3600 # 1 hour
       interval_duration = 1.5  # 1.5 seconds
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 
@@ -1135,13 +1135,13 @@ Uses the function `plot_percentile_intervals()`. The parameters are listed below
     line_graph          (Expected = False)
     different_colors    (Expected = True)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_percentile_intervals()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -1160,7 +1160,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
 
       colors = ["black", "darkslateblue", (1, 0.5, 0)]
 
@@ -1169,7 +1169,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
       column = "Duration_miliseconds"
 
@@ -1178,7 +1178,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       interval_duration = 3600 # 1 hour
       interval_duration = 1.5  # 1.5 seconds
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 
@@ -1212,13 +1212,13 @@ Uses the function `plot_frequency_of_gc_intervals()`. The parameters are listed 
     interval_duration   (Expected = 60) # any positive integer or float
     column_timing       (Expected = None)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_frequency_of_gc_intervals()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -1237,7 +1237,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
 
       colors = ["black", "darkslateblue", (1, 0.5, 0)]
 
@@ -1246,7 +1246,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
       column = "Duration_miliseconds"
 
@@ -1255,7 +1255,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       interval_duration = 3600 # 1 hour
       interval_duration = 1.5  # 1.5 seconds
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 
@@ -1284,13 +1284,13 @@ Uses the function `plot_sum_pause_intervals()`. The parameters are listed below 
     remove_empty_intervals (Expected = False)
     line_graph             (Expected = False)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_frequency_of_gc_intervals()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -1309,7 +1309,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
 
       colors = ["black", "darkslateblue", (1, 0.5, 0)]
 
@@ -1318,7 +1318,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
       column = "Duration_miliseconds"
 
@@ -1327,7 +1327,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       interval_duration = 3600 # 1 hour
       interval_duration = 1.5  # 1.5 seconds
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 
@@ -1364,11 +1364,11 @@ Uses the function `plot_heatmaps_logarithmic()`. The parameters are listed below
     column_timing       (Expected = None)
     frequency_ticks     (Expected = True/False)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_heatmaps_logarithmic()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
 - **-dimensions**-: a 4 length list, with the following values contained within the list
     - dimensions[0] = number of x intervals, or number of columns in the heat map
@@ -1377,7 +1377,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
     - dimensions[3] = base for logarithmic scaling. (typically 2 or 10)
 
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -1397,11 +1397,11 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
       column = "Duration_miliseconds"
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 
@@ -1429,13 +1429,13 @@ Uses the function `plot_percentages()`. The parameters are listed below for the 
     max_heapsize_list    (Expected = [int value in MB]) # heapsize 8gb = 8 * 1024
     line_graph           (Expected = False)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
 `plot_percentages()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -1454,7 +1454,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
 
       colors = ["black", "darkslateblue", (1, 0.5, 0)]
 
@@ -1463,11 +1463,11 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot. If None is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
 
       column = "Duration_miliseconds"
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 
@@ -1489,13 +1489,13 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
 
 ## 17. Heap allocation rate 
-Uses the function `src.graphing.allocation_rate.allocation_rate()`. The parameters are listed below for the functions, with the expected values to create the plot described by `17. Heap allocation rate ` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
+Uses the function `allocation_rate()`. The parameters are listed below for the functions, with the expected values to create the plot described by `17. Heap allocation rate ` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
     
-    gc_event_dataframes  (required)
+    gc_event_dataframes (required)
     group_by            (Expected = None) 
     filter_by           (Expected = diff_in_entries_filter)
     labels              (Expected = labels variable)
-    interval_duration    (Expected = 60) # some int or float number
+    interval_duration   (Expected = 60) # some int or float number
     colors              (Expected = None)
     plot                (Expected = None)
     column_before       (Expected = None)
@@ -1504,13 +1504,13 @@ Uses the function `src.graphing.allocation_rate.allocation_rate()`. The paramete
     percentile          (Expected = 100) 
     line_graph          (Expected = False)
 
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event log`s are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
-`src.graphing.allocation_rate.allocation_rate()` parameters:
+`allocation_rate()` parameters:
 
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected = to be a `gc event log`. The `gc event log`s in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` then defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
       group_by = "EventName"
       group_by = "EventType"
@@ -1535,7 +1535,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       interval_duration = 1.5  # 1.5 seconds
 
 
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If None, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
 
       colors = ["black", "darkslateblue", (1, 0.5, 0)]
 
@@ -1544,15 +1544,15 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column_before** : `str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of data to plot before the event. If None is passed, the default value for this parameter is `"HeapBeforeGC"`. 
+- **column_before** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot before the event. If `None` is passed, the default value for this parameter is `"HeapBeforeGC"`. 
 
       column_before = "HeapBeforeGC"
 
-- **column_after** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the Y coordinate of the data to plot after the event. If None is passed, the default value for this parameter is `"HeapAfterGC"`. 
+- **column_after** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of the data to plot after the event. If `None` is passed, the default value for this parameter is `"HeapAfterGC"`. 
       
       column_after = "HeapAfterGC"
 
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event log`s, and represents the X coordinate of the data to plot. If None is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
 
