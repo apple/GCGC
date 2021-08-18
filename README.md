@@ -7,11 +7,13 @@
 
 GCGC uses a Jupyter notebook interface to analyze GC log files.
 
-The analysis is built into a provided notebook, and generates plots and tables from collected GC information. The collected data for each log is parsed into a python pandas 'event log'. Then, using the event logs as a persistent database, the event information can be sorted, filtered, and grouped in both pre-set and customizable ways to display relevant trends and outliers.
- 
-There are 17 generated plots, which analyze latency, concurrent and STW events, heap information, allocation rates, frequencies of events, and trends, comparing any number of log files and external data sources. 
 
-Furthermore, using Jupyter notebook data visualization allows for easy customization of provided plots.
+There are 17 generated plots, which analyze latency, concurrent and STW events, heap information, allocation rates, frequencies of events, and trends, comparing any number of log files and external data sources. 
+The tool uses Jupyter notebook data visualization allows for easy customization of provided plots.
+
+The analysis is built into a provided notebook, and generates plots and tables from collected GC information. The collected data for each log is parsed into a python pandas 'event log'. Then, using the event logs as a persistent database, the event information can be sorted, filtered, and grouped in both pre-set and customizable ways to display relevant trends and outliers.
+
+
 
 Currently supports collectors in JDK11 & JDK 16.
  # Requirements
