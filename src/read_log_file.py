@@ -104,7 +104,7 @@ def columnNames():
         "HeapBeforeGC",
         "HeapAfterGC",
         "MaxHeapsize",
-        "Duration_miliseconds",
+        "Duration_milliseconds",
         "SafepointName",
         "TimeFromLastSafepoint_ns",
         "TimeToReachSafepoint_ns",

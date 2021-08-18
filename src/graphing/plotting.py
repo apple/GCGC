@@ -25,7 +25,7 @@ def plot_scatter(
     labels=None,    # list of str labels to describe each gc_event_dataframe.  
     colors=None,    # colors to override 
     plot=None,
-    column="Duration_miliseconds",
+    column="Duration_milliseconds",
     column_timing = None,
 ):  
     # Filter and group data. Update colors and labels to reflect to-be-plotted data
@@ -63,7 +63,7 @@ def plot_line(
     labels=None,
     colors=None,
     plot=None,
-    column="Duration_miliseconds",
+    column="Duration_milliseconds",
     column_timing = None
 ):
     timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
@@ -97,7 +97,7 @@ def plot_pie_sum(
     labels=None,
     colors=None,
     plot=None,
-    column="Duration_miliseconds",
+    column="Duration_milliseconds",
     column_timing = None,
 ):
     timestamp_groups, datapoint_groups, labels, colors = filter_and_group(
@@ -132,7 +132,7 @@ def plot_bar_sum(
     labels=None,
     colors=None,
     plot=None,
-    column="Duration_miliseconds",
+    column="Duration_milliseconds",
     column_timing = None,
 ):
     # Group and filter 
@@ -170,7 +170,7 @@ def plot_bar_avg(
     labels=None,        # list of str labels to describe each entry of gc_event_dataframes
     colors=None,        # A list of colors for the bars to be plotted as. 
     plot=None,          # A plot to add new plotted information to.
-    column="Duration_miliseconds", # The column to find the averages of
+    column="Duration_milliseconds", # The column to find the averages of
     column_timing = None,
 ):
     # Filter and group
@@ -208,7 +208,7 @@ def plot_trends(
     group_by=None,      # A string to explain what groups to make within 1 log file
     filter_by=None,     # resitrctions on the data. list of tuples: (column, boolean-function)
     labels=None,        # list of str labels to describe each entry of gc_event_dataframes
-    column="Duration_miliseconds", # Describes the column to find the percentiles of.
+    column="Duration_milliseconds", # Describes the column to find the percentiles of.
     throughput=False, # If true, then the throughput will be calculated from the gc_event_dataframe log info
 ):
     # Filter and group
@@ -264,7 +264,7 @@ def plot_percentiles(
     group_by=None,      # A string to explain what groups to make within 1 log file
     filter_by=None,     # resitrctions on the data. list of tuples: (column, boolean-function)
     labels=None,        # list of str labels to describe each entry of gc_event_dataframes
-    column="Duration_miliseconds", # Describes the column to find the percentiles of.
+    column="Duration_milliseconds", # Describes the column to find the percentiles of.
 ):
     timestamp_groups, datapoint_groups, labels, _, __ = filter_and_group(
         gc_event_dataframes, group_by, filter_by, labels, column
@@ -281,7 +281,7 @@ def plot_percentiles(
     char_start = ord('A')
     if len(timestamp_groups) > len(labels):
         print("Not enough labels to plot")
-    print("Legend (All timing in miliseconds) : ")
+    print("Legend (All timing in milliseconds) : ")
     for index, label in enumerate(labels):
         print(chr(char_start + index) + " | " + label)
         temporary_labels.append(chr(char_start + index))
@@ -350,7 +350,7 @@ def plot_frequency_intervals(
     labels=None,
     colors=None,
     plot=None,
-    column="Duration_miliseconds",
+    column="Duration_milliseconds",
     interval_duration = 0,
     column_timing = None
 ):
@@ -488,7 +488,7 @@ def plot_percentile_intervals(
     labels=None,
     colors=None,
     plot=None,
-    column="Duration_miliseconds",
+    column="Duration_milliseconds",
     interval_duration = 0,
     percentiles = [99.99, 90, 50],
     column_timing = None,
@@ -610,7 +610,7 @@ def plot_frequency_of_gc_intervals(
 #       plot_sum_pause_intervals
 #
 #   Given a list of gc_event_dataframes, and groupings and filters,
-#   plot the sum of all pauses in a provided interval in miliseconds,
+#   plot the sum of all pauses in a provided interval in milliseconds,
 #   for each resulting group
 #
 def plot_sum_pause_intervals(
@@ -620,8 +620,8 @@ def plot_sum_pause_intervals(
     labels=None,
     colors=None,
     plot=None,
-    column="Duration_miliseconds",
-    interval_duration = 0, # miliseconds
+    column="Duration_milliseconds",
+    interval_duration = 0, # milliseconds
     column_timing = None,
     remove_empty_intervals = False,
     line_graph = False
@@ -636,7 +636,7 @@ def plot_heatmaps(
     group_by=None,
     filter_by=None,
     labels=None,
-    column="Duration_miliseconds",
+    column="Duration_milliseconds",
     column_timing = None, 
     frequency_ticks = None
     ):
@@ -677,7 +677,7 @@ def get_buckets_and_range(datapoint_groups, interval_duration):
 #       plot_sum_pause_intervals
 #
 #   Given a list of gc_event_dataframes, and groupings and filters,
-#   plot the sum of all pauses in a provided interval in miliseconds,
+#   plot the sum of all pauses in a provided interval in milliseconds,
 #   for each resulting group.
 #
 #
@@ -688,8 +688,8 @@ def plot_using_intervals(
     labels=None,
     colors=None,
     plot=None,
-    column="Duration_miliseconds",
-    interval_duration = 0, # miliseconds
+    column="Duration_milliseconds",
+    interval_duration = 0, # milliseconds
     column_timing = None,
     remove_empty_intervals = False,
     plot_line = False,
@@ -763,7 +763,7 @@ def plot_heatmaps_logarithmic(
     filter_by=None,
     labels=None,
     colors=None,
-    column="Duration_miliseconds",
+    column="Duration_milliseconds",
     column_timing = None, 
     frequency_ticks = None,
     ):
@@ -784,7 +784,7 @@ def plot_percentages(
     labels=None,    # list of str labels to describe each gc_event_dataframe.  
     colors=None,    # colors to override 
     plot=None,
-    column="Duration_miliseconds",
+    column="Duration_milliseconds",
     column_timing = None,
     max_heapsize_list = None,
     line_graph = False

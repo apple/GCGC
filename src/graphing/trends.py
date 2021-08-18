@@ -14,19 +14,19 @@ import numpy as np
 # Print the trends within the data (total number of pauses, max wait, total wait mean wait)
 # returns total wait
 #
-def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime_seconds=0, timestamps=None):
+def print_trends(pauses_milliseconds, label=None, print_title=True, total_runtime_seconds=0, timestamps=None):
     # Parameters:
-    #   pauses_miliseconds    : list of pauses (floats)
+    #   pauses_milliseconds    : list of pauses (floats)
     #   label                 : label for this row in the table
     #   print_title(optional) : bool, True => print recorded values
-    pauses_miliseconds = list(pauses_miliseconds)
+    pauses_milliseconds = list(pauses_milliseconds)
     if type(timestamps) != type(None):
         timestamps = list(timestamps)
-    if pauses_miliseconds:
-        max_pause = round(max(pauses_miliseconds, key=lambda i: float(i)), 4)
-        sum_pauses = round(sum(float(i) for i in pauses_miliseconds), 4)
-        average_wait = round(sum_pauses / len(pauses_miliseconds), 4)
-        std_deviation = round(np.std(pauses_miliseconds), 4)
+    if pauses_milliseconds:
+        max_pause = round(max(pauses_milliseconds, key=lambda i: float(i)), 4)
+        sum_pauses = round(sum(float(i) for i in pauses_milliseconds), 4)
+        average_wait = round(sum_pauses / len(pauses_milliseconds), 4)
+        std_deviation = round(np.std(pauses_milliseconds), 4)
     else:
         max_pause, sum_pauses, average_wait, std_deviation = 0, 0, 0, 0
     throughput = None
@@ -55,7 +55,7 @@ def print_trends(pauses_miliseconds, label=None, print_title=True, total_runtime
     number_label_chars = 15
     label = label[-number_label_chars:]
     line = __string_const_chars(label, number_label_chars) + " | "
-    line += float_constant_chars(str(len(pauses_miliseconds)), num_chars) + " | "
+    line += float_constant_chars(str(len(pauses_milliseconds)), num_chars) + " | "
     line += float_constant_chars(str(max_pause), num_chars) + " | "
     line += float_constant_chars(str(sum_pauses), num_chars) + " | "
     line += float_constant_chars(str(average_wait), num_chars) + " | "

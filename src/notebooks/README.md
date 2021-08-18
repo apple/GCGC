@@ -125,9 +125,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
-      column = "Duration_miliseconds"
+      column = "Duration_milliseconds"
 
 - **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
@@ -197,9 +197,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
-      column = "Duration_miliseconds"
+      column = "Duration_milliseconds"
 
 - **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
@@ -260,9 +260,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
-      column = "Duration_miliseconds"
+      column = "Duration_milliseconds"
 
 - **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
@@ -333,9 +333,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
-      column = "Duration_miliseconds"
+      column = "Duration_milliseconds"
 
 - **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
@@ -398,9 +398,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
-      column = "Duration_miliseconds"
+      column = "Duration_milliseconds"
 
 - **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
@@ -462,9 +462,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
-      column = "Duration_miliseconds"
+      column = "Duration_milliseconds"
 
 - **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
@@ -514,7 +514,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
 - **throughput** : `bool` datatype. If True, uses the provided timing information to attempt to calculate a throughput (time spent in program execution) / (total program time) * 100. Typically an illogical metric unless each group is all pauses from 1 file.
 
@@ -562,7 +562,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
 - **throughput** : `bool` datatype. If True, uses the provided timing information to attempt to calculate a throughput (time spent in program execution) / (total program time) * 100. Typically an illogical metric unless each group is all pauses from 1 file.
 
@@ -609,7 +609,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
 ---
 
@@ -654,7 +654,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
 ---
 
@@ -715,9 +715,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
-      column = "Duration_miliseconds"
+      column = "Duration_milliseconds"
 
 - **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
@@ -778,9 +778,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
-      column = "Duration_miliseconds"
+      column = "Duration_milliseconds"
 
 - **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
@@ -842,9 +842,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
-      column = "Duration_miliseconds"
+      column = "Duration_milliseconds"
 
 - **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
@@ -904,9 +904,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
-      column = "Duration_miliseconds"
+      column = "Duration_milliseconds"
 
 - **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
@@ -1030,9 +1030,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
-      column = "Duration_miliseconds"
+      column = "Duration_milliseconds"
 
 - **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
@@ -1098,9 +1098,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
-      column = "Duration_miliseconds"
+      column = "Duration_milliseconds"
 
 - **interval_duration** : `float` or `int` datatype. The duration in seconds for grouping of times. For this function, that would be the size of each grouping on the histogram
 
@@ -1169,9 +1169,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
-      column = "Duration_miliseconds"
+      column = "Duration_milliseconds"
 
 - **interval_duration** : `float` or `int` datatype. The duration in seconds for grouping of times. For this function, that would be the size of each grouping on the histogram
 
@@ -1246,9 +1246,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
-      column = "Duration_miliseconds"
+      column = "Duration_milliseconds"
 
 - **interval_duration** : `float` or `int` datatype. The duration in seconds for grouping of times. For this function, that would be the period of time in which the gc events are summed
 
@@ -1318,9 +1318,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
-      column = "Duration_miliseconds"
+      column = "Duration_milliseconds"
 
 - **interval_duration** : `float` or `int` datatype. The duration in seconds for grouping of times. For this function, that would be the period of time in which the gc events durations are summed
 
@@ -1397,9 +1397,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
 
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
-      column = "Duration_miliseconds"
+      column = "Duration_milliseconds"
 
 - **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
@@ -1463,9 +1463,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       plot = plot_scatter(gc_event_dataframes)
       plot = plot_line(gc_event_dataframes, group_by = "EventNames")
 
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_miliseconds"`. 
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
 
-      column = "Duration_miliseconds"
+      column = "Duration_milliseconds"
 
 - **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       

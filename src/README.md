@@ -38,7 +38,7 @@ However, all of the following fields are captured for each event. If a field has
 7 : HeapBeforeGC                | float
 8 : HeapAfterGC                 | float
 9 : MaxHeapsize                 | float
-10: Duration_miliseconds        | float
+10: Duration_milliseconds        | float
 11: HeapBeforeGC   (zgc)        | float
 12: HeapAfterGC    (zgc)        | float
 13: MaxHeapsize    (zgc)        | float

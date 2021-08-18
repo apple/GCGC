@@ -13,23 +13,23 @@ import numpy as np
 #
 #   Display what percent of pauses meet a certain percentile threshold
 #
-def print_percentiles(pauses_miliseconds=[], print_title=True, percentiles=None, label=None):
+def print_percentiles(pauses_milliseconds=[], print_title=True, percentiles=None, label=None):
     # Parameters:
-    #   pauses_miliseconds  : a list of pauses to be analyzed (in any order)
+    #   pauses_milliseconds  : a list of pauses to be analyzed (in any order)
     #   print_title         : True if you would like column headers
     #   percentiles         : a list of percentiles to be plotted, in float list form.
     #   label               : a label to be printed. Should be 0-10 characters
-    if type(pauses_miliseconds) != type(None):
-        pauses_miliseconds = list(pauses_miliseconds)
-    if not pauses_miliseconds:
+    if type(pauses_milliseconds) != type(None):
+        pauses_milliseconds = list(pauses_milliseconds)
+    if not pauses_milliseconds:
         return
-    pauses_miliseconds = sorted(pauses_miliseconds, reverse=True)
+    pauses_milliseconds = sorted(pauses_milliseconds, reverse=True)
 
     percentile_table = {}
     if not percentiles:
         percentiles = [50, 95, 99, 99.99]
     for p in percentiles:
-        percentile_table[p] = np.percentile(pauses_miliseconds, p)
+        percentile_table[p] = np.percentile(pauses_milliseconds, p)
     if not label:
         label = "label"
     num_column_spaces = 18
@@ -47,9 +47,9 @@ def print_percentiles(pauses_miliseconds=[], print_title=True, percentiles=None,
 
 #       compare_pauses_percentiles
 #
-#   Plot the percentiles for pause time in miliseconds for all lists provided, on the same table
+#   Plot the percentiles for pause time in milliseconds for all lists provided, on the same table
 #   Parameters:
-#       pauses_miliseconds    : list of [list of pauses as floats in ms]
+#       pauses_milliseconds    : list of [list of pauses as floats in ms]
 #       percentiles(optional) : list of float value percentiles to be viewed.
 #
 def compare_pauses_percentiles(list_of_list_pauses_ms=[], percentiles=None, labels=None):

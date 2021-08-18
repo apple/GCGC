@@ -18,7 +18,7 @@ def filter_and_group(
     group_by=None,  # creates a group for each unique value in a column specified 
     filter_by=None, # a function to be applied to the row of the table. Should return a boolean
     labels=None, # a list of strings to describe the datasets passed in 
-    column="Duration_miliseconds",  # the column name that we are analyzing from our dataset
+    column="Duration_milliseconds",  # the column name that we are analyzing from our dataset
     colors=None, # a list colors. If none are provided, determinsitic colors returned for dataset
     column_timing = None # Overrides the timing column to collect, if provided. All values in the column must be ints/floats
 ):

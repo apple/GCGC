@@ -217,7 +217,7 @@ def get_heatmap_data(timestamp_groups, datapoint_groups, labels, dimensions):
     x_bucket_count    = dimensions[0]  # Number of time intervals to group gc events into. INT ONLY
     y_bucket_count    = dimensions[1]  # Number of latency time intervals to group events into. INT ONLY
     x_bucket_duration = dimensions[2]  # Duration in seconds that each time interval bucket has for gc event timestamps
-    y_bucket_duration = dimensions[3]  # Duration in miliseconds for the length of each latency interval bucket
+    y_bucket_duration = dimensions[3]  # Duration in milliseconds for the length of each latency interval bucket
     
     for x in [x_bucket_count, y_bucket_count]:
         assert type(x) == int, "Warning: x_bucket_count and y_bucket_count must be integers"
@@ -309,25 +309,25 @@ def get_heatmap_data(timestamp_groups, datapoint_groups, labels, dimensions):
 # Return the timestamps and pauses as a list
 def get_time_and_event_durations(gc_event_dataframe):
     assert isinstance(gc_event_dataframe, pd.DataFrame)
-    return get_time_in_seconds(gc_event_dataframe), get_event_durations_in_miliseconds(gc_event_dataframe)
+    return get_time_in_seconds(gc_event_dataframe), get_event_durations_in_milliseconds(gc_event_dataframe)
 
 
-#       get_event_durations_in_miliseconds
+#       get_event_durations_in_milliseconds
 #
 #   Given a pandas dataframe table populated with parsed log information,
-#   extract all 'event durations' from the Duration_miliseconds column, and
+#   extract all 'event durations' from the Duration_milliseconds column, and
 #   return them as a list of floats.
 #
-def get_event_durations_in_miliseconds(gc_event_dataframe):
+def get_event_durations_in_milliseconds(gc_event_dataframe):
     assert isinstance(gc_event_dataframe, pd.DataFrame)
     if gc_event_dataframe.empty:
         return []
     else:
-        durations_miliseconds = []
-        for duration in gc_event_dataframe["Duration_miliseconds"]:
+        durations_milliseconds = []
+        for duration in gc_event_dataframe["Duration_milliseconds"]:
             if duration != None:
-                durations_miliseconds.append(float(duration))
-        return durations_miliseconds
+                durations_milliseconds.append(float(duration))
+        return durations_milliseconds
 
 
 #       get_time_in_seconds
@@ -353,7 +353,7 @@ def get_heatmap_data_logarithmic(timestamp_groups, datapoint_groups, labels, dim
     x_bucket_count    = dimensions[0]  # Number of time intervals to group gc events into. INT ONLY
     y_bucket_count    = dimensions[1]  # Number of latency time intervals to group events into. INT ONLY
     x_bucket_duration = dimensions[2]  # Duration in seconds that each time interval bucket has for gc event timestamps
-    base              = dimensions[3]  # Duration in miliseconds for the length of each latency interval bucket
+    base              = dimensions[3]  # Duration in milliseconds for the length of each latency interval bucket
     
     heatmap_list = []
     for times_seconds, pauses_ms in zip(timestamp_groups, datapoint_groups):

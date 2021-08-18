@@ -23,7 +23,7 @@ The regex capture groups follow the following format:
 7 : HeapBeforeGC  *             | float
 8 : HeapAfterGC   *             | float
 9 : MaxHeapsize   *             | float
-10: Duration_miliseconds        | float
+10: Duration_milliseconds        | float
 11: HeapBeforeGC * (zgc)        | float
 12: HeapAfterGC  * (zgc)        | float
 13: MaxHeapsize  * (zgc)        | float
@@ -118,11 +118,11 @@ def event_parsing_string():
     #   Group : Non capturing
     optional_group_stuff = ")?(?= ?", None, None
     
-    #   Duration_miliseconds :  Time used for this event in miliseconds
+    #   Duration_milliseconds :  Time used for this event in milliseconds
     #   Field : Required / Normal
     #   Group : 10
     #   Captures: The value of the duration. No unit captures
-    time_spent_miliseconds = "(\d+\.\d+)ms))", "Duration_miliseconds", float  # 24.321ms
+    time_spent_milliseconds = "(\d+\.\d+)ms))", "Duration_milliseconds", float  # 24.321ms
     
     #   Begin regex for ZGC specific memory capturing 
     #   Field : NA
@@ -205,7 +205,7 @@ def event_parsing_string():
                      heap_after_gc ,                # normal
                      max_heap_size ,                # normal
                      optional_group_stuff ,         # normal
-                     time_spent_miliseconds ,       # normal
+                     time_spent_milliseconds ,       # normal
                      zgc_memory_start ,             # zgc mem
                      zgc_heap_before_gc ,           # zgc mem
                      zgc_heap_after_gc ,            # zgc mem
