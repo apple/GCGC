@@ -45,7 +45,6 @@ Note: The following edge cases are known and not handled automatically:
 
 --- 
 ### Note:
-The following files are still being documented.
+The following file will have documentation improvements to make improvements easier:
+- src/parse_log_file.py 
 
-- src/parse_log_file.py -> Correct, but improved documentation will be coming soon, to improve experience.
-- src/graphing/allocation_rate.py
