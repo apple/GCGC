@@ -301,7 +301,7 @@ def zero_start_times(gc_event_dataframes, set_times_to_zero):
     for index, (df, condition) in enumerate(zip(gc_event_dataframes, set_times_to_zero)):
         if condition and type(condition) == type(False):
             if "TimeFromStart_seconds" in df:
-                min_time = df["TimeFromStart_seconds"].iloc[0] 
+                min_time = df["TimeFromStart_seconds"].min()
                 new_timestamps = []
                 for time in df["TimeFromStart_seconds"]:
                     new_timestamps.append(time - min_time)
