@@ -136,14 +136,15 @@ def arrange_into_groups(datasets, group_by, column, column_timing, labels):
                     else:
                         timing = df[column_timing]                        
                     for group, time, datapoint in zip(df[group_by], timing, df[column]):
-                        if group:
-                            if group not in groups:
-                                # Create a new group for each unique item
-                                groups[group] = [[], [], str(labels[idx]) + ": " + str(group)]
-                            
-                            # add the datapoints and time, based on the grouping
-                            groups[group][0].append(time)
-                            groups[group][1].append(datapoint)
+                        if not group:
+                            group = "( " + str(group_by) + " = None )" # None groups should all be put together
+                        if group not in groups:
+                            # Create a new group for each unique item
+                            groups[group] = [[], [], str(labels[idx]) + ": " + str(group)]
+                        
+                        # add the datapoints and time, based on the grouping
+                        groups[group][0].append(time)
+                        groups[group][1].append(datapoint)
 
                     # Sort keys so groups print in the same order between files
                     keys = list(groups.keys())
