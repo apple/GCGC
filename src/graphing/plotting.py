@@ -815,3 +815,30 @@ def plot_percentages(
 
 def get_percentages(datalist, max_value):
     return [data / max_value * 100 for data in datalist]
+
+#       allocation_rate
+#
+#   Calculates and reports the allocation rate during runtime from gc information.
+#   Optional parameter: percentile: If used, then calculates the specified percentile 
+#                       allocation rate. If left as None, finds the mean allocation rate.
+#   Optional parameter: interval_duration: Groups collected data into ranges, then either
+#                       finds the mean or a percentile based on above optional param.
+#
+def allocation_rate(
+    gc_event_dataframes,  # list of dataframes, containing gc event information. 
+    group_by=None,  # A string to explain what groups to make within 1 gc_event_dataframe
+    filter_by=None, # resitrctions on the data. list of tuples: (column, boolean-function) 
+    labels=None,    # list of str labels to describe each gc_event_dataframe.  
+    interval_duration=None, # integer or float. Creates groups of this size to find alloc rate.
+    colors=None,    # colors to override 
+    plot=None, #    matplotlib ax to plot onto. If none provided, one is created
+    column_before="HeapBeforeGC", # Column used as information before event
+    column_after= "HeapAfterGC", # Column used to find information after event
+    column_timing = None, # Timing information used for X axis. List of floats or ints
+    percentile = None, #  If True, and interval_duration is not None, plots the percentile
+    line_graph = False # Plots as a line graph rather than a scatter plot
+):  
+    from src.graphing.allocation_rate import calculate_allocation_rate
+    return calculate_allocation_rate(gc_event_dataframes, group_by, filter_by, labels,
+                                     interval_duration, colors, plot, column_before, column_after,
+                                     column_timing, percentile, line_graph)
