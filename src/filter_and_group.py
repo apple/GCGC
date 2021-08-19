@@ -151,8 +151,8 @@ def arrange_into_groups(datasets, group_by, column, column_timing, labels):
                     keys.sort()
 
                     for key in keys:
-                        timestamp_groups.append(groups[key][0])
-                        datapoint_groups.append(groups[key][1])
+                        timestamp_groups.append(pd.Series(groups[key][0]))
+                        datapoint_groups.append(pd.Series(groups[key][1]))
                         group_labels.append(groups[key][2])
                         
                     
