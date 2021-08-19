@@ -842,3 +842,143 @@ def allocation_rate(
     return calculate_allocation_rate(gc_event_dataframes, group_by, filter_by, labels,
                                      interval_duration, colors, plot, column_before, column_after,
                                      column_timing, percentile, line_graph)
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+#       plot_scatter_universal
+#
+#   Plots a scatter plot based on the provided gc_event_dataframes, and filters.
+#   Returns a plot object that can then be updated.
+#
+def plot_scatter_universal(
+    gc_event_dataframes,  # list of dataframes, containing gc event information. 
+    group_by=None,  # A string to explain what groups to make within 1 gc_event_dataframe
+    filter_by=None, # resitrctions on the data. list of tuples: (column, boolean-function) 
+    labels=None,    # list of str labels to describe each gc_event_dataframe.  
+    colors=None,    # colors to override 
+    plot=None,
+    column="Duration_milliseconds",
+    column_timing = None,
+    interval_duration = None,
+    grouping_function = None,
+    include_timing_in_bucket = False,
+    line_graph = False,
+):  
+    # Filter and group data. Update colors and labels to reflect to-be-plotted data
+    timestamp_groups, datapoint_groups, labels, colors, _ = filter_and_group(
+        gc_event_dataframes, group_by, filter_by, labels, column, colors, column_timing
+    )
+    # if no plot is passed in, create a new plot
+    if not plot:
+        f, plot = plt.subplots()
+    # Create a scatter plot with all data
+    if len(datapoint_groups) > len(labels):
+        print("Not enough labels to plot")
+    if len(datapoint_groups) > len(colors):
+        print("Not enough colors to plot")
+    
+    
+    
+    if interval_duration:
+        min_time, max_time = determine_extremes(timestamp_groups)
+        bucket_count = get_bucket_count(min_time, max_time, interval_duration)
+        
+        for timestamp_list, datapoint_list, label, color in zip(timestamp_groups, datapoint_groups, labels, colors):
+            print("Before population")
+            buckets, bucket_timing = populate_buckets(bucket_count, timestamp_list, datapoint_list, 
+                                    interval_duration, min_time, include_timing_in_bucket)
+            print("After population")
+            xdata, ydata = apply_grouping_function(buckets, bucket_timing, grouping_function, include_timing_in_bucket)   
+
+            if line_graph:
+                plot.plot(xdata, ydata, label=label, color=color)
+            else:
+                plot.scatter(xdata, ydata, label=label, color=color)
+    else:
+        for timestamp_list, datapoint_list, label, color in zip(timestamp_groups, datapoint_groups, labels, colors):
+            
+            xdata, ydata = apply_grouping_function(list(datapoint_list), list(timestamp_list), grouping_function, include_timing_in_bucket)   
+            if line_graph:
+                plot.plot(xdata, ydata, label=label, color=color)
+            else:
+                plot.scatter(xdata, ydata, label=label, color=color)
+    plot.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+    return plot 
+
+########
+#   
+#       Given a lists of timestamp_lists, find the minimum and maximum
+#       times in the provided range. Every timestamp_list in the passed lists
+#       should be a pandas series.
+#
+def determine_extremes(timestamp_lists):
+    # Requirement: It is expected that passed timestamp lists are
+    # sorted, with the smallest values first. 
+
+    min_time = max_time = timestamp_lists[0].iloc[0] # Access pandas series index 0 with iloc 
+    for timestamp_list in timestamp_lists:
+        min_time = min(min_time, timestamp_list.iloc[0]) # First element in timestamp_list
+        max_time = max(max_time, timestamp_list.iloc[-1]) # Last element in timestamp_list
+    return min_time, max_time
+
+########
+#
+#       Determine the number of buckets for a range of data, based
+#       on their interval_duration. Return the bucket count, rounded up.
+#
+def get_bucket_count(min_time, max_time, interval_duration):
+    total_duration = max_time -  min_time 
+    bucket_count = int(total_duration / interval_duration) + 1
+    return bucket_count
+
+#######
+#       
+#       Populate an array of interval buckets with values from 
+#       the
+#
+def populate_buckets(bucket_count, timestamp_list, datapoint_list, 
+                    interval_duration, min_time, include_timing_in_bucket):
+    
+    buckets = [[] for index in range(bucket_count)]
+    if include_timing_in_bucket:
+        timing_buckets = [[] for index in range(bucket_count)]
+        for time in range(len(timestamp_list)):
+            timing_buckets[int((time - min_time)/ interval_duration)].append(time)
+    else:
+        timing_buckets = [int(min_time + interval_duration * index + 1) for index in range(bucket_count)]
+    for time, data in zip(timestamp_list, datapoint_list):
+        bucket_idx = int((time - min_time) / interval_duration)
+        buckets[bucket_idx].append(data)
+    # check if any buckets are empty
+    for idx in range(bucket_count):
+        if len(buckets[idx]) == 0:
+            buckets[idx] = [0]
+    return buckets, timing_buckets
+    
+#######
+#
+#       Apply the grouping function to each bucket. If time has been
+#       included in the grouping function, zip and apply on that as well.
+#
+def apply_grouping_function(buckets, timing_buckets, grouping_function, include_timing_in_bucket):
+    output_xdata = []
+    output_ydata = []
+    for index in range(len(buckets)):
+        if include_timing_in_bucket:
+            x, y = grouping_function(buckets[index], timing_buckets[index])
+        else:
+            y = grouping_function(buckets[index])        
+            x = timing_buckets[index]
+        if type(x) == list:
+            for xdata in x:
+                output_xdata.append(xdata)
+        else:
+            output_xdata.append(x)
+        if type(y) == list:
+            for ydata in y:
+                output_ydata.append(ydata)
+        else:
+            output_ydata.append(y)
+        
+
+    return output_xdata, output_ydata
