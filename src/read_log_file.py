@@ -90,30 +90,6 @@ def __manyMatch_LineSearch(
 
 
 
-# Access the column names for a parsed file. Note that these are dependent
-# on the groups defined in `parse_log_file.py`
-# Full descriptions of the columns can be found in the README under /src/
-def columnNames():
-    return [
-        "DateTime",
-        "TimeFromStart_seconds",
-        "GCIndex",
-        "EventType",
-        "EventName",
-        "AdditionalEventInfo",
-        "HeapBeforeGC",
-        "HeapAfterGC",
-        "MaxHeapsize",
-        "Duration_milliseconds",
-        "SafepointName",
-        "TimeFromLastSafepoint_ns",
-        "TimeToReachSafepoint_ns",
-        "AtSafepoint_ns",
-        "TotalTimeAtSafepoint_ns",
-        "TotalApplicationThreadPauseTime_seconds",
-        "TimeToStopApplication_seconds"
-    ]
-
 
 #       __choose_non_zero
 #
