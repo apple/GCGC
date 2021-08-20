@@ -192,7 +192,7 @@ def event_parsing_string():
     time_to_stop_application = " Stopping threads took: ([\d\.]+) seconds$))", "TimeToStopApplication_seconds", float
     
     
-    event_parsing = [start_of_line ,              # ALL
+    event_parsing = [start_of_line ,                # ALL
                      date_time ,                    # ALL
                      time_from_start_seconds ,      # ALL
                      other_info_fields ,            # ALL
