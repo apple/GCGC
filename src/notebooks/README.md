@@ -2,46 +2,43 @@
 
 List of functions and the plots they are expected to produce. For each of the provided GCGC original plots, the suggested parameters will be provided.
 
->  #### [1a. STW Pauses during program runtime, Linear ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#1a-stw-pauses-during-program-runtime-linear)
->  #### [1b. STW Pauses during program runtime, Logarithmic ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#1b-stw-pauses-during-program-runtime-logarithmic)
+>  #### [1. STW Pauses during program runtime ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#1-stw-pauses-during-program-runtime)
 
-> #### [2a. STW Pauses during program runtime, group by EventName, Linear ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#2a-stw-pauses-during-program-runtime-group-by-eventname-linear)
->
-> #### [2b. STW Pauses during program runtime, group by AdditionalEventInfo, Logarithmic ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#2b-stw-pauses-during-program-runtime-group-by-additionaleventinfo-logarithmic)
+> #### [2. STW Pauses during program runtime, group by EventName ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#2-stw-pauses-during-program-runtime-group-by-eventname)
 
-> #### [3. Concurrent durations during runtime ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#3-concurrent-durations-during-runtime)
+> #### [3. Concurrent durations during runtime ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#3-concurrent-durations-during-runtime)
 
-> #### [4. Total time spent in STW pauses vs. Concurrent durations ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#4-total-time-spent-in-stw-pauses-vs-concurrent-durations)
+> #### [4. Total time spent in STW pauses vs. Concurrent durations ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#4-total-time-spent-in-stw-pauses-vs-concurrent-durations)
 
-> #### [5a. Pauses summary (max, sum, mean, count, std.dev) ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#5a-pauses-summary-max-sum-mean-count-stddev)
-> #### [5b. Pauses summary by name ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#5b-pauses-summary-by-name)
+> #### [5a. Pauses summary (max, sum, mean, count, std.dev) ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#5a-pauses-summary-max-sum-mean-count-stddev)
+> #### [5b. Pauses summary by name ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#5b-pauses-summary-by-name)
 
-> #### [6a. Pause percentiles ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#6a-pause-percentiles)
-> #### [6b. Pause percentiles by name ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#6b-pause-percentiles-by-name)
+> #### [6a. Pause percentiles ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#6a-pause-percentiles)
+> #### [6b. Pause percentiles by name ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#6b-pause-percentiles-by-name)
 
-> #### [7a. Mean event durations ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#7a-mean-event-durations)
-> #### [7b. Sum event durations ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#7b-sum-event-durations)
+> #### [7a. Mean event durations ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#7a-mean-event-durations)
+> #### [7b. Sum event durations ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#7b-sum-event-durations)
 
-> #### [8a. Heap Before GC ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#8a-heap-before-gc)
-> #### [8b. Heap After GC ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#8b-heap-after-gc)
+> #### [8a. Heap Before GC ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#8a-heap-before-gc)
+> #### [8b. Heap After GC ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#8b-heap-after-gc)
 
-> #### [9. MB Reclaimed during program runtime ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#9-mb-reclaimed-during-program-runtime)
+> #### [9. MB Reclaimed during program runtime ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#9-mb-reclaimed-during-program-runtime)
 
-> #### [10. Latency Heatmaps, Linear ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#10-latency-heatmaps-linear)
+> #### [10. Latency Heatmaps, Linear ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#10-latency-heatmaps-linear)
 
-> #### [11. Pause frequencies histogram ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#11-pause-frequencies-histogram)
+> #### [11. Pause frequencies histogram ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#11-pause-frequencies-histogram)
 
-> #### [12. Latency percentiles over time intervals ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#12-latency-percentiles-over-time-intervals)
+> #### [12. Latency percentiles over time intervals ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#12-latency-percentiles-over-time-intervals)
 
-> #### [13. Number of times GC invoked over time intervals ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#13-number-of-times-gc-invoked-over-time-intervals)
+> #### [13. Number of times GC invoked over time intervals ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#13-number-of-times-gc-invoked-over-time-intervals)
 
-> #### [14. Sum of pause durations over intervals ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#14-sum-of-pause-durations-over-intervals)
+> #### [14. Sum of pause durations over intervals ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#14-sum-of-pause-durations-over-intervals)
 
-> #### [15. Logarithmic heatmaps ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#15-logarithmic-heatmaps)
+> #### [15. Logarithmic heatmaps ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#15-logarithmic-heatmaps)
 
-> #### [16. Percentage of heap filled after GC ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#16-percentage-of-heap-filled-after-gc)
+> #### [16. Percentage of heap filled after GC ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#16-percentage-of-heap-filled-after-gc)
 
-> #### [17. Heap allocation rate ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#17-heap-allocation-rate)
+> #### [17. Heap allocation rate ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#17-heap-allocation-rate)
                                         
 ## Configurations for plots
 The following parameters can be found in some of the plotting functions. The list of the parameters for each function can be found below.
@@ -141,79 +138,11 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
 
 
-## 1b. STW Pauses during program runtime, Logarithmic
-
-Important: The plot generated in `1b` is the same as that generated in `1a`, but with a following modifier applied to the returned variable. 
-
-    plot = plot_scatter(gc_event_dataframes,
-                        filter_by = pauses_only,
-                        labels = labels)
-    plot.set_yscale("log")
-    plot.yaxis.set_major_formatter(ScalarFormatter()) # optional
-
-
-Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line()` if a line plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by `1a. STW pauses during program runtime, linear` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
-    
-    gc_event_dataframes (required)
-    group_by            (Expected = None) 
-    filter_by           (Expected = pauses_only)
-    labels              (Expected = labels variable)
-    colors              (Expected = None)
-    plot                (Expected = None)
-    column              (Expected = None)
-    column_timing       (Expected = None)
-
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
-
-`plot_scatter()` / `plot_line()` parameters:
-
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
-
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
-
-      group_by = "EventName"
-      group_by = "EventType"
-
-- **filter_by** : `function` datatype. A boolean function to be applied to each row of each `gc event log`. If the function evaluates to false, then that event will not be included in the resulting plot. A typical function first checks if the column exists before checking any values, as seen in the example below. If this check is not in place, a `KeyError` may be thrown.
-        
-      def pauses_only(row):
-           if "EventType" in row:
-               if row["EventType] == "Pause":
-                   return True
-       return False
-        
-       filter_by = pauses_only
-
-- **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
-
-      labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
-
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
-
-      colors = ["black", "darkslateblue", (1, 0.5, 0)]
-
-- **plot** : `matplotlib.axes._subplots.AxesSubplot` datatype. Each graphing function returns an instance of this plot object. Passing None creates a new figure. Passing an instance of a plot will keep all old data on the plot, and add the newly plotted data on top. Typically used to overlay two data sets with different column names.
-
-      plot = plot_scatter(gc_event_dataframes)
-      plot = plot_line(gc_event_dataframes, group_by = "EventNames")
-
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
-
-      column = "Duration_milliseconds"
-
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
-      
-      column_timing = "TimeFromStart_seconds"
-
----
 
 
 
 
-
-
-
-## 2a. STW Pauses during program runtime, group by EventName, Linear
+## 2. STW Pauses during program runtime, group by EventName
 
 Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line` if a line plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by `2a. STW Pauses during program runtime, group by EventName, Linear` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
     
@@ -269,81 +198,18 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       column_timing = "TimeFromStart_seconds"
 
 
----
 
 
-
-
-
-
-
-## 2b. STW Pauses during program runtime, group by AdditionalEventInfo, Logarithmic
-
-Important: The plot generated in `2b` is the same as that generated in `2a`, but with a following modifier applied to the returned variable. 
+The folloing modifier can be added after to create the logarithmic plot, as described in the commented out code block. 
 
     plot = plot_scatter(gc_event_dataframes,
                         group_by = "AdditionalEventInfo",
                         filter_by = pauses_only,
                         labels = labels)
     plot.set_yscale("log")
-    plot.yaxis.set_major_formatter(ScalarFormatter()) # optional
-
-Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line` if a line plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by `2b. STW Pauses during program runtime, group by AdditionalEventInfo, Logarithmic` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
-    
-    gc_event_dataframes (required)
-    group_by            (Expected = "EventName") 
-    filter_by           (Expected = pauses_only)
-    labels              (Expected = labels variable)
-    colors              (Expected = None)
-    plot                (Expected = None)
-    column              (Expected = None)
-    column_timing       (Expected = None)
-
-Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
-
-`plot_scatter()` / `plot_line()` parameters:
-
-- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
-
-- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
-
-      group_by = "EventName"
-      group_by = "EventType"
-
-- **filter_by** : `function` datatype. A boolean function to be applied to each row of each `gc event log`. If the function evaluates to false, then that event will not be included in the resulting plot. A typical function first checks if the column exists before checking any values, as seen in the example below. If this check is not in place, a `KeyError` may be thrown.
-        
-      def pauses_only(row):
-           if "EventType" in row:
-               if row["EventType] == "Pause":
-                   return True
-       return False
-        
-       filter_by = pauses_only
-
-- **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype. 
-
-      labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
-
-- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
-
-      colors = ["black", "darkslateblue", (1, 0.5, 0)]
-
-- **plot** : `matplotlib.axes._subplots.AxesSubplot` datatype. Each graphing function returns an instance of this plot object. Passing None creates a new figure. Passing an instance of a plot will keep all old data on the plot, and add the newly plotted data on top. Typically used to overlay two data sets with different column names.
-
-      plot = plot_scatter(gc_event_dataframes)
-      plot = plot_line(gc_event_dataframes, group_by = "EventNames")
-
-- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`. 
-
-      column = "Duration_milliseconds"
-
-- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
-      
-      column_timing = "TimeFromStart_seconds"
-
+    plot.yaxis.set_major_formatter(ScalarFormatter()) # optional, known bug for displaying values less than 1 on y axis scale.
 
 ---
-
 
 
 
