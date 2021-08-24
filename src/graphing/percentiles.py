@@ -85,4 +85,4 @@ def __string_const_chars(string, numchars):
         temp_list += " "
     return temp_list + char_list
 
-from src.graphing.trends import float_constant_chars
+from src.graphing.summary import float_constant_chars
