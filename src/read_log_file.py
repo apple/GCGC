@@ -17,8 +17,13 @@ import glob
 #
 def get_file_names_wildcard(path):
     files = []
-    for file in glob.glob(path):
-        files.append(file)
+    filelist = glob.glob(path)
+    if not filelist:
+        print("Warning: No files collected using following path: " + str(path))
+        return []
+    else:
+        for file in filelist:
+            files.append(file)
     return files
 
 
@@ -42,6 +47,7 @@ def get_gc_event_tables(files, time_range_seconds, ignore_crashes = False):
         gc_event_dataframes = [] # associated with one GC run. 
         for file in filelist:
             # Create each log gc_event_dataframe
+            
             gc_event_dataframe = get_parsed_data_from_file(file, time_range_seconds, ignore_crashes)
             
             if not gc_event_dataframe.empty:
@@ -49,8 +55,6 @@ def get_gc_event_tables(files, time_range_seconds, ignore_crashes = False):
         if gc_event_dataframes:
             df = pd.concat(gc_event_dataframes)
             all_runs.append(df)
-        else:
-            print("Warning: No collected data for the following files: ", filelist)  
     if not all_runs:
         print("Error: No data collected in get_gc_event_tables.")
     return all_runs
