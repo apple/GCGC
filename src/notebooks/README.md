@@ -13,8 +13,8 @@ List of functions and the plots they are expected to produce. For each of the pr
 
 > #### [4. Total time spent in STW pauses vs. Concurrent durations ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#4-total-time-spent-in-stw-pauses-vs-concurrent-durations)
 
-> #### [5a. Pauses trends (max, sum, mean, count, std.dev) ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#5a-pauses-trends-max-sum-mean-count-stddev)
-> #### [5b. Pauses trends by name ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#5b-pauses-trends-by-name)
+> #### [5a. Pauses summary (max, sum, mean, count, std.dev) ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#5a-pauses-summary-max-sum-mean-count-stddev)
+> #### [5b. Pauses summary by name ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#5b-pauses-summary-by-name)
 
 > #### [6a. Pause percentiles ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#6a-pause-percentiles)
 > #### [6b. Pause percentiles by name ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.2/src/notebooks/README.md#6b-pause-percentiles-by-name)
@@ -479,8 +479,8 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
 
 
-## 5a. Pauses trends (max, sum, mean, count, std.dev)
-Uses the function `plot_trends()`. The parameters are listed below for the functions, with the expected values to create the plot described by `5a. Pauses trends (max, sum, mean, count, std.dev)` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
+## 5a. Pauses summary (max, sum, mean, count, std.dev)
+Uses the function `plot_summary()`. The parameters are listed below for the functions, with the expected values to create the plot described by `5a. Pauses summary (max, sum, mean, count, std.dev)` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
 
     gc_event_dataframes (required)
     group_by            (Expected = None) 
@@ -491,7 +491,7 @@ Uses the function `plot_trends()`. The parameters are listed below for the funct
 
 Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
-`plot_trends()` parameters:
+`plot_summary()` parameters:
 
 - **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
@@ -526,9 +526,9 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
 
 
-## 5b. Pauses trends by name
+## 5b. Pauses summary by name
 
-Uses the function `plot_trends()`. The parameters are listed below for the functions, with the expected values to create the plot described by `5b. Pauses trends by name` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
+Uses the function `plot_summary()`. The parameters are listed below for the functions, with the expected values to create the plot described by `5b. Pauses summary by name` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
 
     gc_event_dataframes (required)
     group_by            (Expected = "EventName") 
@@ -539,7 +539,7 @@ Uses the function `plot_trends()`. The parameters are listed below for the funct
 
 Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
-`plot_trends()` parameters:
+`plot_summary()` parameters:
 
 - **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 

@@ -193,17 +193,17 @@ def plot_bar_avg(
     return plot
 
 
-from src.graphing.trends import compare_trends
+from src.graphing.summary import compare_summary
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #
-#       plot_trends
+#       plot_summary
 #
 #   Create an ASCII table analyzing the breakdown of the number of events,
 #   mean, standard deviation, total time, and maximum time
 #
-def plot_trends(
+def plot_summary(
     gc_event_dataframes,# list of dataframes, containing gc event information. 
     group_by=None,      # A string to explain what groups to make within 1 log file
     filter_by=None,     # resitrctions on the data. list of tuples: (column, boolean-function)
@@ -220,9 +220,9 @@ def plot_trends(
         return
     if max([len(label) for label in labels]) <= PRINTING_SPACE_COUNT:
         if throughput:
-            compare_trends(datapoint_groups, labels=labels, lists_of_timestamps=timestamp_groups)
+            compare_summary(datapoint_groups, labels=labels, lists_of_timestamps=timestamp_groups)
         else:
-            compare_trends(datapoint_groups, labels=labels)
+            compare_summary(datapoint_groups, labels=labels)
         return
     # Create ASCII spreadsheet
     temporary_labels = []
@@ -245,9 +245,9 @@ def plot_trends(
         print("-" * 97)
 
     if throughput:
-        compare_trends(datapoint_groups, labels=temporary_labels, lists_of_timestamps=timestamp_groups)
+        compare_summary(datapoint_groups, labels=temporary_labels, lists_of_timestamps=timestamp_groups)
     else:
-        compare_trends(datapoint_groups, labels=temporary_labels)
+        compare_summary(datapoint_groups, labels=temporary_labels)
     
 
 from src.graphing.percentiles import compare_pauses_percentiles

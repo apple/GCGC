@@ -1,6 +1,6 @@
-#       trends.py
+#       summary.py
 #
-#   Given a list of floats, analyze macro trends within the data such as
+#   Given a list of floats, analyze macro summary within the data such as
 #   the sum, count, and max/min. Print using an ASCII table.
 #
 #   Ellis Brown, 6/29/2021
@@ -9,12 +9,12 @@ from os import times
 import pandas as pd
 import numpy as np
 
-#       print_trends
+#       print_summary
 #
-# Print the trends within the data (total number of pauses, max wait, total wait mean wait)
+# Print the summary within the data (total number of pauses, max wait, total wait mean wait)
 # returns total wait
 #
-def print_trends(pauses_milliseconds, label=None, print_title=True, total_runtime_seconds=0, timestamps=None):
+def print_summary(pauses_milliseconds, label=None, print_title=True, total_runtime_seconds=0, timestamps=None):
     # Parameters:
     #   pauses_milliseconds    : list of pauses (floats)
     #   label                 : label for this row in the table
@@ -38,7 +38,7 @@ def print_trends(pauses_milliseconds, label=None, print_title=True, total_runtim
 
     # Print title with formatting
     if print_title:
-        title = "  Trends (ms)   | "  # 15 + 3 characters
+        title = "  summary (ms)   | "  # 15 + 3 characters
         title += "Event Count   | "
         title += "Max Duration  | "
         title += "Sum Duration  | "
@@ -72,31 +72,31 @@ def float_constant_chars(value, length):
     return output
 
 
-#       compare_trends
+#       compare_summary
 #
-#   Compares trends from a list of pauses lists
+#   Compares summary from a list of pauses lists
 #
-def compare_trends(pauses_ms_lists, labels=None, lists_of_total_program_runtime=[], lists_of_timestamps=[]):
+def compare_summary(pauses_ms_lists, labels=None, lists_of_total_program_runtime=[], lists_of_timestamps=[]):
     assert isinstance(pauses_ms_lists, list)
     if not pauses_ms_lists:
-        print("No pauses_ms_lists in compare_trends.")
+        print("No pauses_ms_lists in compare_summary.")
         return
     if not labels:
         labels = [str(i) for i in range(len(pauses_ms_lists))]
     # The second and third parameters are optionally lists. Pass them if the parameter exists , and decide between the two.
     # Otherwise, pass none. Pass the first (index 0) with title TRUE, the rest in loop title FALSE.
     if lists_of_total_program_runtime:
-        print_trends(pauses_ms_lists[0], labels[0], True, lists_of_total_program_runtime[0])
+        print_summary(pauses_ms_lists[0], labels[0], True, lists_of_total_program_runtime[0])
         for i in range(1, len(pauses_ms_lists)):
-            print_trends(pauses_ms_lists[i], labels[i], False, lists_of_total_program_runtime[i])
+            print_summary(pauses_ms_lists[i], labels[i], False, lists_of_total_program_runtime[i])
     elif lists_of_timestamps:
-        print_trends(pauses_ms_lists[0], labels[0], True, timestamps=lists_of_timestamps[0])
+        print_summary(pauses_ms_lists[0], labels[0], True, timestamps=lists_of_timestamps[0])
         for i in range(1, len(pauses_ms_lists)):
-            print_trends(pauses_ms_lists[i], labels[i], False, timestamps=lists_of_timestamps[i])
+            print_summary(pauses_ms_lists[i], labels[i], False, timestamps=lists_of_timestamps[i])
     else:
-        print_trends(pauses_ms_lists[0], labels[0], True)
+        print_summary(pauses_ms_lists[0], labels[0], True)
         for i in range(1, len(pauses_ms_lists)):
-            print_trends(pauses_ms_lists[i], labels[i], False)
+            print_summary(pauses_ms_lists[i], labels[i], False)
 
 
 #       __string_const_chars
