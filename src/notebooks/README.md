@@ -2,43 +2,43 @@
 
 List of functions and the plots they are expected to produce. For each of the provided GCGC original plots, the suggested parameters will be provided.
 
->  #### [1. STW Pauses during program runtime ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#1-stw-pauses-during-program-runtime)
+>  #### [1. STW Pauses during program runtime ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#1-stw-pauses-during-program-runtime)
 
-> #### [2. STW Pauses during program runtime, group by EventName ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#2-stw-pauses-during-program-runtime-group-by-eventname)
+> #### [2. STW Pauses during program runtime, group by EventName ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#2-stw-pauses-during-program-runtime-group-by-eventname)
 
-> #### [3. Concurrent durations during runtime ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#3-concurrent-durations-during-runtime)
+> #### [3. Concurrent durations during runtime ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#3-concurrent-durations-during-runtime)
 
-> #### [4. Total time spent in STW pauses vs. Concurrent durations ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#4-total-time-spent-in-stw-pauses-vs-concurrent-durations)
+> #### [4. Total time spent in STW pauses vs. Concurrent durations ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#4-total-time-spent-in-stw-pauses-vs-concurrent-durations)
 
-> #### [5a. Pauses summary (max, sum, mean, count, std.dev) ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#5a-pauses-summary-max-sum-mean-count-stddev)
-> #### [5b. Pauses summary by name ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#5b-pauses-summary-by-name)
+> #### [5a. Pauses summary (max, sum, mean, count, std.dev) ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#5a-pauses-summary-max-sum-mean-count-stddev)
+> #### [5b. Pauses summary by name ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#5b-pauses-summary-by-name)
 
-> #### [6a. Pause percentiles ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#6a-pause-percentiles)
-> #### [6b. Pause percentiles by name ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#6b-pause-percentiles-by-name)
+> #### [6a. Pause percentiles ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#6a-pause-percentiles)
+> #### [6b. Pause percentiles by name ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#6b-pause-percentiles-by-name)
 
-> #### [7a. Mean event durations ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#7a-mean-event-durations)
-> #### [7b. Sum event durations ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#7b-sum-event-durations)
+> #### [7a. Mean event durations ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#7a-mean-event-durations)
+> #### [7b. Sum event durations ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#7b-sum-event-durations)
 
-> #### [8a. Heap Before GC ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#8a-heap-before-gc)
-> #### [8b. Heap After GC ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#8b-heap-after-gc)
+> #### [8a. Heap Before GC ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#8a-heap-before-gc)
+> #### [8b. Heap After GC ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#8b-heap-after-gc)
 
-> #### [9. MB Reclaimed during program runtime ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#9-mb-reclaimed-during-program-runtime)
+> #### [9. MB Reclaimed during program runtime ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#9-mb-reclaimed-during-program-runtime)
 
-> #### [10. Latency Heatmaps, Linear ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#10-latency-heatmaps-linear)
+> #### [10. Latency Heatmaps, Linear ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#10-latency-heatmaps-linear)
 
-> #### [11. Pause frequencies histogram ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#11-pause-frequencies-histogram)
+> #### [11. Pause frequencies histogram ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#11-pause-frequencies-histogram)
 
-> #### [12. Latency percentiles over time intervals ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#12-latency-percentiles-over-time-intervals)
+> #### [12. Latency percentiles over time intervals ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#12-latency-percentiles-over-time-intervals)
 
-> #### [13. Number of times GC invoked over time intervals ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#13-number-of-times-gc-invoked-over-time-intervals)
+> #### [13. Number of times GC invoked over time intervals ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#13-number-of-times-gc-invoked-over-time-intervals)
 
-> #### [14. Sum of pause durations over intervals ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#14-sum-of-pause-durations-over-intervals)
+> #### [14. Sum of pause durations over intervals ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#14-sum-of-pause-durations-over-intervals)
 
-> #### [15. Logarithmic heatmaps ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#15-logarithmic-heatmaps)
+> #### [15. Logarithmic heatmaps ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#15-logarithmic-heatmaps)
 
-> #### [16. Percentage of heap filled after GC ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#16-percentage-of-heap-filled-after-gc)
+> #### [16. Percentage of heap filled after GC ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#16-percentage-of-heap-filled-after-gc)
 
-> #### [17. Heap allocation rate ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.3/src/notebooks/README.md#17-heap-allocation-rate)
+> #### [17. Heap allocation rate ->](https://github.pie.apple.com/ellis-brown/GCGC/blob/version0.9.4/src/notebooks/README.md#17-heap-allocation-rate)
                                         
 ## Configurations for plots
 The following parameters can be found in some of the plotting functions. The list of the parameters for each function can be found below.
