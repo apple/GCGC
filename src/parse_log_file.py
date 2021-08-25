@@ -4,7 +4,7 @@
 #   Returns a regex searchable string 
 #
 
-
+'''https://regex101.com : the best website for checking regex!'''
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                       event_parsing_string
 #
