@@ -35,8 +35,9 @@ Follow the instructions in [docs/how-to-run.md](./docs/how-to-run.md)
 
 --- 
 
-Presentation recording link: phantom://1fb486cb 
----
+
+Presentation recording link: [phantom://1fb486cb](phantom://1fb486cb)
+
 
 ## Known edge cases:
 
