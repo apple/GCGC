@@ -356,6 +356,7 @@ def get_heatmap_data_logarithmic(timestamp_groups, datapoint_groups, labels, dim
     base              = dimensions[3]  # Duration in milliseconds for the length of each latency interval bucket
     
     heatmap_list = []
+    max_number = max([max(pauses_ms) for pauses_ms in datapoint_groups])
     for times_seconds, pauses_ms in zip(timestamp_groups, datapoint_groups):
         # create buckets to store the time information.
         # first, compress into num_b buckets along the time X-axis.
@@ -376,7 +377,6 @@ def get_heatmap_data_logarithmic(timestamp_groups, datapoint_groups, labels, dim
 
         # create heatmap, which will be a 2d-array
         heatmap = []
-        max_number = max(pauses_ms)
         y_range_buckets = get_bucket_upper_ranges(base, y_bucket_count, max_number)
         out_of_range_latency = 0
         # go through each time interval, and sort the pauses there into frequency lists

@@ -45,7 +45,9 @@ def filter_and_group(
         colors, alphas = get_colors_and_alphas(len(group_labels))
     else:
         alphas = [1 for i in range(len(colors))]
-
+    if column_timing == "DateTime":
+        # find the minimum time in any timestamp_group, and subtract it from all recorded values.
+        timestamp_groups = __remove_datetime_scaling(timestamp_groups)
     return timestamp_groups, datapoint_groups, group_labels, colors, alphas
 
 
@@ -132,6 +134,7 @@ def arrange_into_groups(datasets, group_by, column, column_timing, labels):
                     
                     groups = {} # Create a dictionary to hold unique groups
                     if column_timing == "DateTime":
+                        print("Case number 1")
                         timing = pd.Series(matplotlib.dates.date2num(df[column_timing]))
                     else:
                         timing = df[column_timing]                        
@@ -155,7 +158,6 @@ def arrange_into_groups(datasets, group_by, column, column_timing, labels):
                         datapoint_groups.append(pd.Series(groups[key][1]))
                         group_labels.append(groups[key][2])
                         
-                    
         return timestamp_groups, datapoint_groups, group_labels
     
 #       arrange_no_groups
@@ -178,3 +180,22 @@ def arrange_no_groups(datasets, column, column_timing, labels):
             group_labels.append(labels[idx])
                 
     return timestamp_groups, datapoint_groups, group_labels
+
+
+#   Given that column_timing is set to "DateTime" characters,
+#   shift them into TimePassed in Seconds scaling.
+def __remove_datetime_scaling(timestamp_groups):
+    # Each list of timestamp groups contains numbers in matplotlib datetime formats.
+    # First, determine the minimum time present
+    # Then, subtract from all that minimum time to make the values begin from zero.
+    # Then, scale the times into seconds (x84600). Scaling explained here: https://matplotlib.org/stable/api/dates_api.html
+    min_time = timestamp_groups[0].min()
+    print(len(timestamp_groups))
+    for index in range(1, len(timestamp_groups)):
+        min_time = min(min_time, timestamp_groups[index].min())
+    print(min_time)
+    new_times = []
+    for timestamp_list in timestamp_groups:
+        timestamp_list = [(time - min_time) * 86400 for time in timestamp_list] 
+        new_times.append(timestamp_list)
+    return new_times

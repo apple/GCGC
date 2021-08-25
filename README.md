@@ -35,6 +35,9 @@ Follow the instructions in [docs/how-to-run.md](./docs/how-to-run.md)
 
 --- 
 
+Presentation recording link: phantom://1fb486cb 
+---
+
 ## Known edge cases:
 
 Note: The following edge cases are known and not handled automatically:
@@ -46,6 +49,15 @@ Note: The following edge cases are known and not handled automatically:
 5) Using column_timing = "DateTime" in any function that requires an "interval_duration" breaks the tool's analysis features, since DateTime represents each day with about 0.25 float value precision, not the expected unit of seconds. Feature is being fixed in a later version.
 
 --- 
+
+## Generating a log file
+
+Creating a log file is quite easy, just add these logging flags to your appllication. 
+
+    -Xlog:gc*:./filename.log
+
+More detailed logging can be added, but the tool should be able to handle the gc log reported using the above Java runtime flags.
+
 ### Note:
 The following file will have documentation improvements to make improvements easier:
 - src/parse_log_file.py 
