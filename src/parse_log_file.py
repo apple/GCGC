@@ -293,3 +293,369 @@ COLUMN_NAMES = [None, 'DateTime', 'Time', "TimeUnit", "Other fields", 'GCIndex',
 
 
 DATA_TYPES = [str,float,str,str, int, str, str, str, None, float, float, float, None, float, None, float, float, float, str, float, float, float, float, float, float]
+
+def sample_regex():
+    #   DateTime :  The real time when the log event happened. 
+    #   Group: 1    
+    #   example: [2021-08-26T14:36:54.860-0400] 
+    #   example: [0000-00-00T00:00:00.000+0000] 
+    date_time = "(?:(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\])|(?:\[([\d\.]+)((?:s)|(?:ms)|(?:ns))\]))", "DateTime", str
+
+    #   Time : Some time unit that determines when the event happened
+    #   Group : 2
+    #   Note: the unit on the time does not matter, all times are accepted.
+    #   example : [2151242301422ns]
+    #   example : [125642412ms]
+    #   example : [123ms]
+    #   example : [000.00s]
+    #   example : [242.23s]
+    time = "", "Time", float
+
+    #   TimeUnit : The unit that represents what time was collected.
+    #               no unit means no time value collected. (AKA DateTime collected)
+    #   Group : 3
+    #   example: s
+    #   example: ns
+    #   example: ms
+    time_unit = "", "TimeUnit", str
+
+    # Note: Either date_time or (time and time_unit) will be collected. Failure for these
+    # fields to be collected will result in a log line being ignored.
+
+
+    #   Other info fields detailing log line info
+    #   Field : Optional
+    #   Group : Non capturing
+    #   [info][gc          ] 
+    #   [info][81200][gc]
+    #    ((empty string)0)
+    other_info_fields = "(?:\[.*?\])*", None, None
+
+    #   GCIndex
+    #   Field : Required
+    #   Group : 3
+    #   Captures: integer number of the GC's count for an event
+    #   GC(0) 
+    #   GC(21142) 
+    gc_event_number = "(?:(?: GC\((\d+)\) ", "GCIndex", int
+
+    #   EventType : Type of gc event
+    #   Field : Required / Normal
+    #   Group : 4
+    #   Captures: The exact word from the choices of ("Pause", "Concurrent", "Garbage Collection")
+    #   Pause
+    #   Concurrent
+    #   Garbage Collection
+    gc_event_type = "((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) ", "EventType", str
+
+    #   EventName : The name of the GC event
+    #   Field : Required / Normal
+    #   Group : 5
+    #   Captures : The set of 1-3 words following the EventType that names the event
+    #   Young 
+    #   Mark
+    #   ((empty string))
+    gc_event_name = "(?:((?:\w+ ?){1,3}) )?", "EventName", str  # Young    *
+
+    #   AdditionalEventInfo
+    #   Field : Optional
+    #   Group : 6
+    #   Captures: The set of 0-3 words in 0-3 parentheses following the EventName
+    #   (Normal) (G1 Evacuation Pause)
+    #   ((empty string))
+    gc_additional_info = "((?:\((?:\w+ ?){1,3}\) ){0,3})", "AdditionalEventInfo", str  # (Evacuation Pause)    *
+
+    #   Non capturing group setup for OR expressions
+    #   Field: NA
+    #   Group : Non capturing
+    #   (no example, nothing here to be compared against)
+    setup_optional_groups = "(?:(?:(?:", None, None
+
+    #   HeapBeforeGC : Captures the heapsize in MB before the GC run.
+    #   Field : Optional
+    #   Group: 7
+    #   Captures: The float value for the heapsize. No unit captured 
+    #   411M->
+    #   222M->
+    #   8M->
+    heap_before_gc = "(\d+)\w->", "HeapBeforeGC", float
+
+    #   HeapAfterGC : Captures the heapsize in MB after the GC run.
+    #   Field : Optional
+    #   Group : 8
+    #   Captures :  The float value for the heapsize. No unit captured
+    #   98M(
+    #   123542M(
+    heap_after_gc = "(\d+)\w(?:\(", "HeapAfterGC", float
+
+    #   MaxHeapsize: The current maximum heap size after the GC run
+    #   Field : Optional  
+    #   Group: 9
+    #   Captures : The integer value for the heapsize
+    #   (8192M)
+    #   (123456M)
+    #   (0000M)
+    max_heap_size = "(\d+)\w\)?)?", "MaxHeapsize", float
+
+    #   Closing capture group, create positive lookahead
+    #   Field : NA
+    #   Group : Non capturing
+    #   (no example, nothing here to be compared against)
+    optional_group_stuff = ")?(?= ?", None, None
+
+    #   Duration_milliseconds :  Time used for this event in milliseconds
+    #   Field : Required / Normal
+    #   Group : 10
+    #   Captures: The value of the duration. No unit captures
+    #   11.751ms
+    #   12314.751ms
+    time_spent_milliseconds = "(\d+\.\d+)ms))", "Duration_milliseconds", float  # 24.321ms
+
+    #   Begin regex for ZGC specific memory capturing 
+    #   Field : NA
+    #   Group : Non capturing
+    #   (no example, nothing here to be compared against)
+    zgc_memory_start = "|(?:", None, None
+
+    #   HeapBeforeGC : ZGC style heap before gc metric
+    #   Field : Required / ZGCmem
+    #   Group : 11
+    #   Captures : The Heap size in MB before GC run. No unit captured.
+    #   12345M(00%)->
+    #   00000M(12345%)->
+    zgc_heap_before_gc = "(\d+)\w\(\d+%\)->", "HeapBeforeGC", float
+
+    #   HeapAfterGC : ZGC style heap after gc metric
+    #   Field : Required / ZGCmem
+    #   Group : 12 
+    #   Captures : The Heap size in MB after GC run. No unit captured.
+    #   194M
+    #   00000G
+    zgc_heap_after_gc = "(\d+)\w\(", "HeapAfterGC", float
+        
+
+    #   MaxHeapsize : The size of the current heap in MB
+    #   Field : 99
+    #   Group : 13
+    #   Captures : the max heap size percentage full after completed GC
+    #   (2%)
+    #   (00000%)
+    zgc_max_heapsize = "(\d+)%\))))", "MaxHeapsize", float
+
+    #   SafepointName : The name of the recorded safepoint
+    #   Field : Required / Safepoint JDK16
+    #   Group : 14
+    #   Captures: Name of the safepoint, not including parentheses
+    #   Safepoint "ZMarkEnd",
+    #   Safepoint "Example",
+    safepoint_name = "|(?: Safepoint \"(\w+)\"", "SafepointName", str
+
+    #   TimeFromLastSafepoint_ns : Time from last safepoint in nanoseconds
+    #   Field : Required / Safepoint JDK16
+    #   Group : 15 
+    #   Captures: The time since the last safepoint in nanoseconds. No unit captured.
+    #   Time since last: 717687090 ns, 
+    #   Time since last: 9999 ns, 
+    safepoint_time_since_last = ", Time since last: (\d+) ns, ", "TimeFromLastSafepoint_ns", float
+
+    #   TimeToReachSafepoint_ns
+    #   Field : Required / Safepoint JDK16
+    #   Group : 16
+    #   Captures : Time required to reach the safepoint
+    #   Reaching safepoint: 109049 ns, 
+    #   Reaching safepoint: 99999 ns, 
+    safepoint_time_to_reach = "Reaching safepoint: (\d+) ns, ", "TimeToReachSafepoint_ns", float
+
+
+    #   AtSafepoint_ns
+    #   Field :  Required / Safepoint JDK16
+    #   Group : 17
+    #   Captures: Time while at Safepoint. No unit captured,
+    #   At safepoint: 38222 ns, 
+    #   At safepoint: 00000 ns, 
+    time_at_safepoint = "At safepoint: (\d+) ns, ", "AtSafepoint_ns", float
+
+    #   TotalTimeAtSafepoint_ns
+    #   Field :  Required / Safepoint JDK16
+    #   Group : 18
+    #   Captures : Total time spent getting to and at the safepoint. No unit captured 
+    #   Total: 147271 ns
+    #   Total: 00000 ns
+    total_time_safepoint = "Total: (\d+) ns$)", "TotalTimeAtSafepoint_ns", float
+
+    #   TotalApplicationThreadPauseTime_seconds
+    #   Field : Required / Safepoint JDK11
+    #   Group : 19
+    #   Captures : Total time the program's application threads were stopped
+    #   Total time for which application threads were stopped: 0.0002106 seconds,
+    #   Total time for which application threads were stopped: 99999.99999 seconds,
+    program_pause_time = ("|(?: Total time for which application threads were stopped: ([\d\.]+) seconds,",
+                        "TotalApplicationThreadPauseTime_seconds", float)
+
+    #   TimeToStopApplication_seconds
+    #   Field : Required / Safepoint JDK11
+    #   Group : 20
+    #   Captures: Time in seconds to stop threads for safepoint
+    #    Stopping threads took: 0.0000900 seconds
+    #    Stopping threads took: 9999.9999 seconds
+    time_to_stop_application = " Stopping threads took: ([\d\.]+) seconds$))", "TimeToStopApplication_seconds", float
+
+
+    event_parsing = [("^", None, None) ,                # ALL
+                     date_time ,                    # ALL
+                     time ,
+                     time_unit,      # ALL
+                     other_info_fields ,            # ALL
+                     gc_event_number ,              # normal
+                     gc_event_type ,                # normal
+                     gc_event_name ,                # normal
+                     gc_additional_info ,           # normal
+                     setup_optional_groups ,        # normal
+                     heap_before_gc ,               # normal
+                     heap_after_gc ,                # normal
+                     max_heap_size ,                # normal
+                     optional_group_stuff ,         # normal
+                     time_spent_milliseconds ,       # normal
+                     zgc_memory_start ,             # zgc mem
+                     zgc_heap_before_gc ,           # zgc mem
+                     zgc_heap_after_gc ,            # zgc mem
+                     zgc_max_heapsize ,             # zgc mem
+                     safepoint_name ,               # safepoints jdk16
+                     safepoint_time_since_last ,    # safepoints jdk16
+                     safepoint_time_to_reach ,      # safepoints jdk16
+                     time_at_safepoint ,            # safepoints jdk16
+                     total_time_safepoint ,         # safepoints jdk16
+                     program_pause_time ,           # safepoints jdk 11
+                     time_to_stop_application]      # safepoints jdk 11
+    
+    regex_group, column_name, data_type = [], [], []
+    
+    for capture_group in event_parsing:
+        
+        regex_group.append(capture_group[0])
+        column_name.append(capture_group[1])
+        data_type.append(capture_group[2])
+    
+    capture_string = "".join(regex_group)
+
+    return capture_string, column_name, data_type
+
+
+
+
+# returns a list of tupples adding the correct groups.
+def r_or(*groups):
+    # each group is a list of tuples
+    
+    groups = list(groups)
+    groups[0] = set_noncapture(groups[0])
+    for idx in range(1, len(groups)):
+        groups[idx] = set_noncapture(groups[idx])
+        groups[idx] = add_front("|", groups[idx])
+
+    first_term = groups[0][0]
+    last_term  = groups[-1][-1]
+    first_term_regex = "(?:" + first_term[0]
+    last_term_regex  = last_term[0]  + ")"
+    
+    
+
+    groups[0][0] = (first_term_regex, groups[0][0][1], groups[0][0][2])
+    groups[-1][-1] = (last_term_regex, groups[-1][-1][1], groups[-1][-1][2])
+    combined_groups = []
+    for group in groups:
+        for regex_tuple in group:
+            combined_groups.append(regex_tuple)
+    return combined_groups
+
+def set_noncapture(terms):
+    # Terms is a list containing multiple tuples of (regex, col, datatype.)
+    # Change the first item in the list and the last item to turn
+    # the entire list into a single non=capture group
+    terms[0] = ("(?:" + terms[0][0], terms[0][1], terms[0][2])
+    terms[-1] = (terms[-1][0] + ")", terms[-1][1], terms[-1][2])
+    return terms
+
+
+def add_front(char, terms):
+    new_term = (char + terms[0][0], terms[0][1], terms[0][2])
+    terms[0] = new_term
+    return terms
+
+def regex_string():
+    start = "^", None, None
+    
+    date_time = "\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\]", "DateTime", str  
+    time = "\[([\d\.]+)", "Time", float
+    time_unit = "((?:s)|(?:ms)|(?:ns))\]", "TimeUnit", str
+    
+    other_fields = "((?:\[.*?\])*)", "Other fields", str
+
+    gc_phase = " GC\((\d+)\)", "GCIndex", int
+    event_type = " ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) ", "EventType", str # contains lookahead for time spent in event
+    event_name = "(" + words(1, 3) + " )?", "EventName", str
+    additional_event_info = "((?:\(" + words(1, 3) + "\) ){0,3})", "AdditionalEventInfo", str
+    
+    heap_before_gc = " ?(\d+)M->", "HeapBeforeGC", float
+    heap_after_gc = "(\d+)M", "HeapAfterGC", float
+    max_heapsize = "\((\d+)M\)", "MaxHeapsize", float
+    duration_ms = " ?(\d+\.\d+)ms"
+
+    zgc_heap_before_gc = "(\d+)M\(\d+%\)", "HeapBeforeGC", float
+    zgc_heap_after_gc = "->(\d+)M", "HeapAfterGC", float
+    zgc_max_heapsize = "\((\d+%)M\)", "MaxHeapsize", float
+    
+    safepoint_name = " Safepoint \"(\w+)\"", "SafepointName", str
+    safepoint_time_since_last = ", Time since last: (\d+) ns, ", "TimeFromLastSafepoint_ns", float
+    safepoint_time_to_reach = "Reaching safepoint: (\d+) ns, ", "TimeToReachSafepoint_ns", float
+    time_at_safepoint = "At safepoint: (\d+) ns, ", "AtSafepoint_ns", float   
+    total_time_safepoint = "Total: (\d+) ns$", "TotalTimeAtSafepoint_ns", float
+   
+    program_pause_time = (" Total time for which application threads were stopped: ([\d\.]+) seconds,",
+                        "TotalApplicationThreadPauseTime_seconds", float)
+    time_to_stop_application = " Stopping threads took: ([\d\.]+) seconds$", "TimeToStopApplication_seconds", float
+
+    
+    string = []
+    string.append(start) #
+    temp_time = r_or( [date_time], [time, time_unit])
+
+    for line in temp_time:
+        string.append(line) #
+    string.append(other_fields) #
+
+    duration_events = r_or( [heap_before_gc, heap_after_gc, max_heapsize, duration_ms], [zgc_heap_before_gc, zgc_heap_after_gc, zgc_max_heapsize])
+    
+
+
+    temp =   r_or( [gc_phase, event_type, event_name, additional_event_info, *duration_events], 
+                  [safepoint_name, safepoint_time_since_last, safepoint_time_to_reach, time_at_safepoint, total_time_safepoint],
+                  [program_pause_time, time_to_stop_application]
+                  )
+    for item in temp:
+        string.append(item)
+    
+    regex_group, column_name, data_type = [], [], []
+    
+    for capture_group in string:
+        
+        regex_group.append(capture_group[0])
+        column_name.append(capture_group[1])
+        data_type.append(capture_group[2])
+    
+    capture_string = "".join(regex_group)
+
+    return capture_string, column_name, data_type
+    
+
+# Any number of words between min_num and max_num can be captured.
+def words(min_num, max_num):
+    return "(?:\w+ ?){" + str(min_num) + "," + str(max_num) + "}"
+
+
+# r_or([date_time], [time, time_unit]) , 
+#     other_groups, 
+#     r_or([gc_index, event_type, event_name, additional_word_info, r_or( [heap_before_gc, heap_after_gc, max_heapsize, duration_miliseconds],
+#                                                                         [zgc_heap_before_gc, zgc_heap_after_gc, zgc_max_heapsize])]
+#          [safepoint_jdk16],
+#          [safepoinbt_idk11])
