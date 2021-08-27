@@ -5,11 +5,12 @@
 #
 #   Ellis Brown, 6/29/2021
 
+from src.new_parsing import better_parsing
 import pandas as pd
 import numpy as np
 import re
 import glob
-
+import matplotlib
 #       get_file_names_wildcard
 #
 #   Given a path including a linux style wildcard search, return the list of all matching files
@@ -32,7 +33,7 @@ def get_file_names_wildcard(path):
 #   Take a list of list of log file paths/names, and construct a list of tables, one for
 #   each log in the list.
 #
-def get_gc_event_tables(files, time_range_seconds, ignore_crashes = False):
+def get_gc_event_tables(files, zero_times=True, ignore_crashes = False):
     # Files must be a list of strings
     # Time range in seconds is either a list with 2 values,
     # or a single integer max time.
@@ -48,17 +49,52 @@ def get_gc_event_tables(files, time_range_seconds, ignore_crashes = False):
         for file in filelist:
             # Create each log gc_event_dataframe
             
-            gc_event_dataframe = get_parsed_data_from_file(file, time_range_seconds, ignore_crashes)
+            gc_event_dataframe = get_parsed_data_from_file(file, ignore_crashes)
+            gc_event_dataframe = scale_time(gc_event_dataframe)
             
             if not gc_event_dataframe.empty:
                 gc_event_dataframes.append(gc_event_dataframe)
         if gc_event_dataframes:
             df = pd.concat(gc_event_dataframes)
+            if zero_times:
+                zero_start_times(df)
             all_runs.append(df)
     if not all_runs:
         print("Error: No data collected in get_gc_event_tables.")
     return all_runs
 
+
+#       takes the units from the dataframe, and recorded times,
+#       and creates timestammps in seconds.
+#
+def scale_time(df):
+    time_seconds = []
+    if "Time" in df and "TimeUnit" in df:
+        unit = df["TimeUnit"].iloc[0]
+        if unit == "s":
+            divisor = 1
+        elif unit == "ms":
+            divisor = 1000
+        elif unit == "ns": 
+            divisor = 1000000000
+        elif not unit: # date time
+            
+            times = pd.Series(matplotlib.dates.date2num(df["DateTime"]))
+            time_seconds = [time * 86400 for time in times]  # scales matplotlib datetime to seconds.
+            df["TimeFromStart_seconds"] = time_seconds
+            df = df.drop(columns=["Time", "TimeUnit"], axis = 1)
+            return df
+    
+        else:
+            print("Unknown unit detected: unit = ", unit)
+            return df
+        for row in df["Time"]:
+            time_seconds.append(row / divisor)
+    
+    df["TimeFromStart_seconds"] = time_seconds
+    df = df.drop(columns=["Time", "TimeUnit"], axis = 1)
+    return df        
+    
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                         __manyMatch_LineSearch
@@ -91,26 +127,6 @@ def __manyMatch_LineSearch(
             # add the match group number hit, so able to tell what match
     file.close()
     return table
-
-
-
-
-#       __choose_non_zero
-#
-#   Given two lists, choose the value for each zipped index in the list
-#   that is non zero, or None if neither have values, and return the combined 
-#   list
-#
-def __choose_non_zero(list1, list2):
-    list_non_zero = []
-    for item1, item2 in zip(list1, list2):
-        if item1:
-            list_non_zero.append(item1)
-        elif list2:
-            list_non_zero.append(item2)
-        else:
-            list_non_zero.append(None)
-    return list_non_zero
 
 #       set_safepoints_eventtype
 #
@@ -147,8 +163,9 @@ from src.parse_log_file import event_parsing_string
 #   a pandas dataframe, where rows are each an individual event. Columns are labeled, and
 #   collect information on each event, such as when it occured, how long it lasted, and the name
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def get_parsed_data_from_file(logfile,  time_range_seconds, ignore_crashes = False):
-    regex_capture_string, column_names, data_types = event_parsing_string()    
+def get_parsed_data_from_file(logfile, ignore_crashes = False):
+    regex_capture_string, column_names, data_types = better_parsing()    
+    #regex_capture_string, column_names, data_types = event_parsing_string()    
     table = __manyMatch_LineSearch(regex_capture_string, logfile)
     
     # Construct a dictionary to hold column names, and associated data
@@ -189,13 +206,7 @@ def get_parsed_data_from_file(logfile,  time_range_seconds, ignore_crashes = Fal
     if ignore_crashes:
         if not assert_no_timing_errors(df):
             df = fix_timing_errors(df)
-    if time_range_seconds:
-        min_time, max_time = __get_time_range(time_range_seconds)
-        # Get the maximum and minimums and enforce the time range
-        in_minimum = df["TimeFromStart_seconds"] >= min_time
-        in_maximum = df["TimeFromStart_seconds"] <= max_time
-        # Create the combined time table
-        df = df[in_minimum & in_maximum] # Uses true from both other sections
+
 
     return df
 
@@ -232,6 +243,7 @@ def __create_column(table, data_types, table_columns):
 #   that there are no timing errors, meaning the time line never decreases.
 #   For all lines x, time(x) <= time(x + n), n > 0. Otherwise, return false.
 #
+#    returns TRUE if no timing errors
 def assert_no_timing_errors(gc_event_dataframe):
     maximum_time = -1
     for time in gc_event_dataframe["TimeFromStart_seconds"]:
@@ -265,28 +277,11 @@ def fix_timing_errors(gc_event_dataframe):
     
     return gc_event_dataframe
 
-# Confirms the passed time range, which is either a maximum or a 
-# range. Returns the minimum & maximum times, as a float.
-def __get_time_range(time_range):
-    if type(time_range) == int or type(time_range) == float:
-        min_time = 0
-        max_time = time_range
-    else:
-        #   assert len(time_range) == 2
-        min_time = time_range[0]
-        max_time = time_range[1]
-    return min_time, max_time
-
-def zero_start_times(gc_event_dataframes, set_times_to_zero):
-    for index, (df, condition) in enumerate(zip(gc_event_dataframes, set_times_to_zero)):
-        if condition and type(condition) == type(False):
-            if "TimeFromStart_seconds" in df:
-                min_time = df["TimeFromStart_seconds"].min()
-                new_timestamps = []
-                for time in df["TimeFromStart_seconds"]:
-                    new_timestamps.append(time - min_time)
-                df["TimeFromStart_seconds"] = new_timestamps
-            else:
-                print("TimeFromStart_seconds not found in gc_event_dataframes index " + str(index))
+def zero_start_times(dataframe):
+    min_time = dataframe["TimeFromStart_seconds"].min()
+    new_times = []
+    for time in dataframe["TimeFromStart_seconds"]:
+        new_times.append(time - min_time)
+    dataframe["TimeFromStart_seconds"] = new_times
     # No return needed, as the originals have been updated.
             
