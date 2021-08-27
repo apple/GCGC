@@ -288,3 +288,8 @@ def event_parsing_string():
 [2021-07-20T13:28:05.551+0000][1.061s][2294560][2294576][info ] Safepoint "ICBufferFull", Time since last: 352774642 ns, Reaching safepoint: 128133 ns, At safepoint: 1429 ns, Total: 129562 ns
 '''
 
+STRING ='''^(?:(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\])|(?:\[([\d\.]+)((?:s)|(?:ms)|(?:ns))\]))((?:\[.*?\])*)(?:(?: GC\((\d+)\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) (?:((?:\w+ ?){1,3}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})(?:(?:(?:(\d+)\w->(\d+)\w(?:\((\d+)\w\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)\w\(\d+%\)->(\d+)\w\((\d+)%\))))|(?: Safepoint "(\w+)", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)|(?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$))'''
+COLUMN_NAMES = [None, 'DateTime', 'Time', "TimeUnit", "Other fields", 'GCIndex', 'EventType', 'EventName', 'AdditionalEventInfo', None, 'HeapBeforeGC', 'HeapAfterGC', 'MaxHeapsize', None, 'Duration_milliseconds', None, 'HeapBeforeGC', 'HeapAfterGC', 'MaxHeapsize', 'SafepointName', 'TimeFromLastSafepoint_ns', 'TimeToReachSafepoint_ns', 'AtSafepoint_ns', 'TotalTimeAtSafepoint_ns', 'TotalApplicationThreadPauseTime_seconds', 'TimeToStopApplication_seconds']
+
+
+DATA_TYPES = [str,float,str,str, int, str, str, str, None, float, float, float, None, float, None, float, float, float, str, float, float, float, float, float, float]
