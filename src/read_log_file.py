@@ -5,12 +5,14 @@
 #
 #   Ellis Brown, 6/29/2021
 
-from src.new_parsing import better_parsing
+from src.parse_log_file import get_parsing_groups
 import pandas as pd
 import numpy as np
 import re
 import glob
 import matplotlib
+
+
 #       get_file_names_wildcard
 #
 #   Given a path including a linux style wildcard search, return the list of all matching files
@@ -31,7 +33,8 @@ def get_file_names_wildcard(path):
 #       get_gc_event_tables
 #
 #   Take a list of list of log file paths/names, and construct a list of tables, one for
-#   each log in the list.
+#   each log in the list. Creates correct TimeFromStart_seconds time column for data, scaling
+#   based on unit present in log file
 #
 def get_gc_event_tables(files, zero_times=True, ignore_crashes = False):
     # Files must be a list of strings
@@ -65,7 +68,7 @@ def get_gc_event_tables(files, zero_times=True, ignore_crashes = False):
 
 
 #       takes the units from the dataframe, and recorded times,
-#       and creates timestammps in seconds.
+#       and creates timestamps in seconds. Scales units appropriately
 #
 def scale_time(df):
     time_seconds = []
@@ -77,14 +80,12 @@ def scale_time(df):
             divisor = 1000
         elif unit == "ns": 
             divisor = 1000000000
-        elif not unit: # date time
-            
+        elif not unit: # date time            
             times = pd.Series(matplotlib.dates.date2num(df["DateTime"]))
             time_seconds = [time * 86400 for time in times]  # scales matplotlib datetime to seconds.
             df["TimeFromStart_seconds"] = time_seconds
             df = df.drop(columns=["Time", "TimeUnit"], axis = 1)
             return df
-    
         else:
             print("Unknown unit detected: unit = ", unit)
             return df
@@ -144,7 +145,7 @@ def set_safepoints_eventype(eventtype_list, safepoint_list1, safepoint_list2):
             temp.append(eventtype)
     return temp
 
-from src.parse_log_file import event_parsing_string
+
 
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -164,8 +165,8 @@ from src.parse_log_file import event_parsing_string
 #   collect information on each event, such as when it occured, how long it lasted, and the name
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def get_parsed_data_from_file(logfile, ignore_crashes = False):
-    regex_capture_string, column_names, data_types = better_parsing()    
-    #regex_capture_string, column_names, data_types = event_parsing_string()    
+    regex_capture_string, column_names, data_types = get_parsing_groups()    
+       
     table = __manyMatch_LineSearch(regex_capture_string, logfile)
     
     # Construct a dictionary to hold column names, and associated data
