@@ -45,9 +45,8 @@ Note: The following edge cases are known and not handled automatically:
 
 1) Shenandoah has two phases per garbage collection cycle reporting Heap allocation, will lead to two plotted heap occupancy metrics for each GC phase.
 2) ZGC in JDK16 Puts information in safepoints, does not automatically print these in log analysis as it currently stands. These safepoints have comparable metrics to pause times, but ZGC does not report them in the same fashion, so these must be manually enabled on plots.
-3) ZGC bytes reclaimed calculation (This may extend to Shenandoah) may be negative, if the rate of allocation exceeds the rate of gc collection. Information is correctly provided in logs, not properly analyzed here. Feature is being fixed in a later version
-4) Trying to plot a graph or plot with a returned matlpotlib.axes variable declared in another cell does not show up inline in Jupyter notebooks.
-5) Using column_timing = "DateTime" in any function that requires an "interval_duration" breaks the tool's analysis features, since DateTime represents each day with about 0.25 float value precision, not the expected unit of seconds. Feature is being fixed in a later version.
+3) ZGC bytes reclaimed calculation (This may extend to Shenandoah) may be negative, if the rate of allocation exceeds the rate of gc collection. Information is correctly provided in logs, not properly analyzed here. Feature is being fixed in a later version, see issue #61
+4) Trying to plot a graph or plot with a returned matlpotlib.axes variable declared in another cell does not show up inline in Jupyter notebooks. 
 
 --- 
 
@@ -59,7 +58,4 @@ Creating a log file is quite easy, just add these logging flags to your appllica
 
 More detailed logging can be added, but the tool should be able to handle the gc log reported using the above Java runtime flags.
 
-### Note:
-The following file will have documentation improvements to make improvements easier:
-- src/parse_log_file.py 
-test
+
