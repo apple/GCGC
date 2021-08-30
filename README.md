@@ -58,3 +58,4 @@ Creating a log file is quite easy, just add these logging flags to your appllica
 
 More detailed logging can be added, but the tool should be able to handle the gc log reported using the above Java runtime flags.
 
+
