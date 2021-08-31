@@ -56,7 +56,7 @@ def get_gc_event_tables(files, zero_times=True, ignore_crashes = False):
             if not gc_event_dataframe.empty:
                 gc_event_dataframes.append(gc_event_dataframe)
             else:
-                print("No information collected for files in : ", filelist)
+                print("No information collected for file: ", file)
         if gc_event_dataframes:
             df = pd.concat(gc_event_dataframes)
             if zero_times:
