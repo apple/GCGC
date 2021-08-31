@@ -2,10 +2,6 @@
 #
 #   Analyzes trends in lists of pause data, and prints percentiles
 #   of the longest paused time
-#
-#   Ellis Brown, 6/29/2021
-
-
 
 import numpy as np
 

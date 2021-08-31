@@ -2,8 +2,6 @@
 #
 #   Given a log file, parse through that file and return a gc_events_dataframe containing all
 #   relevant information from the log during runtime
-#
-#   Ellis Brown, 6/29/2021
 
 from src.parse_log_file import get_parsing_groups
 import pandas as pd

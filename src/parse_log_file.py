@@ -2,7 +2,8 @@
 #
 #   Defines the parsing function for reading a GC log line in JDK11 & JDK16
 #   Returns a regex searchable string, the column names associated, and the datatypes of the columns
-#
+#   Updating this regex may appear confusing. I recommend you begin by seeing which capture fields already in place
+#   apply to your line, then using a `__regex_or` to append the new grouping. Verify using the link below.
 
 '''https://regex101.com : the best website for checking regex!'''
 
@@ -18,6 +19,8 @@
 #   -> list of datatypes for each column associated with regex groups
 #
 def get_parsing_groups():
+    # Each variable declared here is a tuple with 3 parts:
+    # Regex string, Associated capture group column name (if any), and the datatype for that capture group (if any).
     start = "^", None, None
     
     date_time = "\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\]", "DateTime", str # [9999-08-26T14:42:00.565-0400]
@@ -33,9 +36,9 @@ def get_parsing_groups():
     # contains lookahead for time spent in event
     event_type = " ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) ", "EventType", str  # Concurrent
                                                                                                           # Pause 
-    event_name = "(?:(" + words(1, 4) + ") )?", "EventName", str    # Young
-                                                                    # Any Four Words Here
-    additional_event_info = "((?:\("+ words(1, 3) +"\) ){0,3})", "AdditionalEventInfo", str # (Mixed)
+    event_name = "(?:(" + __words(1, 4) + ") )?", "EventName", str    # Young
+                                                                    # Any Four __Words Here
+    additional_event_info = "((?:\("+ __words(1, 3) +"\) ){0,3})", "AdditionalEventInfo", str # (Mixed)
                                                                                             # (Young) (Mixed Collection)
     # Confusing : Follow the capture groups in this section closely.
     # It is recommended you use the following resource : https://regexper.com
@@ -75,15 +78,15 @@ def get_parsing_groups():
     # Creates the full regex group: Use the website on the top of this file to follow the logic visually.
     combined_groups = [
         start,
-        *regex_or(  [date_time], 
+        *__regex_or([date_time], 
 
                     [time, time_unit]),
         other_fields,
-        *regex_or( [gc_phase, 
+        *__regex_or([gc_phase, 
                     event_type, 
                     event_name,
                     additional_event_info, 
-                    *regex_or([heap_before_gc, 
+                    *__regex_or([heap_before_gc, 
                               heap_after_gc, 
                               max_heapsize, 
                               duration_ms],
@@ -116,25 +119,25 @@ def get_parsing_groups():
     
 # Any number of words between min_num and max_num can be captured.
 # Helps clarify what is being captured.
-def words(min_num, max_num):
-    return "(?:\w+ ?){" + str(min_num) + "," + str(max_num) + "}"
+def __words(min_num, max_num):
+    return "(?:\w+ ?){" + str(min_num) + "," + str(max_num) + "}" #Any set of words with spaces after are captured.
 
 
-#   regex_or 
+#   __regex_or 
 #
 #   Takes some number of lists, representing tuples of (regex, column name, datatype),
 #   and modified the regex to include or statements between each list.
 #
 #   each passed in list will be put in a non capture group. The entire expression returned
 #   will be put in a non-capture group.
-def regex_or(*groups):
+def __regex_or(*groups):
     # each group is a list of tuples
     
     groups = list(groups)
-    groups[0] = set_noncapture(groups[0])
+    groups[0] = __set_noncapture(groups[0])
     for idx in range(1, len(groups)):
-        groups[idx] = set_noncapture(groups[idx])
-        groups[idx] = add_front("|", groups[idx])
+        groups[idx] = __set_noncapture(groups[idx])
+        groups[idx] = __add_front("|", groups[idx])
 
     first_term = groups[0][0]
     last_term  = groups[-1][-1]
@@ -148,11 +151,11 @@ def regex_or(*groups):
             combined_groups.append(regex_tuple)
     return combined_groups
 
-#       set_noncapture
+#       __set_noncapture
 #   
-#   Takes a list of terms, and combines them into one large non-capture group
+#   Takes a list of terms, and combines the regex in them into one large non-capture group
 #
-def set_noncapture(terms):
+def __set_noncapture(terms):
     # Terms is a list containing multiple tuples of (regex, col, datatype.)
     # Change the first item in the list and the last item to turn
     # the entire list into a single non=capture group
@@ -160,17 +163,18 @@ def set_noncapture(terms):
     terms[-1] = (terms[-1][0] + ")", terms[-1][1], terms[-1][2])
     return terms
 
-#       add_front
+#       __add_front
 #
-#       adds chars to the first term in the list.
+#       adds chars to the regex in the first term in the list.
 #
-def add_front(chars, terms):
+def __add_front(chars, terms):
     new_term = (chars + terms[0][0], terms[0][1], terms[0][2])
     terms[0] = new_term
     return terms
 
 
 ####### this function returns the same as 'get_parsing_groups()'. Also useful for reference. CURRENTLY NOT CALLED.
+# This should be used when analyzing the regex, or looking to understand the format in which the get_parsing_groups() data is returned
 def better_parsing():
     STRING ='''^(?:(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\])|(?:\[([\d\.]+)((?:s)|(?:ms)|(?:ns))\]))((?:\[.*?\])*)(?:(?: GC\((\d+)\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) (?:((?:\w+ ?){1,4}) )?((?:\((?:\w+ ?){1,3}\) ){0,3})(?:(?:(?:(\d+)\w->(\d+)\w(?:\((\d+)\w\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)\w\(\d+%\)->(\d+)\w\((\d+)%\))))|(?: Safepoint "(\w+)", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)|(?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$))'''
     COLUMN_NAMES = [ 'DateTime', 'Time', "TimeUnit", "Other fields", 'GCIndex', 'EventType', 'EventName', 'AdditionalEventInfo',  'HeapBeforeGC', 'HeapAfterGC', 'MaxHeapsize',  'Duration_milliseconds',  'HeapBeforeGC', 'HeapAfterGC', 'MaxHeapsize', 'SafepointName', 'TimeFromLastSafepoint_ns', 'TimeToReachSafepoint_ns', 'AtSafepoint_ns', 'TotalTimeAtSafepoint_ns', 'TotalApplicationThreadPauseTime_seconds', 'TimeToStopApplication_seconds']

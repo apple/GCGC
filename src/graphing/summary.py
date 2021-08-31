@@ -2,9 +2,6 @@
 #
 #   Given a list of floats, analyze macro summary within the data such as
 #   the sum, count, and max/min. Print using an ASCII table.
-#
-#   Ellis Brown, 6/29/2021
-
 from os import times
 import pandas as pd
 import numpy as np
