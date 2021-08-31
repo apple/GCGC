@@ -659,7 +659,7 @@ def plot_heatmaps(
 #
 def get_buckets_and_range(datapoint_groups, interval_duration):
     max_time_duration = 0    
-    min_time_duration = datapoint_groups[0][0]
+    min_time_duration = datapoint_groups[0].iloc[0]
 
     for dataset in datapoint_groups:
         if list(dataset): # read as list to check for list legnth, rather than rely on pd.DataFrame.empty
