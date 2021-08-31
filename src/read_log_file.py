@@ -55,6 +55,8 @@ def get_gc_event_tables(files, zero_times=True, ignore_crashes = False):
             
             if not gc_event_dataframe.empty:
                 gc_event_dataframes.append(gc_event_dataframe)
+            else:
+                print("No information collected for files in : ", filelist)
         if gc_event_dataframes:
             df = pd.concat(gc_event_dataframes)
             if zero_times:
@@ -69,7 +71,7 @@ def get_gc_event_tables(files, zero_times=True, ignore_crashes = False):
 #       and creates timestamps in seconds. Scales units appropriately
 #
 def scale_time(df):
-    if df.empty:
+    if df.empty: 
         return df
     time_seconds = []
     if "Time" in df and "TimeUnit" in df:
