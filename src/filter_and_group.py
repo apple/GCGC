@@ -1,10 +1,11 @@
 #       filter_and_group.py
 #   
-#   Given a set of filters, and groupings, take data from pandas dataframes, 
+#   Given a set of filters, and groupings, take data from pandas gc event dataframes, 
 #   and return a modified subset of the data that follows the passed filters/groups.
+#   Note: It is possible to export the following function to hold a state variable of the
+#   modified subset: apply_filter
 #
-# Ellis Brown
-# 7-12-2021
+#   The functions defined are used within in the plotting functions, and are not called in the GCGC notebook
 #
 import matplotlib
 
@@ -196,6 +197,7 @@ def __remove_datetime_scaling(timestamp_groups):
     print(min_time)
     new_times = []
     for timestamp_list in timestamp_groups:
-        timestamp_list = [(time - min_time) * 86400 for time in timestamp_list] 
+        timestamp_list = [(time - min_time) * 86400 for time in timestamp_list]  # scaling
         new_times.append(timestamp_list)
-    return new_times
+    # Note the datatype returned. Series rather than list
+    return pd.Series(new_times)
