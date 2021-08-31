@@ -506,22 +506,20 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
 
 ## 7. Percentage of heap filled after GC
-Uses the function `plot_percentages()`. The parameters are listed below for the functions, with the expected values to create the plot described by `7. Percentage of heap filled after GC` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
+Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line()` if a line plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by ` 7. Percentage of heap filled after GC` being described in paranthesis. The only required parameter is `gc_event_dataframes` 
     
-    gc_event_dataframes  (required)
-    group_by             (Expected = None) 
-    filter_by            (Expected = heap_before_gc)
-    labels               (Expected = labels variable)
-    colors               (Expected = None)
-    plot                 (Expected = None)
-    column               (Expected = "HeapAfterGC")
-    column_timing        (Expected = None)
-    max_heapsize_list    (Expected = [int value in MB]) # heapsize 8gb = 8 * 1024
-    line_graph           (Expected = False)
+    gc_event_dataframes (required)
+    group_by            (Expected = None) 
+    filter_by           (Expected = heap_percent_full_filter)
+    labels              (Expected = labels variable)
+    colors              (Expected = None)
+    plot                (Expected = None)
+    column              (Expected = "HeapPercentFull") 
+    column_timing       (Expected = None)
 
 Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
 
-`plot_percentages()` parameters:
+`plot_scatter()` / `plot_line()` parameters:
 
 - **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
 
@@ -560,14 +558,6 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 - **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`. 
       
       column_timing = "TimeFromStart_seconds"
-
-- **max_heapsize_list** : `list` datatype. a list of the max heapsize in MB for each of the passed lists for gc_event_dataframes. (coming soon! Automatic detection of the max heapsize!) Each entry in the list should be an `int` or `float`.
-
-      max_heapsize_list = [1024 * 8, 2048]
-
-- **line_graph** : `bool` datatype. If True, the graph plotted will be in line graph style, rather than scatter plot. If False or None, then it will remain scatter plot. Default False.
-
-      line_graph = False
 
 ---
 

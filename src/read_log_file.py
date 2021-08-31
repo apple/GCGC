@@ -52,7 +52,7 @@ def get_gc_event_tables(files, zero_times=True, ignore_crashes = False):
             
             gc_event_dataframe = get_parsed_data_from_file(file, ignore_crashes)
             gc_event_dataframe = scale_time(gc_event_dataframe)
-            
+            gc_event_dataframe = scale_heap_allocation(gc_event_dataframe)
             if not gc_event_dataframe.empty:
                 gc_event_dataframes.append(gc_event_dataframe)
             else:
@@ -97,7 +97,29 @@ def scale_time(df):
     df["TimeFromStart_seconds"] = time_seconds
     df = df.drop(columns=["Time", "TimeUnit"], axis = 1)
     return df        
+
+# Create a column "HeapPercentFull", and populate it with data if not already populated 
+def scale_heap_allocation(df):
+    if df.empty:
+        return df
     
+    # First, check if its already populated with values.
+    if "HeapPercentFull" in df:
+        for row in df["HeapPercentFull"]:
+            if row:
+                return df
+    
+    if "MaxHeapsize" in df and "HeapAfterGC" in df:
+        max_heapsize = df["MaxHeapsize"]
+        after_gc = df["HeapAfterGC"]
+        heap_percent_full = []
+        for occupancy, maxsize in zip(after_gc, max_heapsize):
+            if occupancy != None and maxsize != None:
+                heap_percent_full.append(100 * occupancy / maxsize)   
+            else:
+                heap_percent_full.append(None)
+        df["HeapPercentFull"] = heap_percent_full
+    return df
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                         __manyMatch_LineSearch

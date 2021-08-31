@@ -55,7 +55,7 @@ def get_parsing_groups():
                                                                     # 999M(999999%)
     zgc_heap_after_gc = "->(\d+)M", "HeapAfterGC", float    # ->200M
                                                             # ->99999M
-    zgc_max_heapsize = "\((\d+)%\)", "MaxHeapsize", float   # (24%)
+    zgc_max_heapsize = "\((\d+)%\)", "HeapPercentFull", float   # (24%)
                                                             # (00000%)
     safepoint_name = " Safepoint \"(\w+)\"", "SafepointName", str   # Safepoint "Hello"
                                                                     # Safepoint "Example"
