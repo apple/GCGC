@@ -3,7 +3,6 @@
 #   Using parsed data in a gc_event_dataframe, creates heatmaps to visually
 #   show latency during runtime.
 #
-#   Ellis Brown, 6/29/2021
 
 import matplotlib
 from matplotlib import pyplot as plt
@@ -54,7 +53,7 @@ def plot_heatmap(heatmap, dimensions, labels=True):
     ax.set_title("Latency during runtime.")
     # cmap is the color scheme. To change the heatmap color scheme, use a color scheme from here:
     # https://matplotlib.org/stable/tutorials/colors/colormaps.html
-    im = heatmap_make(heatmap, latency_labels, time_labels, ax=ax, cmap="plasma", cbarlabel="Frequency", fig = fig)
+    im = __heatmap_make(heatmap, latency_labels, time_labels, ax=ax, cmap="plasma", cbarlabel="Frequency", fig = fig)
 
     if labels:
         __annotate_heatmap(im, valfmt="{x}")
@@ -68,7 +67,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 ## The following code block was taken directly from matplotlib's documentation
 ## seen here:
 # https://matplotlib.org/stable/gallery/images_contours_and_fields/image_annotated_heatmap.html
-def heatmap_make(data, row_labels, col_labels, ax=None, cbar_kw={}, cbarlabel="", fig = None, **kwargs):
+def __heatmap_make(data, row_labels, col_labels, ax=None, cbar_kw={}, cbarlabel="", fig = None, **kwargs):
     """
     Create a heatmap from a numpy array and two lists of labels.
 
@@ -305,47 +304,8 @@ def get_heatmap_data(timestamp_groups, datapoint_groups, labels, dimensions):
 
 
 
-# Access a Pandas gc_event_dataframe constructed through parse_data.py with labeled columns.
-# Return the timestamps and pauses as a list
-def get_time_and_event_durations(gc_event_dataframe):
-    assert isinstance(gc_event_dataframe, pd.DataFrame)
-    return get_time_in_seconds(gc_event_dataframe), get_event_durations_in_milliseconds(gc_event_dataframe)
 
 
-#       get_event_durations_in_milliseconds
-#
-#   Given a pandas dataframe table populated with parsed log information,
-#   extract all 'event durations' from the Duration_milliseconds column, and
-#   return them as a list of floats.
-#
-def get_event_durations_in_milliseconds(gc_event_dataframe):
-    assert isinstance(gc_event_dataframe, pd.DataFrame)
-    if gc_event_dataframe.empty:
-        return []
-    else:
-        durations_milliseconds = []
-        for duration in gc_event_dataframe["Duration_milliseconds"]:
-            if duration != None:
-                durations_milliseconds.append(float(duration))
-        return durations_milliseconds
-
-
-#       get_time_in_seconds
-#
-#   Given a pandas dataframe table populated with parsed information, exact only
-#   the time since program start timestamps, and return them as a list of floats
-#
-def get_time_in_seconds(gc_event_dataframe):
-    assert isinstance(gc_event_dataframe, pd.DataFrame)
-    if gc_event_dataframe.empty:
-        return []
-    else:
-        timestamps_seconds = []
-        if "TimeFromStart_seconds" in gc_event_dataframe:
-            for time in gc_event_dataframe["TimeFromStart_seconds"]:
-                if time != None:
-                    timestamps_seconds.append(float(time))
-        return timestamps_seconds
 
 
 def get_heatmap_data_logarithmic(timestamp_groups, datapoint_groups, labels, dimensions):
@@ -439,7 +399,7 @@ def plot_heatmap_logarithmic(heatmap, dimensions, labels=True):
     ## Create a figure, and add data to heatmap. Plot then show heatmap.
     fig, ax = plt.subplots()
     ax.set_title("Latency during runtime.")
-    im = heatmap_make(heatmap, latency_labels, time_labels, ax=ax, cmap="plasma", cbarlabel="Frequency")
+    im = __heatmap_make(heatmap, latency_labels, time_labels, ax=ax, cmap="plasma", cbarlabel="Frequency")
     if labels:
         __annotate_heatmap(im, valfmt="{x}")
     fig.tight_layout()
