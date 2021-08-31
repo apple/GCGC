@@ -71,6 +71,8 @@ def get_gc_event_tables(files, zero_times=True, ignore_crashes = False):
 #       and creates timestamps in seconds. Scales units appropriately
 #
 def scale_time(df):
+    if df.empty:
+        return df
     time_seconds = []
     if "Time" in df and "TimeUnit" in df:
         unit = df["TimeUnit"].iloc[0]
