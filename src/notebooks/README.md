@@ -2,41 +2,41 @@
 
 List of functions and the plots they are expected to produce. For each of the provided GCGC original plots, the suggested parameters will be provided.
 
-> #### [1. STW Pauses during program runtime ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.9.4/src/notebooks/README.md#1-stw-pauses-during-program-runtime-linear)
+> #### [1. STW Pauses during program runtime ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#1-stw-pauses-during-program-runtime-linear)
 
-> #### [2. STW Pauses during program runtime, group by EventName ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.9.4/src/notebooks/README.md#2-stw-pauses-during-program-runtime-group-by-eventname)
+> #### [2. STW Pauses during program runtime, group by EventName ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#2-stw-pauses-during-program-runtime-group-by-eventname)
 
-> #### [3. Latency Heatmaps, Linear ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.9.4/src/notebooks/README.md#3-latency-heatmaps-linear)
-
-
-> #### [4. Logarithmic heatmaps ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.9.4/src/notebooks/README.md#4-logarithmic-heatmaps)
+> #### [3. Latency Heatmaps, Linear ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#3-latency-heatmaps-linear)
 
 
-> #### [5. Latency percentiles over time intervals ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.9.4/src/notebooks/README.md#5-latency-percentiles-over-time-intervals)
+> #### [4. Logarithmic heatmaps ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#4-logarithmic-heatmaps)
 
-> #### [6. Sum of pause durations over intervals ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.9.4/src/notebooks/README.md#6-sum-of-pause-durations-over-intervals)
 
-> #### [7. Percentage of heap filled after GC ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.9.4/src/notebooks/README.md#7-percentage-of-heap-filled-after-gc)
+> #### [5. Latency percentiles over time intervals ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#5-latency-percentiles-over-time-intervals)
 
-> #### [8. Heap Before and After GC ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.9.4/src/notebooks/README.md#8-heap-before-and-after-gc)
+> #### [6. Sum of pause durations over intervals ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#6-sum-of-pause-durations-over-intervals)
 
-> #### [9. MB Reclaimed during program runtime ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.9.4/src/notebooks/README.md#9-mb-reclaimed-during-program-runtime)
+> #### [7. Percentage of heap filled after GC ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#7-percentage-of-heap-filled-after-gc)
 
-> #### [10. Heap allocation rate ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.9.4/src/notebooks/README.md#10-heap-allocation-rate)
+> #### [8. Heap Before and After GC ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#8-heap-before-and-after-gc)
 
-> #### [11. Concurrent durations during runtime ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.9.4/src/notebooks/README.md#11-concurrent-durations-during-runtime)
+> #### [9. MB Reclaimed during program runtime ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#9-mb-reclaimed-during-program-runtime)
 
-> #### [12. Sum of event durations, grouped by EventType ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.9.4/src/notebooks/README.md#12-sum-of-event-durations-grouped-by-eventtype)
+> #### [10. Heap allocation rate ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#10-heap-allocation-rate)
 
-> #### [13. Pauses summary ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.9.4/src/notebooks/README.md#13-pauses-summary)
+> #### [11. Concurrent durations during runtime ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#11-concurrent-durations-during-runtime)
 
-> #### [14. Pause percentiles ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.9.4/src/notebooks/README.md#6-pause-percentiles)
+> #### [12. Sum of event durations, grouped by EventType ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#12-sum-of-event-durations-grouped-by-eventtype)
 
-> #### [15. Mean and Sum of event durations ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.9.4/src/notebooks/README.md#15-mean-and-sum-if-event-durations)
+> #### [13. Pauses summary ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#13-pauses-summary)
 
-> #### [16. Pause frequencies histogram ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.9.4/src/notebooks/README.md#16-pause-frequencies-histogram)
+> #### [14. Pause percentiles ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#6-pause-percentiles)
 
-> #### [17. Number of times GC invoked over time intervals ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.9.4/src/notebooks/README.md#17-number-of-times-gc-invoked-over-time-intervals)
+> #### [15. Mean and Sum of event durations ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#15-mean-and-sum-if-event-durations)
+
+> #### [16. Pause frequencies histogram ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#16-pause-frequencies-histogram)
+
+> #### [17. Number of times GC invoked over time intervals ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#17-number-of-times-gc-invoked-over-time-intervals)
 
                                         
 ## Configurations for plots
