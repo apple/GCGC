@@ -2,7 +2,7 @@
 
 List of functions and the plots they are expected to produce. For each of the provided GCGC original plots, the suggested parameters will be provided.
 
-> #### [1. STW Pauses during program runtime ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#1-stw-pauses-during-program-runtime-linear)
+> #### [1. STW Pauses during program runtime ->](https://github.pie.apple.com/applejdk/GCGC/blob/version0.9.4/src/notebooks/README.md#1-stw-pauses-during-program-runtime)
 
 > #### [2. STW Pauses during program runtime, group by EventName ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#2-stw-pauses-during-program-runtime-group-by-eventname)
 
@@ -32,7 +32,7 @@ List of functions and the plots they are expected to produce. For each of the pr
 
 > #### [14. Pause percentiles ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#6-pause-percentiles)
 
-> #### [15. Mean and Sum of event durations ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#15-mean-and-sum-if-event-durations)
+> #### [15. Mean and Sum of event durations ->](https://github.pie.apple.com/applejdk/GCGC/blob/version0.9.4/src/notebooks/README.md#15-mean-and-sum-of-event-durations)
 
 > #### [16. Pause frequencies histogram ->](https://github.pie.apple.com/applejdk/GCGC/tree/version0.10.0/src/notebooks/README.md#16-pause-frequencies-histogram)
 
