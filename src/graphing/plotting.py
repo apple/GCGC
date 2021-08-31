@@ -2,8 +2,6 @@
 #
 #   Defines functions to create plots based on filters and groupings, and a list of 
 #   gc_event_dataframes. Each function returns or creates a plot or ASCII table.
-#
-#   Ellis Brown, 7/7/2021
 
 import matplotlib.pyplot as plt
 from filter_and_group import filter_and_group

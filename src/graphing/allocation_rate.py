@@ -1,5 +1,6 @@
 # The max allocation rate is defined as the difference bewtween the heap usage at GC event A and event A+1.
 # To find it, given a list of data, find the difference between values in "column"
+#
 from filter_and_group import filter_and_group
 from matplotlib import pyplot as plt
 
@@ -41,6 +42,7 @@ def calculate_allocation_rate(
         print("Not enough labels to plot")
     if len(after_list) > len(colors):
         print("Not enough colors to plot")
+    # plot the data
     for time, before_list, after_list, color, label in zip(timestamp_groups, before_list, after_list, colors, labels):
         time = list(time)
         start_times, datapoints = get_difference(list(before_list), list(after_list), time, interval_duration, percentile)
@@ -49,7 +51,8 @@ def calculate_allocation_rate(
         else:
             plot.scatter(start_times, datapoints,  label=label, color=color)
             
-    plot.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+    plot.legend(bbox_to_anchor=(1.05, 1), loc="upper left") # Pins the legend OUTSIDE the graph. 
+    #                                                        (which isnt default behavior for some reason??)
     # return a plot object to be displayed or modified
     return plot
 
@@ -63,6 +66,7 @@ def calculate_allocation_rate(
 def get_difference(before_list, after_list, time, interval_duration, percentile):
     times = []
     difference_list = []
+    # Explains how to measure allocation rate
     # https://plumbr.io/handbook/gc-tuning-in-practice/high-allocation-rate
     interval_start_time = time[0]
     allocated_bytes = 0
@@ -78,11 +82,12 @@ def get_difference(before_list, after_list, time, interval_duration, percentile)
                     interval_start_time = time[index + 1]
         return times, difference_list
     else:
+        # If we have a percentile, we have groupings based on time intervals
         import numpy as np
         allocated_bytes_rate= []
         percentile_array = []
         # Create a list of all allocation rates within a time interval.
-        # Then, take the percentile from that list
+        # Then, take the percentile from that list. Return a list of these percentiles, and associated timestamps
         for index in range( len(before_list) - 1):
             time_delta = (time[index + 1] - time[index])
             if time_delta != 0:
