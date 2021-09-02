@@ -216,7 +216,9 @@ The folloing modifier can be added after to create the logarithmic plot, as desc
 
 ## 3. Latency Heatmaps, Linear
 
-Uses the function `plot_heatmap()`. The parameters are listed below for the functions, with the expected values to create the plot described by `3. Latency Heatmaps, Linear` being described in paranthesis. There are TWO required parameters: both `gc_event_dataframes`, and `dimensions` are needed for this function.
+Uses the function `plot_heatmap()`. The parameters are listed below for the functions, with the expected values to create the plot described by `3. Latency Heatmaps, Linear` being described in paranthesis. There are TWO required parameters: both `gc_event_dataframes`, and `dimensions` are needed for this function. The warning from matplotlib is expected. 
+
+Important: The latency and time information is the LOWER bound of the bucket (square) on the heatmap. If you see a frequency of 3 for time = 0s and the next time square is labeled time = 10s, latency = 5ms and the next square above on latency is 10ms, then there were 3 pause events between 0 and 10 seconds, with latency 5-10 seconds.
     
     gc_event_dataframes (required)
     dimensions (Expected = [ 20,  15, 60, 10 ]) 
@@ -225,13 +227,15 @@ Uses the function `plot_heatmap()`. The parameters are listed below for the func
                                     ### 60 seconds == 1 minute intervals
                                     ### 10 milisecond pause buckets 
     group_by            (Expected = None) 
-    filter_by           (Expected = pauses_only)]
+    filter_by           (Expected = pauses_only)
     labels              (Expected = labels variable)
     column              (Expected = None)
     column_timing       (Expected = None)
     frequency_ticks     (Expected = True/False)
 
 Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files. 
+
+
 
 `plot_heatmap()` parameters:
 
@@ -243,6 +247,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
     - dimensions[2] = duration of a single x interval in seconds, or time duration of each column on the heatmap
     - dimensions[3] = duration of a single y interval in seconds, or time duration in each row of the heatmap.
 
+Dimensions were choosen to be a required parameter rather than automatically set during runtime so comparion between multiple iterations of the tool would be easy to visually compare using the same X and Y axis scalings. Currently, there is a known issue where the color-bar frequency ranges may change between plots.
 
 - **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
 
