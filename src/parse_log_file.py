@@ -33,13 +33,17 @@ def get_parsing_groups():
                                                             # [gc][info][2048]
     gc_phase = " GC\((\d+)\)", "GCIndex", int   # GC (0)
                                                 # GC (99999)
+
     # contains lookahead for time spent in event
     event_type = " ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) ", "EventType", str  # Concurrent
                                                                                                           # Pause 
+
     event_name = "(?:(" + __words(1, 4) + ") )?", "EventName", str    # Young
                                                                     # Any Four __Words Here
-    additional_event_info = "((?:\("+ __words(1, 3) +"\) ){0,3})", "AdditionalEventInfo", str # (Mixed)
-                                                                                            # (Young) (Mixed Collection)
+
+    additional_event_info = "((?:\((?:\w+(?:\.gc\(\))? ?){1,3}\) ){0,3})", "AdditionalEventInfo", str 
+    # Examples: (Mixed), (Young) (Mixed Collection), (System.gc())
+
     # Confusing : Follow the capture groups in this section closely.
     # It is recommended you use the following resource : https://regexper.com
     heap_before_gc = "(?:(\d+)M->", "HeapBeforeGC", float   # 100M->
