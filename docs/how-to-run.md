@@ -27,11 +27,13 @@ Warning: Changing any data within the notebook will require you to re-downloaded
 4. If this is your first time using the notebook, it is recommended you follow the remaining steps with the provided example files before using your own log files. Otherwise, set the following two variables in the first code cell, as seen below:
 
    - `filepaths` : a list of log files to be analyzed
-   - `labels`: describe the log files listed above. 
+   - `labels` : describe the log files listed above. 
+   - `zero_times` : If true, all logs analyzed will have the same start time. Otherwise, all times will be plotted exactly as they appear in the first time metric in the gc log file.
+   
 
 In the example below, you can see filepaths to sample data, with labels describing the log files. 
 
-<img src="../images/set_filepaths_and_labels.jpg" alt="Setting the state variables" height="350px" />
+<img src="../images/set_filepaths_and_labels.jpg" alt="Setting the state variables" height="370px" />
 
 Note: The notebook allows for using unix style wildcards to capture multiple log files in the same directory, that are all associated with a single run. Using this wildcard will group all captured files into 1 event log, and requires 1 label. 
 
