@@ -30,7 +30,7 @@ List of functions and the plots they are expected to produce. For each of the pr
 
 > #### [13. Pauses summary ->](https://github.com/apple/GCGC/blob/main/src/notebooks/README.md#13-pauses-summary)
 
-> #### [14. Pause percentiles ->](https://github.com/apple/GCGC/blob/main/src/notebooks/README.md#6-pause-percentiles)
+> #### [14. Pause percentiles ->](https://github.com/apple/GCGC/blob/main/src/notebooks/README.md#14-pause-percentiles)
 
 > #### [15. Mean and Sum of event durations ->](https://github.com/apple/GCGC/blob/main/src/notebooks/README.md#15-mean-and-sum-of-event-durations)
 
