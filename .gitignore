@@ -1,0 +1,5 @@
+src/__pycache__
+src/graphing/__pycache__
+.vscode
+.ipynb_checkpoints
+*.DS_Store
