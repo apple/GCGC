@@ -130,8 +130,7 @@ def __heatmap_make(data, row_labels, col_labels, ax=None, cbar_kw={}, cbarlabel=
     # Rotate the tick labels and set their alignment.
     plt.setp(ax.get_xticklabels(), rotation=-30, ha="left", rotation_mode="anchor")
 
-    # Turn spines off and create white grid.
-    ax.spines[:].set_visible(False)
+    # Create white grid.
     ax.set_xticks(np.arange(data.shape[1] + 1) - 0.5, minor=True)
     ax.set_yticks(np.arange(data.shape[0] + 1) - 0.5, minor=True)
     ax.grid(which="minor", color="w", linestyle="-", linewidth=3)
