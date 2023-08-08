@@ -1,0 +1,2 @@
+[37400 msec: Full GC (CollectOnAllocation) 26624K->5120K, 0.0067170 secs]
+[37427 msec: Incremental GC (CollectOnAllocation) 31744K->7168K, 0.0029815 secs]

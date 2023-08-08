@@ -22,12 +22,20 @@ def get_parsing_groups():
     # Each variable declared here is a tuple with 3 parts:
     # Regex string, Associated capture group column name (if any), and the datatype for that capture group (if any).
     start = "^", None, None
-    
-    date_time = "\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\]", "DateTime", str # [9999-08-26T14:42:00.565-0400]
+
+    open_bracket = "\[", None, None
+
+    close_bracket = "\]", None, None
+
+    colon = ": ", None, None
+
+    space = "\s", None, None
+
+    date_time = "(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})", "DateTime", str # [9999-08-26T14:42:00.565-0400]
                                                                                         # [2021-08-26T14:42:59.565-0400]
-    time = "\[([\d\.]+)", "Time", float # 999999
+    time = "([\d\.]+)", "Time", float # 999999
                                         # 123541.21425
-    time_unit = "((?:s)|(?:ms)|(?:ns))\]", "TimeUnit", str  # s
+    time_unit = "((?:s)|(?:ms)|(?:ns)|(?:msec))", "TimeUnit", str  # s
                                                             # ms
     other_fields = "((?:\[.*?\])*)", "Other fields", str    # [51805y92148y45y951 it doesnt matter whats in here]
                                                             # [gc][info][2048]
@@ -60,6 +68,15 @@ def get_parsing_groups():
                                                             # ->99999M
     zgc_max_heapsize = "\((\d+)%\)", "HeapPercentFull", float   # (24%)
                                                             # (00000%)
+
+    graalvm_heap_before_gc = "(\d+)K", "HeapBeforeGC_kb", float # 123K
+                                                                       # 9999K
+    graalvm_heap_after_gc = "->(\d+)K, ", "HeapAfterGC_kb", float # ->200K
+                                                                         # ->9999K
+
+    graalvm_duration_sec = "([\d.]+) secs", "Duration_seconds", float # 99999.9999 secs
+                                                                     # 0.0 secs
+
     safepoint_name = " Safepoint \"(\w+)\"", "SafepointName", str   # Safepoint "Hello"
                                                                     # Safepoint "Example"
     safepoint_time_since_last = ", Time since last: (\d+) ns, ", "TimeFromLastSafepoint_ns", float  # , Time since last: 99999 ns
@@ -80,32 +97,48 @@ def get_parsing_groups():
     
     # Creates the full regex group: Use the website on the top of this file to follow the logic visually.
     combined_groups = [
-        start,
-        *__regex_or([date_time], 
+        *__regex_or([
+            start,
+            open_bracket,
+            time,
+            space,
+            time_unit,
+            colon,
+            event_name,
+            additional_event_info,
+            graalvm_heap_before_gc,
+            graalvm_heap_after_gc,
+            graalvm_duration_sec,
+            close_bracket
+        ],
+        [
+            start,
+            *__regex_or([open_bracket, date_time, close_bracket],
 
-                    [time, time_unit]),
-        other_fields,
-        *__regex_or([gc_phase, 
-                    event_type, 
-                    event_name,
-                    additional_event_info, 
-                    *__regex_or([heap_before_gc, 
-                              heap_after_gc, 
-                              max_heapsize, 
-                              duration_ms],
+                        [open_bracket, time, time_unit, close_bracket]),
+            other_fields,
+            *__regex_or([gc_phase,
+                         event_type,
+                         event_name,
+                         additional_event_info,
+                         *__regex_or([heap_before_gc,
+                                      heap_after_gc,
+                                      max_heapsize,
+                                      duration_ms],
 
-                              [zgc_heap_before_gc, 
-                              zgc_heap_after_gc, 
-                              zgc_max_heapsize])], 
+                                     [zgc_heap_before_gc,
+                                      zgc_heap_after_gc,
+                                      zgc_max_heapsize])],
 
-                    [safepoint_name,
-                     safepoint_time_since_last, 
-                     safepoint_time_to_reach, 
-                     time_at_safepoint, 
-                     total_time_safepoint],
+                        [safepoint_name,
+                         safepoint_time_since_last,
+                         safepoint_time_to_reach,
+                         time_at_safepoint,
+                         total_time_safepoint],
 
-                    [program_pause_time, time_to_stop_application]
-                )
+                        [program_pause_time, time_to_stop_application]
+                        )
+        ])
     ]
     # Transform from a list of tuples, into 3 distinct lists. They are initally connected for readability
     regex_groups, column_names, data_types = [], [], []
