@@ -104,16 +104,13 @@ def scale_time(df):
 def scale_duration(df):
     if df.empty:
         return df
-
     duration_milliseconds = []
     for row in df["Duration_seconds"]:
         if row != None:
             duration_milliseconds.append(row * 1000)
-
     if duration_milliseconds:
         df["Duration_milliseconds"] = duration_milliseconds
         df = df.drop(columns=["Duration_seconds"], axis = 1)
-
     return df
 
 # Create columns "HeapBeforeGC" and "HeapAfterGC" that scales the duration in kylobytes to megabytes
@@ -130,11 +127,9 @@ def scale_heap_unit(df, from_column, to_column):
     for row in df[from_column]:
         if row != None:
             heap_mb.append(row * 1024)
-
     if heap_mb:
         df[to_column] = heap_mb
         df = df.drop(columns=[from_column], axis=1)
-
     return df
 
 # Create a column "HeapPercentFull", and populate it with data if not already populated
