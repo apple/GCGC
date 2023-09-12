@@ -3,3 +3,4 @@ src/graphing/__pycache__
 .vscode
 .ipynb_checkpoints
 *.DS_Store
+.idea
