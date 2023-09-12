@@ -34,7 +34,7 @@ def get_parsing_groups():
     date_time = "(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})", "DateTime", str # [9999-08-26T14:42:00.565-0400]
                                                                                         # [2021-08-26T14:42:59.565-0400]
     time = "([\d\.]+)", "Time", float # 999999
-                                        # 123541.21425
+                                      # 123541.21425
     time_unit = "((?:s)|(?:ms)|(?:ns)|(?:msec))", "TimeUnit", str  # s
                                                             # ms
     other_fields = "((?:\[.*?\])*)", "Other fields", str    # [51805y92148y45y951 it doesnt matter whats in here]
@@ -70,12 +70,12 @@ def get_parsing_groups():
                                                             # (00000%)
 
     graalvm_heap_before_gc = "(\d+)K", "HeapBeforeGC_kb", float # 123K
-                                                                       # 9999K
+                                                                # 9999K
     graalvm_heap_after_gc = "->(\d+)K, ", "HeapAfterGC_kb", float # ->200K
-                                                                         # ->9999K
+                                                                  # ->9999K
 
     graalvm_duration_sec = "([\d.]+) secs", "Duration_seconds", float # 99999.9999 secs
-                                                                     # 0.0 secs
+                                                                      # 0.0 secs
 
     safepoint_name = " Safepoint \"(\w+)\"", "SafepointName", str   # Safepoint "Hello"
                                                                     # Safepoint "Example"
