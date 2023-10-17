@@ -19,31 +19,31 @@ class Test_parsing_graalvm_log_file(unittest.TestCase):
         self.gc_event_dataframes = get_parsed_data_from_file(log_file)
 
     def test_time(self):
-        self.assertEqual(37400, self.gc_event_dataframes["Time"][0])
-        self.assertEqual(37427, self.gc_event_dataframes["Time"][1])
+        self.assertEqual(658.653, self.gc_event_dataframes["Time"][0])
+        self.assertEqual(658.793, self.gc_event_dataframes["Time"][1])
 
     def test_time_unit(self):
-        self.assertEqual("msec", self.gc_event_dataframes["TimeUnit"][0])
-        self.assertEqual("msec", self.gc_event_dataframes["TimeUnit"][1])
+        self.assertEqual("s", self.gc_event_dataframes["TimeUnit"][0])
+        self.assertEqual("s", self.gc_event_dataframes["TimeUnit"][1])
 
     def test_event_name(self):
-        self.assertEqual("Full GC", self.gc_event_dataframes["EventName"][0])
-        self.assertEqual("Incremental GC", self.gc_event_dataframes["EventName"][1])
+        self.assertEqual("Incremental GC", self.gc_event_dataframes["EventType"][0])
+        self.assertEqual("Full GC", self.gc_event_dataframes["EventType"][1])
 
     def test_additional_event_info(self):
-        self.assertTrue(contains(self.gc_event_dataframes["AdditionalEventInfo"], "CollectOnAllocation"), "'CollectOnAllocation' not recognized")
+        self.assertTrue(contains(self.gc_event_dataframes["AdditionalEventInfo"], "Collect on allocation"), "'Collect on allocation' not recognized")
 
     def test_heap_before_gc(self):
-        self.assertEqual(26624, self.gc_event_dataframes["HeapBeforeGC_kb"][0])
-        self.assertEqual(31744, self.gc_event_dataframes["HeapBeforeGC_kb"][1])
+        self.assertEqual(54.50, self.gc_event_dataframes["HeapBeforeGC"][0])
+        self.assertEqual(53.50, self.gc_event_dataframes["HeapBeforeGC"][1])
 
     def test_heap_after_gc(self):
-        self.assertEqual(5120, self.gc_event_dataframes["HeapAfterGC_kb"][0])
-        self.assertEqual(7168, self.gc_event_dataframes["HeapAfterGC_kb"][1])
+        self.assertEqual(9.50, self.gc_event_dataframes["HeapAfterGC"][0])
+        self.assertEqual(9, self.gc_event_dataframes["HeapAfterGC"][1])
 
     def test_duration_ms(self):
-        self.assertEqual(0.0067170, self.gc_event_dataframes["Duration_seconds"][0])
-        self.assertEqual(0.0029815, self.gc_event_dataframes["Duration_seconds"][1])
+        self.assertEqual(3.346, self.gc_event_dataframes["Duration_milliseconds"][0])
+        self.assertEqual(23.244, self.gc_event_dataframes["Duration_milliseconds"][1])
 
 if __name__ == "__main__":
     unittest.main()
