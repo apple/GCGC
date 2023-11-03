@@ -107,16 +107,23 @@ def scale_heap_allocation(df):
         for row in df["HeapPercentFull"]:
             if row:
                 return df
-    
+
     if "MaxHeapsize" in df and "HeapAfterGC" in df:
         max_heapsize = df["MaxHeapsize"]
         after_gc = df["HeapAfterGC"]
         heap_percent_full = []
+
         for occupancy, maxsize in zip(after_gc, max_heapsize):
+            percent = None
+            # Will be appended as is if not reassigned, to preserve the indices of the percentages in the column
+
             if occupancy != None and maxsize != None:
-                heap_percent_full.append(100 * occupancy / maxsize)   
-            else:
-                heap_percent_full.append(None)
+                if maxsize > 0:
+                    percent = 100 * occupancy / maxsize
+                else:
+                    percent = 0
+
+            heap_percent_full.append(percent)
         df["HeapPercentFull"] = heap_percent_full
     return df
 
