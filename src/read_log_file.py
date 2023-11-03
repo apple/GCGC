@@ -52,6 +52,13 @@ def get_gc_event_tables(files, zero_times=True, ignore_crashes = False):
             gc_event_dataframe = get_parsed_data_from_file(file, ignore_crashes)
             gc_event_dataframe = scale_time(gc_event_dataframe)
             gc_event_dataframe = scale_heap_allocation(gc_event_dataframe)
+            gc_event_dataframe = generate_new_column_with_values_in_mb(
+                gc_event_dataframe,
+                "UsedMetaspaceAfterGCWithUnit",
+                "UsedMetaspaceAfterGC",
+                True
+            )
+
             if not gc_event_dataframe.empty:
                 gc_event_dataframes.append(gc_event_dataframe)
             else:
@@ -199,7 +206,7 @@ def set_safepoints_eventype(eventtype_list, safepoint_list1, safepoint_list2):
 #   collect information on each event, such as when it occured, how long it lasted, and the name
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def get_parsed_data_from_file(logfile, ignore_crashes = False):
-    regex_capture_string, column_names, data_types = get_parsing_groups()    
+    regex_capture_string, column_names, data_types = get_parsing_groups()
        
     table = __manyMatch_LineSearch(regex_capture_string, logfile)
     
@@ -318,4 +325,44 @@ def zero_start_times(dataframe):
         new_times.append(time - min_time)
     dataframe["TimeFromStart_seconds"] = new_times
     # No return needed, as the originals have been updated.
-            
+
+
+#       generate_new_column_with_values_in_mb
+#
+# - Adds a new column `new_column_name` to the dataframe, generated from another column
+#   `base_column_name`. The values of the fields of the new column are the same as that of the base column
+#   but having all sizes unified to MB.
+# - Drops the base column if `drop_base_column` is set to `True`.
+#
+#   returns `gc_event_dataframe`
+def generate_new_column_with_values_in_mb(
+        gc_event_dataframe,
+        base_column_name,
+        new_column_name,
+        drop_base_column
+):
+    sizes_in_mb = []
+
+    for size in gc_event_dataframe[base_column_name]:
+        if size is None:
+            sizes_in_mb.append(None)  # Keep track of `None` values to preserve indices of sizes in the column
+        else:
+            size_without_unit = float(size[:-1])
+            unit = size[len(size) - 1]
+
+            if unit == 'K':
+                size_without_unit /= 1024  # Convert KB to MB
+            elif unit == 'G':
+                size_without_unit *= 1024  # Convert GB to MB
+            elif unit != 'M':
+                size_without_unit = None  # Already `None` but just to be explicit
+                print("Unknown unit detected when converting to MB: unit = ", unit)
+
+            sizes_in_mb.append(size_without_unit)
+
+    gc_event_dataframe[new_column_name] = sizes_in_mb
+
+    if drop_base_column is True:
+        gc_event_dataframe.drop(columns=[base_column_name])
+
+    return gc_event_dataframe

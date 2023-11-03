@@ -14,15 +14,31 @@ def contains(string_list, text):
 class Test_parsing_groups(unittest.TestCase):
     
     def setUp(self):
-        log_file = "../datasets/parse_log_file_test.log"
-        gc_event_dataframes = get_parsed_data_from_file(log_file);
-        self.additional_event_infos = gc_event_dataframes["AdditionalEventInfo"] 
+        additional_event_info_log_file = "../datasets/additional_event_info_log_file_test.log"
+        metaspace_log_file = "../datasets/metaspace_log_file_test.log"
+
+        additional_event_info_dataframe = get_parsed_data_from_file(additional_event_info_log_file)
+        metaspace_dataframe = get_parsed_data_from_file(metaspace_log_file)
+
+        self.additional_event_infos = additional_event_info_dataframe["AdditionalEventInfo"]
+        self.used_metaspace_after_gc_with_unit = metaspace_dataframe["UsedMetaspaceAfterGCWithUnit"]
 
     def test_recognize_allocation_failure(self):
         self.assertTrue(contains(self.additional_event_infos, "Allocation Failure"), "'Allocation Failure' not recognized")
 
     def test_recognize_system_gc(self):
         self.assertTrue(contains(self.additional_event_infos, "System.gc()"), "'System.gc()' not recognized")
+
+    def test_used_metaspace_after_gc_with_unit(self):
+        self.assertEqual("3821K", self.used_metaspace_after_gc_with_unit[0])
+        self.assertEqual("896M", self.used_metaspace_after_gc_with_unit[1])
+        self.assertEqual("359G", self.used_metaspace_after_gc_with_unit[2])
+        self.assertEqual("605K", self.used_metaspace_after_gc_with_unit[3])
+        self.assertEqual("620M", self.used_metaspace_after_gc_with_unit[4])
+        self.assertEqual("645G", self.used_metaspace_after_gc_with_unit[5])
+        self.assertEqual("562K", self.used_metaspace_after_gc_with_unit[6])
+        self.assertEqual("7605M", self.used_metaspace_after_gc_with_unit[7])
+        self.assertEqual("623G", self.used_metaspace_after_gc_with_unit[8])
 
 if __name__ == "__main__":
     unittest.main()

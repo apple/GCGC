@@ -4,3 +4,4 @@ src/graphing/__pycache__
 .ipynb_checkpoints
 *.DS_Store
 .idea
+*.class

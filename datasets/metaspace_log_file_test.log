@@ -1,0 +1,9 @@
+[0.507s][info][gc,metaspace] GC(0) Metaspace: 3821K used, 4480K committed, 13056K reserved
+[1.507s][info][gc,metaspace] GC(1) Metaspace: 896M used, 964M committed, 1059M reserved
+[2.507s][info][gc,metaspace] GC(2) Metaspace: 359G used, 538G committed, 1024G reserved
+[15.184s][info][gc,metaspace   ] GC(3) Metaspace: 2266K(5440K)->605K(820K) NonClass: 1784K(3776K)->565K(700K) Class: 481K(1664K)->39K(120K)
+[20.412s][info][gc,metaspace   ] GC(4) Metaspace: 4221M(11072M)->620M(832M) NonClass: 3221M(7552M)->578M(704M) Class: 999M(3520M)->42M(128M)
+[25.583s][info][gc,metaspace   ] GC(5) Metaspace: 2118G(5056G)->645G(899G) NonClass: 1683G(3520G)->599G(768G) Class: 435G(1536G)->45G(131G)
+[35.056s][info][gc,metaspace] Metaspace: 1864K(4480K)->562K(832K) NonClass: 1517K(3136K)->528K(704K) Class: 347K(1344K)->34K(128K)
+[30.225s][info][gc,metaspace] Metaspace: 7905M(21824M)->7605M(21524M) NonClass: 6117M(14720M)->6117M(14720M) Class: 1787M(7104M)->1487M(4104M)
+[35.254s][info][gc,metaspace] Metaspace: 9807G(27328G)->623G(896G) NonClass: 7561G(18368G)->587G(768G) Class: 2245G(8960G)->35G(128G)

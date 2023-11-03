@@ -24,19 +24,21 @@ List of functions and the plots they are expected to produce. For each of the pr
 
 > #### [10. Heap allocation rate ->](./README.md#10-heap-allocation-rate)
 
-> #### [11. Concurrent durations during runtime ->](./README.md#11-concurrent-durations-during-runtime)
+> #### [11. Used Metaspace After GC ->](./README.md#11-used-metaspace-after-gc)
 
-> #### [12. Sum of event durations, grouped by EventType ->](./README.md#12-sum-of-event-durations-grouped-by-eventtype)
+> #### [12. Concurrent durations during runtime ->](./README.md#12-concurrent-durations-during-runtime)
 
-> #### [13. Pauses summary ->](./README.md#13-pauses-summary)
+> #### [13. Sum of event durations, grouped by EventType ->](./README.md#13-sum-of-event-durations-grouped-by-eventtype)
 
-> #### [14. Pause percentiles ->](./README.md#14-pause-percentiles)
+> #### [14. Pauses summary ->](./README.md#14-pauses-summary)
 
-> #### [15. Mean and Sum of event durations ->](./README.md#15-mean-and-sum-of-event-durations)
+> #### [15. Pause percentiles ->](./README.md#15-pause-percentiles)
 
-> #### [16. Pause frequencies histogram ->](./README.md#16-pause-frequencies-histogram)
+> #### [16. Mean and Sum of event durations ->](./README.md#16-mean-and-sum-of-event-durations)
 
-> #### [17. Number of times GC invoked over time intervals ->](./README.md#17-number-of-times-gc-invoked-over-time-intervals)
+> #### [17. Pause frequencies histogram ->](./README.md#17-pause-frequencies-histogram)
+
+> #### [18. Number of times GC invoked over time intervals ->](./README.md#18-number-of-times-gc-invoked-over-time-intervals)
 
                                         
 ## Configurations for plots
@@ -750,7 +752,62 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
       line_graph = False
 ---
 
-## 11. Concurrent durations during runtime
+## 11. Used Metaspace After GC
+Uses the function `plot_line()`. This function is interchangeable with the function `plot_scatter()` if a scatter plot is desired, with the same parameters for both functions. The parameters for the functions, and their expected values are listed below. The only required parameter is `gc_event_dataframes`.
+
+    gc_event_dataframes (required)
+    group_by            (Expected = None) 
+    filter_by           (Expected = used_metaspace_after_gc_filter)
+    labels              (Expected = labels variable)
+    colors              (Expected = None)
+    plot                (Expected = None)
+    column              (Expected = "UsedMetaspaceAfterGC") 
+    column_timing       (Expected = None)
+
+Note: a `gc event log` is a pandas dataframe, containing labeled columns to describe fields in a recorded event, and each row representing a discerete event. A list of `gc event logs` are returned from the function `get_gc_event_tables()` in `read_log_file.py`, which is used to automatically parse log files.
+
+`plot_scatter()` / `plot_line()` parameters:
+
+- **gc_event_dataframes**: `list` datatype. Each list entry is expected to be a `gc event log`. The `gc event logs` in the list will be parsed for the columns described by the parameters `column` and `column_timing` for Y and X data respectively, after filters have been applied.
+
+- **group_by**: `str` datatype. Name of a column present in the `gc event logs`. If this parameter is provided, groups all repeated values from the specified column, such that every group has the same value in column '`group_by`'. Leaving this optional parameter as `None` defaults to creating 1 group per `gc event log` in the `gc_event_dataframes` list. Examples below
+
+      group_by = "EventName"
+      group_by = "EventType"
+
+- **filter_by** : `function` datatype. A boolean function to be applied to each row of each `gc event log`. If the function evaluates to false, then that event will not be included in the resulting plot. A typical function first checks if the column exists before checking any values, as seen in the example below. If this check is not in place, a `KeyError` may be thrown.
+
+      def pauses_only(row):
+           if ("EventType" in row) and (row["EventType] == "Pause"):
+               return True
+      return False
+
+      filter_by = pauses_only
+
+- **labels** : `list` datatype. Each entry in the labels list describes the data in `gc_event_dataframes`, in order. Each entry in the labels list should be a `str` datatype.
+
+      labels = ["Monday log", "Tuesday Log", "Wednesday Log"]
+
+- **colors** : `list` datatype. Each entry in the labels list picks a color for the output groups in the created plot, in order. If `None`, a set of discrete colors in the same order will be used. Each entry of this list is either a `str` describing one of the [matplotlib named colors](https://matplotlib.org/stable/gallery/color/named_colors.html), or is an (r, g, b) triplet with values between [0-1] representing brightness on a scaled (0-255) range.
+
+      colors = ["black", "darkslateblue", (1, 0.5, 0)]
+
+- **plot** : `matplotlib.axes._subplots.AxesSubplot` datatype. Each graphing function returns an instance of this plot object. Passing None creates a new figure. Passing an instance of a plot will keep all old data on the plot, and add the newly plotted data on top. Typically used to overlay two data sets with different column names.
+
+      plot = plot_scatter(gc_event_dataframes)
+      plot = plot_line(gc_event_dataframes, group_by = "EventNames")
+
+- **column** : `str` datatype. The name of a column found in the list of `gc event logs`, representing the Y coordinate of data to plot. If `None` is passed, the default value for this parameter is `"Duration_milliseconds"`.
+
+      column = "Duration_milliseconds"
+
+- **column_timing** :`str` datatype. The name of a column found in the list of `gc event logs`, representing the X coordinate of the data to plot. If `None` is passed, the default value for this parameter is `"TimeFromStart_seconds"`.
+
+      column_timing = "TimeFromStart_seconds"
+
+---
+
+## 12. Concurrent durations during runtime
 
 
 Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line()` if a line plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by `11. Concurrent durations during runtime` being described in paranthesis. The only required parameter is `gc_event_dataframes` 
@@ -809,7 +866,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 ---
 
 
-## 12. Sum of event durations, grouped by EventType
+## 13. Sum of event durations, grouped by EventType
 
 
 Uses the function `plot_bar_sum()`. The parameters are listed below for the functions, with the expected values to create the plot described by `12. Mean event durations` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
@@ -870,7 +927,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
 
 
-## 13. Pauses summary 
+## 14. Pauses summary 
 
 Uses the function `plot_summary()`. The parameters are listed below for the functions, with the expected values to create the plot described by `13. Pauses summary` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
 
@@ -914,7 +971,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
 
 
-## 14. Pause percentiles
+## 15. Pause percentiles
 Uses the function `plot_percentiles()`. The parameters are listed below for the functions, with the expected values to create the plot described by `14. Pause percentiles` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
 
     gc_event_dataframes (required)
@@ -952,7 +1009,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
 ---
 
-## 15. Mean and Sum of event durations
+## 16. Mean and Sum of event durations
 
 Uses the function `plot_bar_sum()` and `plot_bar_avg()`. The parameters are listed below for the functions, with the expected values to create the plot described by `15.  Mean and Sum of event durations` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
     
@@ -1010,7 +1067,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 ---
 
 
-## 16. Pause frequencies histogram
+## 17. Pause frequencies histogram
 
 Uses the function `plot_frequency_intervals()`. The parameters are listed below for the functions, with the expected values to create the plot described by `16. Pause frequencies histogram` being described in paranthesis. The only required parameter is `gc_event_dataframes` 
     
@@ -1074,7 +1131,7 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 ---
 
 
-## 17. Number of times GC invoked over time intervals
+## 18. Number of times GC invoked over time intervals
 Uses the function `plot_frequency_of_gc_intervals()`. The parameters are listed below for the functions, with the expected values to create the plot described by `17. Number of times GC invoked over time intervals` being described in paranthesis. The only required parameter is `gc_event_dataframes`.
     
     gc_event_dataframes (required)

@@ -1,4 +1,0 @@
-[2021-08-29T21:19:44.270-0700][info][safepoint ] Entering safepoint region: Cleanup
-[2021-08-29T21:19:47.352-0700][info][gc ] GC(55610) Pause Young (Allocation Failure) 649M->385M(4574M) 16.328ms
-[2021-08-29T21:19:49.442-0700][info][gc ] GC(55611) Pause Full (System.gc()) 514M->383M(4574M) 453.056ms
-[2021-08-29T21:19:49.250-0700][info][gc,phases ] GC(55611) Phase 2: Compute new object addresses 49.677ms
