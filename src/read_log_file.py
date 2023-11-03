@@ -60,6 +60,10 @@ def get_gc_event_tables(files, zero_times=True, ignore_crashes = False):
             df = pd.concat(gc_event_dataframes)
             if zero_times:
                 zero_start_times(df)
+
+            # Clean data
+            df.replace({np.nan: None}, inplace=True)
+
             all_runs.append(df)
     if not all_runs:
         print("Error: No data collected in get_gc_event_tables.")
@@ -232,8 +236,7 @@ def get_parsed_data_from_file(logfile, ignore_crashes = False):
                                 table_groups["TimeToStopApplication_seconds"])
     df = pd.DataFrame(table_groups)
     
-    ## Clean data, apply resrictions as needed **
-    df.replace({np.nan: None}, inplace= True)    
+    ## Apply resrictions as needed **
     if ignore_crashes:
         if not assert_no_timing_errors(df):
             df = fix_timing_errors(df)
