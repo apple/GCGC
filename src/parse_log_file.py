@@ -8,7 +8,7 @@
 '''https://regex101.com : the best website for checking regex!'''
 
 # Note: the documentation of this regex string is confusing. It is STRONGLY recommended you follow along here!!!!
-# https://regexper.com/#%5E%28%3F%3A%28%3F%3A%5C%5B%28%5Cd%7B4%7D-%5Cd%5Cd-%5Cd%5CdT%5Cd%5Cd%3A%5Cd%5Cd%3A%5Cd%5Cd%5C.%5Cd%7B3%7D%5B%2B-%5D%5Cd%7B4%7D%29%5C%5D%29%7C%28%3F%3A%5C%5B%28%5B%5Cd%5C.%5D%2B%29%28%28%3F%3As%29%7C%28%3F%3Ams%29%7C%28%3F%3Ans%29%29%5C%5D%29%29%28%28%3F%3A%5C%5B.*%3F%5C%5D%29*%29%28%3F%3A%28%3F%3A%20GC%5C%28%28%5Cd%2B%29%5C%29%20%28%28%3F%3APause%28%3F%3D.*ms%29%29%7C%28%3F%3AConcurrent%28%3F%3D.*ms%29%7C%28%3F%3AIncremental%20GC%29%7C%28%3F%3AFull%20GC%29%29%7C%28%3F%3AGarbage%20Collection%29%29%20%28%3F%3A%28%28%3F%3A%5Cw%2B%20%3F%29%7B1%2C4%7D%29%20%29%3F%28%28%3F%3A%5C%28%28%3F%3A%5Cw%2B%28%3F%3A%5C.gc%5C%28%5C%29%29%3F%20%3F%29%7B1%2C3%7D%5C%29%20%29%7B0%2C3%7D%29%28%3F%3A%28%3F%3A%28%3F%3A%28%5B%5Cd%5C.%5D%2B%29M-%3E%28%5B%5Cd%5C.%5D%2B%29M%28%3F%3A%5C%28%28%5Cd%2B%29M%5C%29%3F%29%3F%29%3F%28%3F%3D%20%3F%28%5Cd%2B%5C.%5Cd%2B%29ms%29%29%7C%28%3F%3A%28%5Cd%2B%29M%5C%28%5Cd%2B%25%5C%29-%3E%28%5Cd%2B%29M%5C%28%28%5Cd%2B%29%25%5C%29%29%29%29%7C%28%3F%3A%20Safepoint%20%22%28%5Cw%2B%29%22%2C%20Time%20since%20last%3A%20%28%5Cd%2B%29%20ns%2C%20Reaching%20safepoint%3A%20%28%5Cd%2B%29%20ns%2C%20At%20safepoint%3A%20%28%5Cd%2B%29%20ns%2C%20Total%3A%20%28%5Cd%2B%29%20ns%24%29%7C%28%3F%3A%20Total%20time%20for%20which%20application%20threads%20were%20stopped%3A%20%28%5B%5Cd%5C.%5D%2B%29%20seconds%2C%20Stopping%20threads%20took%3A%20%28%5B%5Cd%5C.%5D%2B%29%20seconds%24%29%7C%28%3F%3A%28%3F%3A%20GC%5C%28%5Cd%2B%5C%29%29%3F%20%28%3F%3A%28%3F%3AMetaspace%3A%20%5Cd%2B%5BKMG%5D%5C%28%5Cd%2B%5BKMG%5D%5C%29-%3E%28%5Cd%2B%5BKMG%5D%29%5C%28%5Cd%2B%5BKMG%5D%5C%29%20NonClass%3A%20%5Cd%2B%5BKMG%5D%5C%28%5Cd%2B%5BKMG%5D%5C%29-%3E%5Cd%2B%5BKMG%5D%5C%28%5Cd%2B%5BKMG%5D%5C%29%20Class%3A%20%5Cd%2B%5BKMG%5D%5C%28%5Cd%2B%5BKMG%5D%5C%29-%3E%5Cd%2B%5BKMG%5D%5C%28%5Cd%2B%5BKMG%5D%5C%29%29%7C%28%3F%3AMetaspace%3A%20%28%5Cd%2B%5BKMG%5D%29%20used%2C%20%5Cd%2B%5BKMG%5D%20committed%2C%20%5Cd%2B%5BKMG%5D%20reserved%29%29%29%29
+# https://regexper.com/#%5E%28%3F%3A%28%3F%3A%5C%5B%28%5Cd%7B4%7D-%5Cd%5Cd-%5Cd%5CdT%5Cd%5Cd%3A%5Cd%5Cd%3A%5Cd%5Cd%5C.%5Cd%7B3%7D%5B%2B-%5D%5Cd%7B4%7D%29%5C%5D%29%7C%28%3F%3A%5C%5B%28%5B%5Cd%5C.%5D%2B%29%28%28%3F%3As%29%7C%28%3F%3Ams%29%7C%28%3F%3Ans%29%29%5C%5D%29%29%28%28%3F%3A%5C%5B.*%3F%5C%5D%29*%29%28%3F%3A%28%3F%3A%20GC%5C%28%28%5Cd%2B%29%5C%29%20%28%28%3F%3APause%28%3F%3D.*ms%29%29%7C%28%3F%3AConcurrent%28%3F%3D.*ms%29%7C%28%3F%3AIncremental%20GC%29%7C%28%3F%3AFull%20GC%29%29%7C%28%3F%3AGarbage%20Collection%29%29%20%28%3F%3A%28%28%3F%3A%5Cw%2B%20%3F%29%7B1%2C4%7D%29%20%29%3F%28%28%3F%3A%5C%28%28%3F%3A%5Cw%2B%28%3F%3A%5C.gc%5C%28%5C%29%29%3F%20%3F%29%7B1%2C3%7D%5C%29%20%29%7B0%2C3%7D%29%28%3F%3A%28%3F%3A%28%3F%3A%28%5B%5Cd%5C.%5D%2B%29M-%3E%28%5B%5Cd%5C.%5D%2B%29M%28%3F%3A%5C%28%28%5Cd%2B%29M%5C%29%3F%29%3F%29%3F%28%3F%3D%20%3F%28%5Cd%2B%5C.%5Cd%2B%29ms%29%29%7C%28%3F%3A%28%5Cd%2B%29M%5C%28%5Cd%2B%25%5C%29-%3E%28%5Cd%2B%29M%5C%28%28%5Cd%2B%29%25%5C%29%29%29%29%7C%28%3F%3A%20Safepoint%20%22%28%5Cw%2B%29%22%2C%20Time%20since%20last%3A%20%28%5Cd%2B%29%20ns%2C%20Reaching%20safepoint%3A%20%28%5Cd%2B%29%20ns%2C%20At%20safepoint%3A%20%28%5Cd%2B%29%20ns%2C%20Total%3A%20%28%5Cd%2B%29%20ns%24%29%7C%28%3F%3A%20Total%20time%20for%20which%20application%20threads%20were%20stopped%3A%20%28%5B%5Cd%5C.%5D%2B%29%20seconds%2C%20Stopping%20threads%20took%3A%20%28%5B%5Cd%5C.%5D%2B%29%20seconds%24%29%7C%28%3F%3A%28%3F%3A%20GC%5C%28%5Cd%2B%5C%29%29%3F%20%28%3F%3A%28%3F%3AMetaspace%3A%20%5Cd%2B%5BKMG%5D%5C%28%5Cd%2B%5BKMG%5D%5C%29-%3E%28%5Cd%2B%5BKMG%5D%29%5C%28%5Cd%2B%5BKMG%5D%5C%29%20NonClass%3A%20%5Cd%2B%5BKMG%5D%5C%28%5Cd%2B%5BKMG%5D%5C%29-%3E%5Cd%2B%5BKMG%5D%5C%28%5Cd%2B%5BKMG%5D%5C%29%20Class%3A%20%5Cd%2B%5BKMG%5D%5C%28%5Cd%2B%5BKMG%5D%5C%29-%3E%5Cd%2B%5BKMG%5D%5C%28%5Cd%2B%5BKMG%5D%5C%29%29%7C%28%3F%3AMetaspace%3A%20%28%5Cd%2B%5BKMG%5D%29%20used%2C%20%5Cd%2B%5BKMG%5D%20committed%2C%20%5Cd%2B%5BKMG%5D%20reserved%29%29%29%7C%28%20CodeCache%20flushing%29%7C%28%3F%3A%20CodeHeap%20'%28non-profiled%20nmethods%7Cprofiled%20nmethods%7Cnon-nmethods%29'%3A%20size%3D%28%5Cd%2B%29Kb%20used%3D%28%5Cd%2B%29Kb%20max_used%3D%28%5Cd%2B%29Kb%20free%3D%5Cd%2BKb%29%29
 # Also, do not visit the link by clicking from your IDE. Your IDE might detect just a part of the link. Copy the whole
 # link and paste in your browser.
 
@@ -93,6 +93,25 @@ def get_parsing_groups():
                                         #  Metaspace: 896M used, 964M committed, 1059M reserved
                                         #  Metaspace: 359G used, 538G committed, 1024G reserved
 
+    code_cache_flushing = "( CodeCache flushing)", "CodeCacheFlushing", str  # " CodeCache flushing"
+
+    code_heap = " CodeHeap '(non-profiled nmethods|profiled nmethods|non-nmethods)': ", "CodeHeap", str
+                                                                                    #  CodeHeap 'non-profiled nmethods':
+                                                                                    #  CodeHeap 'profiled nmethods':
+                                                                                    #  CodeHeap 'non-nmethods':
+
+    code_heap_size = "size=(\d+)Kb ", "CodeHeapSize", float  # size=119172Kb
+                                                             # size=119168Kb
+                                                             # size=7420Kb
+
+    code_heap_used = "used=(\d+)Kb ", "CodeHeapUsed", float  # used=55079Kb
+                                                             # used=60237Kb
+                                                             # used=3588Kb
+
+    code_heap_max_used = "max_used=(\d+)Kb free=\d+Kb", "CodeHeapMaxUsed", float  # max_used=55085Kb free=64092Kb
+                                                                                  # max_used=63490Kb free=58930Kb
+                                                                                  # max_used=3742Kb free=3832Kb
+
 ####################################
     
     # Creates the full regex group: Use the website on the top of this file to follow the logic visually.
@@ -123,7 +142,11 @@ def get_parsing_groups():
 
                     [program_pause_time, time_to_stop_application],
 
-                    [optional_gc_phase, *__regex_or([used_metaspace_after_gc_with_unit], [zgc_used_metaspace_after_gc_with_unit])]
+                    [optional_gc_phase, *__regex_or([used_metaspace_after_gc_with_unit], [zgc_used_metaspace_after_gc_with_unit])],
+
+                    [code_cache_flushing],
+
+                    [code_heap, code_heap_size, code_heap_used, code_heap_max_used]
                 )
     ]
     # Transform from a list of tuples, into 3 distinct lists. They are initally connected for readability
@@ -198,7 +221,7 @@ def __add_front(chars, terms):
 ####### this function returns the same as 'get_parsing_groups()'. Also useful for reference. CURRENTLY NOT CALLED.
 # This should be used when analyzing the regex, or looking to understand the format in which the get_parsing_groups() data is returned
 def better_parsing():
-    STRING ='''^(?:(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\])|(?:\[([\d\.]+)((?:s)|(?:ms)|(?:ns))\]))((?:\[.*?\])*)(?:(?: GC\((\d+)\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms)|(?:Incremental GC)|(?:Full GC))|(?:Garbage Collection)) (?:((?:\w+ ?){1,4}) )?((?:\((?:\w+(?:\.gc\(\))? ?){1,3}\) ){0,3})(?:(?:(?:([\d\.]+)M->([\d\.]+)M(?:\((\d+)M\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)M\(\d+%\)->(\d+)M\((\d+)%\))))|(?: Safepoint "(\w+)", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)|(?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$)|(?:(?: GC\(\d+\))? (?:(?:Metaspace: \d+[KMG]\(\d+[KMG]\)->(\d+[KMG])\(\d+[KMG]\) NonClass: \d+[KMG]\(\d+[KMG]\)->\d+[KMG]\(\d+[KMG]\) Class: \d+[KMG]\(\d+[KMG]\)->\d+[KMG]\(\d+[KMG]\))|(?:Metaspace: (\d+[KMG]) used, \d+[KMG] committed, \d+[KMG] reserved))))'''
-    COLUMN_NAMES = [ 'DateTime', 'Time', "TimeUnit", "Other fields", 'GCIndex', 'EventType', 'EventName', 'AdditionalEventInfo',  'HeapBeforeGC', 'HeapAfterGC', 'MaxHeapsize',  'Duration_milliseconds',  'HeapBeforeGC', 'HeapAfterGC', 'HeapPercentFull', 'SafepointName', 'TimeFromLastSafepoint_ns', 'TimeToReachSafepoint_ns', 'AtSafepoint_ns', 'TotalTimeAtSafepoint_ns', 'TotalApplicationThreadPauseTime_seconds', 'TimeToStopApplication_seconds', 'UsedMetaspaceAfterGCWithUnit', 'UsedMetaspaceAfterGCWithUnit']
-    DATA_TYPES = [str,float,str,str, int, str, str, str,  float, float, float,  float,  float, float, float, str, float, float, float, float, float, float, str, str]
+    STRING ='''^(?:(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\])|(?:\[([\d\.]+)((?:s)|(?:ms)|(?:ns))\]))((?:\[.*?\])*)(?:(?: GC\((\d+)\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms)|(?:Incremental GC)|(?:Full GC))|(?:Garbage Collection)) (?:((?:\w+ ?){1,4}) )?((?:\((?:\w+(?:\.gc\(\))? ?){1,3}\) ){0,3})(?:(?:(?:([\d\.]+)M->([\d\.]+)M(?:\((\d+)M\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)M\(\d+%\)->(\d+)M\((\d+)%\))))|(?: Safepoint "(\w+)", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)|(?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$)|(?:(?: GC\(\d+\))? (?:(?:Metaspace: \d+[KMG]\(\d+[KMG]\)->(\d+[KMG])\(\d+[KMG]\) NonClass: \d+[KMG]\(\d+[KMG]\)->\d+[KMG]\(\d+[KMG]\) Class: \d+[KMG]\(\d+[KMG]\)->\d+[KMG]\(\d+[KMG]\))|(?:Metaspace: (\d+[KMG]) used, \d+[KMG] committed, \d+[KMG] reserved)))|( CodeCache flushing)|(?: CodeHeap '(non-profiled nmethods|profiled nmethods|non-nmethods)': size=(\d+)Kb used=(\d+)Kb max_used=(\d+)Kb free=\d+Kb))'''
+    COLUMN_NAMES = [ 'DateTime', 'Time', "TimeUnit", "Other fields", 'GCIndex', 'EventType', 'EventName', 'AdditionalEventInfo',  'HeapBeforeGC', 'HeapAfterGC', 'MaxHeapsize',  'Duration_milliseconds',  'HeapBeforeGC', 'HeapAfterGC', 'HeapPercentFull', 'SafepointName', 'TimeFromLastSafepoint_ns', 'TimeToReachSafepoint_ns', 'AtSafepoint_ns', 'TotalTimeAtSafepoint_ns', 'TotalApplicationThreadPauseTime_seconds', 'TimeToStopApplication_seconds', 'UsedMetaspaceAfterGCWithUnit', 'UsedMetaspaceAfterGCWithUnit', 'CodeCacheFlushing', 'CodeHeap', 'CodeHeapSize', 'CodeHeapUsed', 'CodeHeapMaxUsed']
+    DATA_TYPES = [str,float,str,str, int, str, str, str,  float, float, float,  float,  float, float, float, str, float, float, float, float, float, float, str, str, str, str, float, float, float]
     return STRING, COLUMN_NAMES, DATA_TYPES

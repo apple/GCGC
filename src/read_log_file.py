@@ -58,6 +58,7 @@ def get_gc_event_tables(files, zero_times=True, ignore_crashes = False):
                 "UsedMetaspaceAfterGC",
                 True
             )
+            gc_event_dataframe = generate_columns_for_percent_used_and_max_used_in_each_code_heap(gc_event_dataframe)
 
             if not gc_event_dataframe.empty:
                 gc_event_dataframes.append(gc_event_dataframe)
@@ -364,5 +365,80 @@ def generate_new_column_with_values_in_mb(
 
     if drop_base_column is True:
         gc_event_dataframe.drop(columns=[base_column_name])
+
+    return gc_event_dataframe
+
+
+#       generate_columns_for_percent_used_and_max_used_in_each_code_heap
+#
+# Adds six new columns (two columns for each code heap) to the dataframe, having values for the percentage used and
+# max-used in each code heap
+#
+#   returns `gc_event_dataframe`
+def generate_columns_for_percent_used_and_max_used_in_each_code_heap(gc_event_dataframe):
+    non_profiled_nmethods_code_heap_percent_used = []
+    profiled_nmethods_code_heap_percent_used = []
+    non_nmethods_code_heap_percent_used = []
+
+    non_profiled_nmethods_code_heap_percent_max_used = []
+    profiled_nmethods_code_heap_percent_max_used = []
+    non_nmethods_code_heap_percent_max_used = []
+
+    for code_heap, size, used, max_used in zip(
+        gc_event_dataframe["CodeHeap"],
+        gc_event_dataframe["CodeHeapSize"],
+        gc_event_dataframe["CodeHeapUsed"],
+        gc_event_dataframe["CodeHeapMaxUsed"]
+    ):
+        # Append `None` to all. The `None` value in the list for the detected code heap will be replaced with the
+        # computed percentage. And will be left as is (`None`) in the other lists to preserve the indices of the
+        # percentages in their respective columns
+        non_profiled_nmethods_code_heap_percent_used.append(None)
+        profiled_nmethods_code_heap_percent_used.append(None)
+        non_nmethods_code_heap_percent_used.append(None)
+
+        non_profiled_nmethods_code_heap_percent_max_used.append(None)
+        profiled_nmethods_code_heap_percent_max_used.append(None)
+        non_nmethods_code_heap_percent_max_used.append(None)
+
+        reference_to_list_for_detected_code_heap_used = None
+        reference_to_list_for_detected_code_heap_max_used = None
+        # Will reference the necessary lists, base on the detected code heap
+
+        if code_heap is not None:
+            if size > 0:
+                used_percent = 100 * used / size
+                max_used_percent = 100 * max_used / size
+            else:
+                used_percent = 0
+                max_used_percent = 0
+
+            # Set the reference to the necessary list
+            if code_heap == 'non-profiled nmethods':
+                reference_to_list_for_detected_code_heap_used = non_profiled_nmethods_code_heap_percent_used
+                reference_to_list_for_detected_code_heap_max_used = non_profiled_nmethods_code_heap_percent_max_used
+            elif code_heap == 'profiled nmethods':
+                reference_to_list_for_detected_code_heap_used = profiled_nmethods_code_heap_percent_used
+                reference_to_list_for_detected_code_heap_max_used = profiled_nmethods_code_heap_percent_max_used
+            elif code_heap == 'non-nmethods':
+                reference_to_list_for_detected_code_heap_used = non_nmethods_code_heap_percent_used
+                reference_to_list_for_detected_code_heap_max_used = non_nmethods_code_heap_percent_max_used
+
+            # Replace the appended `None` value with the computed percentage
+            reference_to_list_for_detected_code_heap_used.pop()
+            reference_to_list_for_detected_code_heap_used.append(used_percent)
+
+            reference_to_list_for_detected_code_heap_max_used.pop()
+            reference_to_list_for_detected_code_heap_max_used.append(max_used_percent)
+
+            # The other lists retain their appended `None` values.
+
+    gc_event_dataframe["NonProfiledNMethodsCodeHeapPercentUsed"] = non_profiled_nmethods_code_heap_percent_used
+    gc_event_dataframe["ProfiledNMethodsCodeHeapPercentUsed"] = profiled_nmethods_code_heap_percent_used
+    gc_event_dataframe["NonNMethodsCodeHeapPercentUsed"] = non_nmethods_code_heap_percent_used
+
+    gc_event_dataframe["NonProfiledNMethodsCodeHeapPercentMaxUsed"] = non_profiled_nmethods_code_heap_percent_max_used
+    gc_event_dataframe["ProfiledNMethodsCodeHeapPercentMaxUsed"] = profiled_nmethods_code_heap_percent_max_used
+    gc_event_dataframe["NonNMethodsCodeHeapPercentMaxUsed"] = non_nmethods_code_heap_percent_max_used
 
     return gc_event_dataframe

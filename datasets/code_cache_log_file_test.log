@@ -1,0 +1,4 @@
+[2023-03-01T10:25:13.970-0800][14676][debug][codecache,sweep,start] CodeCache flushing
+[2023-03-01T10:25:13.996-0800][14676][debug][codecache,sweep      ] CodeHeap 'non-profiled nmethods': size=119172Kb used=2325Kb max_used=2325Kb free=116846Kb
+[2023-03-01T10:25:13.996-0800][14676][debug][codecache,sweep      ] CodeHeap 'profiled nmethods': size=119168Kb used=7911Kb max_used=7911Kb free=111256Kb
+[2023-03-01T10:25:13.996-0800][14676][debug][codecache,sweep      ] CodeHeap 'non-nmethods': size=7420Kb used=2970Kb max_used=3029Kb free=4449Kb
