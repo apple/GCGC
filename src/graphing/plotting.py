@@ -805,6 +805,19 @@ def allocation_rate(
                                      interval_duration, colors, plot, column_before, column_after,
                                      column_timing, percentile, line_graph)
 
+#       plot_code_cache_flushing_rate
+#
+#   Plots the code cache flushing rate
+#
+def plot_code_cache_flushing_rate(
+        gc_event_dataframes,  # List of dataframes, containing gc event information
+        labels=None,  # List of strings to describe each gc_event_dataframe
+        colors=None,  # Colors to override
+        plot=None,  # Matplotlib axes to plot onto. If none is provided, one is created
+        line_graph=False  # Plots as a line graph rather than a scatter plot
+):
+    from src.graphing.code_cache_flushing_rate import calculate_code_cache_flushing_rate
+    return calculate_code_cache_flushing_rate(gc_event_dataframes, labels, colors, plot, line_graph)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #       plot_scatter_universal
