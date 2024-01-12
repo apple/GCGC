@@ -1,8 +1,9 @@
 # The max allocation rate is defined as the difference bewtween the heap usage at GC event A and event A+1.
 # To find it, given a list of data, find the difference between values in "column"
 #
-from filter_and_group import filter_and_group
+from src.filter_and_group import filter_and_group
 from matplotlib import pyplot as plt
+import numpy as np
 
 #       calculate_allocation_rate
 #
@@ -58,45 +59,32 @@ def calculate_allocation_rate(
 
 #       get_difference
 #
-#   Purpose: Given a list of heapsize before/after GC runs, with associated times,
-#   calculate the rate at which the bytes are allocated, possibly using a passed
-#   grouping based on an interval_duration, and a percentile. Return a list of
-#   timestamps and allocation rates from this.
+#   Purpose: Given a list of heap sizes before and after GC runs, with associated times, calculate the mean or nth
+#   percentile rate at which the bytes are allocated, grouped by time intervals.
+#   Return a list of timestamps and allocation rates.
 #
 def get_difference(before_list, after_list, time, interval_duration, percentile):
     times = []
-    difference_list = []
-    # Explains how to measure allocation rate
-    # https://plumbr.io/handbook/gc-tuning-in-practice/high-allocation-rate
     interval_start_time = time[0]
-    allocated_bytes = 0
-    if percentile is None or interval_duration is None:
-        for index in range(len(before_list) - 1):
-            allocated_bytes += before_list[index + 1] - after_list[index] 
+    allocated_bytes_rate= []
+    rates = []
+    # Create a list of all allocation rates within a time interval.
+    # Then, take the mean or percentile rate from that list. Return a list of these rates, and associated timestamps
+    for index in range(len(before_list) - 1):
+        time_delta = (time[index + 1] - time[index])
+        if time_delta != 0:
+            allocated_bytes_rate.append((before_list[index + 1] - after_list[index]) / time_delta)
             elapsed_seconds = time[index + 1] - interval_start_time
-            if (interval_duration is None or elapsed_seconds >= interval_duration):
-                if elapsed_seconds != 0:
-                    difference_list.append(allocated_bytes / elapsed_seconds)
-                    times.append(time[index])
-                    allocated_bytes = 0
-                    interval_start_time = time[index + 1]
-        return times, difference_list
-    else:
-        # If we have a percentile, we have groupings based on time intervals
-        import numpy as np
-        allocated_bytes_rate= []
-        percentile_array = []
-        # Create a list of all allocation rates within a time interval.
-        # Then, take the percentile from that list. Return a list of these percentiles, and associated timestamps
-        for index in range( len(before_list) - 1):
-            time_delta = (time[index + 1] - time[index])
-            if time_delta != 0:
-                allocated_bytes_rate.append((before_list[index + 1] - after_list[index]) / time_delta)
-                elapsed_seconds = time[index + 1] - interval_start_time
-                if (elapsed_seconds >= interval_duration):
-                    times.append(time[index]) # Set the timestamp for this time interval
-                    percentile_array.append(np.percentile(allocated_bytes_rate, percentile)) 
-                    interval_start_time = time[index + 1]
-                    allocated_bytes_rate = []
-        return times, percentile_array
+            if (elapsed_seconds >= interval_duration):
+                times.append(time[index]) # Set the timestamp for this time interval
+                if percentile is None:
+                    current_rate = np.mean(allocated_bytes_rate)
+                else:
+                    current_rate = np.percentile(allocated_bytes_rate, percentile)
+
+                rates.append(current_rate)
+
+                interval_start_time = time[index + 1]
+                allocated_bytes_rate = []
+    return times, rates
     
