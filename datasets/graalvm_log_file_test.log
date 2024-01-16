@@ -1,2 +1,2 @@
-[37400 msec: Full GC (CollectOnAllocation) 26624K->5120K, 0.0067170 secs]
-[37427 msec: Incremental GC (CollectOnAllocation) 31744K->7168K, 0.0029815 secs]
+[2.318s] GC(1) Pause Incremental GC (Collect on allocation) 16.00M->4.00M 4.495ms
+[2.370s] GC(2) Pause Full GC (Collect on allocation) 17.00M->4.00M 11.971ms
