@@ -8,7 +8,7 @@
 '''https://regex101.com : the best website for checking regex!'''
 
 # Note: the documentation of this regex string is confusing. It is STRONGLY recommended you follow along here!!!!
-# https://regexper.com/#%5E%28%3F%3A%28%3F%3A%5C%5B%28%5Cd%7B4%7D-%5Cd%5Cd-%5Cd%5CdT%5Cd%5Cd%3A%5Cd%5Cd%3A%5Cd%5Cd%5C.%5Cd%7B3%7D%5B%2B-%5D%5Cd%7B4%7D%29%5C%5D%29%7C%28%3F%3A%5C%5B%28%5B%5Cd%5C.%5D%2B%29%28%28%3F%3As%29%7C%28%3F%3Ams%29%7C%28%3F%3Ans%29%29%5C%5D%29%29%28%28%3F%3A%5C%5B.*%3F%5C%5D%29*%29%28%3F%3A%28%3F%3A%20GC%5C%28%28%5Cd%2B%29%5C%29%20%28%28%3F%3APause%28%3F%3D.*ms%29%29%7C%28%3F%3AConcurrent%28%3F%3D.*ms%29%29%7C%28%3F%3AGarbage%20Collection%29%29%20%28%3F%3A%28%28%3F%3A%5Cw%2B%20%3F%29%7B1%2C4%7D%29%20%29%3F%28%28%3F%3A%5C%28%28%3F%3A%5Cw%2B%28%3F%3A%5C.gc%5C%28%5C%29%29%3F%20%3F%29%7B1%2C3%7D%5C%29%20%29%7B0%2C3%7D%29%28%3F%3A%28%3F%3A%28%3F%3A%28%5Cd%2B%29M-%3E%28%5Cd%2B%29M%28%3F%3A%5C%28%28%5Cd%2B%29M%5C%29%3F%29%3F%29%3F%28%3F%3D%20%3F%28%5Cd%2B%5C.%5Cd%2B%29ms%29%29%7C%28%3F%3A%28%5Cd%2B%29M%5C%28%5Cd%2B%25%5C%29-%3E%28%5Cd%2B%29M%5C%28%28%5Cd%2B%29%25%5C%29%29%29%29%7C%28%3F%3A%20Safepoint%20%22%28%5Cw%2B%29%22%2C%20Time%20since%20last%3A%20%28%5Cd%2B%29%20ns%2C%20Reaching%20safepoint%3A%20%28%5Cd%2B%29%20ns%2C%20At%20safepoint%3A%20%28%5Cd%2B%29%20ns%2C%20Total%3A%20%28%5Cd%2B%29%20ns%24%29%7C%28%3F%3A%20Total%20time%20for%20which%20application%20threads%20were%20stopped%3A%20%28%5B%5Cd%5C.%5D%2B%29%20seconds%2C%20Stopping%20threads%20took%3A%20%28%5B%5Cd%5C.%5D%2B%29%20seconds%24%29%29
+# https://regexper.com/#%5E%28%3F%3A%28%3F%3A%5C%5B%28%5Cd%7B4%7D-%5Cd%5Cd-%5Cd%5CdT%5Cd%5Cd%3A%5Cd%5Cd%3A%5Cd%5Cd%5C.%5Cd%7B3%7D%5B%2B-%5D%5Cd%7B4%7D%29%5C%5D%29%7C%28%3F%3A%5C%5B%28%5B%5Cd%5C.%5D%2B%29%28%28%3F%3As%29%7C%28%3F%3Ams%29%7C%28%3F%3Ans%29%29%5C%5D%29%29%28%28%3F%3A%5C%5B.*%3F%5C%5D%29*%29%28%3F%3A%28%3F%3A%20GC%5C%28%28%5Cd%2B%29%5C%29%20%28%28%3F%3APause%28%3F%3D.*ms%29%29%7C%28%3F%3AConcurrent%28%3F%3D.*ms%29%7C%28%3F%3AIncremental%20GC%29%7C%28%3F%3AFull%20GC%29%29%7C%28%3F%3AGarbage%20Collection%29%29%20%28%3F%3A%28%28%3F%3A%5Cw%2B%20%3F%29%7B1%2C4%7D%29%20%29%3F%28%28%3F%3A%5C%28%28%3F%3A%5Cw%2B%28%3F%3A%5C.gc%5C%28%5C%29%29%3F%20%3F%29%7B1%2C3%7D%5C%29%20%29%7B0%2C3%7D%29%28%3F%3A%28%3F%3A%28%3F%3A%28%5B%5Cd%5C.%5D%2B%29M-%3E%28%5B%5Cd%5C.%5D%2B%29M%28%3F%3A%5C%28%28%5Cd%2B%29M%5C%29%3F%29%3F%29%3F%28%3F%3D%20%3F%28%5Cd%2B%5C.%5Cd%2B%29ms%29%29%7C%28%3F%3A%28%5Cd%2B%29M%5C%28%5Cd%2B%25%5C%29-%3E%28%5Cd%2B%29M%5C%28%28%5Cd%2B%29%25%5C%29%29%29%29%7C%28%3F%3A%20Safepoint%20%22%28%5Cw%2B%29%22%2C%20Time%20since%20last%3A%20%28%5Cd%2B%29%20ns%2C%20Reaching%20safepoint%3A%20%28%5Cd%2B%29%20ns%2C%20At%20safepoint%3A%20%28%5Cd%2B%29%20ns%2C%20Total%3A%20%28%5Cd%2B%29%20ns%24%29%7C%28%3F%3A%20Total%20time%20for%20which%20application%20threads%20were%20stopped%3A%20%28%5B%5Cd%5C.%5D%2B%29%20seconds%2C%20Stopping%20threads%20took%3A%20%28%5B%5Cd%5C.%5D%2B%29%20seconds%24%29%29
 
 
 #       get_parsing_groups
@@ -23,19 +23,11 @@ def get_parsing_groups():
     # Regex string, Associated capture group column name (if any), and the datatype for that capture group (if any).
     start = "^", None, None
 
-    open_bracket = "\[", None, None
-
-    close_bracket = "\]", None, None
-
-    colon = ": ", None, None
-
-    space = "\s", None, None
-
-    date_time = "(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})", "DateTime", str # [9999-08-26T14:42:00.565-0400]
+    date_time = "\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\]", "DateTime", str # [9999-08-26T14:42:00.565-0400]
                                                                                         # [2021-08-26T14:42:59.565-0400]
-    time = "([\d\.]+)", "Time", float # 999999
-                                      # 123541.21425
-    time_unit = "((?:s)|(?:ms)|(?:ns)|(?:msec))", "TimeUnit", str  # s
+    time = "\[([\d\.]+)", "Time", float # 999999
+                                        # 123541.21425
+    time_unit = "((?:s)|(?:ms)|(?:ns))\]", "TimeUnit", str  # s
                                                             # ms
     other_fields = "((?:\[.*?\])*)", "Other fields", str    # [51805y92148y45y951 it doesnt matter whats in here]
                                                             # [gc][info][2048]
@@ -43,8 +35,8 @@ def get_parsing_groups():
                                                 # GC (99999)
 
     # contains lookahead for time spent in event
-    event_type = " ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) ", "EventType", str  # Concurrent
-                                                                                                          # Pause 
+    event_type = " ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms)|(?:Incremental GC)|(?:Full GC))|(?:Garbage Collection)) ", "EventType", str  # Concurrent
+                                                                                                                                         # Pause
 
     event_name = "(?:(" + __words(1, 4) + ") )?", "EventName", str    # Young
                                                                     # Any Four __Words Here
@@ -53,10 +45,12 @@ def get_parsing_groups():
     # Examples: (Mixed), (Young) (Mixed Collection), (System.gc())
     # Confusing : Follow the capture groups in this section closely.
     # It is recommended you use the following resource : https://regexper.com
-    heap_before_gc = "(?:(\d+)M->", "HeapBeforeGC", float   # 100M->
-                                                            # 99999M->
-    heap_after_gc = "(\d+)M", "HeapAfterGC", float  # 500M
-                                                    # 99999M
+    heap_before_gc = "(?:([\d\.]+)M->", "HeapBeforeGC", float   # 100M->
+                                                                # 99999M->
+                                                                # 70.10M->
+    heap_after_gc = "([\d\.]+)M", "HeapAfterGC", float  # 500M
+                                                        # 99999M
+                                                        # 60.20M
     max_heapsize = "(?:\((\d+)M\)?)?)?(?=", "MaxHeapsize", float    # (200M)
                                                                     # (99999M)
     duration_ms = " ?(\d+\.\d+)ms)", "Duration_milliseconds", float # 99999.9999ms
@@ -68,15 +62,6 @@ def get_parsing_groups():
                                                             # ->99999M
     zgc_max_heapsize = "\((\d+)%\)", "HeapPercentFull", float   # (24%)
                                                             # (00000%)
-
-    graalvm_heap_before_gc = "(\d+)K", "HeapBeforeGC_kb", float # 123K
-                                                                # 9999K
-    graalvm_heap_after_gc = "->(\d+)K, ", "HeapAfterGC_kb", float # ->200K
-                                                                  # ->9999K
-
-    graalvm_duration_sec = "([\d.]+) secs", "Duration_seconds", float # 99999.9999 secs
-                                                                      # 0.0 secs
-
     safepoint_name = " Safepoint \"(\w+)\"", "SafepointName", str   # Safepoint "Hello"
                                                                     # Safepoint "Example"
     safepoint_time_since_last = ", Time since last: (\d+) ns, ", "TimeFromLastSafepoint_ns", float  # , Time since last: 99999 ns
@@ -97,48 +82,32 @@ def get_parsing_groups():
     
     # Creates the full regex group: Use the website on the top of this file to follow the logic visually.
     combined_groups = [
-        *__regex_or([
-            start,
-            open_bracket,
-            time,
-            space,
-            time_unit,
-            colon,
-            event_name,
-            additional_event_info,
-            graalvm_heap_before_gc,
-            graalvm_heap_after_gc,
-            graalvm_duration_sec,
-            close_bracket
-        ],
-        [
-            start,
-            *__regex_or([open_bracket, date_time, close_bracket],
+        start,
+        *__regex_or([date_time],
 
-                        [open_bracket, time, time_unit, close_bracket]),
-            other_fields,
-            *__regex_or([gc_phase,
-                         event_type,
-                         event_name,
-                         additional_event_info,
-                         *__regex_or([heap_before_gc,
-                                      heap_after_gc,
-                                      max_heapsize,
-                                      duration_ms],
+                    [time, time_unit]),
+        other_fields,
+        *__regex_or([gc_phase,
+                    event_type,
+                    event_name,
+                    additional_event_info,
+                    *__regex_or([heap_before_gc,
+                              heap_after_gc,
+                              max_heapsize,
+                              duration_ms],
 
-                                     [zgc_heap_before_gc,
-                                      zgc_heap_after_gc,
-                                      zgc_max_heapsize])],
+                              [zgc_heap_before_gc,
+                              zgc_heap_after_gc,
+                              zgc_max_heapsize])],
 
-                        [safepoint_name,
-                         safepoint_time_since_last,
-                         safepoint_time_to_reach,
-                         time_at_safepoint,
-                         total_time_safepoint],
+                    [safepoint_name,
+                     safepoint_time_since_last,
+                     safepoint_time_to_reach,
+                     time_at_safepoint,
+                     total_time_safepoint],
 
-                        [program_pause_time, time_to_stop_application]
-                        )
-        ])
+                    [program_pause_time, time_to_stop_application]
+                )
     ]
     # Transform from a list of tuples, into 3 distinct lists. They are initally connected for readability
     regex_groups, column_names, data_types = [], [], []
@@ -212,7 +181,7 @@ def __add_front(chars, terms):
 ####### this function returns the same as 'get_parsing_groups()'. Also useful for reference. CURRENTLY NOT CALLED.
 # This should be used when analyzing the regex, or looking to understand the format in which the get_parsing_groups() data is returned
 def better_parsing():
-    STRING ='''^(?:(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\])|(?:\[([\d\.]+)((?:s)|(?:ms)|(?:ns))\]))((?:\[.*?\])*)(?:(?: GC\((\d+)\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms))|(?:Garbage Collection)) (?:((?:\w+ ?){1,4}) )?((?:\((?:\w+(?:\.gc\(\))? ?){1,3}\) ){0,3})(?:(?:(?:(\d+)M->(\d+)M(?:\((\d+)M\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)M\(\d+%\)->(\d+)M\((\d+)%\))))|(?: Safepoint "(\w+)", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)|(?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$))'''
+    STRING ='''^(?:(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\])|(?:\[([\d\.]+)((?:s)|(?:ms)|(?:ns))\]))((?:\[.*?\])*)(?:(?: GC\((\d+)\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms)|(?:Incremental GC)|(?:Full GC))|(?:Garbage Collection)) (?:((?:\w+ ?){1,4}) )?((?:\((?:\w+(?:\.gc\(\))? ?){1,3}\) ){0,3})(?:(?:(?:([\d\.]+)M->([\d\.]+)M(?:\((\d+)M\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)M\(\d+%\)->(\d+)M\((\d+)%\))))|(?: Safepoint "(\w+)", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)|(?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$))'''
     COLUMN_NAMES = [ 'DateTime', 'Time', "TimeUnit", "Other fields", 'GCIndex', 'EventType', 'EventName', 'AdditionalEventInfo',  'HeapBeforeGC', 'HeapAfterGC', 'MaxHeapsize',  'Duration_milliseconds',  'HeapBeforeGC', 'HeapAfterGC', 'MaxHeapsize', 'SafepointName', 'TimeFromLastSafepoint_ns', 'TimeToReachSafepoint_ns', 'AtSafepoint_ns', 'TotalTimeAtSafepoint_ns', 'TotalApplicationThreadPauseTime_seconds', 'TimeToStopApplication_seconds']
     DATA_TYPES = [str,float,str,str, int, str, str, str,  float, float, float,  float,  float, float, float, str, float, float, float, float, float, float]
     return STRING, COLUMN_NAMES, DATA_TYPES
