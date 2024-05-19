@@ -189,7 +189,7 @@ def __remove_datetime_scaling(timestamp_groups):
     # Each list of timestamp groups contains numbers in matplotlib datetime formats.
     # First, determine the minimum time present
     # Then, subtract from all that minimum time to make the values begin from zero.
-    # Then, scale the times into seconds (x84600). Scaling explained here: https://matplotlib.org/stable/api/dates_api.html
+    # Then, scale the times into seconds (x86400). Scaling explained here: https://matplotlib.org/stable/api/dates_api.html
     min_time = timestamp_groups[0].min()
     print(len(timestamp_groups))
     for index in range(1, len(timestamp_groups)):
