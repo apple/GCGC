@@ -36,11 +36,13 @@ def get_parsing_groups():
     gc_phase = " GC\((\d+)\)", "GCIndex", int   # GC (0)
                                                 # GC (99999)
 
-    # contains lookahead for time spent in event
-    event_type = " ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms)|(?:Incremental GC)|(?:Full GC))|(?:Garbage Collection)) ", "EventType", str  # Concurrent
-                                                                                                                                         # Pause
+    zgc_generation = "( y:| Y:| o:| O:)?", "Generation", str
 
-    event_name = "(?:(" + __words(1, 4) + ") )?", "EventName", str    # Young
+    # contains lookahead for time spent in event
+    event_type = " ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms)|(?:Incremental GC)|(?:Full GC))|(?:.+ Collection)) ", "EventType", str  # Concurrent
+                                                                                                                                    # Pause
+
+    event_name = "(?:(" + __words(1, 4) + ") )?", "EventName", str  # Young
                                                                     # Any Four __Words Here
 
     additional_event_info = "((?:\((?:\w+(?:\.gc\(\))? ?){1,3}\) ){0,3})", "AdditionalEventInfo", str 
@@ -62,8 +64,8 @@ def get_parsing_groups():
                                                                     # 999M(999999%)
     zgc_heap_after_gc = "->(\d+)M", "HeapAfterGC", float    # ->200M
                                                             # ->99999M
-    zgc_max_heapsize = "\((\d+)%\)", "HeapPercentFull", float   # (24%)
-                                                            # (00000%)
+    zgc_percent_full = "\((\d+)%\)", "HeapPercentFull", float   # (24%)
+                                                                # (00000%)
     safepoint_name = " Safepoint \"(\w+)\"", "SafepointName", str   # Safepoint "Hello"
                                                                     # Safepoint "Example"
     safepoint_time_since_last = ", Time since last: (\d+) ns, ", "TimeFromLastSafepoint_ns", float  # , Time since last: 99999 ns
@@ -122,17 +124,18 @@ def get_parsing_groups():
                     [time, time_unit]),
         other_fields,
         *__regex_or([gc_phase,
-                    event_type,
-                    event_name,
-                    additional_event_info,
-                    *__regex_or([heap_before_gc,
-                              heap_after_gc,
-                              max_heapsize,
-                              duration_ms],
+                     zgc_generation,
+                     event_type,
+                     event_name,
+                     additional_event_info,
+                     *__regex_or([heap_before_gc,
+                               heap_after_gc,
+                               max_heapsize,
+                               duration_ms],
 
-                              [zgc_heap_before_gc,
-                              zgc_heap_after_gc,
-                              zgc_max_heapsize])],
+                               [zgc_heap_before_gc,
+                                zgc_heap_after_gc,
+                                zgc_percent_full])],
 
                     [safepoint_name,
                      safepoint_time_since_last,
@@ -221,7 +224,7 @@ def __add_front(chars, terms):
 ####### this function returns the same as 'get_parsing_groups()'. Also useful for reference. CURRENTLY NOT CALLED.
 # This should be used when analyzing the regex, or looking to understand the format in which the get_parsing_groups() data is returned
 def better_parsing():
-    STRING ='''^(?:(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\])|(?:\[([\d\.]+)((?:s)|(?:ms)|(?:ns))\]))((?:\[.*?\])*)(?:(?: GC\((\d+)\) ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms)|(?:Incremental GC)|(?:Full GC))|(?:Garbage Collection)) (?:((?:\w+ ?){1,4}) )?((?:\((?:\w+(?:\.gc\(\))? ?){1,3}\) ){0,3})(?:(?:(?:([\d\.]+)M->([\d\.]+)M(?:\((\d+)M\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)M\(\d+%\)->(\d+)M\((\d+)%\))))|(?: Safepoint "(\w+)", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)|(?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$)|(?:(?: GC\(\d+\))? (?:(?:Metaspace: \d+[KMG]\(\d+[KMG]\)->(\d+[KMG])\(\d+[KMG]\) NonClass: \d+[KMG]\(\d+[KMG]\)->\d+[KMG]\(\d+[KMG]\) Class: \d+[KMG]\(\d+[KMG]\)->\d+[KMG]\(\d+[KMG]\))|(?:Metaspace: (\d+[KMG]) used, \d+[KMG] committed, \d+[KMG] reserved)))|( CodeCache flushing)|(?: CodeHeap '(non-profiled nmethods|profiled nmethods|non-nmethods)': size=(\d+)Kb used=(\d+)Kb max_used=(\d+)Kb free=\d+Kb))'''
-    COLUMN_NAMES = [ 'DateTime', 'Time', "TimeUnit", "Other fields", 'GCIndex', 'EventType', 'EventName', 'AdditionalEventInfo',  'HeapBeforeGC', 'HeapAfterGC', 'MaxHeapsize',  'Duration_milliseconds',  'HeapBeforeGC', 'HeapAfterGC', 'HeapPercentFull', 'SafepointName', 'TimeFromLastSafepoint_ns', 'TimeToReachSafepoint_ns', 'AtSafepoint_ns', 'TotalTimeAtSafepoint_ns', 'TotalApplicationThreadPauseTime_seconds', 'TimeToStopApplication_seconds', 'UsedMetaspaceAfterGCWithUnit', 'UsedMetaspaceAfterGCWithUnit', 'CodeCacheFlushing', 'CodeHeap', 'CodeHeapSize', 'CodeHeapUsed', 'CodeHeapMaxUsed']
+    STRING ='''^(?:(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\])|(?:\[([\d\.]+)((?:s)|(?:ms)|(?:ns))\]))((?:\[.*?\])*)(?:(?: GC\((\d+)\)( y:| Y:| o:| O:)? ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms)|(?:Incremental GC)|(?:Full GC))|(?:* Collection)) (?:((?:\w+ ?){1,4}) )?((?:\((?:\w+(?:\.gc\(\))? ?){1,3}\) ){0,3})(?:(?:(?:([\d\.]+)M->([\d\.]+)M(?:\((\d+)M\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)M\(\d+%\)->(\d+)M\((\d+)%\))))|(?: Safepoint "(\w+)", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)|(?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$)|(?:(?: GC\(\d+\))? (?:(?:Metaspace: \d+[KMG]\(\d+[KMG]\)->(\d+[KMG])\(\d+[KMG]\) NonClass: \d+[KMG]\(\d+[KMG]\)->\d+[KMG]\(\d+[KMG]\) Class: \d+[KMG]\(\d+[KMG]\)->\d+[KMG]\(\d+[KMG]\))|(?:Metaspace: (\d+[KMG]) used, \d+[KMG] committed, \d+[KMG] reserved)))|( CodeCache flushing)|(?: CodeHeap '(non-profiled nmethods|profiled nmethods|non-nmethods)': size=(\d+)Kb used=(\d+)Kb max_used=(\d+)Kb free=\d+Kb))'''
+    COLUMN_NAMES = [ 'DateTime', 'Time', "TimeUnit", "Other fields", 'GCIndex', 'Generation', 'EventType', 'EventName', 'AdditionalEventInfo',  'HeapBeforeGC', 'HeapAfterGC', 'MaxHeapsize',  'Duration_milliseconds',  'HeapBeforeGC', 'HeapAfterGC', 'HeapPercentFull', 'SafepointName', 'TimeFromLastSafepoint_ns', 'TimeToReachSafepoint_ns', 'AtSafepoint_ns', 'TotalTimeAtSafepoint_ns', 'TotalApplicationThreadPauseTime_seconds', 'TimeToStopApplication_seconds', 'UsedMetaspaceAfterGCWithUnit', 'UsedMetaspaceAfterGCWithUnit', 'CodeCacheFlushing', 'CodeHeap', 'CodeHeapSize', 'CodeHeapUsed', 'CodeHeapMaxUsed']
     DATA_TYPES = [str,float,str,str, int, str, str, str,  float, float, float,  float,  float, float, float, str, float, float, float, float, float, float, str, str, str, str, float, float, float]
     return STRING, COLUMN_NAMES, DATA_TYPES

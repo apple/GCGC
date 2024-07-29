@@ -51,7 +51,7 @@ def get_gc_event_tables(files, zero_times=True, ignore_crashes = False):
             # Create each log gc_event_dataframe
             gc_event_dataframe = get_parsed_data_from_file(file, ignore_crashes)
             gc_event_dataframe = scale_time(gc_event_dataframe)
-            gc_event_dataframe = scale_heap_allocation(gc_event_dataframe)
+            gc_event_dataframe = scale_heap_percent_full(gc_event_dataframe)
             gc_event_dataframe = generate_new_column_with_values_in_mb(
                 gc_event_dataframe,
                 "UsedMetaspaceAfterGCWithUnit",
@@ -110,7 +110,7 @@ def scale_time(df):
     return df
 
 # Create a column "HeapPercentFull", and populate it with data if not already populated
-def scale_heap_allocation(df):
+def scale_heap_percent_full(df):
     if df.empty:
         return df
     
@@ -138,6 +138,7 @@ def scale_heap_allocation(df):
             heap_percent_full.append(percent)
         df["HeapPercentFull"] = heap_percent_full
     return df
+
 
 ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                         __manyMatch_LineSearch
