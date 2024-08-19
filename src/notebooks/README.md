@@ -516,8 +516,8 @@ Note: a `gc event log` is a pandas dataframe, containing labeled columns to desc
 
 
 
-## 7. Percentage of heap filled after GC
-Uses the function `plot_scatter()`. This function is interchangeable with the function `plot_line()` if a line plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by ` 7. Percentage of heap filled after GC` being described in paranthesis. The only required parameter is `gc_event_dataframes` 
+## 7. Percentage of heap full after global GC
+Uses the function `plot_line()`. This function is interchangeable with the function `plot_scatter()` if a scatter plot is desired, with the same parameters for both functions. The parameters are listed below for the functions, with the expected values to create the plot described by ` 7. Percentage of heap full after global GC` being described in paranthesis. The only required parameter is `gc_event_dataframes` 
     
     gc_event_dataframes (required)
     group_by            (Expected = None) 

@@ -113,28 +113,32 @@ def scale_time(df):
 def scale_heap_percent_full(df):
     if df.empty:
         return df
-    
-    # First, check if its already populated with values.
+
     if "HeapPercentFull" in df:
         for row in df["HeapPercentFull"]:
-            if row:
+            if row: # We have found prepopulated data from ZGC or GenZGC
+                heap_percent_full = []
+                for event_type, value in zip(df["EventType"], df["HeapPercentFull"]):
+                    # Filter out minor collections in GenZGC
+                    if event_type != None and "Collection" in event_type and not "Minor" in event_type:
+                        heap_percent_full.append(value)
+                    else:
+                        heap_percent_full.append(None)
+                df["HeapPercentFull"] = heap_percent_full
                 return df
 
+    # For other collectors we have to calculate the values ourselves
+    # (GraalVM is not yet supported, has no output, because there are no max heap size entries in its logs.)
     if "MaxHeapsize" in df and "HeapAfterGC" in df:
-        max_heapsize = df["MaxHeapsize"]
-        after_gc = df["HeapAfterGC"]
         heap_percent_full = []
-
-        for occupancy, maxsize in zip(after_gc, max_heapsize):
+        # Filter out minor collections using these markers
+        minor_gc_tags = ["Young", "Incremental"] # "Young" in {Serial, Parallel, G1} and "Incremental" in {GraalVM}.
+        for event_type, event_name, info, after_gc, max_size in zip(df["EventType"], df["EventName"], df["AdditionalEventInfo"], df["HeapAfterGC"], df["MaxHeapsize"]):
             percent = None
-            # Will be appended as is if not reassigned, to preserve the indices of the percentages in the column
-
-            if occupancy != None and maxsize != None:
-                if maxsize > 0:
-                    percent = 100 * occupancy / maxsize
-                else:
-                    percent = 0
-
+            if after_gc != None and max_size != None and max_size > 0:
+                if (info is not None and "Mixed" == info) or event_type is not None and \
+                        not any(i in event_type or (event_name is not None and i in event_name) for i in minor_gc_tags):
+                    percent = 100.0 * after_gc / max_size
             heap_percent_full.append(percent)
         df["HeapPercentFull"] = heap_percent_full
     return df
