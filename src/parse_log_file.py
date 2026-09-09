@@ -25,15 +25,15 @@ def get_parsing_groups():
     # Regex string, Associated capture group column name (if any), and the datatype for that capture group (if any).
     start = "^", None, None
 
-    date_time = "\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\]", "DateTime", str # [9999-08-26T14:42:00.565-0400]
+    date_time = r"\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\]", "DateTime", str # [9999-08-26T14:42:00.565-0400]
                                                                                         # [2021-08-26T14:42:59.565-0400]
-    time = "\[([\d\.]+)", "Time", float # 999999
+    time = r"\[([\d\.]+)", "Time", float # 999999
                                         # 123541.21425
-    time_unit = "((?:s)|(?:ms)|(?:ns))\]", "TimeUnit", str  # s
+    time_unit = r"((?:s)|(?:ms)|(?:ns))\]", "TimeUnit", str  # s
                                                             # ms
-    other_fields = "((?:\[.*?\])*)", "Other fields", str    # [51805y92148y45y951 it doesnt matter whats in here]
+    other_fields = r"((?:\[.*?\])*)", "Other fields", str    # [51805y92148y45y951 it doesnt matter whats in here]
                                                             # [gc][info][2048]
-    gc_phase = " GC\((\d+)\)", "GCIndex", int   # GC (0)
+    gc_phase = r" GC\((\d+)\)", "GCIndex", int   # GC (0)
                                                 # GC (99999)
 
     zgc_generation = "( y:| Y:| o:| O:)?", "Generation", str
@@ -45,52 +45,52 @@ def get_parsing_groups():
     event_name = "(?:(" + __words(1, 4) + ") )?", "EventName", str  # Young
                                                                     # Any Four __Words Here
 
-    additional_event_info = "((?:\((?:\w+(?:\.gc\(\))? ?){1,3}\) ){0,3})", "AdditionalEventInfo", str 
+    additional_event_info = r"((?:\((?:\w+(?:\.gc\(\))? ?){1,3}\) ){0,3})", "AdditionalEventInfo", str 
     # Examples: (Mixed), (Young) (Mixed Collection), (System.gc())
     # Confusing : Follow the capture groups in this section closely.
     # It is recommended you use the following resource : https://regexper.com
-    heap_before_gc = "(?:([\d\.]+)M->", "HeapBeforeGC", float   # 100M->
+    heap_before_gc = r"(?:([\d\.]+)M->", "HeapBeforeGC", float   # 100M->
                                                                 # 99999M->
                                                                 # 70.10M->
-    heap_after_gc = "([\d\.]+)M", "HeapAfterGC", float  # 500M
+    heap_after_gc = r"([\d\.]+)M", "HeapAfterGC", float  # 500M
                                                         # 99999M
                                                         # 60.20M
-    max_heapsize = "(?:\((\d+)M\)?)?)?(?=", "MaxHeapsize", float    # (200M)
+    max_heapsize = r"(?:\((\d+)M\)?)?)?(?=", "MaxHeapsize", float    # (200M)
                                                                     # (99999M)
-    duration_ms = " ?(\d+\.\d+)ms)", "Duration_milliseconds", float # 99999.9999ms
+    duration_ms = r" ?(\d+\.\d+)ms)", "Duration_milliseconds", float # 99999.9999ms
                                                                     # 0.0ms
 
-    zgc_heap_before_gc = "(\d+)M\(\d+%\)", "HeapBeforeGC", float    # 123M(200%)
+    zgc_heap_before_gc = r"(\d+)M\(\d+%\)", "HeapBeforeGC", float    # 123M(200%)
                                                                     # 999M(999999%)
-    zgc_heap_after_gc = "->(\d+)M", "HeapAfterGC", float    # ->200M
+    zgc_heap_after_gc = r"->(\d+)M", "HeapAfterGC", float    # ->200M
                                                             # ->99999M
-    zgc_percent_full = "\((\d+)%\)", "HeapPercentFull", float   # (24%)
+    zgc_percent_full = r"\((\d+)%\)", "HeapPercentFull", float   # (24%)
                                                                 # (00000%)
-    safepoint_name = " Safepoint \"(\w+)\"", "SafepointName", str   # Safepoint "Hello"
+    safepoint_name = r' Safepoint "(\w+)"', "SafepointName", str   # Safepoint "Hello"
                                                                     # Safepoint "Example"
-    safepoint_time_since_last = ", Time since last: (\d+) ns, ", "TimeFromLastSafepoint_ns", float  # , Time since last: 99999 ns
+    safepoint_time_since_last = r", Time since last: (\d+) ns, ", "TimeFromLastSafepoint_ns", float  # , Time since last: 99999 ns
                                                                                                     # , Time since last: 1 ns
-    safepoint_time_to_reach = "Reaching safepoint: (\d+) ns, ", "TimeToReachSafepoint_ns", float    # Reaching safepoint: 0 ns
+    safepoint_time_to_reach = r"Reaching safepoint: (\d+) ns, ", "TimeToReachSafepoint_ns", float    # Reaching safepoint: 0 ns
                                                                                                     # Reaching safepoint: 99999 ns
-    time_at_safepoint = "At safepoint: (\d+) ns, ", "AtSafepoint_ns", float     # At safepoint: 1000 ns
+    time_at_safepoint = r"At safepoint: (\d+) ns, ", "AtSafepoint_ns", float     # At safepoint: 1000 ns
                                                                                 # At safepoint: 123 ns
 
-    total_time_safepoint = "Total: (\d+) ns$", "TotalTimeAtSafepoint_ns", float # Total: 1 ns$
+    total_time_safepoint = r"Total: (\d+) ns$", "TotalTimeAtSafepoint_ns", float # Total: 1 ns$
                                                                                 # Total: 000000 ns$
    
-    program_pause_time = (" Total time for which application threads were stopped: ([\d\.]+) seconds,", #  Total time for which application threads were stopped: 999 seconds,
+    program_pause_time = (r" Total time for which application threads were stopped: ([\d\.]+) seconds,", #  Total time for which application threads were stopped: 999 seconds,
                         "TotalApplicationThreadPauseTime_seconds", float)                               #  Total time for which application threads were stopped: 00.000 seconds,
-    time_to_stop_application = " Stopping threads took: ([\d\.]+) seconds$", "TimeToStopApplication_seconds", float # Stopping threads took 990 seconds
+    time_to_stop_application = r" Stopping threads took: ([\d\.]+) seconds$", "TimeToStopApplication_seconds", float # Stopping threads took 990 seconds
                                                                                                                     # Stopping threads took 000.000 seconds
 
 
-    optional_gc_phase = "(?: GC\(\d+\))?", None, None
+    optional_gc_phase = r"(?: GC\(\d+\))?", None, None
 
-    used_metaspace_after_gc_with_unit = " Metaspace: \d+[KMG]\(\d+[KMG]\)->(\d+[KMG])\(\d+[KMG]\) NonClass: \d+[KMG]\(\d+[KMG]\)->\d+[KMG]\(\d+[KMG]\) Class: \d+[KMG]\(\d+[KMG]\)->\d+[KMG]\(\d+[KMG]\)", "UsedMetaspaceAfterGCWithUnit", str
+    used_metaspace_after_gc_with_unit = r" Metaspace: \d+[KMG]\(\d+[KMG]\)->(\d+[KMG])\(\d+[KMG]\) NonClass: \d+[KMG]\(\d+[KMG]\)->\d+[KMG]\(\d+[KMG]\) Class: \d+[KMG]\(\d+[KMG]\)->\d+[KMG]\(\d+[KMG]\)", "UsedMetaspaceAfterGCWithUnit", str
                                         #  Metaspace: 2266K(5440K)->605K(820K) NonClass: 1784K(3776K)->565K(700K) Class: 481K(1664K)->39K(120K)
                                         #  Metaspace: 4221M(11072M)->620M(832M) NonClass: 3221M(7552M)->578M(704M) Class: 999M(3520M)->42M(128M)
                                         #  Metaspace: 2118G(5056G)->645G(899G) NonClass: 1683G(3520G)->599G(768G) Class: 435G(1536G)->45G(131G)
-    zgc_used_metaspace_after_gc_with_unit = " Metaspace: (\d+[KMG]) used, \d+[KMG] committed, \d+[KMG] reserved", "UsedMetaspaceAfterGCWithUnit", str
+    zgc_used_metaspace_after_gc_with_unit = r" Metaspace: (\d+[KMG]) used, \d+[KMG] committed, \d+[KMG] reserved", "UsedMetaspaceAfterGCWithUnit", str
                                         #  Metaspace: 3821K used, 4480K committed, 13056K reserved
                                         #  Metaspace: 896M used, 964M committed, 1059M reserved
                                         #  Metaspace: 359G used, 538G committed, 1024G reserved
@@ -102,15 +102,15 @@ def get_parsing_groups():
                                                                                     #  CodeHeap 'profiled nmethods':
                                                                                     #  CodeHeap 'non-nmethods':
 
-    code_heap_size = "size=(\d+)Kb ", "CodeHeapSize", float  # size=119172Kb
+    code_heap_size = r"size=(\d+)Kb ", "CodeHeapSize", float  # size=119172Kb
                                                              # size=119168Kb
                                                              # size=7420Kb
 
-    code_heap_used = "used=(\d+)Kb ", "CodeHeapUsed", float  # used=55079Kb
+    code_heap_used = r"used=(\d+)Kb ", "CodeHeapUsed", float  # used=55079Kb
                                                              # used=60237Kb
                                                              # used=3588Kb
 
-    code_heap_max_used = "max_used=(\d+)Kb free=\d+Kb", "CodeHeapMaxUsed", float  # max_used=55085Kb free=64092Kb
+    code_heap_max_used = r"max_used=(\d+)Kb free=\d+Kb", "CodeHeapMaxUsed", float  # max_used=55085Kb free=64092Kb
                                                                                   # max_used=63490Kb free=58930Kb
                                                                                   # max_used=3742Kb free=3832Kb
 
@@ -168,7 +168,7 @@ def get_parsing_groups():
 # Any number of words between min_num and max_num can be captured.
 # Helps clarify what is being captured.
 def __words(min_num, max_num):
-    return "(?:\w+ ?){" + str(min_num) + "," + str(max_num) + "}" #Any set of words with spaces after are captured.
+    return r"(?:\w+ ?){" + str(min_num) + "," + str(max_num) + "}" #Any set of words with spaces after are captured.
 
 
 #   __regex_or 
@@ -224,7 +224,7 @@ def __add_front(chars, terms):
 ####### this function returns the same as 'get_parsing_groups()'. Also useful for reference. CURRENTLY NOT CALLED.
 # This should be used when analyzing the regex, or looking to understand the format in which the get_parsing_groups() data is returned
 def better_parsing():
-    STRING ='''^(?:(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\])|(?:\[([\d\.]+)((?:s)|(?:ms)|(?:ns))\]))((?:\[.*?\])*)(?:(?: GC\((\d+)\)( y:| Y:| o:| O:)? ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms)|(?:Incremental GC)|(?:Full GC))|(?:* Collection)) (?:((?:\w+ ?){1,4}) )?((?:\((?:\w+(?:\.gc\(\))? ?){1,3}\) ){0,3})(?:(?:(?:([\d\.]+)M->([\d\.]+)M(?:\((\d+)M\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)M\(\d+%\)->(\d+)M\((\d+)%\))))|(?: Safepoint "(\w+)", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)|(?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$)|(?:(?: GC\(\d+\))? (?:(?:Metaspace: \d+[KMG]\(\d+[KMG]\)->(\d+[KMG])\(\d+[KMG]\) NonClass: \d+[KMG]\(\d+[KMG]\)->\d+[KMG]\(\d+[KMG]\) Class: \d+[KMG]\(\d+[KMG]\)->\d+[KMG]\(\d+[KMG]\))|(?:Metaspace: (\d+[KMG]) used, \d+[KMG] committed, \d+[KMG] reserved)))|( CodeCache flushing)|(?: CodeHeap '(non-profiled nmethods|profiled nmethods|non-nmethods)': size=(\d+)Kb used=(\d+)Kb max_used=(\d+)Kb free=\d+Kb))'''
+    STRING =r'''^(?:(?:\[(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}[+-]\d{4})\])|(?:\[([\d\.]+)((?:s)|(?:ms)|(?:ns))\]))((?:\[.*?\])*)(?:(?: GC\((\d+)\)( y:| Y:| o:| O:)? ((?:Pause(?=.*ms))|(?:Concurrent(?=.*ms)|(?:Incremental GC)|(?:Full GC))|(?:* Collection)) (?:((?:\w+ ?){1,4}) )?((?:\((?:\w+(?:\.gc\(\))? ?){1,3}\) ){0,3})(?:(?:(?:([\d\.]+)M->([\d\.]+)M(?:\((\d+)M\)?)?)?(?= ?(\d+\.\d+)ms))|(?:(\d+)M\(\d+%\)->(\d+)M\((\d+)%\))))|(?: Safepoint "(\w+)", Time since last: (\d+) ns, Reaching safepoint: (\d+) ns, At safepoint: (\d+) ns, Total: (\d+) ns$)|(?: Total time for which application threads were stopped: ([\d\.]+) seconds, Stopping threads took: ([\d\.]+) seconds$)|(?:(?: GC\(\d+\))? (?:(?:Metaspace: \d+[KMG]\(\d+[KMG]\)->(\d+[KMG])\(\d+[KMG]\) NonClass: \d+[KMG]\(\d+[KMG]\)->\d+[KMG]\(\d+[KMG]\) Class: \d+[KMG]\(\d+[KMG]\)->\d+[KMG]\(\d+[KMG]\))|(?:Metaspace: (\d+[KMG]) used, \d+[KMG] committed, \d+[KMG] reserved)))|( CodeCache flushing)|(?: CodeHeap '(non-profiled nmethods|profiled nmethods|non-nmethods)': size=(\d+)Kb used=(\d+)Kb max_used=(\d+)Kb free=\d+Kb))'''
     COLUMN_NAMES = [ 'DateTime', 'Time', "TimeUnit", "Other fields", 'GCIndex', 'Generation', 'EventType', 'EventName', 'AdditionalEventInfo',  'HeapBeforeGC', 'HeapAfterGC', 'MaxHeapsize',  'Duration_milliseconds',  'HeapBeforeGC', 'HeapAfterGC', 'HeapPercentFull', 'SafepointName', 'TimeFromLastSafepoint_ns', 'TimeToReachSafepoint_ns', 'AtSafepoint_ns', 'TotalTimeAtSafepoint_ns', 'TotalApplicationThreadPauseTime_seconds', 'TimeToStopApplication_seconds', 'UsedMetaspaceAfterGCWithUnit', 'UsedMetaspaceAfterGCWithUnit', 'CodeCacheFlushing', 'CodeHeap', 'CodeHeapSize', 'CodeHeapUsed', 'CodeHeapMaxUsed']
     DATA_TYPES = [str,float,str,str, int, str, str, str,  float, float, float,  float,  float, float, float, str, float, float, float, float, float, float, str, str, str, str, float, float, float]
     return STRING, COLUMN_NAMES, DATA_TYPES
